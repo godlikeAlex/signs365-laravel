@@ -1,8 +1,8 @@
-import React, { useState, useContext, Fragment } from 'react';
+import { useState, createContext, useContext, Fragment } from 'react';
 import { Link } from '@inertiajs/inertia-react';
 import { Transition } from '@headlessui/react';
 
-const DropDownContext = React.createContext();
+const DropDownContext = createContext();
 
 const Dropdown = ({ children }) => {
     const [open, setOpen] = useState(false);
@@ -70,7 +70,7 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-whit
     );
 };
 
-const DropdownLink = ({ href, method = 'post', as = 'a', children }) => {
+const DropdownLink = ({ href, method, as, children }) => {
     return (
         <Link
             href={href}
