@@ -42,7 +42,16 @@ class CityResource extends Resource
                     ->afterStateHydrated(function (TextInput $component, $state) {
                         $component->state($state * 100);
                     })
-                    ->dehydrateStateUsing(fn ($state) => floatval($state) / 100)
+                    ->dehydrateStateUsing(fn ($state) => floatval($state) / 100),
+                    Forms\Components\TextInput::make('state')
+                        ->label('State')
+                        ->helperText('State must format like in Wiki, for example NY, TX, CT')
+                        ->unique(ignoreRecord: true)
+                        ->afterStateHydrated(function (TextInput $component, $state) {
+                            $component->state(strtoupper($state));
+                        })
+                        ->dehydrateStateUsing(fn ($state) => strtoupper($state))
+                        ->required(),
             ]);
     }
 
@@ -52,6 +61,7 @@ class CityResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')->searchable(),
                 Tables\Columns\TextColumn::make('domain')->label('Subdomain'),
+                Tables\Columns\TextColumn::make('state')->label('State'),
                 Tables\Columns\TextColumn::make('tax')
                     ->formatStateUsing(fn (string $state): string => __($state * 100 . "%"))
             ])

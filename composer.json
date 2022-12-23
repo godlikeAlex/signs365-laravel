@@ -17,7 +17,8 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.5",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "torann/geoip": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
