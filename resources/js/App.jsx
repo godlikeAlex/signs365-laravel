@@ -1,17 +1,15 @@
-import { Routes, Route } from "react-router-dom"
-
-const Home = () => (
-    <h1>Hello world</h1>
-);
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Routing } from "@/src/components";
 
 function App() {
-    return (
-        <div className="App">
-            <Routes>
-                <Route path="/" element={ <Home/> } />
-            </Routes>
-        </div>
-    )
+  return (
+    <>
+      <BrowserRouter>
+        <Routing />
+      </BrowserRouter>
+    </>
+  );
 }
 
-export default App
+export default App;

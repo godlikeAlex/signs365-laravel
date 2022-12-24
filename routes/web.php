@@ -23,6 +23,10 @@ Route::get('/{reactRoutes?}', function ($city = null) {
     return view('app'); // your start view
 })
 ->where('reactRoutes', '^((?!admin).)*$')
-->name('app')
+->where('reactRoutes', '^((?!api).)*$')
+//->name('app')
 ->middleware(\App\Http\Middleware\UserCityRedirect::class); // except 'api' word
 
+Route::get('m', function () {
+    return view('emails.reset-password');
+});
