@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\GetSanctumTokenFromCookies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,13 +14,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::prefix('auth')->group(function () {
-    Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
-    Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
-
-    Route::post('/forgot', [\App\Http\Controllers\Api\ForgotPassword::class, 'forgot']);
-});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

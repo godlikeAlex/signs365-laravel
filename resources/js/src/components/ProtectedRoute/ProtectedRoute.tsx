@@ -1,12 +1,12 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/src/hooks";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const BASE_FOR_NOT_AUTHED_REDIRECT = "/login";
 export const BASE_FOR_AUTHED_REDIRECT = "/profile";
 
 const ProtectedRoute = ({ allowAuthed = true }) => {
-  const isAuthed = useSelector((state) => state.auth.isAuthed);
+  const { isAuthed } = useAppSelector((state) => state.auth);
 
   if (allowAuthed && !isAuthed) {
     return <Navigate to={BASE_FOR_NOT_AUTHED_REDIRECT} replace />;
