@@ -21,10 +21,9 @@ $DOMAIN = env('APP_DOMAIN');
 Route::prefix('api/auth')->group(function () {
     Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
     Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+    Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
     
-Route::get('domains', [\App\Http\Controllers\Api\AuthController::class, 'domains']);
-    Route::get('get-token', [\App\Http\Controllers\Api\AuthController::class, 'token']);
-    Route::post('/forgot', [\App\Http\Controllers\Api\ForgotPassword::class, 'forgot']);
+    Route::post('forgot', [\App\Http\Controllers\Api\ForgotPassword::class, 'forgot']);
 });
 
 Route::get('/{reactRoutes?}', function ($city = null) {

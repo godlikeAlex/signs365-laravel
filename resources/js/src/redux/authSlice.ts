@@ -45,6 +45,13 @@ export const registerUser = createAsyncThunk<
   }
 });
 
+export const logoutUser = createAsyncThunk<void, void>(
+  "auth/logout",
+  async () => {
+    await AuthService.logout();
+  }
+);
+
 export const getUserByToken = createAsyncThunk<
   User,
   void,
@@ -83,6 +90,18 @@ export const authSlice = createSlice({
     });
 
     builder.addCase(getUserByToken.rejected, (state) => {
+      state.authChecked = true;
+      state.isAuthed = false;
+      state.user = undefined;
+    });
+
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.authChecked = true;
+      state.isAuthed = false;
+      state.user = undefined;
+    });
+
+    builder.addCase(logoutUser.rejected, (state) => {
       state.authChecked = true;
       state.isAuthed = false;
       state.user = undefined;

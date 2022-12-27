@@ -39,6 +39,8 @@ class AuthController extends Controller
         Auth::login($user);
 
         $token = $user->createToken('api')->plainTextToken;
+
+        $request->session()->regenerate();
         
         return response()->json([
             'token' => $token,
@@ -78,16 +80,12 @@ class AuthController extends Controller
         ])->cookie($cookie);
     }
 
-    /**
-     * Get allowed domains
-    */
-    public function domains() {
-        $cities = City::all();
+    public function logout(Request $request) {
+        Auth::logout();
 
-        return DomainsResource::collection($cities);
-    }
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    public function token(Request $request) {
-        return $request->session()->get('tokenz');
+        return;
     }
 }

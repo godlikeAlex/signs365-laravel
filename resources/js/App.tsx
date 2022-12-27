@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Routing } from "./src/components";
+import { Menu, Routing } from "./src/components";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useAppDispatch } from "./src/hooks";
@@ -28,6 +28,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <Menu />
         <Routing />
       </BrowserRouter>
 
