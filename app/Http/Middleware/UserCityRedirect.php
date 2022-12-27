@@ -6,6 +6,7 @@ use App\Models\City;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Session;
 
 class UserCityRedirect
 {
@@ -24,29 +25,45 @@ class UserCityRedirect
         $availableDomains = $cities->pluck('domain', 'id')->toArray();
         $availableStates = $cities->pluck('state', 'id')->toArray();
         $geoInfo = geoip($request->ip());
-        if (count($request->segments()) > 0) {
-            return $next($request);
-        }
+        
+        $isMainPage = env('APP_URL') === url()->current();
+        $currentSubDomainIsAvaliable = in_array($subdomain, $availableDomains);
+        $subdomainIsNotPartOfMainDomain = explode('.', env('APP_DOMAIN'))[0] !== $subdomain;
+        
+        $DOMAIN = env('APP_DOMAIN');
 
-        if (in_array($subdomain, $availableDomains)) { // if has domain continue
-            return $next($request);
-        }
-
-        if ($geoInfo->country !== 'United States') { // if user not from us continue
+        if (!$geoInfo->state) {
             return $next($request);
         }
 
         $currentState = strtoupper($geoInfo->state);
+        $subDomainToRedirect = null;
 
         if (in_array($currentState, $availableStates)) {
-            $indexState = array_search($currentState, $availableStates);
-            $subdomain = $availableDomains[$indexState];
-            $DOMAIN = env('APP_DOMAIN');
-
-            return redirect()->away("https://{$subdomain}.${DOMAIN}", 302);
+            $subDomainToRedirect = $availableDomains[array_search($currentState, $availableStates)];
+        } else {
+            $subDomainToRedirect = null;
         }
 
+        if ($subdomainIsNotPartOfMainDomain) {
+            if (!in_array($subdomain, $availableDomains)) {
+                return abort(404);
+            }
+        } else {
+            return redirect()->away($this->generateUrl($request, $subDomainToRedirect), 302);
+        }
+
+        Session::put('city_checked', true);
+        Session::save();
 
         return $next($request);
+    }
+
+    private function generateUrl(Request $request, $subdomain) {
+        $parameters = $request->route()->parameters();
+        $name = $request->route()->getName();
+            
+        $url = str_replace('://', '://' . $subdomain . '.', route($name,$parameters));
+        return $url;
     }
 }

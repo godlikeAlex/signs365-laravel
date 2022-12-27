@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\DomainsResource;
+use App\Models\City;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Cookie;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,14 +38,16 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        $token = $user->createToken('api')->plainTextToken;
+        
         return response()->json([
-            'token' => $user->createToken('api')->plainTextToken,
+            'token' => $token,
             'user' => $user
         ]);
     }
 
     /**
-     * Display the password reset view.
+     * Login user into.
     */
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
@@ -60,10 +65,29 @@ class AuthController extends Controller
          * @var User $user
          */
         $user = $request->user();
+        $token = $user->createToken('api')->plainTextToken;
+
+        $cookie = cookie()
+            ->forever(name: 'token', value: $token, httpOnly: true, raw: true);
+
+        $request->session()->regenerate();
 
         return response()->json([
-            'token' => $user->createToken('api')->plainTextToken,
+            'token' => $token,
             'user' => $user
-        ]);
+        ])->cookie($cookie);
+    }
+
+    /**
+     * Get allowed domains
+    */
+    public function domains() {
+        $cities = City::all();
+
+        return DomainsResource::collection($cities);
+    }
+
+    public function token(Request $request) {
+        return $request->session()->get('tokenz');
     }
 }

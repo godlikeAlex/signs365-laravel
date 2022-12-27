@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 $DOMAIN = env('APP_DOMAIN');
 
@@ -17,16 +16,23 @@ $DOMAIN = env('APP_DOMAIN');
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
+Route::prefix('api/auth')->group(function () {
+    Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+    Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+    
+Route::get('domains', [\App\Http\Controllers\Api\AuthController::class, 'domains']);
+    Route::get('get-token', [\App\Http\Controllers\Api\AuthController::class, 'token']);
+    Route::post('/forgot', [\App\Http\Controllers\Api\ForgotPassword::class, 'forgot']);
+});
 
 Route::get('/{reactRoutes?}', function ($city = null) {
+
     return view('app'); // your start view
 })
+->withoutMiddleware(['web'])
+->name('react-app')
 ->where('reactRoutes', '^((?!admin).)*$')
 ->where('reactRoutes', '^((?!api).)*$')
-//->name('app')
-->middleware(\App\Http\Middleware\UserCityRedirect::class); // except 'api' word
-
-Route::get('m', function () {
-    return view('emails.reset-password');
-});
+->middleware(['redirectUserToCity']); // except 'api' word
