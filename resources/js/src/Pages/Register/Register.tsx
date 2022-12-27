@@ -5,24 +5,26 @@ import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { Input } from "@/src/components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { login } from "@/src/redux/authSlice";
+import { registerUser } from "@/src/redux/authSlice";
 import { toast } from "react-toastify";
 import { isCustomAxisError } from "@/src/helpers/axiosErrorGrabber";
 import { BASE_FOR_AUTHED_REDIRECT } from "@/src/components/ProtectedRoute/ProtectedRoute";
 
-const LoginSchema = yup
+const RegisterSchema = yup
   .object({
+    name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().min(7).required(),
   })
   .required();
 
 type Inputs = {
+  name: string;
   email: string;
   password: string;
 };
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const { isAuthed, authChecked } = useAppSelector((state) => state.auth);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +36,7 @@ export default function Login() {
     watch,
     formState: { errors, isValid },
   } = useForm<Inputs>({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(RegisterSchema),
   });
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      const loginData = await dispatch(login(data)).unwrap();
+      const loginData = await dispatch(registerUser(data)).unwrap();
       setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
@@ -59,11 +61,28 @@ export default function Login() {
       if (error.type === "message") {
         toast(error.error, { type: "error" });
       }
+
+      if (error.type === "validation") {
+        let errors = error.errors;
+        Object.keys(errors).forEach((errInput) => {
+          errors[errInput].forEach((errMessage) => {
+            toast(errMessage, { type: "error" });
+          });
+        });
+        // error.errors[0]
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h2>Register</h2>
+      <Input
+        {...register("name")}
+        type="text"
+        error={errors.name?.message}
+        disabled={isSubmitting}
+      />
       <Input
         {...register("email")}
         type="email"

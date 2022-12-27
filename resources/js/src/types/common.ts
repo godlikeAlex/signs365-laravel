@@ -4,10 +4,10 @@ export interface ErrorFromAxiosMessage {
 }
 
 export interface ErrorFromAxiosValidation {
-  type: "message";
+  type: "validation";
   errors: {
     [k: string]: string[];
   };
 }
 
-export type ErrorFromAxios = ErrorFromAxiosMessage | ErrorFromAxiosMessage;
+export type ErrorFromAxios = ErrorFromAxiosMessage | ErrorFromAxiosValidation;

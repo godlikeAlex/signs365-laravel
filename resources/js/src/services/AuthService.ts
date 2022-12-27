@@ -20,5 +20,8 @@ export default class AuthService {
     return api.get<DomainsResponse>("/auth/domains");
   }
 
-  static register() {}
+  static async register(email: string, password: string, name: string) {
+    await api.get("/sanctum/csrf-cookie");
+    return api.post<LoginResponse>("/auth/register", { email, password, name });
+  }
 }

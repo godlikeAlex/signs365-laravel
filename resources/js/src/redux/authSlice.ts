@@ -1,8 +1,5 @@
 import { compose, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import Cookies from "js-cookie";
 import axiosErrorGrab from "../helpers/axiosErrorGrabber";
-import CrosDomainStorage from "../helpers/crossDomainStorage";
 import { AuthService } from "../services";
 import { LoginResponse } from "../types/axiosResponses";
 import { ErrorFromAxios } from "../types/common";
@@ -34,6 +31,20 @@ export const login = createAsyncThunk<
   }
 });
 
+export const registerUser = createAsyncThunk<
+  LoginResponse,
+  { email: string; password: string; name: string },
+  { rejectValue: ErrorFromAxios }
+>("auth/register", async ({ email, password, name }, { rejectWithValue }) => {
+  try {
+    const response = await AuthService.register(email, password, name);
+
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(axiosErrorGrab(error));
+  }
+});
+
 export const getUserByToken = createAsyncThunk<
   User,
   void,
@@ -57,6 +68,12 @@ export const authSlice = createSlice({
       state.authChecked = true;
       state.isAuthed = true;
       state.user = action.payload.user;
+    });
+
+    builder.addCase(registerUser.fulfilled, (state, acction) => {
+      state.authChecked = true;
+      state.isAuthed = true;
+      state.user = acction.payload.user;
     });
 
     builder.addCase(getUserByToken.fulfilled, (state, action) => {

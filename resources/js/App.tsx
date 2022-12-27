@@ -14,9 +14,12 @@ function App() {
 
   useEffect(() => {
     const initApp = async () => {
-      await dispatch(getUserByToken()).unwrap();
-
-      setAppLoaded(true);
+      try {
+        await dispatch(getUserByToken()).unwrap();
+        setAppLoaded(true);
+      } catch (error) {
+        setAppLoaded(true);
+      }
     };
 
     initApp();
