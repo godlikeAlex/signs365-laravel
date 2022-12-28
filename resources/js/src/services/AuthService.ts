@@ -18,7 +18,22 @@ export default class AuthService {
   }
 
   static async logout() {
-    await api.get("/sanctum/csrf-cookie");
     return api.post("/auth/logout");
+  }
+
+  static async sendForgotPasswordRequest(email: string) {
+    return api.post("/auth/forgot", { email });
+  }
+
+  static async resetPassword(
+    token: string,
+    password: string,
+    passwordConfirmation: string
+  ) {
+    return api.post("/auth/reset-password", {
+      token,
+      password,
+      passwordConfirmation,
+    });
   }
 }

@@ -24,8 +24,8 @@ class ForgotPassword extends Controller
 
         if (User::where('email', $email)->doesntExist()) {
             return response([
-                'message' => 'User doen\'t exists!'
-            ], 404);
+                'error' => 'User doen\'t exists!'
+            ], 400);
         }
 
         try {
@@ -48,7 +48,7 @@ class ForgotPassword extends Controller
                 'message' => 'success'
             ]);
         } catch (\Exception $error) {
-            return response(['message' => $error->getMessage()], 400);
+            return response(['error' => $error->getMessage()], 400);
         }
     }
 
@@ -58,13 +58,13 @@ class ForgotPassword extends Controller
 
         if (!$passwordResets = DB::table('password_resets')->where('token', $token)->first()) {
             return response([
-                'message' => 'Invalid token!'
+                'error' => 'Invalid token!'
             ], 400);
         }
 
         if (!$user = User::where('email', $passwordResets->email)->first()) {
             return response()->json([
-                'message' => 'User doesn\'t exists'
+                'error' => 'User doesn\'t exists'
             ], 404);
         }
 

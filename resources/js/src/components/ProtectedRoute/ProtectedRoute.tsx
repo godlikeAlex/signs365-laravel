@@ -11,9 +11,11 @@ const ProtectedRoute = ({ allowAuthed = true }) => {
   if (allowAuthed && !isAuthed) {
     return <Navigate to={BASE_FOR_NOT_AUTHED_REDIRECT} replace />;
   }
-  if (allowAuthed === false) {
+
+  if (allowAuthed === false && isAuthed) {
     return <Navigate to={BASE_FOR_AUTHED_REDIRECT} replace />;
   }
+
   return <Outlet />;
 };
 

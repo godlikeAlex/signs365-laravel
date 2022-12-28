@@ -24,6 +24,7 @@ Route::prefix('api/auth')->group(function () {
     Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
     
     Route::post('forgot', [\App\Http\Controllers\Api\ForgotPassword::class, 'forgot']);
+    Route::post('reset-password', [\App\Http\Controllers\Api\ForgotPassword::class, 'reset']);
 });
 
 Route::get('/{reactRoutes?}', function ($city = null) {

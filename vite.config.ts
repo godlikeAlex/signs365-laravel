@@ -18,6 +18,17 @@ export default defineConfig({
     }),
     react(),
     mkcert(),
+    {
+      name: "singleHMR",
+      handleHotUpdate({ modules }) {
+        modules.map((m) => {
+          m.importedModules = new Set();
+          m.importers = new Set();
+        });
+
+        return modules;
+      },
+    },
   ],
   resolve: {
     alias: {
