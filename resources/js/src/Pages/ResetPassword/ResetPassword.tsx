@@ -17,7 +17,7 @@ type Inputs = {
   passwordConfirmation: string;
 };
 
-const ResetPasswordValidation = yup.object({
+export const ResetPasswordValidation = yup.object({
   password: yup.string().required().min(7),
   passwordConfirmation: yup
     .string()

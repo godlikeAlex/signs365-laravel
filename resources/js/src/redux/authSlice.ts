@@ -1,4 +1,9 @@
-import { compose, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  compose,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import axiosErrorGrab from "../helpers/axiosErrorGrabber";
 import { AuthService } from "../services";
 import { LoginResponse } from "../types/axiosResponses";
@@ -69,7 +74,11 @@ export const getUserByToken = createAsyncThunk<
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    updateUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
       state.authChecked = true;
@@ -108,5 +117,7 @@ export const authSlice = createSlice({
     });
   },
 });
+
+export const { updateUser } = authSlice.actions;
 
 export default authSlice.reducer;

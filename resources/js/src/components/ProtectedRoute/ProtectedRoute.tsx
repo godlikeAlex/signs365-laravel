@@ -8,7 +8,7 @@ export const BASE_FOR_AUTHED_REDIRECT = "/profile";
 const ProtectedRoute = ({ allowAuthed = true }) => {
   const { isAuthed } = useAppSelector((state) => state.auth);
 
-  if (allowAuthed && !isAuthed) {
+  if (allowAuthed && isAuthed === false) {
     return <Navigate to={BASE_FOR_NOT_AUTHED_REDIRECT} replace />;
   }
 

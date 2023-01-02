@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import {
+  EditProfile,
   ForgotPassword,
   Home,
   Login,
@@ -19,6 +20,8 @@ function Routing() {
 
       <Route element={<ProtectedRoute allowAuthed={true} />}>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/edit" element={<EditProfile />} />
+        <Route path="/profile/orders" element={<Home />} />
       </Route>
 
       <Route element={<ProtectedRoute allowAuthed={false} />}>

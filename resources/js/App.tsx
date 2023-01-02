@@ -29,7 +29,7 @@ function App() {
     <>
       <BrowserRouter>
         <Menu />
-        <Routing />
+        {appLoaded ? <Routing /> : null}
       </BrowserRouter>
 
       <Sugar customLoading={!appLoaded} />
