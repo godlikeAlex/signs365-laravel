@@ -1,7 +1,14 @@
 {
-  "resources/js/App.tsx": {
-    "file": "assets/App-1e6cd4e9.js",
-    "src": "resources/js/App.tsx",
-    "isEntry": true
+  "resources/js/index.css": {
+    "file": "assets/index-2a37359d.css",
+    "src": "resources/js/index.css"
+  },
+  "resources/js/index.tsx": {
+    "file": "assets/index-14f73001.js",
+    "src": "resources/js/index.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/index-2a37359d.css"
+    ]
   }
 }

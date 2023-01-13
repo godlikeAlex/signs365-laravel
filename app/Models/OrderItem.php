@@ -9,33 +9,38 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'order_id',
-        'product_id',
-        'product_price_id',
-        'quantity',
-        'price'
-    ];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'order_id',
+    'product_id',
+    'product_price_id',
+    'quantity',
+    'price'
+  ];
 
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class);
-    }
+  public function order(): BelongsTo
+  {
+    return $this->belongsTo(Order::class);
+  }
 
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
+  public function product(): BelongsTo
+  {
+    return $this->belongsTo(Product::class);
+  }
 
-    public function productPrice(): BelongsTo
-    {
-        return $this->belongsTo(ProductPrice::class);
-    }
+  public function productPrice(): BelongsTo
+  {
+    return $this->belongsTo(ProductPrice::class);
+  }
+
+  public function variant(): BelongsTo
+  {
+    return $this->belongsTo(ProductVariant::class);
+  }
 }

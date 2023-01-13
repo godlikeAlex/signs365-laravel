@@ -8,17 +8,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductPrice extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $guarded = [];
+  protected $guarded = [];
 
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
+  public function product(): BelongsTo
+  {
+    return $this->belongsTo(Product::class);
+  }
 
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
-    }
+  public function city(): BelongsTo
+  {
+    return $this->belongsTo(City::class);
+  }
 }

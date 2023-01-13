@@ -34,6 +34,22 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\CityProduct
+ *
+ * @property int $id
+ * @property int|null $city_id
+ * @property int|null $product_id
+ * @property-read \App\Models\City|null $city
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|CityProduct newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CityProduct newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CityProduct query()
+ */
+	class CityProduct extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Order
  *
  * @property int $id
@@ -71,6 +87,7 @@ namespace App\Models{
  * @property-read \App\Models\Order|null $order
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\ProductPrice|null $productPrice
+ * @property-read \App\Models\ProductVariant|null $variant
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem query()
@@ -97,6 +114,8 @@ namespace App\Models{
  * @property-read int|null $cities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductPrice[] $prices
  * @property-read int|null $prices_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductVariant[] $variants
+ * @property-read int|null $variants_count
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
@@ -117,8 +136,10 @@ namespace App\Models{
  * @property-read int|null $cities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
  * @property-read int|null $products_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory availableInCity($city)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory publishedProducts()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductCategory query()
  */
 	class ProductCategory extends \Eloquent {}
@@ -129,10 +150,10 @@ namespace App\Models{
  * App\Models\ProductPrice
  *
  * @property int $id
- * @property string $label
  * @property int $price
- * @property int|null $product_id
+ * @property int|null $product_variant_id
  * @property int|null $city_id
+ * @property int|null $product_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\City|null $city
@@ -142,6 +163,25 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ProductPrice query()
  */
 	class ProductPrice extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ProductVariant
+ *
+ * @property int $id
+ * @property string $label
+ * @property int|null $product_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductPrice[] $prices
+ * @property-read int|null $prices_count
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductVariant newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductVariant newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductVariant query()
+ */
+	class ProductVariant extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -157,6 +197,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $is_admin
+ * @property string|null $avatar
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders

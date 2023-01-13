@@ -7,17 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $guarded = [];
+  protected $guarded = [];
 
-    public function cities()
-    {
-        return $this->belongsToMany(City::class, 'city_product_category', 'product_category_id', 'city_id');
+  public function scopeAvailableInCity($query, $city)
+  {
+    return $query->whereHas('cities', function ($cityQuery) use ($city) {
+      $cityQuery->where('city_id', $city);
+    });
+  }
+
+  public function scopePublishedProducts($query, $limit)
+  {
+    $products = $query->with('products', function ($productQuery) {
+      $productQuery->where('published', 1);
+    })->latest();
+
+    if ($limit) {
+      $products->limit($limit);
     }
 
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, 'product_product_category', 'product_category_id', 'product_id');
-    }
+    return $products;
+  }
+
+  public function cities()
+  {
+    return $this->belongsToMany(City::class, 'city_product_category', 'product_category_id', 'city_id');
+  }
+
+  public function products()
+  {
+    return $this->belongsToMany(Product::class, 'product_product_category', 'product_category_id', 'product_id');
+  }
 }

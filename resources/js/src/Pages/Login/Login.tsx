@@ -9,6 +9,7 @@ import { login } from "@/src/redux/authSlice";
 import { toast } from "react-toastify";
 import { isCustomAxisError } from "@/src/helpers/axiosErrorGrabber";
 import { BASE_FOR_AUTHED_REDIRECT } from "@/src/components/ProtectedRoute/ProtectedRoute";
+import { AuthService } from "@/src/services";
 
 const LoginSchema = yup
   .object({

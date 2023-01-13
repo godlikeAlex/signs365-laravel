@@ -11,53 +11,54 @@ use Illuminate\Queue\SerializesModels;
 
 class ResetPassword extends Mailable
 {
-    use Queueable, SerializesModels;
-    public $resetUrl;
+  use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($resetUrl)
-    {
-        $this->resetUrl = $resetUrl;
-    }
+  public $resetUrl;
 
-    /**
-     * Get the message envelope.
-     *
-     * @return \Illuminate\Mail\Mailables\Envelope
-     */
-    public function envelope()
-    {
-        return new Envelope(
-            subject: 'Reset Password',
-        );
-    }
+  /**
+   * Create a new message instance.
+   *
+   * @return void
+   */
+  public function __construct($resetUrl)
+  {
+    $this->resetUrl = $resetUrl;
+  }
 
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            markdown: 'emails.reset-password',
-            with: [
-                'url' => $this->resetUrl,
-            ],
-        );
-    }
+  /**
+   * Get the message envelope.
+   *
+   * @return Envelope
+   */
+  public function envelope()
+  {
+    return new Envelope(
+      subject: 'Reset Password',
+    );
+  }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
-    public function attachments()
-    {
-        return [];
-    }
+  /**
+   * Get the message content definition.
+   *
+   * @return Content
+   */
+  public function content()
+  {
+    return new Content(
+      markdown: 'emails.reset-password',
+      with: [
+        'url' => $this->resetUrl,
+      ],
+    );
+  }
+
+  /**
+   * Get the attachments for the message.
+   *
+   * @return array
+   */
+  public function attachments()
+  {
+    return [];
+  }
 }

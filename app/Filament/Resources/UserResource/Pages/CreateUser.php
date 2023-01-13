@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends CreateRecord
 {
-    protected static string $resource = UserResource::class;
+  protected static string $resource = UserResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        if ($data['password']) {
-            $data['password'] = Hash::make($data['password']);
-        }
-
-        return $data;
+  protected function mutateFormDataBeforeCreate(array $data): array
+  {
+    if ($data['password']) {
+      $data['password'] = Hash::make($data['password']);
     }
+
+    return $data;
+  }
 }

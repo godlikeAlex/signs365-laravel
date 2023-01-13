@@ -9,12 +9,12 @@ use JetBrains\PhpStorm\NoReturn;
 
 class ManageCities extends ManageRecords
 {
-    protected static string $resource = CityResource::class;
+  protected static string $resource = CityResource::class;
 
-    protected function getActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
+  protected function getActions(): array
+  {
+    return [
+      Actions\CreateAction::make(),
+    ];
+  }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetRequest;
 use App\Mail\ResetPassword;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,65 +15,65 @@ use Illuminate\Support\Str;
 
 class ForgotPassword extends Controller
 {
-    public function forgot(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email'
-        ]);
+  public function forgot(Request $request)
+  {
+    $request->validate([
+      'email' => 'required|email'
+    ]);
 
-        $email = $request->input('email');
+    $email = $request->input('email');
 
-        if (User::where('email', $email)->doesntExist()) {
-            return response([
-                'error' => 'User doen\'t exists!'
-            ], 400);
-        }
-
-        try {
-            $token = Str::random(10);
-
-            DB::table('password_resets')->insert([
-                'email' => $email,
-                'token' => $token
-            ]);
-
-            $appUrl = env('APP_URL');
-
-            Mail::to($email)
-                ->later(
-                    now(),
-                    new ResetPassword("{$appUrl}/auth/reset-password/{$token}")
-                );
-
-            return response([
-                'message' => 'success'
-            ]);
-        } catch (\Exception $error) {
-            return response(['error' => $error->getMessage()], 400);
-        }
+    if (User::where('email', $email)->doesntExist()) {
+      return response([
+        'error' => 'User doen\'t exists!'
+      ], 400);
     }
 
-    public function reset(ResetRequest $request)
-    {
-        $token = $request->input('token');
+    try {
+      $token = Str::random(10);
 
-        if (!$passwordResets = DB::table('password_resets')->where('token', $token)->first()) {
-            return response([
-                'error' => 'Invalid token!'
-            ], 400);
-        }
+      DB::table('password_resets')->insert([
+        'email' => $email,
+        'token' => $token
+      ]);
 
-        if (!$user = User::where('email', $passwordResets->email)->first()) {
-            return response()->json([
-                'error' => 'User doesn\'t exists'
-            ], 404);
-        }
+      $appUrl = env('APP_URL');
 
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
-        DB::table('password_resets')->where('token', $token)->delete();
+      Mail::to($email)
+        ->later(
+          now(),
+          new ResetPassword("{$appUrl}/auth/reset-password/{$token}")
+        );
 
-        return response()
-            ->json(['message' => 'success']);
+      return response([
+        'message' => 'success'
+      ]);
+    } catch (Exception $error) {
+      return response(['error' => $error->getMessage()], 400);
     }
+  }
+
+  public function reset(ResetRequest $request)
+  {
+    $token = $request->input('token');
+
+    if (!$passwordResets = DB::table('password_resets')->where('token', $token)->first()) {
+      return response([
+        'error' => 'Invalid token!'
+      ], 400);
+    }
+
+    if (!$user = User::where('email', $passwordResets->email)->first()) {
+      return response()->json([
+        'error' => 'User doesn\'t exists'
+      ], 404);
+    }
+
+    $user->password = Hash::make($request->input('password'));
+    $user->save();
+    DB::table('password_resets')->where('token', $token)->delete();
+
+    return response()
+      ->json(['message' => 'success']);
+  }
 }

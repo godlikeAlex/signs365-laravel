@@ -8,11 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateProductCategory extends CreateRecord
 {
-    protected static string $resource = ProductCategoryResource::class;
-    protected static ?string $title = 'Create Category';
+  protected static string $resource = ProductCategoryResource::class;
+  protected static ?string $title = 'Create Category';
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
+  protected function getRedirectUrl(): string
+  {
+    return $this->getResource()::getUrl('index');
+  }
 }

@@ -18,7 +18,7 @@ class CreateOrderItemsTable extends Migration
 
             $table->foreignId('order_id')->nullable();
             $table->foreignId('product_id')->nullable();
-            $table->foreignId('product_price_id')->nullable();
+            $table->foreignId('product_variant_id')->nullable();
 
             $table->integer('quantity')->default(1);
             $table->integer('price');
@@ -27,9 +27,9 @@ class CreateOrderItemsTable extends Migration
                 ->references('id')
                 ->on('products')
                 ->onDelete('cascade');
-            $table->foreign('product_price_id')
+            $table->foreign('product_variant_id')
                 ->references('id')
-                ->on('product_prices')
+                ->on('variants')
                 ->onDelete('cascade');
             $table->foreign('order_id')
                 ->references('id')

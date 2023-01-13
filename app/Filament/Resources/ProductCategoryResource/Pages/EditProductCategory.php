@@ -9,18 +9,18 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditProductCategory extends EditRecord
 {
-    protected static string $resource = ProductCategoryResource::class;
-    protected static ?string $title = 'Edit Category';
+  protected static string $resource = ProductCategoryResource::class;
+  protected static ?string $title = 'Edit Category';
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
+  protected function getRedirectUrl(): string
+  {
+    return $this->getResource()::getUrl('index');
+  }
 
-    protected function getActions(): array
-    {
-        return [
-            Actions\DeleteAction::make(),
-        ];
-    }
+  protected function getActions(): array
+  {
+    return [
+      Actions\DeleteAction::make(),
+    ];
+  }
 }

@@ -11,35 +11,36 @@ use ImageOptimizer;
 
 class UserController extends Controller
 {
-    public function edit(EditProfileRequest $request) {
-        $user = $request->user();
+  public function edit(EditProfileRequest $request)
+  {
+    $user = $request->user();
 
-        $user->update($request->only(['name', 'email']));
+    $user->update($request->only(['name', 'email']));
 
-        if ($request->has('avatar')) {
-            $path = $request->file('avatar')->store('users','public');
+    if ($request->has('avatar')) {
+      $path = $request->file('avatar')->store('users', 'public');
 
-            $user->update(['avatar' => $path]);
-        }
-
-
-        return $user;
+      $user->update(['avatar' => $path]);
     }
-    
-    public function changePassword(ChangePasswordRequest $request)
-    {
-        $user = $request->user();
-     
-        if (Hash::check($request->input('oldPassword'), $user->password)) {
-            $user->update([
-                'password' => Hash::make($request->input('newPassword'))
-            ]);
-            return response(['ok' => true]);
-        } else {
 
-            return response([
-                'error' => 'The current password is incorrect.'
-            ], 400);
-        }
+
+    return $user;
+  }
+
+  public function changePassword(ChangePasswordRequest $request)
+  {
+    $user = $request->user();
+
+    if (Hash::check($request->input('oldPassword'), $user->password)) {
+      $user->update([
+        'password' => Hash::make($request->input('newPassword'))
+      ]);
+      return response(['ok' => true]);
+    } else {
+
+      return response([
+        'error' => 'The current password is incorrect.'
+      ], 400);
     }
+  }
 }

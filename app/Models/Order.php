@@ -10,37 +10,38 @@ use Illuminate\Support\Str;
 
 class Order extends Model
 {
-    use HasFactory;
-    protected $guarded = [];
+  use HasFactory;
 
-    static $ORDERS_STATUSES = [
-        'pending' => 'Pending',
-        'approved' => 'Approved',
-        'process' => 'Process',
-        'shipping' => 'Shipping',
-        'completed' => 'Completed'
-    ];
+  protected $guarded = [];
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($order) {
-            $order['uuid'] = (string) Str::uuid();
-        });
-    }
+  static $ORDERS_STATUSES = [
+    'pending' => 'Pending',
+    'approved' => 'Approved',
+    'process' => 'Process',
+    'shipping' => 'Shipping',
+    'completed' => 'Completed'
+  ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+  protected static function boot()
+  {
+    parent::boot();
+    static::creating(function ($order) {
+      $order['uuid'] = (string)Str::uuid();
+    });
+  }
 
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
-    }
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class);
+  }
 
-    public function orderItems(): HasMany
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+  public function city(): BelongsTo
+  {
+    return $this->belongsTo(City::class);
+  }
+
+  public function orderItems(): HasMany
+  {
+    return $this->hasMany(OrderItem::class);
+  }
 }
