@@ -44,8 +44,14 @@ export interface ICartItem {
 }
 
 export interface ICart {
-  cart: ICartItem[];
+  items: ICartItem[];
   tax: number;
   total: number;
   total_with_tax: number;
+}
+
+export interface IProductVaraint {
+  id: number;
+  label: string;
+  price: number;
 }

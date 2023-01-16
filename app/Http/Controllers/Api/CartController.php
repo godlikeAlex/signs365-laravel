@@ -13,11 +13,27 @@ use Darryldecode\Cart\CartCondition;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
+  protected $cart;
+
+  public function __construct(Request $request)
+  {
+    if (Cookie::has('cart')) {
+      $this->cart = Cookie::get('cart');
+    } else {
+      $uuid = Str::uuid();
+      $cookie = Cookie::forever(name: 'cart', value: $uuid, httpOnly: true);
+      
+      Cookie::queue($cookie);
+
+      $this->cart = $uuid;
+    }
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -27,10 +43,6 @@ class CartController extends Controller
     try {
       // Request get city from middleware.
       $city = City::where('id', $request->get('city'))->firstOrFail();
-
-      if (!Session::has('cart_id')) {
-        Session::put('cart_id', Str::uuid());
-      }
 
       return \response()->json($this->formatCart($city));
     } catch (ModelNotFoundException $e) {
@@ -51,7 +63,7 @@ class CartController extends Controller
     try {
       $data = $request->validated();
 
-      $city = City::where('domain', $data['city'])->firstOrFail();
+      $city = City::where('id', $request->get('city'))->firstOrFail();
 
       /** @var Product $product */
       $product = $city->products()->find($data['product_id']);
@@ -71,14 +83,13 @@ class CartController extends Controller
         ->firstOrFail();
 
 
-      if (!Session::has('cart_id')) {
-        Session::put('cart_id', Str::uuid());
-      }
-
-      \Cart::session(Session::get('cart_id'));
+      \Cart::session($this->cart);
 
       $options = array(
-        'product_variant_id' => $productVariant->id
+        'product_variant' => [
+          'id' => $productVariant->id,
+          'label' => $productVariant->label
+        ]
       );
 
       $id = md5($product->id . serialize($options));
@@ -92,11 +103,7 @@ class CartController extends Controller
         'associatedModel' => $product
       ));
 
-      return \Cart::getContent($product->id);
-
-//            return $this->updateOrAddToCart($product->id);
-
-
+      return \response()->json($this->formatCart($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
         'error' => "This product does'nt exists"
@@ -140,7 +147,7 @@ class CartController extends Controller
 
   private function formatCart($city)
   {
-    \Cart::session(Session::get('cart_id'));
+    \Cart::session($this->cart);
 
     $cart = \Cart::getContent()->map(function ($cart_item) use ($city) {
       $product = Product::whereHas('cities', function ($query) use ($city) {
@@ -149,9 +156,9 @@ class CartController extends Controller
         ->find($cart_item->associatedModel->id);
 
       if ($product) {
-        $variantID = $cart_item->attributes->get('product_variant_id');
+        $variant = $cart_item->attributes->get('product_variant');
 
-        $variant = $product->variants()->find($variantID);
+        $variant = $product->variants()->find($variant['id']);
 
         if ($variant) {
           $productPrice = $variant->prices()
@@ -193,7 +200,7 @@ class CartController extends Controller
     $tax = $condition->getCalculatedValue($sub_total);
 
     return [
-      'cart' => $cart->values(),
+      'items' => $cart->values(),
       'tax' => $tax,
       'total' => $sub_total,
       'total_with_tax' => $sub_total + $tax

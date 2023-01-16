@@ -41,4 +41,9 @@ class ProductVariant extends Model
   {
     return $this->belongsTo(Product::class);
   }
+
+  public function price(): HasOne 
+  {
+    return $this->hasOne(ProductPrice::class);
+  }
 }

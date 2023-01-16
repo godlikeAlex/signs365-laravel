@@ -70,23 +70,20 @@ class AuthController extends Controller
     $user = $request->user();
     $token = $user->createToken('api')->plainTextToken;
 
-    $cookie = cookie()
-      ->forever(name: 'token', value: $token, httpOnly: true, raw: true);
-
     $request->session()->regenerate();
 
     return response()->json([
       'token' => $token,
       'user' => $user
-    ])->cookie($cookie);
+    ]);
   }
 
   public function logout(Request $request)
   {
     Auth::logout();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    // $request->session()->invalidate();
+    // $request->session()->regenerateToken();
 
     return;
   }

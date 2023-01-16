@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\GetSanctumTokenFromCookies;
 use Illuminate\Http\Request;
@@ -25,6 +26,10 @@ Route::middleware('handleCityFromRequest')->group(function () {
 
     Route::post('add', [\App\Http\Controllers\Api\CartController::class, 'addToCart']);
   });
+});
+
+Route::middleware('handleCityFromRequest')->prefix('products')->group(function () {
+  Route::get('{product}/variants/', [ProductController::class, 'productVariants']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

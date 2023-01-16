@@ -3,7 +3,7 @@ import { ICart } from "../types/models";
 
 export interface AddToCartParams {
   product_id: number;
-  city: string;
+  city?: string;
   product_variant_id: number;
 }
 

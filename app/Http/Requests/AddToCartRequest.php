@@ -26,7 +26,7 @@ class AddToCartRequest extends FormRequest
     return [
       'product_id' => 'required',
       'product_variant_id' => 'required',
-      'city' => 'required',
+      'city' => 'nullable',
     ];
   }
 }

@@ -1,3 +1,5 @@
+import CartItem from "./CartItem";
+import CartList from "./CartList";
 import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
@@ -10,6 +12,8 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   VariantsProductPlaceholder,
+  CartItem,
+  CartList,
   Routing,
   Layout,
   ProtectedRoute,

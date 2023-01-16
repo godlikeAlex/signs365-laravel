@@ -17,11 +17,12 @@ function App() {
     const initApp = async () => {
       try {
         await dispatch(getUserByToken()).unwrap();
-        await dispatch(initCart()).unwrap();
         setAppLoaded(true);
       } catch (error) {
         setAppLoaded(true);
       }
+
+      await dispatch(initCart()).unwrap();
     };
 
     initApp();
