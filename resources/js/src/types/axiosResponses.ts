@@ -1,4 +1,4 @@
-import { Domain, User } from "./models";
+import { Domain, ICategoryWithProducts, User } from "./models";
 
 export interface LoginResponse {
   token: string;
@@ -7,4 +7,8 @@ export interface LoginResponse {
 
 export interface DomainsResponse {
   data: Domain[];
+}
+
+export interface ICategoriesWithProducts {
+  categories: ICategoryWithProducts[];
 }

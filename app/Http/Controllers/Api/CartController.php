@@ -25,14 +25,18 @@ class CartController extends Controller
   public function index(GetCartRequest $request)
   {
     try {
-      $data = $request->validated();
+      // Request get city from middleware.
+      $city = City::where('id', $request->get('city'))->firstOrFail();
 
-      $city = City::where('domain', $data['city'])->firstOrFail();
+      if (!Session::has('cart_id')) {
+        Session::put('cart_id', Str::uuid());
+      }
 
       return \response()->json($this->formatCart($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
-        'error' => "This cart does'nt exists"
+        'error' => "This cart does'nt exists",
+        'throwed_by' => $e
       ], 404);
     }
   }
@@ -189,7 +193,7 @@ class CartController extends Controller
     $tax = $condition->getCalculatedValue($sub_total);
 
     return [
-      'cart' => $cart,
+      'cart' => $cart->values(),
       'tax' => $tax,
       'total' => $sub_total,
       'total_with_tax' => $sub_total + $tax

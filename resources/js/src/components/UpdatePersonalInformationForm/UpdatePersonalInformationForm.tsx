@@ -54,6 +54,7 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
 
       dispatch(updateUser(editedUser));
       setIsSubmiting(false);
+      toast("Profile updated!", { type: "success" });
 
       reset({
         name: editedUser.name,

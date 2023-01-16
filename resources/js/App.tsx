@@ -7,6 +7,7 @@ import { useAppDispatch } from "./src/hooks";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserByToken } from "./src/redux/authSlice";
 import { Sugar } from "react-preloaders";
+import { initCart } from "./src/redux/cartSlice";
 
 function App() {
   const [appLoaded, setAppLoaded] = useState(false);
@@ -16,6 +17,7 @@ function App() {
     const initApp = async () => {
       try {
         await dispatch(getUserByToken()).unwrap();
+        await dispatch(initCart()).unwrap();
         setAppLoaded(true);
       } catch (error) {
         setAppLoaded(true);
@@ -27,10 +29,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Menu />
-        {appLoaded ? <Routing /> : null}
-      </BrowserRouter>
+      <BrowserRouter>{appLoaded ? <Routing /> : null}</BrowserRouter>
 
       <Sugar customLoading={!appLoaded} />
 

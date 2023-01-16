@@ -24,7 +24,7 @@ class GetCartRequest extends FormRequest
   public function rules()
   {
     return [
-      'city' => 'required'
+      'city' => 'nullable'
     ];
   }
 }

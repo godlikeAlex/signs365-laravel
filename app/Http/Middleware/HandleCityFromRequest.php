@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class HandleCityFromRequest
 {
@@ -19,10 +20,10 @@ class HandleCityFromRequest
    */
   public function handle(Request $request, Closure $next)
   {
-    $referer = parse_url(
-      $request->headers->get('Referer'),
-      PHP_URL_HOST
-    );
+    $referer = $request->headers->get('Referer');
+
+    $referer = Str::replaceFirst('https://', '', $referer);
+    $referer = Str::replaceFirst('http://', '', $referer);
 
     if ($request->has('city')) {
       $request->attributes->add([
@@ -40,7 +41,9 @@ class HandleCityFromRequest
           'city' => $city->id
         ]);
       } else {
-        abort(422, 'City not found! Please provide the city');
+        $request->attributes->add([
+          'city' => City::first()->id
+        ]);
       }
     } else {
       abort(422, 'City is required!');

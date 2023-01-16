@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+
+.headless-bg {
+  background-color: rgba(0, 0, 0, 0.255);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headless-popup {
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  width: 900px;
+  height: 500px;
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px 0px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.images-headless {
+  height: 100%;
+  flex: 50%;
+  background-color: red;
+  /* position: absolute; */
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.headless-content {
+  padding: 24px;
+}
