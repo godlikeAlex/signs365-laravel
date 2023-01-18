@@ -10,7 +10,7 @@ const CartList: React.FC<Props> = ({ items }: Props) => {
   return (
     <>
       {items.map((item) => (
-        <CartItem {...item} />
+        <CartItem {...item} key={item.id} />
       ))}
     </>
   );

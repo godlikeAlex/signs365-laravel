@@ -25,6 +25,9 @@ Route::middleware('handleCityFromRequest')->group(function () {
     Route::get('', [\App\Http\Controllers\Api\CartController::class, 'index']);
 
     Route::post('add', [\App\Http\Controllers\Api\CartController::class, 'addToCart']);
+    Route::post('update-quantity', [\App\Http\Controllers\Api\CartController::class, 'updateQuantity']);
+    Route::post('remove-item', [\App\Http\Controllers\Api\CartController::class, 'removeItem']);
+    Route::post('clear', [\App\Http\Controllers\Api\CartController::class, 'clear']);
   });
 });
 

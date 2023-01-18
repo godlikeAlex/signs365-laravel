@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddToCartRequest;
 use App\Http\Requests\Installers\GetCartRequest;
+use App\Http\Requests\RemoveItemFromCartRequest;
+use App\Http\Requests\UpdateQuantityRequest;
 use App\Http\Resources\CartResource;
 use App\Models\City;
 use App\Models\Product;
@@ -112,37 +114,81 @@ class CartController extends Controller
   }
 
   /**
-   * Display the specified resource.
+   * Update Quantity
    *
    * @param int $id
    * @return Response
    */
-  public function show($id)
+  public function updateQuantity(UpdateQuantityRequest $request)
   {
-    //
+    try {
+      $city = City::where('id', $request->get('city'))->firstOrFail();
+
+      \Cart::session($this->cart);
+      
+      $itemExist = \Cart::has($request->input('item_id'));
+
+      if (!$itemExist) {
+        return response()->json([
+          'error' => "This cart item does'nt exists"
+        ], 404);
+      }
+
+      \Cart::update($request->input('item_id'), array(
+        'quantity' => $request->input('type') === 'reduce' ? -1 : +1
+      ));
+
+      return \response()->json($this->formatCart($city));
+    } catch (ModelNotFoundException $e) {
+      return response()->json([
+        'error' => "This product does'nt exists"
+      ], 404);
+    }
   }
 
-  /**
-   * Update the specified resource in storage.
+    /**
+   * Remove item from cart.
    *
-   * @param Request $request
-   * @param int $id
    * @return Response
    */
-  public function update(Request $request, $id)
+  public function removeItem(RemoveItemFromCartRequest $request)
   {
-    //
+    try {
+      $city = City::where('id', $request->get('city'))->firstOrFail();
+
+      \Cart::session($this->cart);
+      
+      $itemExist = \Cart::has($request->input('item_id'));
+
+      if (!$itemExist) {
+        return response()->json([
+          'error' => "This cart item does'nt exists"
+        ], 404);
+      }
+
+      \Cart::remove($request->input('item_id'));
+
+      return \response()->json($this->formatCart($city));
+    } catch (ModelNotFoundException $e) {
+      return response()->json([
+        'error' => "This product does'nt exists"
+      ], 404);
+    }
   }
 
+
   /**
-   * Remove the specified resource from storage.
+   * Destroy the cart.
    *
-   * @param int $id
    * @return Response
    */
-  public function destroy($id)
+  public function clear()
   {
-    //
+    \Cart::session($this->cart);
+
+    \Cart::clear();
+
+    return response()->json(['ok' => true]);
   }
 
   private function formatCart($city)
@@ -200,7 +246,7 @@ class CartController extends Controller
     $tax = $condition->getCalculatedValue($sub_total);
 
     return [
-      'items' => $cart->values(),
+      'items' => $cart->sort()->values(),
       'tax' => $tax,
       'total' => $sub_total,
       'total_with_tax' => $sub_total + $tax

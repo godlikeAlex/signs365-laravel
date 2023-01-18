@@ -38,7 +38,10 @@ export interface ICartItem {
   quantity: number;
   disabled: boolean;
   attributes: {
-    product_variant_id: number;
+    product_variant: {
+      id: number;
+      label: string;
+    };
   };
   associatedModel: IProduct;
 }
