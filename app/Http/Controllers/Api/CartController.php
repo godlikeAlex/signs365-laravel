@@ -18,6 +18,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
+use App\Services\Cart\Service as CartService;
+
 class CartController extends Controller
 {
   protected $cart;
@@ -25,14 +27,14 @@ class CartController extends Controller
   public function __construct(Request $request)
   {
     if (Cookie::has('cart')) {
-      $this->cart = Cookie::get('cart');
+      $this->cart = new CartService(Cookie::get('cart'));
     } else {
       $uuid = Str::uuid();
       $cookie = Cookie::forever(name: 'cart', value: $uuid, httpOnly: true);
       
       Cookie::queue($cookie);
 
-      $this->cart = $uuid;
+      $this->cart = new CartService($uuid);
     }
   }
 
@@ -46,7 +48,7 @@ class CartController extends Controller
       // Request get city from middleware.
       $city = City::where('id', $request->get('city'))->firstOrFail();
 
-      return \response()->json($this->formatCart($city));
+      return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
         'error' => "This cart does'nt exists",
@@ -76,36 +78,9 @@ class CartController extends Controller
         ], 404);
       }
 
-      $productVariant = $product->variants()
-        ->findOrFail($data['product_variant_id']);
+      $this->cart->add($product, $request->input('product_variant_id'), $city->id);
 
-      $productPrice = $productVariant
-        ->prices()
-        ->where('city_id', $city->id)
-        ->firstOrFail();
-
-
-      \Cart::session($this->cart);
-
-      $options = array(
-        'product_variant' => [
-          'id' => $productVariant->id,
-          'label' => $productVariant->label
-        ]
-      );
-
-      $id = md5($product->id . serialize($options));
-
-      \Cart::add(array(
-        'id' => $id,
-        'name' => $product->title,
-        'quantity' => 1,
-        'price' => $productPrice->price,
-        'attributes' => $options,
-        'associatedModel' => $product
-      ));
-
-      return \response()->json($this->formatCart($city));
+      return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
         'error' => "This product does'nt exists"
@@ -124,21 +99,14 @@ class CartController extends Controller
     try {
       $city = City::where('id', $request->get('city'))->firstOrFail();
 
-      \Cart::session($this->cart);
-      
-      $itemExist = \Cart::has($request->input('item_id'));
 
-      if (!$itemExist) {
-        return response()->json([
-          'error' => "This cart item does'nt exists"
-        ], 404);
+      if ($request->input('type') === 'add') {
+        $this->cart->addQuantity($request->input('item_id'));
+      } else {
+        $this->cart->reduceQuantity($request->input('item_id'));
       }
 
-      \Cart::update($request->input('item_id'), array(
-        'quantity' => $request->input('type') === 'reduce' ? -1 : +1
-      ));
-
-      return \response()->json($this->formatCart($city));
+      return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
         'error' => "This product does'nt exists"
@@ -156,19 +124,9 @@ class CartController extends Controller
     try {
       $city = City::where('id', $request->get('city'))->firstOrFail();
 
-      \Cart::session($this->cart);
-      
-      $itemExist = \Cart::has($request->input('item_id'));
+      $this->cart->removeItem($request->input('item_id'));
 
-      if (!$itemExist) {
-        return response()->json([
-          'error' => "This cart item does'nt exists"
-        ], 404);
-      }
-
-      \Cart::remove($request->input('item_id'));
-
-      return \response()->json($this->formatCart($city));
+      return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json([
         'error' => "This product does'nt exists"
@@ -184,72 +142,8 @@ class CartController extends Controller
    */
   public function clear()
   {
-    \Cart::session($this->cart);
-
-    \Cart::clear();
+    $this->cart->instance()->clear();
 
     return response()->json(['ok' => true]);
-  }
-
-  private function formatCart($city)
-  {
-    \Cart::session($this->cart);
-
-    $cart = \Cart::getContent()->map(function ($cart_item) use ($city) {
-      $product = Product::whereHas('cities', function ($query) use ($city) {
-        return $query->where('city_id', $city->id);
-      })
-        ->find($cart_item->associatedModel->id);
-
-      if ($product) {
-        $variant = $cart_item->attributes->get('product_variant');
-
-        $variant = $product->variants()->find($variant['id']);
-
-        if ($variant) {
-          $productPrice = $variant->prices()
-            ->where('city_id', $city->id)->first();
-
-          \Cart::update($cart_item->id, [
-            'price' => $productPrice->price
-          ]);
-
-          $cart_item['disabled'] = false;
-        } else {
-          $cart_item['disabled'] = true;
-        }
-      } else {
-        $cart_item['disabled'] = true;
-      }
-
-      return $cart_item;
-    });
-
-    $createdTaxCondition = new CartCondition(array(
-      'name' => "TAX",
-      'type' => 'tax',
-      'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
-      'value' => '20%',
-    ));
-
-    \Cart::condition($createdTaxCondition);
-
-    $sub_total = $cart->reduce(function ($carry, $item) {
-      if ($item['disabled'] === false) {
-        return $carry + $item->getPriceSumWithConditions();
-      } else {
-        return $carry;
-      }
-    }, 0);
-
-    $condition = \Cart::getCondition('TAX');
-    $tax = $condition->getCalculatedValue($sub_total);
-
-    return [
-      'items' => $cart->sort()->values(),
-      'tax' => $tax,
-      'total' => $sub_total,
-      'total_with_tax' => $sub_total + $tax
-    ];
   }
 }

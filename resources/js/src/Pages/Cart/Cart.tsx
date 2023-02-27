@@ -2,12 +2,14 @@ import { CartList } from "@/src/components";
 import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { clearCart } from "@/src/redux/cartSlice";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 interface CartProps {}
 
 const Cart: React.FC<CartProps> = ({}: CartProps) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { cart, loaded } = useAppSelector((state) => state.cart);
 
   const handleClearCart = async () => {
@@ -32,6 +34,8 @@ const Cart: React.FC<CartProps> = ({}: CartProps) => {
         <h1>Shopping cart:</h1>
         <button onClick={handleClearCart}>Clear Cart</button>
         <CartList items={cart.items} />
+
+        <button onClick={() => navigate("checkout")}>Checkout</button>
       </>
     );
   };

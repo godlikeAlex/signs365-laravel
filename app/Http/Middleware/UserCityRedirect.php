@@ -52,6 +52,9 @@ class UserCityRedirect
         return abort(404);
       }
     } else {
+      if (!$subDomainToRedirect) {
+        return $next($request);
+      }
       return redirect()->away($this->generateUrl($request, $subDomainToRedirect), 302);
     }
 

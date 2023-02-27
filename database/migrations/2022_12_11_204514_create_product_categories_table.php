@@ -20,6 +20,7 @@ class CreateProductCategoriesTable extends Migration
             $table->string('slug')->unique();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

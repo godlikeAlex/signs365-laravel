@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductVariant extends Model
 {
-  use HasFactory;
+  use HasFactory, SoftDeletes;
 
   protected $guarded = [];
 
@@ -24,9 +25,9 @@ class ProductVariant extends Model
 
       foreach ($product->cities as $city) {
         $model->prices()->create([
-          'city_id' => $city->id,
-          'product_id' => $product->id,
-          'price' => 0
+          "city_id" => $city->id,
+          "product_id" => $product->id,
+          "price" => 0,
         ]);
       }
     });
@@ -34,7 +35,7 @@ class ProductVariant extends Model
 
   public function prices(): HasMany
   {
-    return $this->hasMany(ProductPrice::class);
+    return $this->hasMany(ProductPrice::class)->withTrashed();
   }
 
   public function product(): BelongsTo
@@ -42,8 +43,8 @@ class ProductVariant extends Model
     return $this->belongsTo(Product::class);
   }
 
-  public function price(): HasOne 
+  public function price(): HasOne
   {
-    return $this->hasOne(ProductPrice::class);
+    return $this->hasOne(ProductPrice::class)->withTrashed();
   }
 }

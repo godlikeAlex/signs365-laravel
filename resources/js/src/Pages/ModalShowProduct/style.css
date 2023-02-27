@@ -10,6 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9;
 }
 
 .headless-popup {
@@ -17,13 +18,7 @@
   border-radius: 1rem;
   overflow: hidden;
   width: 900px;
-  height: 500px;
   position: relative;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0px 0px;
-  font-family: "Open Sans", sans-serif;
 }
 
 .images-headless {

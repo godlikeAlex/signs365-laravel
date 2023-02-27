@@ -7,10 +7,12 @@ import ResetPassword from "./ResetPassword";
 import EditProfile from "./EditProfile";
 import Cart from "./Cart";
 import ModalShowProduct from "./ModalShowProduct";
+import Checkout from "./Checkout";
 
 export {
   Home,
   ModalShowProduct,
+  Checkout,
   Cart,
   Login,
   Register,

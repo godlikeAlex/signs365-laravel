@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->boolean('with_checkout')->default(true);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

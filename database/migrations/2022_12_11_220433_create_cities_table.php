@@ -20,6 +20,7 @@ class CreateCitiesTable extends Migration
             $table->string('title');
             $table->float('tax', 8, 4);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

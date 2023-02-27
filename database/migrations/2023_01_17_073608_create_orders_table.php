@@ -35,6 +35,7 @@ class CreateOrdersTable extends Migration
                 ->on('cities')
                 ->onDelete('set null');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

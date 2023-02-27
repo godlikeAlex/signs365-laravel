@@ -27,7 +27,7 @@ class CreateProductPricesTable extends Migration
 
             $table->unique(['city_id', 'product_variant_id']);
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
