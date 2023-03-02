@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\ProductPrice;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductVaraintResource extends JsonResource
+class CartItemsResource extends JsonResource
 {
   /**
    * Transform the resource into an array.
@@ -17,8 +16,13 @@ class ProductVaraintResource extends JsonResource
   {
     return [
       "id" => $this->id,
-      "label" => $this->label,
-      "price" => ProductPriceResource::make($this->price)->price / 100,
+      "name" => $this->name,
+      "price" => $this->price / 100,
+      "quantity" => $this->quantity,
+      "attributes" => $this->attributes,
+      "conditions" => $this->conditions,
+      "associatedModel" => $this->associatedModel,
+      "disabled" => $this->disabled,
     ];
   }
 }

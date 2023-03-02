@@ -11,10 +11,15 @@ class CategoryController extends Controller
 {
   public function index(Request $request)
   {
-    $categoriesWithProducts = ProductCategory::availableInCity($request->get('city'))
+    $categoriesWithProducts = ProductCategory::availableInCity(
+      $request->get("city")
+    )
+      ->orderBy("id", "asc")
       ->publishedProducts(6)
       ->get();
 
-    return ['categories' => CategoryResource::collection($categoriesWithProducts)];
+    return [
+      "categories" => CategoryResource::collection($categoriesWithProducts),
+    ];
   }
 }

@@ -19,6 +19,14 @@ class Product extends Model
     "images" => "array",
   ];
 
+  /**
+   * Get the route key for the model.
+   */
+  public function getRouteKeyName(): string
+  {
+    return "slug";
+  }
+
   public function cities(): BelongsToMany
   {
     return $this->belongsToMany(

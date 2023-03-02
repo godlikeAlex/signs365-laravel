@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { getUserByToken } from "./src/redux/authSlice";
 import { Sugar } from "react-preloaders";
 import { initCart } from "./src/redux/cartSlice";
+import { getCategoriesWithProducts } from "./src/redux/appSlice";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function App() {
   const [appLoaded, setAppLoaded] = useState(false);
@@ -17,12 +19,13 @@ function App() {
     const initApp = async () => {
       try {
         await dispatch(getUserByToken()).unwrap();
-        setAppLoaded(true);
       } catch (error) {
-        setAppLoaded(true);
+        console.log(error);
       }
-
+      await dispatch(getCategoriesWithProducts()).unwrap();
       await dispatch(initCart()).unwrap();
+
+      setAppLoaded(true);
     };
 
     initApp();

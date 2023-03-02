@@ -57,6 +57,7 @@ Route::middleware("handleCityFromRequest")->group(function () {
 Route::middleware("handleCityFromRequest")
   ->prefix("products")
   ->group(function () {
+    Route::get("{product}", [ProductController::class, "product"]);
     Route::get("{product}/variants/", [
       ProductController::class,
       "productVariants",

@@ -43,6 +43,14 @@ class ProductCategoryResource extends Resource
         ->multiple()
         ->relationship("cities", "title")
         ->preload(),
+      Forms\Components\FileUpload::make("icon")
+        ->label("Icon for menu")
+        ->helperText(
+          "It is best to upload svg, if it is not available, load png 256x256. The most important thing is that the icon fit the entire size"
+        ),
+      Forms\Components\Toggle::make("show_on_home")
+        ->label("Show on home page in menu?")
+        ->columnSpanFull(),
     ]);
   }
 
@@ -53,6 +61,7 @@ class ProductCategoryResource extends Resource
         Tables\Columns\TextColumn::make("id"),
         Tables\Columns\TextColumn::make("title"),
         Tables\Columns\TextColumn::make("slug"),
+        Tables\Columns\BooleanColumn::make("show_on_home"),
       ])
       ->filters([Tables\Filters\TrashedFilter::make()])
       ->actions([

@@ -44,8 +44,8 @@ const PaymentForm: React.FC<Props> = ({}: Props) => {
   } = useForm<Inputs>({
     resolver: yupResolver(CheckOutSchema),
     defaultValues: {
-      name: user.name ?? "",
-      email: user.email ?? "",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
     },
   });
 
@@ -71,6 +71,55 @@ const PaymentForm: React.FC<Props> = ({}: Props) => {
       setSubmiting(false);
     }
   };
+
+  return (
+    <div>
+      <h3 className="ps-checkout__heading">Billing details</h3>
+      <div className="row">
+        <div className="col-12 col-md-6">
+          {!user ? (
+            <Input
+              {...register("name")}
+              error={errors.name?.message}
+              placeholder={"name"}
+              formType="checkout"
+            />
+          ) : null}
+        </div>
+        <div className="col-12 col-md-6">
+          <div className="ps-checkout__group">
+            <label className="ps-checkout__label">Last name *</label>
+            <input className="ps-input" type="text" />
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="ps-checkout__group">
+            <label className="ps-checkout__label">
+              Company name (optional)
+            </label>
+            <input className="ps-input" type="text" />
+          </div>
+        </div>
+
+        <div className="col-12">
+          <div className="ps-checkout__group">
+            <label className="ps-checkout__label">Order notes (optional)</label>
+            <textarea
+              className="ps-textarea"
+              rows="7"
+              placeholder="Notes about your order, e.g. special notes for delivery."
+            ></textarea>
+          </div>
+        </div>
+
+        <div className="col-12">
+          <PaymentElement
+            options={{ fields: { billingDetails: { address: "never" } } }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

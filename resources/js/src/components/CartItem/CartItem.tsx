@@ -13,6 +13,7 @@ const CartItem: React.FC<Props> = ({
   price,
   id,
   attributes,
+  associatedModel,
 }: Props) => {
   const dispatch = useAppDispatch();
 
@@ -51,6 +52,60 @@ const CartItem: React.FC<Props> = ({
       toast("An error occurred while removing item", { type: "error" });
     }
   };
+
+  return (
+    <tr>
+      <td className="ps-product__remove">
+        <a href="#" onClick={removeItem}>
+          <i className="icon-cross"></i>
+        </a>
+      </td>
+      <td className="ps-product__thumbnail">
+        <a className="ps-product__image">
+          <figure>
+            {associatedModel.images && associatedModel.images.length > 0 ? (
+              <img src={`/storage/${associatedModel.images[0]}`} alt={name} />
+            ) : null}
+          </figure>
+        </a>
+      </td>
+      <td className="ps-product__name">
+        <a href="product1.html">
+          {name}
+          {attributes?.product_variant?.label && (
+            <>
+              <br />
+              {attributes.product_variant.label}
+            </>
+          )}
+        </a>
+      </td>
+      <td className="ps-product__meta">
+        <span className="ps-product__price">${price.toLocaleString()}</span>
+      </td>
+      <td className="ps-product__quantity">
+        <div className="def-number-input number-input safari_only">
+          <button className="minus" onClick={reduceItem}>
+            <i className="icon-minus"></i>
+          </button>
+          <input
+            className="quantity"
+            min="1"
+            name="quantity"
+            value={quantity}
+            type="number"
+            readOnly
+          />
+          <button className="plus" onClick={addItem}>
+            <i className="icon-plus"></i>
+          </button>
+        </div>
+      </td>
+      <td className="ps-product__subtotal">
+        ${(price * quantity).toLocaleString()}
+      </td>
+    </tr>
+  );
 
   return (
     <div style={{ border: "1px solid red" }}>

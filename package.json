@@ -39,6 +39,7 @@
     "laravel-vite-plugin": "^0.7.3",
     "react-content-loader": "^6.2.0",
     "react-hook-form": "^7.41.1",
+    "react-loading-skeleton": "^3.1.1",
     "react-preloaders": "^3.0.3",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.0",

@@ -14,6 +14,8 @@ export interface ICategory {
   id: number;
   title: string;
   slug: string;
+  icon?: string;
+  show_on_home?: null | boolean;
 }
 
 export interface IProduct {
@@ -25,6 +27,7 @@ export interface IProduct {
   published: boolean;
   start_at: number;
   images?: null | string[];
+  categories?: Pick<ICategory, "title" | "slug" | "id">[];
 }
 
 export interface ICategoryWithProducts extends ICategory {

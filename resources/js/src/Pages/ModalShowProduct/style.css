@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
-
+body {
+  /* display: none; */
+}
 .headless-bg {
   background-color: rgba(0, 0, 0, 0.255);
   position: fixed;
@@ -19,6 +21,14 @@
   overflow: hidden;
   width: 900px;
   position: relative;
+}
+
+.ps-gallery--image {
+  display: block !important;
+}
+
+.ps-product__thumbnail {
+  display: block !important;
 }
 
 .images-headless {
@@ -58,13 +68,14 @@
   background-color: #f0f0f0;
   border-radius: 1rem;
   padding: 10px;
-  width: 100px;
+  width: 130px;
   margin-left: 10px;
   cursor: pointer;
+  border: 2px solid transparent;
 }
 
 .headless-content .active {
-  border: 2px solid red;
+  border: 2px solid #fd8d27;
 }
 
 .headless-content .add-to-cart {
@@ -92,4 +103,5 @@ h6 {
 .product-variants-container {
   display: flex;
   row-gap: 10px;
+  flex-wrap: wrap;
 }

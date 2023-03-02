@@ -4,6 +4,7 @@ import {
   IProductVaraint,
   ProductVaraint,
   User,
+  IProduct,
 } from "./models";
 
 export interface LoginResponse {
@@ -21,4 +22,8 @@ export interface ICategoriesWithProducts {
 
 export interface IGetProductVariants {
   variants: IProductVaraint[];
+}
+
+export interface IGetProduct {
+  product: IProduct;
 }

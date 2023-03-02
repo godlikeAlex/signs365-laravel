@@ -14,6 +14,7 @@ interface MenuState {
 const Menu: React.FC<Props> = ({}: Props) => {
   const { isAuthed, user } = useAppSelector((state) => state.auth);
   const { cart, loaded } = useAppSelector((state) => state.cart);
+  const { homeCategories } = useAppSelector((state) => state.app);
 
   const [state, setState] = useState<MenuState>({
     showMiniAuth: false,
@@ -21,103 +22,130 @@ const Menu: React.FC<Props> = ({}: Props) => {
   });
 
   return (
-    <header className="ps-header ps-header--3 ps-header--4">
-      <div className="ps-header__middle">
-        <div className="container">
-          <a className="ps-menu--sticky" href="#">
-            <i className="fa fa-bars"></i>
-          </a>
-          <div className="ps-header__right" style={{ width: "100%" }}>
-            <div className="ps-logo">
-              <a href="index.html">
-                {" "}
-                <img src="/img/logo.png" alt="" />
-                <img
-                  className="sticky-logo"
-                  src="/img/sticky-logo.png"
-                  alt=""
-                />
-              </a>
-            </div>
-            <div className="ps-header__search">
-              <form
-                action="https://nouthemes.net/html/mymedi/do_action"
-                method="post"
-              >
-                <div className="ps-search-table">
-                  <div className="input-group">
-                    <input
-                      className="form-control ps-input"
-                      type="text"
-                      placeholder="Search for products"
-                    />
-                    <div className="input-group-append">
-                      <a href="#">
-                        <i className="fa fa-search"></i>
-                      </a>
-                    </div>
-                  </div>
+    <>
+      <header
+        className="ps-header ps-header--2 ps-header--7 ps-header--4"
+        style={{ borderBottom: "1px solid #d9dee8" }}
+      >
+        <div className="ps-header__top">
+          <div className="container">
+            <a href="tel:(949)9421363" className="ps-header__text">
+              <strong>+ (949) 942-1363 - Call Us</strong>
+            </a>
+            <div className="ps-top__right">
+              <div className="ps-language-currency">
+                <div
+                  className="ps-dropdown-value with-dp-modal"
+                  onMouseLeave={() =>
+                    setState((oldState) => ({
+                      ...oldState,
+                      showMiniAuth: false,
+                    }))
+                  }
+                  onMouseEnter={() =>
+                    setState((oldState) => ({
+                      ...oldState,
+                      showMiniAuth: true,
+                    }))
+                  }
+                >
+                  <Link className="ps-header__item" to={"/login"}>
+                    <i className="icon-user"></i>
+                  </Link>
+                  {/*  */}
                 </div>
-              </form>
-            </div>
-            <div className="ps-header__menu">
-              <ul className="menu"></ul>
-            </div>
-            <ul className="ps-header__icons">
-              <li>
-                <a className="ps-header__item open-search" href="#">
-                  <i className="icon-magnifier"></i>
-                </a>
-              </li>
-              <li
-                onMouseLeave={() =>
-                  setState((oldState) => ({
-                    ...oldState,
-                    showMiniAuth: false,
-                  }))
-                }
-                onMouseEnter={() =>
-                  setState((oldState) => ({
-                    ...oldState,
-                    showMiniAuth: true,
-                  }))
-                }
-              >
-                <a className="ps-header__item" href="#">
-                  <i className="icon-user"></i>
-                </a>
-                {/*  */}
-                <MiniAuthModal active={state.showMiniAuth} />
-              </li>
 
-              <li
-                onMouseLeave={() =>
-                  setState((oldState) => ({
-                    ...oldState,
-                    showMiniCart: false,
-                  }))
-                }
-                onMouseEnter={() =>
-                  setState((oldState) => ({
-                    ...oldState,
-                    showMiniCart: true,
-                  }))
-                }
-              >
-                <a className="ps-header__item" href="#" id="cart-mini">
-                  <i className="icon-cart-empty"></i>
-                  {loaded && cart.items.length > 0 ? (
-                    <span className="badge">{cart.items.length}</span>
-                  ) : null}
-                </a>
-                {/*  */}
-                <MiniCartModal active={state.showMiniCart} />
-              </li>
-            </ul>
+                <div
+                  onMouseLeave={() =>
+                    setState((oldState) => ({
+                      ...oldState,
+                      showMiniCart: false,
+                    }))
+                  }
+                  onMouseEnter={() =>
+                    setState((oldState) => ({
+                      ...oldState,
+                      showMiniCart: true,
+                    }))
+                  }
+                  className="ps-dropdown-value with-dp-modal"
+                >
+                  <Link className="ps-header__item" to="/cart" id="cart-mini">
+                    <i className="icon-cart-empty"></i>
+                    {loaded && cart.items.length > 0 ? (
+                      <span className="badge-mini">{cart.items.length}</span>
+                    ) : null}
+                  </Link>
+                  {/*  */}
+                  <MiniCartModal active={state.showMiniCart} />
+                </div>
+              </div>
+
+              <ul className="menu-top">
+                <li className="nav-item">
+                  <a className="nav-link" href="about-us.html">
+                    About
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a className="nav-link" href="blog-sidebar1.html">
+                    Blog
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="contact-us.html">
+                    Contact
+                  </a>
+                </li>
+              </ul>
+              <div className="ps-header__text">
+                Need help? <strong>0020 500 - MYMEDI - 000</strong>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+
+        <div className="ps-header__middle">
+          <div className="container">
+            <a className="ps-menu--sticky" href="#">
+              <i className="fa fa-bars"></i>
+            </a>
+            <div className="ps-header__menu" style={{ width: "100%" }}>
+              <ul className="menu-custom">
+                <li className="ps-logo custom-logo">
+                  <Link to="/">
+                    <img src="/img/logo.png" alt="" />
+                    <img
+                      className="sticky-logo"
+                      src="/img/sticky-logo.png"
+                      alt=""
+                    />
+                  </Link>
+                </li>
+                {homeCategories.map(({ id, title, icon }, index) => (
+                  <li
+                    className="ps-category__item ps-category__item-custom"
+                    key={id}
+                  >
+                    <a href="/shop" className="ps-category__link">
+                      <img
+                        src={`/storage/${icon}`}
+                        alt={title}
+                        style={{ width: "34px", height: "34px" }}
+                      />
+                    </a>
+                    <div className="ps-category__name">
+                      <Link to="/shop">{title}</Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
   );
 
   return (

@@ -5,6 +5,7 @@ import CartMiniItem from "../CartMiniItem";
 import { Zoom } from "react-preloaders";
 import { Lines } from "react-preloaders";
 import { BeatLoader } from "react-spinners";
+import { Link } from "react-router-dom";
 
 interface Props {
   active: boolean;
@@ -12,11 +13,10 @@ interface Props {
 
 const MiniCartModal: React.FC<Props> = ({ active }: Props) => {
   const { loaded, cart } = useAppSelector((state) => state.cart);
-
   return (
     <div
       className={classNames("ps-cart--mini", {
-        active: active,
+        active,
       })}
     >
       {loaded ? (
@@ -25,20 +25,24 @@ const MiniCartModal: React.FC<Props> = ({ active }: Props) => {
             <>
               <ul className="ps-cart__items">
                 <li className="ps-cart__item">
-                  <CartMiniItem />
+                  {cart.items.map((item, index) => {
+                    if (index <= 2) {
+                      return <CartMiniItem {...item} key={item.id} />;
+                    }
+                  })}
                 </li>
               </ul>
               <div className="ps-cart__total">
                 <span>Subtotal </span>
-                <span>$ {cart.total_with_tax.toLocaleString()}</span>
+                <span>${cart.total_with_tax.toLocaleString()}</span>
               </div>
               <div className="ps-cart__footer">
-                <a className="ps-btn ps-btn--outline" href="shopping-cart.html">
+                <Link className="ps-btn ps-btn--outline" to="/cart">
                   View Cart
-                </a>
-                <a className="ps-btn ps-btn--warning" href="checkout.html">
+                </Link>
+                <Link className="ps-btn ps-btn--warning" to="/cart/checkout">
                   Checkout
-                </a>
+                </Link>
               </div>
             </>
           ) : (

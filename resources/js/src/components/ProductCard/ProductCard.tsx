@@ -9,7 +9,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const { title, start_at, id, slug } = props;
+  const { title, start_at, id, slug, images } = props;
 
   const [fetching, setIsFetch] = useState(false);
 
@@ -34,8 +34,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               state={{ backgroundLocation: location, product: props }}
             >
               <figure>
-                <img src="img/products/054.jpg" alt="alt" />
-                <img src="img/products/057.jpg" alt="alt" />
+                {images.map((image) => (
+                  <img src={`/storage/${image}`} alt={title} />
+                ))}
               </figure>
             </Link>
             <div className="ps-product__actions">
@@ -77,7 +78,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               </Link>
             </h5>
             <div className="ps-product__meta">
-              <span className="ps-product__price">$299.99</span>
+              <span className="ps-product__price">
+                ${start_at.toLocaleString()}
+              </span>
             </div>
             <div className="ps-product__desc">
               <ul className="ps-product__list">

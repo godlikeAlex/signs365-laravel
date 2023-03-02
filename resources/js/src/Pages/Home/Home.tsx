@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { useAppSelector } from "@/src/hooks";
-import { login } from "@/src/redux/authSlice";
-import { useDispatch } from "react-redux";
 import CategoryService from "@/src/services/CategoryService";
 import { ICategoryWithProducts } from "@/src/types/models";
 import { toast } from "react-toastify";
 import { ProductCard, ProductCardPlaceholder } from "@/src/components";
-import { Outlet } from "react-router-dom";
 
 interface IState {
   loading: boolean;

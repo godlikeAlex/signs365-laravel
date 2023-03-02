@@ -1,8 +1,12 @@
 import api from "../api";
-import { IGetProductVariants } from "../types/axiosResponses";
+import { IGetProduct, IGetProductVariants } from "../types/axiosResponses";
 
 export default class ProductService {
-  static getProductVariants(productID: number) {
-    return api.get<IGetProductVariants>(`/products/${productID}/variants`);
+  static getProduct(slug: string) {
+    return api.get<IGetProduct>(`/products/${slug}`);
+  }
+
+  static getProductVariants(slug: string) {
+    return api.get<IGetProductVariants>(`/products/${slug}/variants`);
   }
 }
