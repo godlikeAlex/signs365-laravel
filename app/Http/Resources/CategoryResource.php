@@ -23,7 +23,7 @@ class CategoryResource extends JsonResource
       "slug" => $this->slug,
       "icon" => $this->icon,
       "show_on_home" => $this->show_on_home,
-      "products" => ProductResource::collection($this->products),
+      "products" => ProductResource::collection($this->products)->take(10),
     ];
   }
 }

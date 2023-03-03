@@ -155,9 +155,9 @@ class Service
 
     return [
       "items" => CartItemsResource::collection($cart->sort()->values()),
-      "tax" => $tax / 100,
-      "total" => $sub_total / 100,
-      "total_with_tax" => ($sub_total + $tax) / 100,
+      "tax" => round($tax / 100, 2),
+      "total" => round($sub_total / 100, 2),
+      "total_with_tax" => round(($sub_total + $tax) / 100, 2),
     ];
   }
 }

@@ -15,18 +15,20 @@ class Order extends Model
   protected $guarded = [];
 
   static $ORDERS_STATUSES = [
-    'pending' => 'Pending',
-    'approved' => 'Approved',
-    'process' => 'Process',
-    'shipping' => 'Shipping',
-    'completed' => 'Completed'
+    "pending" => "Pending",
+    "approved" => "Approved",
+    "process" => "Process",
+    "shipping" => "Shipping",
+    "completed" => "Completed",
   ];
 
   protected static function boot()
   {
     parent::boot();
     static::creating(function ($order) {
-      $order['uuid'] = (string)Str::uuid();
+      if (!isset($order["uuid"])) {
+        $order["uuid"] = (string) Str::random(8);
+      }
     });
   }
 

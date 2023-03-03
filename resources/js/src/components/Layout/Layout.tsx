@@ -1,6 +1,7 @@
 import { ModalShowProduct } from "@/src/Pages";
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
+import Footer from "../Footer";
 import Menu from "../Menu";
 import MobileHeader from "../MobileHeader";
 
@@ -16,7 +17,7 @@ const Layout: React.FC<Props> = ({}: Props) => {
         <Outlet />
       </div>
 
-      <footer>signs365</footer>
+      <Footer />
     </div>
   );
 };

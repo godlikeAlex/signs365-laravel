@@ -1,5 +1,5 @@
 import { PaymentForm } from "@/src/components";
-import { useAppDispatch, useAppSelector } from "@/src/hooks";
+import { useAppSelector } from "@/src/hooks";
 import PaymentService from "@/src/services/PaymentService";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -7,15 +7,22 @@ import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import CheckoutSidebar from "./CheckoutSidebar";
 
 interface CheckoutProps {}
+
+interface State {
+  clientSecret?: string;
+  tempOrderID?: number | string;
+}
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
 const Checkout: React.FC<CheckoutProps> = ({}: CheckoutProps) => {
   const { cart } = useAppSelector((state) => state.cart);
-  const [clientSecret, setClientSecret] = useState(undefined);
+  const [state, setState] = useState<State>({
+    clientSecret: undefined,
+    tempOrderID: undefined,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +36,10 @@ const Checkout: React.FC<CheckoutProps> = ({}: CheckoutProps) => {
       try {
         const { data } = await PaymentService.retrivePaymentIntent();
 
-        setClientSecret(data.client_secret);
+        setState({
+          clientSecret: data.client_secret,
+          tempOrderID: data.temp_order_id,
+        });
       } catch (error) {
         toast("Error initing payment...", { type: "error" });
       }
@@ -54,55 +64,48 @@ const Checkout: React.FC<CheckoutProps> = ({}: CheckoutProps) => {
         </ul>
         <h3 className="ps-checkout__title">Checkout</h3>
         <div className="ps-checkout__content">
-          <form action="">
+          {stripePromise && state.clientSecret ? (
+            <Elements
+              stripe={stripePromise}
+              options={{
+                clientSecret: state.clientSecret,
+                locale: "en",
+                fonts: [
+                  {
+                    cssSrc: "https://fonts.googleapis.com/css?family=Jost",
+                  },
+                ],
+                appearance: {
+                  theme: "flat",
+
+                  variables: {
+                    colorPrimary: "#103178",
+                    colorBackground: "#f0f2f5",
+                    colorText: "#103178",
+                    fontFamily: '"Jost", sans-serif',
+                    spacingUnit: "4px",
+                    borderRadius: "40px",
+                    // See all possible variables below
+                  },
+                },
+              }}
+            >
+              <PaymentForm tempOrderID={state.tempOrderID} />
+            </Elements>
+          ) : (
             <div className="row">
               <div className="col-12 col-lg-8">
-                {/* form here */}
-                <div className="ps-checkout__form">
-                  {stripePromise && clientSecret ? (
-                    <Elements
-                      stripe={stripePromise}
-                      options={{
-                        clientSecret,
-                        locale: "en",
-                        fonts: [
-                          {
-                            cssSrc:
-                              "https://fonts.googleapis.com/css?family=Jost",
-                          },
-                        ],
-                        appearance: {
-                          theme: "flat",
-
-                          variables: {
-                            colorPrimary: "#103178",
-                            colorBackground: "#f0f2f5",
-                            colorText: "#103178",
-                            fontFamily: '"Jost", sans-serif',
-                            spacingUnit: "4px",
-                            borderRadius: "40px",
-                            // See all possible variables below
-                          },
-                        },
-                      }}
-                    >
-                      <PaymentForm />
-                    </Elements>
-                  ) : (
-                    <div>
-                      <Skeleton height={40} />
-                      <Skeleton height={100} count={2} />
-                      <Skeleton height={35} count={6} />
-                    </div>
-                  )}
-                </div>
+                <Skeleton height={40} />
+                <Skeleton height={100} count={2} />
+                <Skeleton height={35} count={6} />
               </div>
 
               <div className="col-12 col-lg-4">
-                <CheckoutSidebar />
+                <Skeleton height={55} />
+                <Skeleton height={35} count={8} />
               </div>
             </div>
-          </form>
+          )}
         </div>
       </div>
     </div>

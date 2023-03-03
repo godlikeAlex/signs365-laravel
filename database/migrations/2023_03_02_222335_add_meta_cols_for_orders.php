@@ -12,12 +12,11 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::create("temporary_orders", function (Blueprint $table) {
-      $table->id();
-
-      $table->json("cart_data");
-
-      $table->timestamps();
+    Schema::table("orders", function (Blueprint $table) {
+      $table->string("name")->nullable();
+      $table->string("phone")->nullable();
+      $table->string("email")->nullable();
+      $table->string("address")->nullable();
     });
   }
 
@@ -28,6 +27,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::dropIfExists("temporary_orders");
+    Schema::table("orders", function (Blueprint $table) {
+      $table->dropColumn("name", "phone", "email", "address");
+    });
   }
 };

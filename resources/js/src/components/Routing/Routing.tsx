@@ -19,6 +19,7 @@ import {
   Profile,
   Register,
   ResetPassword,
+  SuccessPayment,
 } from "@/src/Pages";
 import ProtectedRoute from "../ProtectedRoute";
 import Layout from "../Layout";
@@ -62,6 +63,11 @@ function Routing() {
           <Route path="cart" element={<Cart />} />
 
           <Route path="/cart/checkout" element={<Checkout />} />
+
+          <Route
+            path="/cart/checkout/success-payment"
+            element={<SuccessPayment />}
+          />
 
           <Route element={<ProtectedRoute allowAuthed={true} />}>
             <Route path="profile" element={<Profile />} />

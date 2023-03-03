@@ -14,31 +14,41 @@ class ProductCategory extends Model
 
   public function scopeAvailableInCity($query, $city)
   {
-    return $query->whereHas('cities', function ($cityQuery) use ($city) {
-      $cityQuery->where('city_id', $city);
+    $categories = $query->whereHas("cities", function ($cityQuery) use ($city) {
+      return $cityQuery->where("city_id", $city);
     });
+
+    return $categories;
   }
 
-  public function scopePublishedProducts($query, $limit)
+  public function scopePublishedProducts($query, $city)
   {
-    $products = $query->with('products', function ($productQuery) {
-      $productQuery->where('published', 1);
-    })->latest();
-
-    if ($limit) {
-      $products->limit($limit);
-    }
+    $products = $query
+      ->with("products", function ($productQuery) use ($city) {
+        return $productQuery->where("published", 1)->availableInCity($city);
+      })
+      ->latest();
 
     return $products;
   }
 
   public function cities()
   {
-    return $this->belongsToMany(City::class, 'city_product_category', 'product_category_id', 'city_id');
+    return $this->belongsToMany(
+      City::class,
+      "city_product_category",
+      "product_category_id",
+      "city_id"
+    );
   }
 
   public function products()
   {
-    return $this->belongsToMany(Product::class, 'product_product_category', 'product_category_id', 'product_id');
+    return $this->belongsToMany(
+      Product::class,
+      "product_product_category",
+      "product_category_id",
+      "product_id"
+    );
   }
 }

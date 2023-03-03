@@ -8,10 +8,12 @@ import EditProfile from "./EditProfile";
 import Cart from "./Cart";
 import ModalShowProduct from "./ModalShowProduct";
 import Checkout from "./Checkout";
+import SuccessPayment from "./SuccessPayment/";
 
 export {
   Home,
   ModalShowProduct,
+  SuccessPayment,
   Checkout,
   Cart,
   Login,

@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class TemporaryOrder extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $casts = [
-        'cart_data' => 'object'
-    ];
+  protected $casts = [
+    "cart_data" => "object",
+  ];
 
-    protected $fillable = ['cart_data'];
+  protected $guarded = [];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
 }

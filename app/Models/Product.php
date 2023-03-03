@@ -19,6 +19,15 @@ class Product extends Model
     "images" => "array",
   ];
 
+  public function scopeAvailableInCity($query, $city)
+  {
+    $products = $query->whereHas("cities", function ($cityQuery) use ($city) {
+      return $cityQuery->where("city_id", $city);
+    });
+
+    return $products;
+  }
+
   /**
    * Get the route key for the model.
    */

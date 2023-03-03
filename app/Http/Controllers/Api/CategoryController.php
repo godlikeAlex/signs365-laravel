@@ -15,7 +15,7 @@ class CategoryController extends Controller
       $request->get("city")
     )
       ->orderBy("id", "asc")
-      ->publishedProducts(6)
+      ->publishedProducts($request->get("city"))
       ->get();
 
     return [

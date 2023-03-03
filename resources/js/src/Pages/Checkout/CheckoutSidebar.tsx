@@ -2,11 +2,13 @@ import { useAppSelector } from "@/src/hooks";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-interface CheckoutSidebarProps {}
+interface CheckoutSidebarProps {
+  submiting: boolean;
+}
 
-const CheckoutSidebar: React.FC<
-  CheckoutSidebarProps
-> = ({}: CheckoutSidebarProps) => {
+const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
+  submiting,
+}: CheckoutSidebarProps) => {
   const { cart } = useAppSelector((state) => state.cart);
   return (
     <div
@@ -25,7 +27,7 @@ const CheckoutSidebar: React.FC<
               {cartItem.name} x <span>{cartItem.quantity}</span>
             </div>
             <div className="ps-product__price">
-              ${cartItem.price.toLocaleString()}
+              ${(cartItem.quantity * cartItem.price).toLocaleString()}
             </div>
           </div>
         ))
@@ -55,7 +57,13 @@ const CheckoutSidebar: React.FC<
         </div>
       </div>
       <div className="ps-checkout__payment">
-        <button className="ps-btn ps-btn--warning">Place order</button>
+        <button
+          className="ps-btn ps-btn--warning custom-button"
+          type="submit"
+          disabled={submiting}
+        >
+          Place order
+        </button>
       </div>
     </div>
   );

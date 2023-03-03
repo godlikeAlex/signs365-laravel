@@ -35,7 +35,14 @@ const Input: React.FC<Props> = React.forwardRef<HTMLInputElement, Props>(
         />
 
         {props.error ? (
-          <p style={{ textTransform: "capitalize", color: "#ff5252" }}>
+          <p
+            style={{
+              textTransform: "capitalize",
+              color: "#ff5252",
+              fontSize: 12,
+              marginTop: 8,
+            }}
+          >
             {props.error}
           </p>
         ) : null}

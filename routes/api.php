@@ -52,6 +52,16 @@ Route::middleware("handleCityFromRequest")->group(function () {
     PaymentController::class,
     "createPaymentIntent",
   ]);
+
+  Route::post("/temp-order/update/{temporary_order}", [
+    PaymentController::class,
+    "updateTempOrder",
+  ]);
+
+  Route::get("/payment-intent/retrive/{payment_intent_id}", [
+    PaymentController::class,
+    "retrivePayment",
+  ]);
 });
 
 Route::middleware("handleCityFromRequest")

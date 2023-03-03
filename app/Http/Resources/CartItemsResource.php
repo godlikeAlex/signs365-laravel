@@ -17,7 +17,7 @@ class CartItemsResource extends JsonResource
     return [
       "id" => $this->id,
       "name" => $this->name,
-      "price" => $this->price / 100,
+      "price" => round($this->price / 100, 2),
       "quantity" => $this->quantity,
       "attributes" => $this->attributes,
       "conditions" => $this->conditions,

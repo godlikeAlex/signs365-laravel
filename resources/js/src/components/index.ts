@@ -1,5 +1,6 @@
 import CartItem from "./CartItem";
 import CartList from "./CartList";
+import Footer from "./Footer";
 import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
@@ -15,6 +16,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 export {
   VariantsProductPlaceholder,
   CartItem,
+  Footer,
   CartList,
   PaymentForm,
   MobileHeader,

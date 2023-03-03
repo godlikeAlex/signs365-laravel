@@ -26,12 +26,12 @@ class CartController extends Controller
 
   public function __construct(Request $request)
   {
-    if (Cookie::has('cart')) {
-      $this->cart = new CartService(Cookie::get('cart'));
+    if (Cookie::has("cart")) {
+      $this->cart = new CartService(Cookie::get("cart"));
     } else {
       $uuid = Str::uuid();
-      $cookie = Cookie::forever(name: 'cart', value: $uuid, httpOnly: true);
-      
+      $cookie = Cookie::forever(name: "cart", value: $uuid, httpOnly: true);
+
       Cookie::queue($cookie);
 
       $this->cart = new CartService($uuid);
@@ -46,17 +46,19 @@ class CartController extends Controller
   {
     try {
       // Request get city from middleware.
-      $city = City::where('id', $request->get('city'))->firstOrFail();
+      $city = City::where("id", $request->get("city"))->firstOrFail();
 
       return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json([
-        'error' => "This cart does'nt exists",
-        'throwed_by' => $e
-      ], 404);
+      return response()->json(
+        [
+          "error" => "This cart does'nt exists",
+          "throwed_by" => $e,
+        ],
+        404
+      );
     }
   }
-
 
   /**
    * Add to cart
@@ -67,24 +69,37 @@ class CartController extends Controller
     try {
       $data = $request->validated();
 
-      $city = City::where('id', $request->get('city'))->firstOrFail();
+      $city = City::where("id", $request->get("city"))->firstOrFail();
+
+      info($city->products);
+      info($data);
 
       /** @var Product $product */
-      $product = $city->products()->find($data['product_id']);
+      $product = $city->products()->find($data["product_id"]);
 
       if (!$product) {
-        return response()->json([
-          'error' => "This product does'nt exists in {$city->domain}"
-        ], 404);
+        return response()->json(
+          [
+            "error" => "This product does'nt exists in {$city->domain}",
+          ],
+          404
+        );
       }
 
-      $this->cart->add($product, $request->input('product_variant_id'), $city->id);
+      $this->cart->add(
+        $product,
+        $request->input("product_variant_id"),
+        $city->id
+      );
 
       return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json([
-        'error' => "This product does'nt exists"
-      ], 404);
+      return response()->json(
+        [
+          "error" => "This product does'nt exists",
+        ],
+        404
+      );
     }
   }
 
@@ -97,24 +112,26 @@ class CartController extends Controller
   public function updateQuantity(UpdateQuantityRequest $request)
   {
     try {
-      $city = City::where('id', $request->get('city'))->firstOrFail();
+      $city = City::where("id", $request->get("city"))->firstOrFail();
 
-
-      if ($request->input('type') === 'add') {
-        $this->cart->addQuantity($request->input('item_id'));
+      if ($request->input("type") === "add") {
+        $this->cart->addQuantity($request->input("item_id"));
       } else {
-        $this->cart->reduceQuantity($request->input('item_id'));
+        $this->cart->reduceQuantity($request->input("item_id"));
       }
 
       return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json([
-        'error' => "This product does'nt exists"
-      ], 404);
+      return response()->json(
+        [
+          "error" => "This product does'nt exists",
+        ],
+        404
+      );
     }
   }
 
-    /**
+  /**
    * Remove item from cart.
    *
    * @return Response
@@ -122,18 +139,20 @@ class CartController extends Controller
   public function removeItem(RemoveItemFromCartRequest $request)
   {
     try {
-      $city = City::where('id', $request->get('city'))->firstOrFail();
+      $city = City::where("id", $request->get("city"))->firstOrFail();
 
-      $this->cart->removeItem($request->input('item_id'));
+      $this->cart->removeItem($request->input("item_id"));
 
       return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json([
-        'error' => "This product does'nt exists"
-      ], 404);
+      return response()->json(
+        [
+          "error" => "This product does'nt exists",
+        ],
+        404
+      );
     }
   }
-
 
   /**
    * Destroy the cart.
@@ -144,6 +163,6 @@ class CartController extends Controller
   {
     $this->cart->instance()->clear();
 
-    return response()->json(['ok' => true]);
+    return response()->json(["ok" => true]);
   }
 }

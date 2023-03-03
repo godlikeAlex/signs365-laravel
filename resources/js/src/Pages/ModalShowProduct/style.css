@@ -12,7 +12,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9;
+  z-index: 999;
 }
 
 .headless-popup {
@@ -68,8 +68,7 @@ body {
   background-color: #f0f0f0;
   border-radius: 1rem;
   padding: 10px;
-  width: 130px;
-  margin-left: 10px;
+  width: 100%;
   cursor: pointer;
   border: 2px solid transparent;
 }
@@ -104,4 +103,29 @@ h6 {
   display: flex;
   row-gap: 10px;
   flex-wrap: wrap;
+}
+
+.overlay-loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-button:disabled,
+.custom-button[disabled] {
+  background-color: #f0f2f5 !important;
+  color: #5b6c8f !important;
+  border-color: #f0f2f5 !important;
+}
+
+.cust-padding {
+  padding-left: 15px !important;
+}
+
+.cust-padding:first-child {
+  padding-left: 0px !important;
 }

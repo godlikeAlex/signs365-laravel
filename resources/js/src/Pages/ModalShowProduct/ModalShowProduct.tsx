@@ -37,12 +37,13 @@ interface IState {
 }
 
 const ThumbnailSlick = {
-  slidesToShow: 5,
+  // slidesToShow: 5,
   slidesToScroll: 1,
   lazyLoad: "ondemand",
   dots: false,
   arrows: false,
   focusOnSelect: true,
+  infinite: false,
 };
 
 const MainSlick = {
@@ -179,54 +180,33 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
                           {...MainSlick}
                           className="ps-product__thumbnail"
                         >
-                          <div className="slide">
-                            <img src="/img/products/001.jpg" alt="alt" />
-                          </div>
-                          <div className="slide">
-                            <img src="/img/products/047.jpg" alt="alt" />
-                          </div>
-                          <div className="slide">
-                            <img src="/img/products/047.jpg" alt="alt" />
-                          </div>
-                          <div className="slide">
-                            <img src="/img/products/008.jpg" alt="alt" />
-                          </div>
-                          <div className="slide">
-                            <img src="/img/products/034.jpg" alt="alt" />
-                          </div>
+                          {state.product?.images.map((img) => (
+                            <div className="slide">
+                              <img
+                                src={`/storage/${img}`}
+                                alt={state.product.title}
+                              />
+                            </div>
+                          ))}
                         </Slider>
                         <Slider
                           ref={(slider) => setThumbNailSlickRef(slider)}
                           asNavFor={mainSlickRef}
                           {...ThumbnailSlick}
+                          slidesToShow={5}
                           className="ps-gallery--image"
                           style={{ display: "block" }}
                         >
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img src="/img/products/001.jpg" alt="alt" />
+                          {state.product?.images.map((img) => (
+                            <div className="slide">
+                              <div className="ps-gallery__item">
+                                <img
+                                  src={`/storage/${img}`}
+                                  alt={state.product.title}
+                                />
+                              </div>
                             </div>
-                          </div>
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img src="/img/products/047.jpg" alt="alt" />
-                            </div>
-                          </div>
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img src="/img/products/047.jpg" alt="alt" />
-                            </div>
-                          </div>
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img src="/img/products/008.jpg" alt="alt" />
-                            </div>
-                          </div>
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img src="/img/products/034.jpg" alt="alt" />
-                            </div>
-                          </div>
+                          ))}
                         </Slider>
                       </div>
                     </div>
@@ -276,30 +256,28 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
                               style={{ width: "100%" }}
                             >
                               {state.productVariants.map((productVariant) => (
-                                <div
-                                  className={classNames(
-                                    "product-variant",
-                                    "col-md-4",
-                                    {
+                                <div className="col-md-4 cust-padding">
+                                  <div
+                                    className={classNames("product-variant", {
                                       active:
                                         productVariant.id ===
                                         state.currentVaraint.id,
+                                    })}
+                                    onClick={() =>
+                                      handleSelectVariant(productVariant)
                                     }
-                                  )}
-                                  onClick={() =>
-                                    handleSelectVariant(productVariant)
-                                  }
-                                >
-                                  <h6>{productVariant.label}</h6>
-                                  <h6
-                                    style={{
-                                      color: "#fd8d27",
-                                      marginBottom: 0,
-                                      marginTop: 5,
-                                    }}
                                   >
-                                    ${productVariant.price.toLocaleString()}
-                                  </h6>
+                                    <h6>{productVariant.label}</h6>
+                                    <h6
+                                      style={{
+                                        color: "#fd8d27",
+                                        marginBottom: 0,
+                                        marginTop: 5,
+                                      }}
+                                    >
+                                      ${productVariant.price.toLocaleString()}
+                                    </h6>
+                                  </div>
                                 </div>
                               ))}
                             </div>
@@ -328,7 +306,7 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
 
                         <button
                           type="submit"
-                          style={{ marginTop: 40 }}
+                          style={{ marginTop: 20 }}
                           className="ps-btn ps-btn--warning"
                           onClick={handleAddToCart}
                         >
