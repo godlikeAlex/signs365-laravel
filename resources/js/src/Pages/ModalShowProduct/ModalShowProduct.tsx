@@ -18,6 +18,7 @@ import Slider from "react-slick";
 import Skeleton from "react-loading-skeleton";
 import "./style.css";
 import classNames from "classnames";
+import { Helmet } from "react-helmet";
 
 interface Props {}
 
@@ -155,6 +156,12 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
 
   return (
     <>
+      {state.product ? (
+        <Helmet>
+          <title>{state.product?.title}</title>
+        </Helmet>
+      ) : null}
+
       <Dialog open onClose={handleClose}>
         <div className="headless-bg">
           <Dialog.Panel className="headless-popup">

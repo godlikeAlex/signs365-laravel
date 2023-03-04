@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import axiosErrorGrab, {
   DEFAULT_ERROR_MESSAGE,
 } from "@/src/helpers/axiosErrorGrabber";
+import { Link } from "react-router-dom";
 
 interface Props {}
 
@@ -53,16 +54,35 @@ const ForgotPassword: React.FC<Props> = ({}: Props) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          {...register("email")}
-          type="email"
-          error={errors.email?.message}
-          disabled={isSubmiting}
-        />
+      <div className="ps-account">
+        <div className="container">
+          <div className="row" style={{ justifyContent: "center" }}>
+            <div className="col-12 col-md-8">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="ps-form--review">
+                  <h2 className="ps-form__title">Reset password</h2>
 
-        <input type="submit" disabled={isSubmiting} />
-      </form>
+                  <Input
+                    {...register("email")}
+                    type="email"
+                    error={errors.email?.message}
+                    disabled={isSubmiting}
+                    formType={"profile"}
+                    label={"Email"}
+                  />
+
+                  <div className="ps-form__submit">
+                    <button className="ps-btn ps-btn--warning">Reset</button>
+                  </div>
+                  <Link className="ps-account__link" to="/login">
+                    Login.
+                  </Link>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

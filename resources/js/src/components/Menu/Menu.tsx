@@ -49,7 +49,10 @@ const Menu: React.FC<Props> = ({}: Props) => {
                     }))
                   }
                 >
-                  <Link className="ps-header__item" to={"/login"}>
+                  <Link
+                    className="ps-header__item"
+                    to={user ? "/profile" : "/login"}
+                  >
                     <i className="icon-user"></i>
                   </Link>
                   {/*  */}

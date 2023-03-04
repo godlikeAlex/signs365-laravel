@@ -5,6 +5,7 @@ import {
   ProductVaraint,
   User,
   IProduct,
+  IOrder,
 } from "./models";
 
 export interface LoginResponse {
@@ -26,4 +27,16 @@ export interface IGetProductVariants {
 
 export interface IGetProduct {
   product: IProduct;
+}
+
+export interface IOrdersPagenation {
+  data: IOrder[];
+  meta: {
+    per_page: number;
+    to: number;
+    total: number;
+    current_page: number;
+    from: number;
+    last_page: number;
+  };
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { Input } from "@/src/components";
@@ -75,27 +75,53 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h2>Register</h2>
-      <Input
-        {...register("name")}
-        type="text"
-        error={errors.name?.message}
-        disabled={isSubmitting}
-      />
-      <Input
-        {...register("email")}
-        type="email"
-        error={errors.email?.message}
-        disabled={isSubmitting}
-      />
-      <Input
-        {...register("password")}
-        type="password"
-        error={errors.password?.message}
-        disabled={isSubmitting}
-      />
-      <input type="submit" disabled={isSubmitting || !isValid} />
-    </form>
+    <div className="ps-account">
+      <div className="container">
+        <div className="row" style={{ justifyContent: "center" }}>
+          <div className="col-12 col-md-8">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="ps-form--review">
+                <h2 className="ps-form__title">Create account</h2>
+                <Input
+                  {...register("name")}
+                  type="text"
+                  error={errors.name?.message}
+                  disabled={isSubmitting}
+                  formType={"profile"}
+                  label={"Name"}
+                />
+
+                <Input
+                  {...register("email")}
+                  type="email"
+                  error={errors.email?.message}
+                  disabled={isSubmitting}
+                  formType={"profile"}
+                  label={"Email"}
+                />
+
+                <Input
+                  {...register("password")}
+                  type="password"
+                  error={errors.password?.message}
+                  disabled={isSubmitting}
+                  formType={"profile"}
+                  label={"Password"}
+                />
+
+                <div className="ps-form__submit">
+                  <button className="ps-btn ps-btn--warning">
+                    Create account
+                  </button>
+                </div>
+                <Link className="ps-account__link" to="/login">
+                  Have an account? Login.
+                </Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

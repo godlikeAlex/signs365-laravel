@@ -13,12 +13,14 @@ const Input: React.FC<Props> = React.forwardRef<HTMLInputElement, Props>(
       <div
         className={classNames({
           "ps-checkout__group": props.formType === "checkout",
+          "ps-form__group": props.formType === "profile",
         })}
       >
         {props.label ? (
           <label
             className={classNames({
               "ps-checkout__label": props.formType === "checkout",
+              "ps-form__label": props.formType === "profile",
             })}
           >
             {props.label}
@@ -31,6 +33,7 @@ const Input: React.FC<Props> = React.forwardRef<HTMLInputElement, Props>(
           ref={ref}
           className={classNames({
             "ps-input": props.formType === "checkout",
+            "form-control ps-form__input": props.formType === "profile",
           })}
         />
 

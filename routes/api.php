@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
@@ -83,6 +84,7 @@ Route::middleware("auth:sanctum")->group(function () {
     \App\Http\Controllers\Api\UserController::class,
     "changePassword",
   ]);
+  Route::get("/orders", [OrdersController::class, "list"]);
 });
 
 Route::middleware("auth:sanctum")->get("/user", function (Request $request) {

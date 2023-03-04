@@ -5,6 +5,7 @@ import { clearCart } from "@/src/redux/cartSlice";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 interface CartProps {}
 
@@ -93,7 +94,7 @@ const Cart: React.FC<CartProps> = ({}: CartProps) => {
 
   const renderEmptyCart = () => {
     return (
-      <div className="cart-empty text-center">
+      <div className="cart-empty text-center title-with-icon-section">
         <div className="ps-cart__icon">
           <i
             className="fa fa-shopping-basket"
@@ -108,20 +109,26 @@ const Cart: React.FC<CartProps> = ({}: CartProps) => {
   };
 
   return (
-    <div className="ps-shopping">
-      <div className="container">
-        <ul className="ps-breadcrumb">
-          <li className="ps-breadcrumb__item">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="ps-breadcrumb__item active" aria-current="page">
-            Shopping cart
-          </li>
-        </ul>
+    <>
+      <Helmet>
+        <title>Shopping cart</title>
+      </Helmet>
 
-        <div>{cart.items.length > 0 ? renderCart() : renderEmptyCart()}</div>
+      <div className="ps-shopping">
+        <div className="container">
+          <ul className="ps-breadcrumb">
+            <li className="ps-breadcrumb__item">
+              <Link to="/">Home</Link>
+            </li>
+            <li className="ps-breadcrumb__item active" aria-current="page">
+              Shopping cart
+            </li>
+          </ul>
+
+          <div>{cart.items.length > 0 ? renderCart() : renderEmptyCart()}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

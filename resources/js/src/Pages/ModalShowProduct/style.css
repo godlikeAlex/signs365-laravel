@@ -129,3 +129,61 @@ h6 {
 .cust-padding:first-child {
   padding-left: 0px !important;
 }
+
+.title-with-icon-section {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.table-custom {
+  font-family: Jost;
+  color: #103178;
+  width: 100%;
+}
+
+.table-custom thead {
+  background-color: rgba(240, 242, 245, 1);
+  font-size: 16px;
+  color: #103178;
+}
+
+.table-custom th {
+  padding: 11px 20px;
+}
+
+.table-custom td {
+  padding: 11px 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.table-custom tr {
+  border: 1px solid rgba(240, 242, 245, 1);
+  border-top: unset;
+}
+
+.pagenation-custom {
+  background-color: #103178;
+  border: unset;
+  color: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.pagenation-custom:hover {
+  background-color: #fd8d27;
+}
+
+.pagination-list {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}

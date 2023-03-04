@@ -10,6 +10,15 @@ export interface Domain {
   domain: string;
 }
 
+export interface IOrder {
+  id: number;
+  uuid: string;
+  status: string;
+  total: number;
+  total_without_tax: number;
+  address: string;
+}
+
 export interface ICategory {
   id: number;
   title: string;
