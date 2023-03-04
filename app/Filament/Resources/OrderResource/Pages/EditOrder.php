@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrderResource\Pages;
 
 use App\Filament\Resources\OrderResource;
+use App\Models\User;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -12,9 +13,19 @@ class EditOrder extends EditRecord
 
   protected function getActions(): array
   {
-    return [
-      Actions\DeleteAction::make(),
-    ];
+    return [Actions\DeleteAction::make()];
+  }
+
+  protected function mutateFormDataBeforeSave(array $data): array
+  {
+    if ($data["user_id"]) {
+      $user = User::find($data["user_id"]);
+
+      $data["name"] = $user->name;
+      $data["email"] = $user->email;
+    }
+
+    return $data;
   }
 
   protected function afterSave()

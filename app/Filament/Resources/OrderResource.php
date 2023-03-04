@@ -40,7 +40,25 @@ class OrderResource extends Resource
       Forms\Components\Select::make("user_id")
         ->searchable()
         ->preload()
+        ->reactive()
         ->relationship("user", "name"),
+
+      Forms\Components\TextInput::make("name")
+        ->reactive()
+        ->hidden(function (Closure $get) {
+          return $get("user_id") ? true : false;
+        }),
+      Forms\Components\TextInput::make("email")
+        ->reactive()
+        ->hidden(function (Closure $get) {
+          return $get("user_id") ? true : false;
+        }),
+      Forms\Components\TextInput::make("phone"),
+      Forms\Components\TextInput::make("address"),
+      Forms\Components\TextInput::make("uuid")
+        ->label("UUID")
+        ->hiddenOn("create"),
+
       Forms\Components\Select::make("city_id")
         ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
           $repeaterProducts = $get("orderItems");
@@ -59,6 +77,7 @@ class OrderResource extends Resource
           "Warning! After choosing a city, all order items will be reset."
         )
         ->relationship("city", "title"),
+
       Forms\Components\Repeater::make("orderItems")
         ->relationship()
         ->schema([
@@ -99,53 +118,33 @@ class OrderResource extends Resource
               }
             })
             ->preload()
-            //                            ->options(function (\Closure $get) {
-            //                                $product_id = $get('product_id');
-            //                                $city_id = $get('../../city_id');
-            //
-            //                                if (!$product_id) {
-            //                                    return [];
-            //                                }
-            //
-            //                                return Product::query()
-            //                                    ->find($product_id)
-            //                                    ->prices()
-            //                                    ->whereHas('city', function ($query) use ($city_id) {
-            //                                        return $query->where('id', $city_id);
-            //                                    })
-            //                                    ->pluck('label', 'id');
-            //                            })
-            //                            ->afterStateUpdated(function ($state, callable $set, \Closure $get) {
-            //                                $productPrice = ProductPrice::find($get('product_price_id'));
-            //
-            //                                if ($productPrice) {
-            //                                    $price = $productPrice->price;
-            //                                    $qty = $get('quantity') === '' ? 0 : $get('quantity');
-            //
-            //                                    $calculatedWithQty = number_format(
-            //                                        ($price * $qty )/ 100,
-            //                                        2,
-            //                                        '.',
-            //                                        ''
-            //                                    );
-            //                                    $set(
-            //                                        'total_price',
-            //                                        $calculatedWithQty
-            //                                    );
-            //                                    $set('price', $price);
-            //                                    $set('unit_price', number_format($price / 100, 2, '.', ''));
-            //                                }
-            //                            })
+            ->options(function (\Closure $get) {
+              $product_id = $get("product_id");
+              $city_id = $get("../../city_id");
+
+              if (!$product_id) {
+                return [];
+              }
+
+              return Product::query()
+                ->find($product_id)
+                ->variants()
+                ->pluck("label", "id");
+            })
             ->afterStateUpdated(function ($state, callable $set, Closure $get) {
-              $productVariantPrice = ProductVariant::find(
+              $productVariant = ProductVariant::find(
                 $get("product_variant_id")
               );
 
-              if ($productVariantPrice) {
-                $price = $productVariantPrice
+              if ($productVariant) {
+                $productPrice = $productVariant
                   ->prices()
                   ->where("city_id", $get("../../city_id"))
-                  ->first()->price;
+                  ->first();
+
+                $price = $productPrice->price;
+
+                $set("product_price_id", $productPrice->id);
 
                 $qty = $get("quantity") === "" ? 0 : $get("quantity");
 
@@ -162,15 +161,17 @@ class OrderResource extends Resource
             })
             ->reactive()
             ->required(),
+          Forms\Components\Hidden::make("product_price_id")->reactive(),
+
           Forms\Components\TextInput::make("quantity")
             ->numeric()
             ->afterStateUpdated(function ($state, callable $set, Closure $get) {
-              $productVariantPrice = ProductVariant::find(
+              $productVariant = ProductVariant::find(
                 $get("product_variant_id")
               );
 
-              if ($productVariantPrice) {
-                $price = $productVariantPrice
+              if ($productVariant) {
+                $price = $productVariant
                   ->prices()
                   ->where("city_id", $get("../../city_id"))
                   ->first()->price;
@@ -265,9 +266,11 @@ class OrderResource extends Resource
           ->searchable()
           ->label("User")
           ->url(
-            fn(Order $record) => UserResource::getUrl("edit", [
-              "record" => $record->user,
-            ])
+            fn(Order $record) => $record->user
+              ? UserResource::getUrl("edit", [
+                "record" => $record->user,
+              ])
+              : ""
           ),
         Tables\Columns\BadgeColumn::make("status")->colors([
           "danger" => "pending",
