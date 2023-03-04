@@ -133,11 +133,13 @@ class Service
       return $cart_item;
     });
 
+    $humanTax = $city->tax * 100;
+
     $createdTaxCondition = new CartCondition([
       "name" => "TAX",
       "type" => "tax",
       "target" => "subtotal", // this condition will be applied to cart's subtotal when getSubTotal() is called.
-      "value" => "20%",
+      "value" => "{$humanTax}%",
     ]);
 
     $this->cart->condition($createdTaxCondition);

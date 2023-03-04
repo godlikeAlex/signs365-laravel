@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\TemporaryOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -71,6 +72,11 @@ class StripeWebHookController extends Controller
           ]);
 
           foreach ($tempOrder->cart_data->items as $cartItem) {
+            // $orderItem = new OrderItem();
+
+            // $orderItem->order()->associate($order);
+
+            // $orderItem->save();
           }
         }
 
