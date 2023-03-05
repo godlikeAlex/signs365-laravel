@@ -91,34 +91,48 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
   };
 
   return (
-    <>
-      <h2>Personal Information</h2>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="ps-form--review">
+        <h2 className="ps-form__title">Personal Information</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <img src={watch("preview")} />
-
-        <input
-          onChange={(e) => {
-            if (e.target.files) {
-              console.log(URL.createObjectURL(e.target.files[0]));
-              setValue("preview", URL.createObjectURL(e.target.files[0]));
-              setValue("avatar", e.target.files[0]);
-            }
+        <div
+          className="ps-form__group"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          type="file"
-          id="upload"
-          hidden={true}
-          style={{ display: "none" }}
-        />
-        <label htmlFor="upload" style={{ cursor: "pointer" }}>
-          Choose file
-        </label>
+        >
+          <img
+            src={watch("preview")}
+            style={{ width: 120, height: 120, borderRadius: 120 }}
+          />
+
+          <input
+            onChange={(e) => {
+              if (e.target.files) {
+                console.log(URL.createObjectURL(e.target.files[0]));
+                setValue("preview", URL.createObjectURL(e.target.files[0]));
+                setValue("avatar", e.target.files[0]);
+              }
+            }}
+            type="file"
+            id="upload"
+            hidden={true}
+            style={{ display: "none" }}
+          />
+          <label htmlFor="upload" style={{ cursor: "pointer", marginTop: 10 }}>
+            Choose file
+          </label>
+        </div>
 
         <Input
           {...register("name")}
           type="text"
           error={errors.name?.message}
           disabled={isSubmiting}
+          formType="profile"
         />
 
         <Input
@@ -126,11 +140,14 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
           type="email"
           error={errors.email?.message}
           disabled={isSubmiting}
+          formType="profile"
         />
 
-        <input type={"submit"} />
-      </form>
-    </>
+        <div className="ps-form__submit">
+          <button className="ps-btn ps-btn--warning">Update</button>
+        </div>
+      </div>
+    </form>
   );
 };
 

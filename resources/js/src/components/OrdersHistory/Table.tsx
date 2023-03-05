@@ -6,13 +6,7 @@ interface TableProps {
   columns: any[];
   data: any[];
   pageCount: number;
-  fetchData: ({
-    pageSize,
-    pageIndex,
-  }: {
-    pageSize: any;
-    pageIndex: any;
-  }) => void;
+  fetchData: ({ pageIndex }: { pageIndex: any }, loadMore: boolean) => void;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -54,7 +48,7 @@ const Table: React.FC<TableProps> = ({
 
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
-    fetchData({ pageIndex, pageSize });
+    fetchData({ pageIndex }, false);
   }, [fetchData, pageIndex, pageSize]);
 
   // Render the UI for your table
@@ -101,28 +95,30 @@ const Table: React.FC<TableProps> = ({
         </tbody>
       </table>
 
-      <div className="pagination-list">
-        <button
-          className="pagenation-custom"
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-        >
-          <i className="fa fa-chevron-left" />
-        </button>
-        <span style={{ marginLeft: 5, marginRight: 5 }}>
-          Page
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <button
-          className="pagenation-custom"
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-        >
-          <i className="fa fa-chevron-right" />
-        </button>
-      </div>
+      {pageCount > 1 ? (
+        <div className="pagination-list">
+          <button
+            className="pagenation-custom"
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+          >
+            <i className="fa fa-chevron-left" />
+          </button>
+          <span style={{ marginLeft: 5, marginRight: 5 }}>
+            Page
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <button
+            className="pagenation-custom"
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+          >
+            <i className="fa fa-chevron-right" />
+          </button>
+        </div>
+      ) : null}
     </>
   );
 };

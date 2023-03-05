@@ -17,7 +17,7 @@ class OrdersController extends Controller
       ->orders()
       ->orderBy("created_at", "DESC")
       ->latest()
-      ->paginate(10);
+      ->paginate(2);
 
     return OrderResource::collection($orders);
   }

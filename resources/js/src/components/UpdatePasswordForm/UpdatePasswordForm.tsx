@@ -1,18 +1,18 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "../Input";
-import * as yup from "yup";
 import { ResetPasswordParams } from "@/src/types/servicesParams";
 import UserService from "@/src/services/UserService";
 import axiosErrorGrab, {
   isCustomAxisError,
 } from "@/src/helpers/axiosErrorGrabber";
 import { toast } from "react-toastify";
+import * as yup from "yup";
 
 interface Props {}
 
-export const ResetPasswordSchema = yup.object({
+const ResetPasswordSchema = yup.object({
   oldPassword: yup.string().required(),
   newPassword: yup.string().required().min(7),
   passwordConfirmation: yup
@@ -65,16 +65,16 @@ const UpdatePasswordForm: React.FC<Props> = ({}: Props) => {
   };
 
   return (
-    <>
-      <h2>Update Password</h2>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="ps-form--review">
+        <h2 className="ps-form__title">Update Password</h2>
         <Input
           {...register("oldPassword")}
           error={errors.oldPassword?.message}
           type="password"
           disabled={isSubmiting}
           placeholder="Current Password"
+          formType="profile"
         />
 
         <Input
@@ -83,6 +83,7 @@ const UpdatePasswordForm: React.FC<Props> = ({}: Props) => {
           type="password"
           disabled={isSubmiting}
           placeholder="New Password"
+          formType="profile"
         />
 
         <Input
@@ -91,11 +92,14 @@ const UpdatePasswordForm: React.FC<Props> = ({}: Props) => {
           type="password"
           placeholder="Confirm Password"
           disabled={isSubmiting}
+          formType="profile"
         />
 
-        <input type={"submit"} />
-      </form>
-    </>
+        <div className="ps-form__submit">
+          <button className="ps-btn ps-btn--warning">Update</button>
+        </div>
+      </div>
+    </form>
   );
 };
 

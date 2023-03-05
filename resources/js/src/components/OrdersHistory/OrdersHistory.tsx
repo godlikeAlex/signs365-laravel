@@ -1,12 +1,14 @@
 import OrderService from "@/src/services/OrderService";
 import React from "react";
 import { Link } from "react-router-dom";
+import MobileOrderList from "./MobileOrderList";
 import Table from "./Table";
 
 interface Props {}
 
 const OrdersHistory: React.FC<Props> = ({}: Props) => {
   const [data, setData] = React.useState([]);
+  const [mobileData, setMobileData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [pageCount, setPageCount] = React.useState(0);
   const fetchIdRef = React.useRef(0);
@@ -48,40 +50,60 @@ const OrdersHistory: React.FC<Props> = ({}: Props) => {
     []
   );
 
-  const fetchData = React.useCallback(async ({ pageSize, pageIndex }) => {
-    // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
+  const fetchData = React.useCallback(
+    async ({ pageIndex }, loadMore: boolean = false) => {
+      // This will get called when the table needs new data
+      // You could fetch your data from literally anywhere,
+      // even a server. But for this example, we'll just fake it.
 
-    // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current;
+      // Give this fetch an ID
+      const fetchId = ++fetchIdRef.current;
 
-    // Set the loading state
-    setLoading(true);
+      // Set the loading state
+      setLoading(true);
 
-    if (fetchId === fetchIdRef.current) {
-      const currentPage = pageIndex + 1;
+      if (fetchId === fetchIdRef.current) {
+        const currentPage = pageIndex + 1;
 
-      const { data } = await OrderService.orders(currentPage);
+        const { data } = await OrderService.orders(currentPage);
 
-      setData(data.data);
+        if (loadMore) {
+          setMobileData((oldData) => {
+            return [...oldData, ...data.data];
+          });
+        } else {
+          setData(data.data);
+        }
 
-      // Your server could send back total page count.
-      // For now we'll just fake it, too
-      setPageCount(data.meta.last_page);
+        // Your server could send back total page count.
+        // For now we'll just fake it, too
+        setPageCount(data.meta.last_page);
 
-      setLoading(false);
-    }
-  }, []);
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return (
-    <Table
-      data={data}
-      pageCount={pageCount}
-      loading={loading}
-      columns={columns}
-      fetchData={fetchData}
-    />
+    <>
+      <div className="ps-shopping__table">
+        <Table
+          data={data}
+          pageCount={pageCount}
+          loading={loading}
+          columns={columns}
+          fetchData={fetchData}
+        />
+      </div>
+
+      <MobileOrderList
+        items={mobileData}
+        loading={loading}
+        fetchData={fetchData}
+        pageCount={pageCount}
+      />
+    </>
   );
 };
 

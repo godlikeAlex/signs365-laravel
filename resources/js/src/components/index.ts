@@ -11,11 +11,13 @@ import ProductCard from "./ProductCard";
 import ProductCardPlaceholder from "./ProductCardPlaceholder";
 import ProtectedRoute from "./ProtectedRoute";
 import Routing from "./Routing";
+import UpdatePasswordForm from "./UpdatePasswordForm";
 import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   VariantsProductPlaceholder,
+  UpdatePasswordForm,
   CartItem,
   OrdersHistory,
   Footer,

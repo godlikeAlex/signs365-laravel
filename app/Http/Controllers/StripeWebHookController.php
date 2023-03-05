@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductPrice;
+use App\Models\ProductVariant;
 use App\Models\TemporaryOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -71,12 +73,27 @@ class StripeWebHookController extends Controller
             "main_order_uuid" => $randomUUID,
           ]);
 
+          $city = $order->city;
+
           foreach ($tempOrder->cart_data->items as $cartItem) {
-            // $orderItem = new OrderItem();
+            $orderItem = new OrderItem();
 
-            // $orderItem->order()->associate($order);
+            $productVariant = ProductVariant::find(
+              $cartItem->attributes->product_variant->id
+            );
+            $productPrice = $productVariant
+              ->prices()
+              ->where("city_id", $city->id)
+              ->first();
 
-            // $orderItem->save();
+            $orderItem->price = $productPrice->price;
+            $orderItem->quantity = $cartItem->quantity;
+            $orderItem->order()->associate($order);
+            $orderItem->productPrice()->associate($productPrice);
+            $orderItem->variant()->associate($productVariant);
+            $orderItem->product_id = $cartItem->associatedModel->id;
+
+            $orderItem->save();
           }
         }
 

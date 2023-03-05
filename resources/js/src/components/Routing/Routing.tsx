@@ -1,13 +1,5 @@
-import React, { useEffect } from "react";
-import {
-  Routes,
-  Route,
-  useLocation,
-  useNavigate,
-  useResolvedPath,
-  matchPath,
-  Navigate,
-} from "react-router-dom";
+// import React from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import {
   Cart,
   Checkout,
@@ -29,24 +21,6 @@ function Routing() {
   let state = location.state as { backgroundLocation?: Location };
   const navigate = useNavigate();
   const background = location.state && location.state.background;
-
-  console.log(state, location);
-
-  useEffect(() => {
-    // console.log(currentPath, "ker");
-    // console.log(location);
-    // navigate("/login");
-    if (!location.state) {
-      try {
-        const { params, pattern, pathname } = matchPath(
-          "/product/:slug",
-          location.pathname
-        );
-        console.log(pattern, params, pathname);
-        navigate("/login");
-      } catch (error) {}
-    }
-  }, [location]);
 
   return (
     <>

@@ -64,7 +64,7 @@ const SuccessPayment: React.FC<Props> = ({}: Props) => {
       </Helmet>
 
       <div className="container">
-        <div className="cart-empty text-center" style={{}}>
+        <div className="cart-empty text-center title-with-icon-section">
           <div className="">
             <div className="ps-cart__icon" style={{ marginBottom: 10 }}>
               {state.loading ? (
