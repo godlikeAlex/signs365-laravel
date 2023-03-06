@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { IProduct, IProductVaraint } from "@/src/types/models";
-import { VariantsProductPlaceholder } from "@/src/components";
+import { Input, VariantsProductPlaceholder } from "@/src/components";
 import ProductService from "@/src/services/ProductService";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "@/src/hooks";
@@ -19,6 +19,7 @@ import Skeleton from "react-loading-skeleton";
 import "./style.css";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
+import ModalContentWithForm from "./ModalContentWithForm";
 
 interface Props {}
 
@@ -154,6 +155,65 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
     }
   };
 
+  const renderVariants = () => (
+    <>
+      {state.productVaraintsLoaded && state?.currentVaraint ? (
+        <span className="ps-product__price">
+          ${state.currentVaraint.price.toLocaleString()}
+        </span>
+      ) : (
+        <Skeleton height={52} width={"35%"} />
+      )}
+
+      <h6 style={{ marginTop: 20 }}>Variants</h6>
+      {state.productVaraintsLoaded ? (
+        <div className="row no-gutters" style={{ width: "100%" }}>
+          {state.productVariants.map((productVariant) => (
+            <div className="col-md-4 cust-padding">
+              <div
+                className={classNames("product-variant", {
+                  active: productVariant.id === state.currentVaraint.id,
+                })}
+                onClick={() => handleSelectVariant(productVariant)}
+              >
+                <h6>{productVariant.label}</h6>
+                <h6
+                  style={{
+                    color: "#fd8d27",
+                    marginBottom: 0,
+                    marginTop: 5,
+                  }}
+                >
+                  ${productVariant.price.toLocaleString()}
+                </h6>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          className="col-md-12"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ width: "33%" }}>
+            <Skeleton height={67} width={"100%"} />
+          </div>
+
+          <div style={{ width: "33%" }}>
+            <Skeleton height={67} width={"100%"} />
+          </div>
+
+          <div style={{ width: "33%" }}>
+            <Skeleton height={67} width={"100%"} />
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
     <>
       {state.product ? (
@@ -180,7 +240,15 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
                 <div className="ps-product--detail">
                   <div className="row">
                     <div className="col-12 col-xl-6">
-                      <div className="ps-product--gallery">
+                      <div
+                        className="ps-product--gallery"
+                        style={{
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                        }}
+                      >
                         <Slider
                           ref={(slider) => setMainSlickRef(slider)}
                           asNavFor={thumbNailSlickRef}
@@ -243,82 +311,28 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
                             <Skeleton count={4} />
                           )}
                         </div>
+
                         <div
                           className="ps-product__meta col-md-12"
                           style={{ marginTop: 0 }}
                         >
-                          {state.productVaraintsLoaded &&
-                          state?.currentVaraint ? (
-                            <span className="ps-product__price">
-                              ${state.currentVaraint.price.toLocaleString()}
-                            </span>
+                          {state.product?.with_checkout ? (
+                            renderVariants()
                           ) : (
-                            <Skeleton height={52} width={"35%"} />
-                          )}
-
-                          <h6 style={{ marginTop: 20 }}>Variants</h6>
-                          {state.productVaraintsLoaded ? (
-                            <div
-                              className="row no-gutters"
-                              style={{ width: "100%" }}
-                            >
-                              {state.productVariants.map((productVariant) => (
-                                <div className="col-md-4 cust-padding">
-                                  <div
-                                    className={classNames("product-variant", {
-                                      active:
-                                        productVariant.id ===
-                                        state.currentVaraint.id,
-                                    })}
-                                    onClick={() =>
-                                      handleSelectVariant(productVariant)
-                                    }
-                                  >
-                                    <h6>{productVariant.label}</h6>
-                                    <h6
-                                      style={{
-                                        color: "#fd8d27",
-                                        marginBottom: 0,
-                                        marginTop: 5,
-                                      }}
-                                    >
-                                      ${productVariant.price.toLocaleString()}
-                                    </h6>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div
-                              className="col-md-12"
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <div style={{ width: "33%" }}>
-                                <Skeleton height={67} width={"100%"} />
-                              </div>
-
-                              <div style={{ width: "33%" }}>
-                                <Skeleton height={67} width={"100%"} />
-                              </div>
-
-                              <div style={{ width: "33%" }}>
-                                <Skeleton height={67} width={"100%"} />
-                              </div>
-                            </div>
+                            <ModalContentWithForm product={state.product} />
                           )}
                         </div>
 
-                        <button
-                          type="submit"
-                          style={{ marginTop: 20 }}
-                          className="ps-btn ps-btn--warning"
-                          onClick={handleAddToCart}
-                        >
-                          Add to cart
-                        </button>
+                        {state.product?.with_checkout ? (
+                          <button
+                            type="submit"
+                            style={{ marginTop: 20 }}
+                            className="ps-btn ps-btn--warning"
+                            onClick={handleAddToCart}
+                          >
+                            Add to cart
+                          </button>
+                        ) : null}
                       </div>
                     </div>
                   </div>

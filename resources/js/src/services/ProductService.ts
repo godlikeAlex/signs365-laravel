@@ -9,4 +9,11 @@ export default class ProductService {
   static getProductVariants(slug: string) {
     return api.get<IGetProductVariants>(`/products/${slug}/variants`);
   }
+
+  static sendRequestProduct(
+    slug: string,
+    data: { name: string; email: string }
+  ) {
+    return api.post<{ ok: boolean }>(`/product-request/${slug}`, data);
+  }
 }

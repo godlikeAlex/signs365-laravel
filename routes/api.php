@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post("webhook", [StripeWebHookController::class, "webhook"]);
+
+Route::post("/product-request/{product}", [
+  ContactController::class,
+  "sendProductRequest",
+]);
 
 Route::middleware("handleCityFromRequest")->group(function () {
   Route::get("/categories", [
