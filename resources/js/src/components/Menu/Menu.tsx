@@ -86,18 +86,13 @@ const Menu: React.FC<Props> = ({}: Props) => {
 
               <ul className="menu-top">
                 <li className="nav-item">
-                  <a className="nav-link" href="about-us.html">
+                  <a className="nav-link" href="#">
                     About
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link" href="blog-sidebar1.html">
-                    Blog
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="contact-us.html">
+                  <a className="nav-link" href="#">
                     Contact
                   </a>
                 </li>
@@ -126,18 +121,18 @@ const Menu: React.FC<Props> = ({}: Props) => {
                     />
                   </Link>
                 </li>
-                {homeCategories.map(({ id, title, icon }, index) => (
+                {homeCategories.map(({ id, title, icon, slug }, index) => (
                   <li
                     className="ps-category__item ps-category__item-custom"
                     key={id}
                   >
-                    <a href="/shop" className="ps-category__link">
+                    <Link to={`/catalog/${slug}`} className="ps-category__link">
                       <img
                         src={`/storage/${icon}`}
                         alt={title}
                         style={{ width: "34px", height: "34px" }}
                       />
-                    </a>
+                    </Link>
                     <div className="ps-category__name">
                       <Link to="/shop">{title}</Link>
                     </div>

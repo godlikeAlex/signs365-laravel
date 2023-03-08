@@ -2,6 +2,7 @@
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import {
   Cart,
+  Catalog,
   Checkout,
   EditProfile,
   ForgotPassword,
@@ -37,6 +38,8 @@ function Routing() {
           <Route path="cart" element={<Cart />} />
 
           <Route path="/cart/checkout" element={<Checkout />} />
+
+          <Route path="/catalog/:categorySlug" element={<Catalog />} />
 
           <Route
             path="/cart/checkout/success-payment"

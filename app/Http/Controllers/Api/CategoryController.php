@@ -15,6 +15,7 @@ class CategoryController extends Controller
       $request->get("city")
     )
       ->orderBy("id", "asc")
+      ->where("show_on_home", true)
       ->publishedProducts($request->get("city"))
       ->get();
 

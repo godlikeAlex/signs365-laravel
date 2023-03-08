@@ -41,7 +41,7 @@ const CartListMobile: React.FC<Props> = ({ items }: Props) => {
                   cartItem.associatedModel.images.length > 0 ? (
                     <img
                       src={`/storage/${cartItem.associatedModel.images[0]}`}
-                      alt={name}
+                      alt=""
                     />
                   ) : null}
                 </figure>

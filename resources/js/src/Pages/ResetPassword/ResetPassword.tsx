@@ -78,12 +78,14 @@ const ResetPassword: React.FC<Props> = ({}: Props) => {
           type="password"
           error={errors.password?.message}
           disabled={isSubmiting}
+          formType="profile"
         />
         <Input
           {...register("passwordConfirmation")}
           type="password"
           error={errors.passwordConfirmation?.message}
           disabled={isSubmiting}
+          formType="profile"
         />
 
         <input type="submit" disabled={isSubmiting} />

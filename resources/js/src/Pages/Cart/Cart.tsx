@@ -1,11 +1,11 @@
 import { CartList } from "@/src/components";
-import CartListMobile from "@/src/components/CartList/CartListMobile";
 import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { clearCart } from "@/src/redux/cartSlice";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet";
+import CartListMobile from "@/src/components/CartList/CartListMobile";
 
 interface CartProps {}
 
@@ -40,8 +40,8 @@ const Cart: React.FC<CartProps> = ({}: CartProps) => {
           <div className="row">
             <div className="col-12 col-md-7 col-lg-9">
               {/* content. List and etc */}
-              <CartListMobile items={cart.items} />
               <CartList items={cart.items} />
+              <CartListMobile items={cart.items} />
             </div>
 
             <div className="col-12 col-md-5 col-lg-3">

@@ -9,6 +9,7 @@ import Cart from "./Cart";
 import ModalShowProduct from "./ModalShowProduct";
 import Checkout from "./Checkout";
 import SuccessPayment from "./SuccessPayment/";
+import Catalog from "./Catalog";
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   ForgotPassword,
   ResetPassword,
   EditProfile,
+  Catalog,
 };

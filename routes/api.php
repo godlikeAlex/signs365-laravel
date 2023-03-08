@@ -34,6 +34,21 @@ Route::middleware("handleCityFromRequest")->group(function () {
     "index",
   ]);
 
+  Route::get("/shop/category/{product_category:slug}", [
+    \App\Http\Controllers\Api\ShopController::class,
+    "category",
+  ]);
+
+  Route::get("/shop/category/{product_category:slug}/products", [
+    \App\Http\Controllers\Api\ShopController::class,
+    "products",
+  ]);
+
+  Route::get("/shop/categories", [
+    \App\Http\Controllers\Api\ShopController::class,
+    "categories",
+  ]);
+
   Route::prefix("cart")->group(function () {
     Route::get("", [\App\Http\Controllers\Api\CartController::class, "index"]);
 

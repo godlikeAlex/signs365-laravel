@@ -42,27 +42,14 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                     <div className="ps-logo">
                       <a href="index.html">
                         {" "}
-                        <img src="img/sticky-logo.png" alt />
-                        <img
-                          className="logo-white"
-                          src="img/logo-white.png"
-                          alt
-                        />
-                        <img
-                          className="logo-black"
-                          src="img/Logo-black.png"
-                          alt
-                        />
+                        <img src="/img/sticky-logo.png" />
+                        <img className="logo-white" src="/img/logo-white.png" />
+                        <img className="logo-black" src="/img/Logo-black.png" />
                         <img
                           className="logo-white-all"
-                          src="img/logo-white1.png"
-                          alt
+                          src="/img/logo-white1.png"
                         />
-                        <img
-                          className="logo-green"
-                          src="img/logo-green.png"
-                          alt
-                        />
+                        <img className="logo-green" src="/img/logo-green.png" />
                       </a>
                     </div>
                     <div className="ps-footer__title">Our store</div>
@@ -222,8 +209,12 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
               <p>Copyright © 2021 Mymedi. All Rights Reserved</p>
             </div>
             <div className="col-12 col-md-6 text-right">
-              <img src="img/payment.png" alt />
-              <img className="payment-light" src="img/payment-light.png" alt />
+              <img src="img/payment.png" alt="" />
+              <img
+                className="payment-light"
+                src="img/payment-light.png"
+                alt=""
+              />
             </div>
           </div>
         </div>

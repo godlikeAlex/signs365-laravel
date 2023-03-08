@@ -20,6 +20,7 @@ import "./style.css";
 import classNames from "classnames";
 import { Helmet } from "react-helmet";
 import ModalContentWithForm from "./ModalContentWithForm";
+import FullModalProduct from "./FullModalProduct";
 
 interface Props {}
 
@@ -38,7 +39,7 @@ interface IState {
   productSlug?: string;
 }
 
-const ThumbnailSlick = {
+export const ThumbnailSlick = {
   // slidesToShow: 5,
   slidesToScroll: 1,
   lazyLoad: "ondemand",
@@ -48,7 +49,7 @@ const ThumbnailSlick = {
   infinite: false,
 };
 
-const MainSlick = {
+export const MainSlick = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: false,
@@ -214,6 +215,129 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
     </>
   );
 
+  const modal = () => (
+    <Dialog open onClose={handleClose}>
+      <div className="headless-bg">
+        <Dialog.Panel className="headless-popup">
+          <div className="modal-body headless-content">
+            <div className="wrap-modal-slider container-fluid ps-quickview__body">
+              <button
+                className="close ps-quickview__close"
+                type="button"
+                onClick={handleClose}
+                style={{ cursor: "pointer", zIndex: 2 }}
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <div className="ps-product--detail">
+                <div className="row">
+                  <div className="col-12 col-xl-6">
+                    <div
+                      className="ps-product--gallery"
+                      style={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Slider
+                        ref={(slider) => setMainSlickRef(slider)}
+                        asNavFor={thumbNailSlickRef}
+                        {...MainSlick}
+                        className="ps-product__thumbnail"
+                      >
+                        {state.product?.images.map((img) => (
+                          <div className="slide">
+                            <img
+                              src={`/storage/${img}`}
+                              alt={state.product.title}
+                            />
+                          </div>
+                        ))}
+                      </Slider>
+                      <Slider
+                        ref={(slider) => setThumbNailSlickRef(slider)}
+                        asNavFor={mainSlickRef}
+                        {...ThumbnailSlick}
+                        slidesToShow={5}
+                        className="ps-gallery--image"
+                        style={{ display: "block" }}
+                      >
+                        {state.product?.images.map((img) => (
+                          <div className="slide">
+                            <div className="ps-gallery__item">
+                              <img
+                                src={`/storage/${img}`}
+                                alt={state.product.title}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </Slider>
+                    </div>
+                  </div>
+                  <div className="col-12 col-xl-6">
+                    <div
+                      className="ps-product__info row no-gutters"
+                      style={{ marginTop: 20, marginBottom: 20 }}
+                    >
+                      <div className="ps-product__branch col-md-12">
+                        {state?.product?.categories?.map((category) => (
+                          <a>{category.title}</a>
+                        )) || <Skeleton />}
+                      </div>
+                      <Dialog.Title className={"ps-product__title col-md-12"}>
+                        <a>{state?.product?.title || <Skeleton />}</a>
+                      </Dialog.Title>
+
+                      <div className="ps-product__desc col-md-12">
+                        {state?.product?.description ? (
+                          <Dialog.Description
+                            className={"product_modal_desc"}
+                            dangerouslySetInnerHTML={{
+                              __html: state?.product?.description,
+                            }}
+                          ></Dialog.Description>
+                        ) : (
+                          <Skeleton count={4} />
+                        )}
+                      </div>
+
+                      <div
+                        className="ps-product__meta col-md-12"
+                        style={{ marginTop: 0 }}
+                      >
+                        {state.product?.with_checkout ? (
+                          renderVariants()
+                        ) : (
+                          <ModalContentWithForm product={state.product} />
+                        )}
+                      </div>
+
+                      {state.product?.with_checkout ? (
+                        <button
+                          type="submit"
+                          style={{ marginTop: 20 }}
+                          className="ps-btn ps-btn--warning"
+                          onClick={handleAddToCart}
+                        >
+                          Add to cart
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Dialog.Panel>
+      </div>
+    </Dialog>
+  );
+
   return (
     <>
       {state.product ? (
@@ -222,174 +346,13 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
         </Helmet>
       ) : null}
 
-      <Dialog open onClose={handleClose}>
-        <div className="headless-bg">
-          <Dialog.Panel className="headless-popup">
-            <div className="modal-body headless-content">
-              <div className="wrap-modal-slider container-fluid ps-quickview__body">
-                <button
-                  className="close ps-quickview__close"
-                  type="button"
-                  onClick={handleClose}
-                  style={{ cursor: "pointer", zIndex: 2 }}
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <div className="ps-product--detail">
-                  <div className="row">
-                    <div className="col-12 col-xl-6">
-                      <div
-                        className="ps-product--gallery"
-                        style={{
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Slider
-                          ref={(slider) => setMainSlickRef(slider)}
-                          asNavFor={thumbNailSlickRef}
-                          {...MainSlick}
-                          className="ps-product__thumbnail"
-                        >
-                          {state.product?.images.map((img) => (
-                            <div className="slide">
-                              <img
-                                src={`/storage/${img}`}
-                                alt={state.product.title}
-                              />
-                            </div>
-                          ))}
-                        </Slider>
-                        <Slider
-                          ref={(slider) => setThumbNailSlickRef(slider)}
-                          asNavFor={mainSlickRef}
-                          {...ThumbnailSlick}
-                          slidesToShow={5}
-                          className="ps-gallery--image"
-                          style={{ display: "block" }}
-                        >
-                          {state.product?.images.map((img) => (
-                            <div className="slide">
-                              <div className="ps-gallery__item">
-                                <img
-                                  src={`/storage/${img}`}
-                                  alt={state.product.title}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </Slider>
-                      </div>
-                    </div>
-                    <div className="col-12 col-xl-6">
-                      <div
-                        className="ps-product__info row no-gutters"
-                        style={{ marginTop: 20, marginBottom: 20 }}
-                      >
-                        <div className="ps-product__branch col-md-12">
-                          {state?.product?.categories?.map((category) => (
-                            <a>{category.title}</a>
-                          )) || <Skeleton />}
-                        </div>
-                        <Dialog.Title className={"ps-product__title col-md-12"}>
-                          <a>{state?.product?.title || <Skeleton />}</a>
-                        </Dialog.Title>
-
-                        <div className="ps-product__desc col-md-12">
-                          {state?.product?.description ? (
-                            <Dialog.Description
-                              className={"product_modal_desc"}
-                              dangerouslySetInnerHTML={{
-                                __html: state?.product?.description,
-                              }}
-                            ></Dialog.Description>
-                          ) : (
-                            <Skeleton count={4} />
-                          )}
-                        </div>
-
-                        <div
-                          className="ps-product__meta col-md-12"
-                          style={{ marginTop: 0 }}
-                        >
-                          {state.product?.with_checkout ? (
-                            renderVariants()
-                          ) : (
-                            <ModalContentWithForm product={state.product} />
-                          )}
-                        </div>
-
-                        {state.product?.with_checkout ? (
-                          <button
-                            type="submit"
-                            style={{ marginTop: 20 }}
-                            className="ps-btn ps-btn--warning"
-                            onClick={handleAddToCart}
-                          >
-                            Add to cart
-                          </button>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* <div className="images-headless"></div>
-
-            <div className="headless-content">
-              <Dialog.Title className={"product_modal_title"}>
-                {product.title}
-              </Dialog.Title>
-              {state.productVaraintsLoaded && state.currentVaraint ? (
-                <div className="product_modal_price">
-                  {state.currentVaraint.price.toLocaleString()} $
-                </div>
-              ) : (
-                <div>Loading...</div>
-              )}
-              <Dialog.Description
-                className={"product_modal_desc"}
-                dangerouslySetInnerHTML={{ __html: product.description }}
-              ></Dialog.Description>
-              <h3>Variants</h3>
-              {state.productVaraintsLoaded ? (
-                <div className="product-variants-container">
-                  {state.productVariants.map((productVariant) => (
-                    <div
-                      className={
-                        productVariant.id === state.currentVaraint.id
-                          ? "product-variant active"
-                          : "product-variant"
-                      }
-                      onClick={() => handleSelectVariant(productVariant)}
-                    >
-                      <h5>{productVariant.label}</h5>
-                      <h6>{productVariant.price.toLocaleString()} $</h6>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <VariantsProductPlaceholder />
-              )}
-
-              <div className="add-to-cart" onClick={handleAddToCart}>
-                Add to cart
-              </div>
-            </div> */}
-
-            {/* <p dangerouslySetInnerHTML={{ __html: product.description }}></p> */}
-
-            {/* <button onClick={() => setIsOpen(false)}>Deactivate</button> */}
-            {/* <button onClick={() => setIsOpen(false)}>Cancel</button> */}
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+      {/* <FullModalProduct
+        renderVariants={renderVariants}
+        product={state.product}
+        handleAddToCart={handleAddToCart}
+        handleClose={handleClose}
+      /> */}
+      {modal()}
     </>
   );
 };

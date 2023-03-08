@@ -5,6 +5,7 @@ import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
 import MobileHeader from "./MobileHeader";
+import OrderCard from "./OrderCard";
 import OrdersHistory from "./OrdersHistory";
 import PaymentForm from "./PaymentForm";
 import ProductCard from "./ProductCard";
@@ -18,6 +19,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 export {
   VariantsProductPlaceholder,
   UpdatePasswordForm,
+  OrderCard,
   CartItem,
   OrdersHistory,
   Footer,

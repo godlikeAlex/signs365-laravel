@@ -1,9 +1,10 @@
-import { OrdersHistory } from "@/src/components";
+import { OrderCard, OrdersHistory } from "@/src/components";
 import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { logoutUser } from "@/src/redux/authSlice";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { AuthService } from "@/src/services";
 
 interface Props {}
 
@@ -75,7 +76,6 @@ const Profile: React.FC<Props> = ({}: Props) => {
 
                     <a
                       className="ps-btn ps-btn--warning"
-                      href=""
                       onClick={() => dispatch(logoutUser())}
                       style={{ marginBottom: 0, marginTop: 15 }}
                     >

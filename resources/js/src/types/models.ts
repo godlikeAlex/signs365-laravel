@@ -17,6 +17,16 @@ export interface IOrder {
   total: number;
   total_without_tax: number;
   address: string;
+  created_at: string;
+  order_items: IOrderItem[];
+}
+
+export interface IOrderItem {
+  id: number;
+  quantity: number;
+  price: number;
+  product_variant_title: string;
+  product: IProduct;
 }
 
 export interface ICategory {
