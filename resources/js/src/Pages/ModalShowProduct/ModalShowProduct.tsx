@@ -7,6 +7,7 @@ import {
   Path,
   useLocation,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 import { IProduct, IProductVaraint } from "@/src/types/models";
 import { Input, VariantsProductPlaceholder } from "@/src/components";
@@ -21,8 +22,12 @@ import classNames from "classnames";
 import { Helmet } from "react-helmet";
 import ModalContentWithForm from "./ModalContentWithForm";
 import FullModalProduct from "./FullModalProduct";
+import { useMediaQuery } from "react-responsive";
+import { MainSlick, ThumbnailSlick } from "./sliderConfig";
 
-interface Props {}
+interface Props {
+  fullPage?: boolean;
+}
 
 interface ILocation extends Path {
   state: {
@@ -39,31 +44,15 @@ interface IState {
   productSlug?: string;
 }
 
-export const ThumbnailSlick = {
-  // slidesToShow: 5,
-  slidesToScroll: 1,
-  lazyLoad: "ondemand",
-  dots: false,
-  arrows: false,
-  focusOnSelect: true,
-  infinite: false,
-};
-
-export const MainSlick = {
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  arrows: false,
-  dots: false,
-  lazyLoad: "ondemand",
-};
-
-const ModalShowProduct: React.FC<Props> = ({}: Props) => {
+const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
+  const params = useParams<"slug">();
   const location: ILocation = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [mainSlickRef, setMainSlickRef] = useState(null);
   const [thumbNailSlickRef, setThumbNailSlickRef] = useState(null);
+  const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
   const [state, setState] = useState<IState>({
     loading: location.state?.product ? true : false,
@@ -79,11 +68,6 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
       if (!location?.state?.product) {
         // need fetch PRODUCT if joined by link
         try {
-          const { params, pattern, pathname } = matchPath(
-            "/home/product/modal/:slug",
-            location.pathname
-          );
-
           const { data } = await ProductService.getProduct(params.slug);
           setState((currentState) => ({
             ...currentState,
@@ -106,7 +90,7 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
     };
 
     fetchProduct();
-  }, [location]);
+  }, [params]);
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -149,11 +133,7 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
   };
 
   const handleClose = () => {
-    if (location.state) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
+    navigate(-1);
   };
 
   const renderVariants = () => (
@@ -220,7 +200,7 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
       <div className="headless-bg">
         <Dialog.Panel className="headless-popup">
           <div className="modal-body headless-content">
-            <div className="wrap-modal-slider container-fluid ps-quickview__body">
+            <div className="wrap-modal-slider  ps-quickview__body">
               <button
                 className="close ps-quickview__close"
                 type="button"
@@ -346,13 +326,17 @@ const ModalShowProduct: React.FC<Props> = ({}: Props) => {
         </Helmet>
       ) : null}
 
-      {/* <FullModalProduct
-        renderVariants={renderVariants}
-        product={state.product}
-        handleAddToCart={handleAddToCart}
-        handleClose={handleClose}
-      /> */}
-      {modal()}
+      {fullPage ? (
+        <FullModalProduct
+          renderVariants={renderVariants}
+          product={state.product}
+          handleAddToCart={handleAddToCart}
+          handleClose={handleClose}
+        />
+      ) : (
+        modal()
+      )}
+      {/* {modal()} */}
     </>
   );
 };

@@ -1,8 +1,12 @@
+import { useAppSelector } from "@/src/hooks";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface FooterProps {}
 
 const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
+  const { homeCategories } = useAppSelector((state) => state.app);
+
   return (
     <footer className="ps-footer ps-footer--1">
       <div className="ps-footer--top">
@@ -41,70 +45,30 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                   <div className="ps-footer--address">
                     <div className="ps-logo">
                       <a href="index.html">
-                        {" "}
-                        <img src="/img/sticky-logo.png" />
-                        <img className="logo-white" src="/img/logo-white.png" />
-                        <img className="logo-black" src="/img/Logo-black.png" />
-                        <img
-                          className="logo-white-all"
-                          src="/img/logo-white1.png"
-                        />
-                        <img className="logo-green" src="/img/logo-green.png" />
+                        <img src="/img/logo.png" />
                       </a>
                     </div>
                     <div className="ps-footer__title">Our store</div>
-                    <p>
+                    {/* <p>
                       1487 Rocky Horse Carrefour
                       <br />
                       Arlington, TX 16819
-                    </p>
-                    <p>
+                    </p> */}
+                    {/* <p>
                       <a
                         target="_blank"
                         href="https://www.google.com/maps/place/Arlington,+TX,+USA/@32.701968,-97.2054529,12z/data=!3m1!4b1!4m8!1m2!2m1!1s1487+Rocky+Horse+Carrefour+Arlington,+TX+16819!3m4!1s0x864e62d2e40898d3:0xb5ef6ac1fa05351!8m2!3d32.735687!4d-97.1080656"
                       >
                         Show on map
                       </a>
-                    </p>
-                    <ul className="ps-social">
-                      <li>
-                        <a className="ps-social__link facebook" href="#">
-                          <i className="fa fa-facebook"> </i>
-                          <span className="ps-tooltip">Facebook</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a className="ps-social__link instagram" href="#">
-                          <i className="fa fa-instagram"></i>
-                          <span className="ps-tooltip">Instagram</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a className="ps-social__link youtube" href="#">
-                          <i className="fa fa-youtube-play"></i>
-                          <span className="ps-tooltip">Youtube</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a className="ps-social__link pinterest" href="#">
-                          <i className="fa fa-pinterest-p"></i>
-                          <span className="ps-tooltip">Pinterest</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a className="ps-social__link linkedin" href="#">
-                          <i className="fa fa-linkedin"></i>
-                          <span className="ps-tooltip">Linkedin</span>
-                        </a>
-                      </li>
-                    </ul>
+                    </p> */}
                   </div>
                 </div>
                 <div className="col-12 col-md-8">
                   <div className="ps-footer--contact">
                     <h5 className="ps-footer__title">Need help</h5>
                     <div className="ps-footer__fax">
-                      <i className="icon-telephone"></i>0020 500 – MYMEDI – 000
+                      <i className="icon-telephone"></i> (949) 942-1363{" "}
                     </div>
                     <p className="ps-footer__work">
                       Monday – Friday: 9:00-20:00
@@ -123,7 +87,7 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                           className="__cf_email__"
                           data-cfemail="15767a7b6174766155706d74786579703b767a78"
                         >
-                          [email&#160;protected]
+                          info@signs7.com
                         </span>{" "}
                       </a>
                     </p>
@@ -133,12 +97,12 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
             </div>
             <div className="col-12 col-md-5">
               <div className="row">
-                <div className="col-6 col-md-4">
+                <div className="col-6 col-md-8">
                   <div className="ps-footer--block">
                     <h5 className="ps-block__title">Information</h5>
                     <ul className="ps-block__list">
                       <li>
-                        <a href="about-us.html">About us</a>
+                        <a href="#">About us</a>
                       </li>
                       <li>
                         <a href="#">Delivery information</a>
@@ -146,56 +110,21 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       <li>
                         <a href="#">Privacy Policy</a>
                       </li>
-                      <li>
-                        <a href="#">Sales</a>
-                      </li>
-                      <li>
-                        <a href="#">Terms &amp; Conditions</a>
-                      </li>
                     </ul>
                   </div>
                 </div>
-                <div className="col-6 col-md-4">
-                  <div className="ps-footer--block">
-                    <h5 className="ps-block__title">Account</h5>
-                    <ul className="ps-block__list">
-                      <li>
-                        <a href="#">My account</a>
-                      </li>
-                      <li>
-                        <a href="#">My orders</a>
-                      </li>
-                      <li>
-                        <a href="#">Returns</a>
-                      </li>
-                      <li>
-                        <a href="#">Shipping</a>
-                      </li>
-                      <li>
-                        <a href="wishlist.html">Wishlist</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+
                 <div className="col-6 col-md-4">
                   <div className="ps-footer--block">
                     <h5 className="ps-block__title">Store</h5>
                     <ul className="ps-block__list">
-                      <li>
-                        <a href="#">Affiliate</a>
-                      </li>
-                      <li>
-                        <a href="#">Bestsellers</a>
-                      </li>
-                      <li>
-                        <a href="#">Discount</a>
-                      </li>
-                      <li>
-                        <a href="#">Latest products</a>
-                      </li>
-                      <li>
-                        <a href="#">Sale</a>
-                      </li>
+                      {homeCategories.map((category) => (
+                        <li key={`footer-category-${category.id}`}>
+                          <Link to={`/catalog/${category.slug}`}>
+                            {category.title}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -206,7 +135,7 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
         <div className="ps-footer--bottom">
           <div className="row">
             <div className="col-12 col-md-6">
-              <p>Copyright © 2021 Mymedi. All Rights Reserved</p>
+              <p>Copyright © 2023 Signs7. All Rights Reserved</p>
             </div>
             <div className="col-12 col-md-6 text-right">
               <img src="img/payment.png" alt="" />

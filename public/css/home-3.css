@@ -25,7 +25,7 @@
   top: 0;
   left: 0;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .ps-home--3 .ps-section--banner .ps-banner__content {

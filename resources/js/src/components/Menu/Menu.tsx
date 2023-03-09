@@ -114,11 +114,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 <li className="ps-logo custom-logo">
                   <Link to="/">
                     <img src="/img/logo.png" alt="" />
-                    <img
-                      className="sticky-logo"
-                      src="/img/sticky-logo.png"
-                      alt=""
-                    />
+                    <img className="sticky-logo" src="/img/logo.png" alt="" />
                   </Link>
                 </li>
                 {homeCategories.map(({ id, title, icon, slug }, index) => (
@@ -134,7 +130,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
                       />
                     </Link>
                     <div className="ps-category__name">
-                      <Link to="/shop">{title}</Link>
+                      <Link to={`/catalog/${slug}`}>{title}</Link>
                     </div>
                   </li>
                 ))}

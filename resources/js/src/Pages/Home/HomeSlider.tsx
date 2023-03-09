@@ -20,26 +20,17 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
       }}
       className="mySwiper"
     >
-      <SwiperSlide>
+      {/* <SwiperSlide>
         <div className="ps-banner" style={{ background: "#FFCC00" }}>
           <div className="container container-initial">
             <div className="ps-banner__block">
               <div className="ps-banner__content">
                 <h2 className="ps-banner__title">
-                  Get rid of bacteria <br />
-                  in your home
+                  Buy banner now <br />
+                  free shipping
                 </h2>
-                <div className="ps-banner__desc">Get rid of all bacteria!</div>
-                <div className="ps-banner__btn-group">
-                  <div className="ps-banner__btn font-bold">
-                    <img src="/img/icon/bacterial.svg" alt="alt" />
-                    Anti-Bacterial
-                  </div>
-                  <div className="ps-banner__btn font-bold">
-                    <img src="/img/icon/virus.svg" alt="alt" />
-                    Anti-Virus
-                  </div>
-                </div>
+                <div className="ps-banner__desc">55% off only in NY</div>
+
                 <a className="bg-white ps-banner__shop" href="#">
                   Shop now
                 </a>
@@ -60,29 +51,18 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
             </div>
           </div>
         </div>
-      </SwiperSlide>
+      </SwiperSlide> */}
       <SwiperSlide>
         <div className="ps-banner" style={{ background: "#F0F2F5" }}>
           <div className="container container-initial">
             <div className="ps-banner__block">
               <div className="ps-banner__content">
                 <h2 className="ps-banner__title">
-                  Antibacterial
-                  <br /> Medical Mask
+                  Signs, Decals...
+                  <br /> Only in NY
                 </h2>
-                <div className="ps-banner__desc">
-                  Just a few seconds to measure your body temperature.
-                </div>
-                <div className="ps-banner__btn-group">
-                  <div className="ps-banner__btn">
-                    <img src="/img/icon/bacterial.svg" alt="alt" />
-                    Anti-Bacterial
-                  </div>
-                  <div className="ps-banner__btn">
-                    <img src="/img/icon/virus.svg" alt="alt" />
-                    Anti-Virus
-                  </div>
-                </div>
+                <div className="ps-banner__desc">Only this week</div>
+
                 <a className="bg-warning ps-banner__shop" href="#">
                   Shop now
                 </a>
@@ -112,7 +92,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
             <div className="ps-banner__block">
               <div className="ps-banner__content">
                 <h2 className="ps-banner__title">
-                  Candid <br /> Whitening Kit
+                  Banner <br /> all types
                 </h2>
                 <div className="ps-banner__desc">
                   Only in this week. Don’t misss!

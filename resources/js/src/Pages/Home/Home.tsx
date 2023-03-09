@@ -6,7 +6,7 @@ import { ProductCard, ProductCardPlaceholder } from "@/src/components";
 import { useAppSelector } from "@/src/hooks";
 import HomeSlider from "./HomeSlider";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 interface IState {
   loading: boolean;
@@ -53,6 +53,8 @@ export default function Home() {
           })}
         </div>
       </div>
+
+      <Outlet />
     </>
   );
 }

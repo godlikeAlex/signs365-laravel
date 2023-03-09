@@ -33,19 +33,13 @@ const CartMiniItem: React.FC<CartMiniItemProps> = ({
 
   return (
     <div className="ps-product--mini-cart">
-      <a
-        className="ps-product__thumbnail"
-        href="https://nouthemes.net/html/mymedi/product-default.html"
-      >
+      <a className="ps-product__thumbnail" href="">
         {associatedModel.images && associatedModel.images.length > 0 ? (
           <img src={`/storage/${associatedModel.images[0]}`} alt={name} />
         ) : null}
       </a>
       <div className="ps-product__content">
-        <a
-          className="ps-product__name"
-          href="https://nouthemes.net/html/mymedi/product-default.html"
-        >
+        <a className="ps-product__name" href="">
           {name} x{quantity}
         </a>
         <p className="ps-product__meta">

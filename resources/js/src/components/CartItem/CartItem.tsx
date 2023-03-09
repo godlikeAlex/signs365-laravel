@@ -70,7 +70,7 @@ const CartItem: React.FC<Props> = ({
         </a>
       </td>
       <td className="ps-product__name">
-        <a href="product1.html">
+        <a href="">
           {name}
           {attributes?.product_variant?.label && (
             <>

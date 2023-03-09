@@ -12,9 +12,9 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         <div className="ps-header__middle">
           <div className="container">
             <div className="ps-logo">
-              <a href="index.html">
+              <a href="/">
                 {" "}
-                <img src="/img/mobile-logo.png" alt="" />
+                <img src="/img/logo.png" alt="" style={{ width: 80 }} />
               </a>
             </div>
             <div className="ps-header__right">

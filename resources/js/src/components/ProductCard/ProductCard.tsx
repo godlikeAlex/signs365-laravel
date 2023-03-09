@@ -3,7 +3,9 @@ import { IProduct } from "@/src/types/models";
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
-interface Props extends IProduct {}
+interface Props extends IProduct {
+  fullPage?: boolean;
+}
 
 const ProductCard: React.FC<Props> = (props: Props) => {
   const dispatch = useAppDispatch();
@@ -30,8 +32,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           <div className="ps-product__thumbnail">
             <Link
               className="ps-product__image"
-              to={`/home/product/modal/${slug}`}
-              state={{ backgroundLocation: location, product: props }}
+              to={
+                !props.fullPage
+                  ? `/home/product/modal/${slug}`
+                  : `/catalog/product/${slug}`
+              }
+              state={{
+                background: !props.fullPage && location,
+                product: props,
+              }}
             >
               <figure>
                 {images.map((image) => (
@@ -47,8 +56,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 title="Quick view"
               >
                 <Link
-                  to={`/home/product/modal/${slug}`}
-                  state={{ backgroundLocation: location, product: props }}
+                  to={
+                    !props.fullPage
+                      ? `/home/product/modal/${slug}`
+                      : `/catalog/product/${slug}`
+                  }
+                  state={{
+                    background: !props.fullPage && location,
+                    product: props,
+                  }}
                 >
                   <i className="fa fa-search"></i>
                 </Link>
@@ -60,8 +76,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 title="Add to cart"
               >
                 <Link
-                  to={`/home/product/modal/${slug}`}
-                  state={{ backgroundLocation: location, product: props }}
+                  to={
+                    !props.fullPage
+                      ? `/home/product/modal/${slug}`
+                      : `/catalog/product/${slug}`
+                  }
+                  state={{
+                    background: !props.fullPage && location,
+                    product: props,
+                  }}
                 >
                   <i className="fa fa-shopping-basket"></i>
                 </Link>
@@ -71,8 +94,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           <div className="ps-product__content">
             <h5 className="ps-product__title">
               <Link
-                to={`/home/product/modal/${slug}`}
-                state={{ backgroundLocation: location, product: props }}
+                to={
+                  !props.fullPage
+                    ? `/home/product/modal/${slug}`
+                    : `/catalog/product/${slug}`
+                }
+                state={{
+                  background: !props.fullPage && location,
+                  product: props,
+                }}
               >
                 {title}
               </Link>
@@ -82,13 +112,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 ${start_at.toLocaleString()}
               </span>
             </div>
-            <div className="ps-product__desc">
-              <ul className="ps-product__list">
-                <li>Study history up to 30 days</li>
-                <li>Up to 5 users simultaneously</li>
-                <li>Has HEALTH certificate</li>
-              </ul>
-            </div>
+
             <div className="ps-product__actions ps-product__group-mobile">
               <div className="ps-product__quantity">
                 <div className="def-number-input number-input safari_only">
@@ -116,8 +140,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="ps-product__cart">
                 <Link
                   className="ps-btn ps-btn--warning"
-                  to={`/home/product/modal/${slug}`}
-                  state={{ backgroundLocation: location, product: props }}
+                  to={
+                    !props.fullPage
+                      ? `/home/product/modal/${slug}`
+                      : `/catalog/product/${slug}`
+                  }
+                  state={{
+                    background: !props.fullPage && location,
+                    product: props,
+                  }}
                 >
                   Add to cart
                 </Link>
@@ -129,8 +160,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 title="Add to cart"
               >
                 <Link
-                  to={`/home/product/modal/${slug}`}
-                  state={{ backgroundLocation: location, product: props }}
+                  to={
+                    !props.fullPage
+                      ? `/home/product/modal/${slug}`
+                      : `/catalog/product/${slug}`
+                  }
+                  state={{
+                    background: !props.fullPage && location,
+                    product: props,
+                  }}
                 >
                   <i className="fa fa-shopping-basket"></i>
                 </Link>
@@ -139,8 +177,6 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           </div>
         </div>
       </div>
-
-      <Outlet />
     </>
   );
 
@@ -151,8 +187,12 @@ const ProductCard: React.FC<Props> = (props: Props) => {
       <h6>{(start_at / 100).toLocaleString()}</h6>
 
       <Link
-        to={`/home/product/modal/${slug}`}
-        state={{ backgroundLocation: location, product: props }}
+        to={
+          !props.fullPage
+            ? `/home/product/modal/${slug}`
+            : `/catalog/product/${slug}`
+        }
+        state={{ background: !props.fullPage && location, product: props }}
       >
         Show Product
       </Link>

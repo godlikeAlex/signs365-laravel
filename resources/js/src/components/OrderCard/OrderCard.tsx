@@ -4,7 +4,7 @@ import Collapse, { Panel } from "rc-collapse";
 // import "rc-collapse/assets/index.css";
 import motion from "./motionUtil";
 import { IOrder } from "@/src/types/models";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 interface Props extends IOrder {}
 

@@ -28,12 +28,13 @@
 }
 
 .ps-home--11 .ps-section--black-style .ps-section__body {
-  border: 3px solid #FD8D27;
+  border: 3px solid #fd8d27;
   border-radius: 4px;
   padding: 50px 0 10px;
 }
 
-.ps-home--11 .ps-section--black-style .ps-product--standard .ps-product__price, .ps-home--11 .ps-section--black-style .ps-product--standard .ps-product__title {
+.ps-home--11 .ps-section--black-style .ps-product--standard .ps-product__price,
+.ps-home--11 .ps-section--black-style .ps-product--standard .ps-product__title {
   color: #103178;
 }
 

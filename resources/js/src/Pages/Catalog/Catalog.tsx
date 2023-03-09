@@ -95,9 +95,11 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
             Catalog
           </li>
 
-          <li className="ps-breadcrumb__item active" aria-current="page">
-            some item
-          </li>
+          {state.currentCategory && (
+            <li className="ps-breadcrumb__item active" aria-current="page">
+              {state.currentCategory.title}
+            </li>
+          )}
         </ul>
         {!state.categoriesLoading ? (
           <h1 className="ps-categogy__name">

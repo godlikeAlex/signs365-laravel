@@ -33,7 +33,7 @@ const CatalogProducts: React.FC<Props> = ({ products, loading }: Props) => {
               className="col-6 col-lg-4 col-xl-3 p-0"
               key={`${product.id}-${idx}`}
             >
-              <ProductCard {...product} />
+              <ProductCard {...product} fullPage />
             </div>
           ))}
         </div>

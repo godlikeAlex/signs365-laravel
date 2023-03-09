@@ -143,10 +143,18 @@ h6 {
   padding-left: 0px !important;
 }
 
+.btn-add-to-cart-modal {
+  width: 300px !important;
+}
+
 @media (max-width: 700px) {
   .cust-padding {
     padding-left: 0px !important;
     margin-top: 15px;
+  }
+
+  .btn-add-to-cart-modal {
+    width: 100% !important;
   }
 }
 

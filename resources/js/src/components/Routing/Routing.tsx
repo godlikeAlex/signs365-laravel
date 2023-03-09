@@ -16,22 +16,35 @@ import {
 } from "@/src/Pages";
 import ProtectedRoute from "../ProtectedRoute";
 import Layout from "../Layout";
+import { useMediaQuery } from "react-responsive";
 
 function Routing() {
   const location = useLocation();
   let state = location.state as { backgroundLocation?: Location };
   const navigate = useNavigate();
   const background = location.state && location.state.background;
+  const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
   return (
     <>
-      <Routes location={state?.backgroundLocation || location}>
+      <Routes location={isMobile ? undefined : background || location}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
 
-          <Route path="home/*" element={<Home />}>
-            <Route path="product/modal/:slug" element={<ModalShowProduct />} />
-          </Route>
+          {isMobile ? (
+            <Route
+              path="home/product/modal/:slug"
+              element={<ModalShowProduct fullPage />}
+            />
+          ) : (
+            <Route path="home/*" element={<Home />}>
+              <Route
+                path="product/modal/:slug"
+                element={<ModalShowProduct />}
+              />
+            </Route>
+          )}
+
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 
@@ -40,6 +53,11 @@ function Routing() {
           <Route path="/cart/checkout" element={<Checkout />} />
 
           <Route path="/catalog/:categorySlug" element={<Catalog />} />
+
+          <Route
+            path="/catalog/product/:slug"
+            element={<ModalShowProduct fullPage />}
+          />
 
           <Route
             path="/cart/checkout/success-payment"
@@ -62,10 +80,10 @@ function Routing() {
         </Route>
       </Routes>
 
-      {state?.backgroundLocation && (
+      {!isMobile && background && (
         <Routes>
           <Route
-            path="/home/product/modal/:slug"
+            path="home/product/modal/:slug"
             element={<ModalShowProduct />}
           />
         </Routes>
