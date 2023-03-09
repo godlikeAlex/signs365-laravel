@@ -13,7 +13,7 @@ import { IProduct, IProductVaraint } from "@/src/types/models";
 import { Input, VariantsProductPlaceholder } from "@/src/components";
 import ProductService from "@/src/services/ProductService";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "@/src/hooks";
+import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import { addToCart } from "@/src/redux/cartSlice";
 import Slider from "react-slick";
 import Skeleton from "react-loading-skeleton";
@@ -24,6 +24,13 @@ import ModalContentWithForm from "./ModalContentWithForm";
 import FullModalProduct from "./FullModalProduct";
 import { useMediaQuery } from "react-responsive";
 import { MainSlick, ThumbnailSlick } from "./sliderConfig";
+import {
+  clearProductState,
+  getProduct,
+  getProductVariants,
+  selectProductVariant,
+  setProduct,
+} from "@/src/redux/singleProductSlice";
 
 interface Props {
   fullPage?: boolean;
@@ -48,44 +55,40 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
   const params = useParams<"slug">();
   const location: ILocation = useLocation();
   const navigate = useNavigate();
+
+  const {
+    loading,
+    product,
+    currentVaraint,
+    productVaraintsLoaded,
+    productVariants,
+  } = useAppSelector((state) => state.product);
+
   const dispatch = useAppDispatch();
 
   const [mainSlickRef, setMainSlickRef] = useState(null);
   const [thumbNailSlickRef, setThumbNailSlickRef] = useState(null);
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
-  const [state, setState] = useState<IState>({
-    loading: location.state?.product ? true : false,
-    productVariants: undefined,
-    productVaraintsLoaded: false,
-    currentVaraint: undefined,
-    product: undefined,
-    productSlug: undefined,
-  });
+  useEffect(() => {
+    return () => {
+      dispatch(clearProductState());
+    };
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
       if (!location?.state?.product) {
         // need fetch PRODUCT if joined by link
         try {
-          const { data } = await ProductService.getProduct(params.slug);
-          setState((currentState) => ({
-            ...currentState,
-            product: data.product,
-            productSlug: data.product.slug,
-            // loading: false
-          }));
+          dispatch(getProduct({ slug: params.slug })).unwrap();
         } catch (error) {
           toast("Product not found", { type: "error" });
           console.log(error);
           navigate("/");
         }
       } else {
-        setState((currentState) => ({
-          ...currentState,
-          product: location.state.product,
-          productSlug: location.state.product.slug,
-        }));
+        dispatch(setProduct(location.state.product));
       }
     };
 
@@ -94,39 +97,29 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
 
   useEffect(() => {
     const fetchVariants = async () => {
-      const { data } = await ProductService.getProductVariants(
-        state.product.slug
-      );
+      const varinats = await dispatch(
+        getProductVariants({ slug: product.slug })
+      ).unwrap();
 
-      if (data.variants.length > 0) {
-        setState((currentState) => ({
-          ...currentState,
-          productVaraintsLoaded: true,
-          productVariants: data.variants,
-          currentVaraint: data.variants[0],
-        }));
-      } else {
+      if (varinats.length === 0) {
         toast("Variants not found, try reload page", { type: "warning" });
       }
     };
 
-    if (state.product) {
+    if (product) {
       fetchVariants();
     }
-  }, [state.product]);
+  }, [product]);
 
   const handleSelectVariant = (productVariant: IProductVaraint) => {
-    setState((currentState) => ({
-      ...currentState,
-      currentVaraint: productVariant,
-    }));
+    dispatch(selectProductVariant(productVariant));
   };
 
   const handleAddToCart = async () => {
     dispatch(
       addToCart({
-        product_id: state.product.id,
-        product_variant_id: state.currentVaraint.id,
+        product_id: product.id,
+        product_variant_id: currentVaraint.id,
       })
     );
     toast("Successfully added to cart", { type: "success" });
@@ -138,22 +131,22 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
 
   const renderVariants = () => (
     <>
-      {state.productVaraintsLoaded && state?.currentVaraint ? (
+      {productVaraintsLoaded && currentVaraint ? (
         <span className="ps-product__price">
-          ${state.currentVaraint.price.toLocaleString()}
+          ${currentVaraint.price.toLocaleString()}
         </span>
       ) : (
         <Skeleton height={52} width={"35%"} />
       )}
 
       <h6 style={{ marginTop: 20 }}>Variants</h6>
-      {state.productVaraintsLoaded ? (
+      {productVaraintsLoaded ? (
         <div className="row no-gutters" style={{ width: "100%" }}>
-          {state.productVariants.map((productVariant) => (
+          {productVariants.map((productVariant) => (
             <div className="col-md-4 cust-padding">
               <div
                 className={classNames("product-variant", {
-                  active: productVariant.id === state.currentVaraint.id,
+                  active: productVariant.id === currentVaraint.id,
                 })}
                 onClick={() => handleSelectVariant(productVariant)}
               >
@@ -229,12 +222,9 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                         {...MainSlick}
                         className="ps-product__thumbnail"
                       >
-                        {state.product?.images.map((img) => (
+                        {product?.images.map((img) => (
                           <div className="slide">
-                            <img
-                              src={`/storage/${img}`}
-                              alt={state.product.title}
-                            />
+                            <img src={`/storage/${img}`} alt={product.title} />
                           </div>
                         ))}
                       </Slider>
@@ -246,12 +236,12 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                         className="ps-gallery--image"
                         style={{ display: "block" }}
                       >
-                        {state.product?.images.map((img) => (
+                        {product?.images.map((img) => (
                           <div className="slide">
                             <div className="ps-gallery__item">
                               <img
                                 src={`/storage/${img}`}
-                                alt={state.product.title}
+                                alt={product.title}
                               />
                             </div>
                           </div>
@@ -265,20 +255,20 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                       style={{ marginTop: 20, marginBottom: 20 }}
                     >
                       <div className="ps-product__branch col-md-12">
-                        {state?.product?.categories?.map((category) => (
+                        {product?.categories?.map((category) => (
                           <a>{category.title}</a>
                         )) || <Skeleton />}
                       </div>
                       <Dialog.Title className={"ps-product__title col-md-12"}>
-                        <a>{state?.product?.title || <Skeleton />}</a>
+                        <a>{product?.title || <Skeleton />}</a>
                       </Dialog.Title>
 
                       <div className="ps-product__desc col-md-12">
-                        {state?.product?.description ? (
+                        {product?.description ? (
                           <Dialog.Description
                             className={"product_modal_desc"}
                             dangerouslySetInnerHTML={{
-                              __html: state?.product?.description,
+                              __html: product?.description,
                             }}
                           ></Dialog.Description>
                         ) : (
@@ -290,14 +280,14 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                         className="ps-product__meta col-md-12"
                         style={{ marginTop: 0 }}
                       >
-                        {state.product?.with_checkout ? (
+                        {product?.with_checkout ? (
                           renderVariants()
                         ) : (
-                          <ModalContentWithForm product={state.product} />
+                          <ModalContentWithForm product={product} />
                         )}
                       </div>
 
-                      {state.product?.with_checkout ? (
+                      {product?.with_checkout ? (
                         <button
                           type="submit"
                           style={{ marginTop: 20 }}
@@ -320,23 +310,22 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
 
   return (
     <>
-      {state.product ? (
+      {product ? (
         <Helmet>
-          <title>{state.product?.title}</title>
+          <title>{product?.title}</title>
         </Helmet>
       ) : null}
 
       {fullPage ? (
         <FullModalProduct
           renderVariants={renderVariants}
-          product={state.product}
+          product={product}
           handleAddToCart={handleAddToCart}
           handleClose={handleClose}
         />
       ) : (
         modal()
       )}
-      {/* {modal()} */}
     </>
   );
 };
