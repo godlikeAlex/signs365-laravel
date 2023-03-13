@@ -31,8 +31,7 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
     categories: [],
     products: [],
   });
-
-  console.log(state);
+  const [collapseCategories, setCollapseCategories] = useState(true);
 
   const fetchProducts = React.useCallback(
     async (page: number | string, currentCategory: ICategory) => {
@@ -126,10 +125,22 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
                 <div className="ps-widget ps-widget--product">
                   <div className="ps-widget__block">
                     <h4 className="ps-widget__title">Categories</h4>
-                    <a className="ps-block-control" href="#">
+                    <a
+                      className={classNames({
+                        "ps-block-control": true,
+                        active: collapseCategories,
+                      })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCollapseCategories((isCollapsed) => !isCollapsed);
+                      }}
+                    >
                       <i className="fa fa-angle-down"></i>
                     </a>
-                    <div className="ps-widget__content ps-widget__category">
+                    <div
+                      className="ps-widget__content ps-widget__category"
+                      style={{ display: collapseCategories ? "block" : "none" }}
+                    >
                       <ul className="menu--mobile">
                         {state.categories.map((category) => (
                           <li
