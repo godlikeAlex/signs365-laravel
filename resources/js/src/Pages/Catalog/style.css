@@ -1,0 +1,20 @@
+.custom-pagenation-products {
+}
+
+@media only screen and (max-width: 600px) {
+  .hide_on_mob_items .page-paginate:nth-last-child(-n + 4) {
+    display: none;
+  }
+
+  .hide_on_mob_items .page-paginate:nth-last-child(2) {
+    display: block !important;
+  }
+}
+
+.custom-pagenation-products .active {
+  display: block !important;
+}
+
+.page-paginate {
+  cursor: pointer;
+}

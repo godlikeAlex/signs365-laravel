@@ -11,9 +11,9 @@ export default class CatalogService {
     return api.get<{ categories: ICategory[] }>(`/shop/categories`);
   }
 
-  static products(categorySlug) {
+  static products(categorySlug, page: number | string = 1) {
     return api.get<IProductsPagenation>(
-      `/shop/category/${categorySlug}/products`
+      `/shop/category/${categorySlug}/products?page=${page}`
     );
   }
 }

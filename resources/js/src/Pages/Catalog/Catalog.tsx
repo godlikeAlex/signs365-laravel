@@ -32,6 +32,25 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
     products: [],
   });
 
+  console.log(state);
+
+  const fetchProducts = React.useCallback(
+    async (page: number | string, currentCategory: ICategory) => {
+      const { data } = await CatalogService.products(
+        currentCategory.slug,
+        page
+      );
+
+      setState((oldState) => ({
+        ...oldState,
+        products: data.data,
+        productsLoading: false,
+        pageCount: data.meta.last_page,
+      }));
+    },
+    []
+  );
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -64,24 +83,6 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
       });
     };
   }, [params]);
-
-  React.useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await CatalogService.products(
-        state.currentCategory.slug
-      );
-
-      setState((oldState) => ({
-        ...oldState,
-        products: data.data,
-        productsLoading: false,
-      }));
-    };
-
-    if (state.currentCategory) {
-      fetchProducts();
-    }
-  }, [state.currentCategory]);
 
   return (
     <div className="ps-categogy">
@@ -116,6 +117,8 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
                 currentCategory={state.currentCategory}
                 products={state.products}
                 loading={state.productsLoading}
+                fetchProducts={fetchProducts}
+                pageCount={state.pageCount}
               />
             </div>
             <div className="col-12 col-md-3">
