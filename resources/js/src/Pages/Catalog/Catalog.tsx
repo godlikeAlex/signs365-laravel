@@ -113,6 +113,7 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
           <div className="row row-reverse">
             <div className="col-12 col-md-9">
               <CatalogProducts
+                currentCategory={state.currentCategory}
                 products={state.products}
                 loading={state.productsLoading}
               />

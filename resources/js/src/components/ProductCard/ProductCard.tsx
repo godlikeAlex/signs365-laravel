@@ -1,10 +1,11 @@
 import { useAppDispatch } from "@/src/hooks";
-import { IProduct } from "@/src/types/models";
+import { ICategory, IProduct } from "@/src/types/models";
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 interface Props extends IProduct {
   fullPage?: boolean;
+  category?: ICategory;
 }
 
 const ProductCard: React.FC<Props> = (props: Props) => {
@@ -40,6 +41,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               state={{
                 background: !props.fullPage && location,
                 product: props,
+                category: props.category,
               }}
             >
               <figure>
@@ -64,6 +66,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   state={{
                     background: !props.fullPage && location,
                     product: props,
+                    category: props.category,
                   }}
                 >
                   <i className="fa fa-search"></i>
@@ -84,6 +87,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   state={{
                     background: !props.fullPage && location,
                     product: props,
+                    category: props.category,
                   }}
                 >
                   <i className="fa fa-shopping-basket"></i>
@@ -102,6 +106,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 state={{
                   background: !props.fullPage && location,
                   product: props,
+                  category: props.category,
                 }}
               >
                 {title}
@@ -148,6 +153,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   state={{
                     background: !props.fullPage && location,
                     product: props,
+                    category: props.category,
                   }}
                 >
                   Add to cart
@@ -168,6 +174,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   state={{
                     background: !props.fullPage && location,
                     product: props,
+                    category: props.category,
                   }}
                 >
                   <i className="fa fa-shopping-basket"></i>

@@ -1,194 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Dialog } from "@headlessui/react";
-
-import {
-  matchPath,
-  Outlet,
-  Path,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import { IProduct, IProductVaraint } from "@/src/types/models";
-import { Input, VariantsProductPlaceholder } from "@/src/components";
-import ProductService from "@/src/services/ProductService";
-import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "@/src/hooks";
-import { addToCart } from "@/src/redux/cartSlice";
-import Slider from "react-slick";
 import Skeleton from "react-loading-skeleton";
-import "./style.css";
-import classNames from "classnames";
-import { Helmet } from "react-helmet";
 import ModalContentWithForm from "./ModalContentWithForm";
-import FullModalProduct from "./FullModalProduct";
+import withProductControl, {
+  WithProductsControlProps,
+} from "@/src/hoc/withProductControl";
+import { ProductSlider } from "@/src/components";
+import "./style.css";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { MainSlick, ThumbnailSlick } from "./sliderConfig";
-import {
-  clearProductState,
-  getProduct,
-  getProductVariants,
-  selectProductVariant,
-  setProduct,
-} from "@/src/redux/singleProductSlice";
 
-interface Props {
-  fullPage?: boolean;
-}
+interface Props extends WithProductsControlProps {}
 
-interface ILocation extends Path {
-  state: {
-    product: IProduct;
-  };
-}
-
-interface IState {
-  loading: boolean;
-  productVaraintsLoaded: boolean;
-  productVariants?: IProductVaraint[];
-  currentVaraint?: IProductVaraint;
-  product?: IProduct;
-  productSlug?: string;
-}
-
-const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
-  const params = useParams<"slug">();
-  const location: ILocation = useLocation();
-  const navigate = useNavigate();
-
-  const {
-    loading,
-    product,
-    currentVaraint,
-    productVaraintsLoaded,
-    productVariants,
-  } = useAppSelector((state) => state.product);
-
-  const dispatch = useAppDispatch();
-
-  const [mainSlickRef, setMainSlickRef] = useState(null);
-  const [thumbNailSlickRef, setThumbNailSlickRef] = useState(null);
+function ModalShowProduct({
+  product,
+  loading,
+  handleAddToCart,
+  handleClose,
+  renderVariants,
+}: Props) {
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
+  const navigate = useNavigate();
+  const params = useParams<"slug">();
+  const location = useLocation();
 
   useEffect(() => {
-    return () => {
-      dispatch(clearProductState());
-    };
-  }, []);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!location?.state?.product) {
-        // need fetch PRODUCT if joined by link
-        try {
-          dispatch(getProduct({ slug: params.slug })).unwrap();
-        } catch (error) {
-          toast("Product not found", { type: "error" });
-          console.log(error);
-          navigate("/");
-        }
-      } else {
-        dispatch(setProduct(location.state.product));
-      }
-    };
-
-    fetchProduct();
-  }, [params]);
-
-  useEffect(() => {
-    const fetchVariants = async () => {
-      const varinats = await dispatch(
-        getProductVariants({ slug: product.slug })
-      ).unwrap();
-
-      if (varinats.length === 0) {
-        toast("Variants not found, try reload page", { type: "warning" });
-      }
-    };
-
-    if (product) {
-      fetchVariants();
+    if (isMobile || !location.state) {
+      navigate(`/catalog/product/${params.slug}`, { replace: true });
     }
-  }, [product]);
+  }, [isMobile, params, location]);
 
-  const handleSelectVariant = (productVariant: IProductVaraint) => {
-    dispatch(selectProductVariant(productVariant));
-  };
-
-  const handleAddToCart = async () => {
-    dispatch(
-      addToCart({
-        product_id: product.id,
-        product_variant_id: currentVaraint.id,
-      })
-    );
-    toast("Successfully added to cart", { type: "success" });
-  };
-
-  const handleClose = () => {
-    navigate(-1);
-  };
-
-  const renderVariants = () => (
-    <>
-      {productVaraintsLoaded && currentVaraint ? (
-        <span className="ps-product__price">
-          ${currentVaraint.price.toLocaleString()}
-        </span>
-      ) : (
-        <Skeleton height={52} width={"35%"} />
-      )}
-
-      <h6 style={{ marginTop: 20 }}>Variants</h6>
-      {productVaraintsLoaded ? (
-        <div className="row no-gutters" style={{ width: "100%" }}>
-          {productVariants.map((productVariant) => (
-            <div className="col-md-4 cust-padding">
-              <div
-                className={classNames("product-variant", {
-                  active: productVariant.id === currentVaraint.id,
-                })}
-                onClick={() => handleSelectVariant(productVariant)}
-              >
-                <h6>{productVariant.label}</h6>
-                <h6
-                  style={{
-                    color: "#fd8d27",
-                    marginBottom: 0,
-                    marginTop: 5,
-                  }}
-                >
-                  ${productVariant.price.toLocaleString()}
-                </h6>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div
-          className="col-md-12"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ width: "33%" }}>
-            <Skeleton height={67} width={"100%"} />
-          </div>
-
-          <div style={{ width: "33%" }}>
-            <Skeleton height={67} width={"100%"} />
-          </div>
-
-          <div style={{ width: "33%" }}>
-            <Skeleton height={67} width={"100%"} />
-          </div>
-        </div>
-      )}
-    </>
-  );
-
-  const modal = () => (
+  return (
     <Dialog open onClose={handleClose}>
       <div className="headless-bg">
         <Dialog.Panel className="headless-popup">
@@ -207,47 +49,16 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
               <div className="ps-product--detail">
                 <div className="row">
                   <div className="col-12 col-xl-6">
-                    <div
-                      className="ps-product--gallery"
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Slider
-                        ref={(slider) => setMainSlickRef(slider)}
-                        asNavFor={thumbNailSlickRef}
-                        {...MainSlick}
-                        className="ps-product__thumbnail"
-                      >
-                        {product?.images.map((img) => (
-                          <div className="slide">
-                            <img src={`/storage/${img}`} alt={product.title} />
-                          </div>
-                        ))}
-                      </Slider>
-                      <Slider
-                        ref={(slider) => setThumbNailSlickRef(slider)}
-                        asNavFor={mainSlickRef}
-                        {...ThumbnailSlick}
-                        slidesToShow={5}
-                        className="ps-gallery--image"
-                        style={{ display: "block" }}
-                      >
-                        {product?.images.map((img) => (
-                          <div className="slide">
-                            <div className="ps-gallery__item">
-                              <img
-                                src={`/storage/${img}`}
-                                alt={product.title}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </Slider>
-                    </div>
+                    {product?.images ? (
+                      <ProductSlider
+                        images={product.images}
+                        productName={product.title}
+                      />
+                    ) : (
+                      <div style={{ height: 450, marginBottom: 30 }}>
+                        <Skeleton height={"100%"} />
+                      </div>
+                    )}
                   </div>
                   <div className="col-12 col-xl-6">
                     <div
@@ -256,7 +67,9 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                     >
                       <div className="ps-product__branch col-md-12">
                         {product?.categories?.map((category) => (
-                          <a>{category.title}</a>
+                          <Link to={`/catalog/${category.slug}`}>
+                            {category.title}
+                          </Link>
                         )) || <Skeleton />}
                       </div>
                       <Dialog.Title className={"ps-product__title col-md-12"}>
@@ -294,7 +107,7 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
                           className="ps-btn ps-btn--warning"
                           onClick={handleAddToCart}
                         >
-                          Add to cart
+                          Add to cartsss
                         </button>
                       ) : null}
                     </div>
@@ -307,27 +120,6 @@ const ModalShowProduct: React.FC<Props> = ({ fullPage }: Props) => {
       </div>
     </Dialog>
   );
+}
 
-  return (
-    <>
-      {product ? (
-        <Helmet>
-          <title>{product?.title}</title>
-        </Helmet>
-      ) : null}
-
-      {fullPage ? (
-        <FullModalProduct
-          renderVariants={renderVariants}
-          product={product}
-          handleAddToCart={handleAddToCart}
-          handleClose={handleClose}
-        />
-      ) : (
-        modal()
-      )}
-    </>
-  );
-};
-
-export default ModalShowProduct;
+export default withProductControl(ModalShowProduct);

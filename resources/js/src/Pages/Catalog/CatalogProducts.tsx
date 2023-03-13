@@ -1,14 +1,19 @@
 import { ProductCard } from "@/src/components";
-import { IProduct } from "@/src/types/models";
+import { ICategory, IProduct } from "@/src/types/models";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
 interface Props {
   products: IProduct[];
   loading: boolean;
+  currentCategory: ICategory;
 }
 
-const CatalogProducts: React.FC<Props> = ({ products, loading }: Props) => {
+const CatalogProducts: React.FC<Props> = ({
+  products,
+  loading,
+  currentCategory,
+}: Props) => {
   if (loading) {
     return (
       <div className="row" style={{ marginBottom: 20 }}>
@@ -33,7 +38,7 @@ const CatalogProducts: React.FC<Props> = ({ products, loading }: Props) => {
               className="col-6 col-lg-4 col-xl-3 p-0"
               key={`${product.id}-${idx}`}
             >
-              <ProductCard {...product} fullPage />
+              <ProductCard {...product} fullPage category={currentCategory} />
             </div>
           ))}
         </div>

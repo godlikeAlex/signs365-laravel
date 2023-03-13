@@ -77,7 +77,7 @@ body {
   font-weight: 400;
 }
 
-.modal-body .product-variant {
+.product-variant {
   background-color: #f0f0f0;
   border-radius: 1rem;
   padding: 10px;
@@ -86,7 +86,7 @@ body {
   border: 2px solid transparent;
 }
 
-.modal-body .active {
+.active-variant {
   border: 2px solid #fd8d27;
 }
 
@@ -103,11 +103,11 @@ body {
   margin-top: 30px;
 }
 
-.modal-body .product-variant:first-child {
+.product-variant:first-child {
   margin-left: 0px;
 }
 
-.modal-body .product-variant h5,
+.product-variant h5,
 h6 {
   margin: 0px;
 }
