@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import CatalogProducts from "./CatalogProducts";
+import { Helmet } from "react-helmet";
 
 interface CatalogProps {}
 
@@ -84,109 +85,120 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
   }, [params]);
 
   return (
-    <div className="ps-categogy">
-      <div className="container">
-        <ul className="ps-breadcrumb">
-          <li className="ps-breadcrumb__item">
-            <Link to="/">Home</Link>
-          </li>
+    <>
+      <Helmet>
+        <title>
+          {state.currentCategory?.title ? state.currentCategory?.title : "Shop"}
+        </title>
+      </Helmet>
 
-          <li className="ps-breadcrumb__item active" aria-current="page">
-            Catalog
-          </li>
-
-          {state.currentCategory && (
-            <li className="ps-breadcrumb__item active" aria-current="page">
-              {state.currentCategory.title}
+      <div className="ps-categogy">
+        <div className="container">
+          <ul className="ps-breadcrumb">
+            <li className="ps-breadcrumb__item">
+              <Link to="/">Home</Link>
             </li>
+
+            <li className="ps-breadcrumb__item active" aria-current="page">
+              Catalog
+            </li>
+
+            {state.currentCategory && (
+              <li className="ps-breadcrumb__item active" aria-current="page">
+                {state.currentCategory.title}
+              </li>
+            )}
+          </ul>
+          {!state.categoriesLoading ? (
+            <h1 className="ps-categogy__name">
+              {state.currentCategory.title}
+              <sup>({state.categoriesProductCount})</sup>
+            </h1>
+          ) : (
+            <Skeleton height={50} />
           )}
-        </ul>
-        {!state.categoriesLoading ? (
-          <h1 className="ps-categogy__name">
-            {state.currentCategory.title}
-            <sup>({state.categoriesProductCount})</sup>
-          </h1>
-        ) : (
-          <Skeleton height={50} />
-        )}
-        <div className="ps-categogy__content">
-          <div className="row row-reverse">
-            <div className="col-12 col-md-9">
-              <CatalogProducts
-                currentCategory={state.currentCategory}
-                products={state.products}
-                loading={state.productsLoading}
-                fetchProducts={fetchProducts}
-                pageCount={state.pageCount}
-              />
-            </div>
-            <div className="col-12 col-md-3">
-              {!state.categoriesLoading ? (
-                <div className="ps-widget ps-widget--product">
-                  <div className="ps-widget__block">
-                    <h4 className="ps-widget__title">Categories</h4>
-                    <a
-                      className={classNames({
-                        "ps-block-control": true,
-                        active: collapseCategories,
-                      })}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCollapseCategories((isCollapsed) => !isCollapsed);
-                      }}
-                    >
-                      <i className="fa fa-angle-down"></i>
-                    </a>
-                    <div
-                      className="ps-widget__content ps-widget__category"
-                      style={{ display: collapseCategories ? "block" : "none" }}
-                    >
-                      <ul className="menu--mobile">
-                        {state.categories.map((category) => (
-                          <li
-                            key={`category-${category.slug}`}
-                            className={classNames({
-                              active: state.currentCategory.id === category.id,
-                            })}
-                          >
-                            <Link
-                              to={`/catalog/${category.slug}`}
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
+          <div className="ps-categogy__content">
+            <div className="row row-reverse">
+              <div className="col-12 col-md-9">
+                <CatalogProducts
+                  currentCategory={state.currentCategory}
+                  products={state.products}
+                  loading={state.productsLoading}
+                  fetchProducts={fetchProducts}
+                  pageCount={state.pageCount}
+                />
+              </div>
+              <div className="col-12 col-md-3">
+                {!state.categoriesLoading ? (
+                  <div className="ps-widget ps-widget--product">
+                    <div className="ps-widget__block">
+                      <h4 className="ps-widget__title">Categories</h4>
+                      <a
+                        className={classNames({
+                          "ps-block-control": true,
+                          active: collapseCategories,
+                        })}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCollapseCategories((isCollapsed) => !isCollapsed);
+                        }}
+                      >
+                        <i className="fa fa-angle-down"></i>
+                      </a>
+                      <div
+                        className="ps-widget__content ps-widget__category"
+                        style={{
+                          display: collapseCategories ? "block" : "none",
+                        }}
+                      >
+                        <ul className="menu--mobile">
+                          {state.categories.map((category) => (
+                            <li
+                              key={`category-${category.slug}`}
+                              className={classNames({
+                                active:
+                                  state.currentCategory.id === category.id,
+                              })}
                             >
-                              {category.title}
-                              <span
-                                className="category-go-icon"
+                              <Link
+                                to={`/catalog/${category.slug}`}
                                 style={{
                                   display: "flex",
-                                  justifyContent: "center",
+                                  justifyContent: "space-between",
                                   alignItems: "center",
                                 }}
                               >
-                                <i className="fa fa-chevron-right"></i>
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                                {category.title}
+                                <span
+                                  className="category-go-icon"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <i className="fa fa-chevron-right"></i>
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div>
-                  <Skeleton height={25} />
+                ) : (
+                  <div>
+                    <Skeleton height={25} />
 
-                  <Skeleton count={10} />
-                </div>
-              )}
+                    <Skeleton count={10} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
