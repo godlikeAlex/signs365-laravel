@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import ModalContentWithForm from "./ModalContentWithForm";
 import Slider from "react-slick";
-import { MainSlick, ThumbnailSlick } from "./sliderConfig";
 
 interface Props {
   handleClose: () => void;
@@ -50,36 +49,7 @@ const FullModalProduct: React.FC<Props> = ({
                     flexDirection: "column",
                     justifyContent: "center",
                   }}
-                >
-                  <Slider
-                    ref={(slider) => setMainSlickRef(slider)}
-                    asNavFor={thumbNailSlickRef}
-                    {...MainSlick}
-                    className="ps-product__thumbnail"
-                  >
-                    {product?.images.map((img) => (
-                      <div className="slide">
-                        <img src={`/storage/${img}`} alt={product.title} />
-                      </div>
-                    ))}
-                  </Slider>
-                  <Slider
-                    ref={(slider) => setThumbNailSlickRef(slider)}
-                    asNavFor={mainSlickRef}
-                    {...ThumbnailSlick}
-                    slidesToShow={5}
-                    className="ps-gallery--image"
-                    style={{ display: "block" }}
-                  >
-                    {product?.images.map((img) => (
-                      <div className="slide">
-                        <div className="ps-gallery__item">
-                          <img src={`/storage/${img}`} alt={product.title} />
-                        </div>
-                      </div>
-                    ))}
-                  </Slider>
-                </div>
+                ></div>
               </div>
               <div className="col-12 col-xl-6">
                 <div

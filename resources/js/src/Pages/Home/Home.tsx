@@ -7,6 +7,7 @@ import { useAppSelector } from "@/src/hooks";
 import HomeSlider from "./HomeSlider";
 import { Helmet } from "react-helmet";
 import { Link, Outlet } from "react-router-dom";
+import classNames from "classnames";
 
 interface IState {
   loading: boolean;
@@ -25,18 +26,25 @@ export default function Home() {
         <section className="ps-section--banner">
           <HomeSlider />
         </section>
-        <div className="container">
-          {homeCategories.map((category, idx) => {
-            const { products, id, title, slug } = category;
 
-            return (
-              <section className="ps-section--featured">
+        {homeCategories.map((category, idx) => {
+          const { products, id, title, slug } = category;
+
+          return (
+            <section
+              className={classNames({
+                "ps-section--featured": true,
+                "main-section": true,
+                "alt-section": idx % 2 === 0,
+              })}
+            >
+              <div className="container-fluid">
                 <h3 className="ps-section__title">{title}</h3>
                 <div className="ps-section__content">
                   <div className="row m-0">
                     {/* PRODUCT */}
                     {products.map((product, idx) => (
-                      <div className="col-6 col-md-4 col-lg-2dot4 p-0">
+                      <div className="col-md-3 p-0">
                         <ProductCard
                           {...product}
                           key={`${product.id}-${idx}`}
@@ -48,10 +56,10 @@ export default function Home() {
                     <Link to={`/catalog/${slug}`}>Show all</Link>
                   </div>
                 </div>
-              </section>
-            );
-          })}
-        </div>
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       <Outlet />

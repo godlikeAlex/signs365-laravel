@@ -78,7 +78,7 @@ export function withProductControl<T extends WithProductsControlProps>(
           getProductVariants({ slug: product.slug })
         ).unwrap();
 
-        if (varinats.length === 0) {
+        if (varinats.length === 0 && product.with_checkout) {
           toast("Variants not found, try reload page", { type: "warning" });
         }
       };

@@ -21,18 +21,19 @@ class UserCityRedirect
    */
   public function handle(Request $request, Closure $next)
   {
-    $server = explode('.', $request->server('HTTP_HOST'));
+    $server = explode(".", $request->server("HTTP_HOST"));
     $subdomain = $server[0];
     $cities = City::all();
-    $availableDomains = $cities->pluck('domain', 'id')->toArray();
-    $availableStates = $cities->pluck('state', 'id')->toArray();
+    $availableDomains = $cities->pluck("domain", "id")->toArray();
+    $availableStates = $cities->pluck("state", "id")->toArray();
     $geoInfo = geoip($request->ip());
 
-    $isMainPage = env('APP_URL') === url()->current();
+    $isMainPage = env("APP_URL") === url()->current();
     $currentSubDomainIsAvaliable = in_array($subdomain, $availableDomains);
-    $subdomainIsNotPartOfMainDomain = explode('.', env('APP_DOMAIN'))[0] !== $subdomain;
+    $subdomainIsNotPartOfMainDomain =
+      explode(".", env("APP_DOMAIN"))[0] !== $subdomain;
 
-    $DOMAIN = env('APP_DOMAIN');
+    $DOMAIN = env("APP_DOMAIN");
 
     if (!$geoInfo->state) {
       return $next($request);
@@ -42,7 +43,8 @@ class UserCityRedirect
     $subDomainToRedirect = null;
 
     if (in_array($currentState, $availableStates)) {
-      $subDomainToRedirect = $availableDomains[array_search($currentState, $availableStates)];
+      $subDomainToRedirect =
+        $availableDomains[array_search($currentState, $availableStates)];
     } else {
       $subDomainToRedirect = null;
     }
@@ -55,10 +57,13 @@ class UserCityRedirect
       if (!$subDomainToRedirect) {
         return $next($request);
       }
-      return redirect()->away($this->generateUrl($request, $subDomainToRedirect), 302);
+      return redirect()->away(
+        $this->generateUrl($request, $subDomainToRedirect),
+        302
+      );
     }
 
-    Session::put('city_checked', true);
+    Session::put("city_checked", true);
     Session::save();
 
     return $next($request);
@@ -69,7 +74,11 @@ class UserCityRedirect
     $parameters = $request->route()->parameters();
     $name = $request->route()->getName();
 
-    $url = str_replace('://', '://' . $subdomain . '.', route($name, $parameters));
+    $url = str_replace(
+      "://",
+      "://" . $subdomain . ".",
+      route($name, $parameters)
+    );
     return $url;
   }
 }

@@ -14,7 +14,7 @@ class CategoryController extends Controller
     $categoriesWithProducts = ProductCategory::availableInCity(
       $request->get("city")
     )
-      ->orderBy("id", "asc")
+      ->orderBy("menu_order", "asc")
       ->where("show_on_home", true)
       ->publishedProducts($request->get("city"))
       ->get();

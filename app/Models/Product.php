@@ -17,6 +17,8 @@ class Product extends Model
 
   protected $casts = [
     "images" => "array",
+    "is_published" => "boolean",
+    "with_checkout" => "boolean",
   ];
 
   public function scopeAvailableInCity($query, $city)
@@ -47,6 +49,16 @@ class Product extends Model
   }
 
   public function categories(): BelongsToMany
+  {
+    return $this->belongsToManyCategories();
+  }
+
+  public function productCategories(): BelongsToMany
+  {
+    return $this->belongsToManyCategories();
+  }
+
+  private function belongsToManyCategories()
   {
     return $this->belongsToMany(
       ProductCategory::class,

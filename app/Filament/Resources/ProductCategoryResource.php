@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductCategoryResource\Pages;
 use App\Filament\Resources\ProductCategoryResource\RelationManagers;
 use App\Filament\Resources\ProductCategoryResource\RelationManagers\CitiesRelationManager;
+use App\Filament\Resources\ProductCategoryResource\RelationManagers\ProductsRelationManager;
 use App\Models\ProductCategory;
 use Closure;
 use Filament\Forms;
@@ -48,6 +49,9 @@ class ProductCategoryResource extends Resource
         ->helperText(
           "It is best to upload svg, if it is not available, load png 256x256. The most important thing is that the icon fit the entire size"
         ),
+      Forms\Components\TextInput::make("menu_order")
+        ->numeric()
+        ->label("Ordering on menu (Home Page)"),
       Forms\Components\Toggle::make("show_on_home")
         ->label("Show on home page in menu?")
         ->columnSpanFull(),
@@ -61,7 +65,8 @@ class ProductCategoryResource extends Resource
         Tables\Columns\TextColumn::make("id"),
         Tables\Columns\TextColumn::make("title"),
         Tables\Columns\TextColumn::make("slug"),
-        Tables\Columns\BooleanColumn::make("show_on_home"),
+        Tables\Columns\IconColumn::make("show_on_home")->boolean(),
+        Tables\Columns\TextColumn::make("menu_order")->label("Order"),
       ])
       ->filters([Tables\Filters\TrashedFilter::make()])
       ->actions([
@@ -75,6 +80,11 @@ class ProductCategoryResource extends Resource
         Tables\Actions\ForceDeleteBulkAction::make(),
         Tables\Actions\RestoreBulkAction::make(),
       ]);
+  }
+
+  public static function getRelations(): array
+  {
+    return [ProductsRelationManager::class];
   }
 
   public static function getEloquentQuery(): Builder

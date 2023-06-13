@@ -56,6 +56,7 @@ class OrderResource extends Resource
       Forms\Components\TextInput::make("phone"),
       Forms\Components\TextInput::make("address"),
       Forms\Components\TextInput::make("uuid")
+        ->unique(ignoreRecord: true)
         ->label("UUID")
         ->hiddenOn("create"),
 

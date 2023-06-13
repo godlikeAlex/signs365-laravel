@@ -28,7 +28,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <div className="ps-section__product">
+      <div className="ps-section__product" style={{ height: "100%" }}>
         <div className="ps-product ps-product--standard">
           <div className="ps-product__thumbnail">
             <Link
@@ -45,7 +45,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               }}
             >
               <figure>
-                {images.map((image) => (
+                {images.slice(0, 2).map((image) => (
                   <img src={`/storage/${image}`} alt={title} />
                 ))}
               </figure>
