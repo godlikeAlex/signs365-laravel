@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
@@ -103,19 +104,59 @@ class ProductResource extends Resource
     return $table
       ->columns([
         Tables\Columns\TextColumn::make("title")->searchable(),
-        Tables\Columns\TextColumn::make("slug"),
+        Tables\Columns\TextColumn::make("slug")->searchable(),
         Tables\Columns\TextColumn::make("prices_min_price")
           ->label("Start Price")
           ->min("prices", "price")
           ->sortable()
           ->money("usd"),
+        Tables\Columns\IconColumn::make("published")
+          ->boolean()
+          ->sortable(),
+        Tables\Columns\TagsColumn::make("categories.title")->separator(","),
         Tables\Columns\TextColumn::make("created_at")->date($format = "F j, Y"),
       ])
       ->filters([
-        //
+        Tables\Filters\TrashedFilter::make(),
+        Tables\Filters\Filter::make("product_category")
+          ->form([
+            Forms\Components\Select::make("product_category")
+              ->options(ProductCategory::all()->pluck("title", "id"))
+              ->searchable(),
+          ])
+          ->query(function (Builder $query, array $data) {
+            if (isset($data["product_category"])) {
+              // ->productCategories()
+              // ->find($data["product_category"]);
+              return $query->whereHas("productCategories", function (
+                Builder $qCategories
+              ) use ($data) {
+                $qCategories->where(
+                  "product_categories.id",
+                  $data["product_category"]
+                );
+              });
+            }
+          }),
       ])
-      ->actions([Tables\Actions\EditAction::make()])
-      ->bulkActions([Tables\Actions\DeleteBulkAction::make()]);
+      ->actions([
+        Tables\Actions\EditAction::make(),
+        Tables\Actions\DeleteAction::make(),
+        Tables\Actions\ForceDeleteAction::make(),
+        Tables\Actions\RestoreAction::make(),
+      ])
+      ->bulkActions([
+        Tables\Actions\DeleteBulkAction::make(),
+        Tables\Actions\ForceDeleteBulkAction::make(),
+        Tables\Actions\RestoreBulkAction::make(),
+      ]);
+  }
+
+  public static function getEloquentQuery(): Builder
+  {
+    return parent::getEloquentQuery()->withoutGlobalScopes([
+      SoftDeletingScope::class,
+    ]);
   }
 
   public static function getRelations(): array
