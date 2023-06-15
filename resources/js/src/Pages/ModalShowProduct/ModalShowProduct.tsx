@@ -48,7 +48,7 @@ function ModalShowProduct({
               </button>
               <div className="ps-product--detail">
                 <div className="row">
-                  <div className="col-12 col-xl-6">
+                  <div className="col-12 col-md-6">
                     {product?.images ? (
                       <ProductSlider
                         images={product.images}
@@ -60,56 +60,74 @@ function ModalShowProduct({
                       </div>
                     )}
                   </div>
-                  <div className="col-12 col-xl-6">
-                    <div
-                      className="ps-product__info row no-gutters"
-                      style={{ marginTop: 20, marginBottom: 20 }}
-                    >
-                      <div className="ps-product__branch col-md-12">
-                        {product?.categories?.map((category) => (
-                          <Link to={`/catalog/${category.slug}`}>
-                            {category.title}
-                          </Link>
-                        )) || <Skeleton />}
-                      </div>
-                      <Dialog.Title className={"ps-product__title col-md-12"}>
-                        <a>{product?.title || <Skeleton />}</a>
-                      </Dialog.Title>
-
-                      <div className="ps-product__desc col-md-12">
-                        {product?.description ? (
-                          <Dialog.Description
-                            className={"product_modal_desc"}
-                            dangerouslySetInnerHTML={{
-                              __html: product?.description,
-                            }}
-                          ></Dialog.Description>
-                        ) : (
-                          <Skeleton count={4} />
-                        )}
-                      </div>
-
+                  <div className="col-12 col-md-6">
+                    <div className="ps-product__info">
                       <div
-                        className="ps-product__meta col-md-12"
-                        style={{ marginTop: 0 }}
+                        className="row"
+                        style={{ marginTop: 20, marginBottom: 20 }}
                       >
-                        {product?.with_checkout ? (
-                          renderVariants()
-                        ) : (
-                          <ModalContentWithForm product={product} />
-                        )}
-                      </div>
+                        <div className="col-md-12">
+                          <div className="ps-product__branch">
+                            {product?.categories?.map((category, idx) => (
+                              <>
+                                <Link to={`/catalog/${category.slug}`}>
+                                  {category.title}
+                                </Link>
 
-                      {product?.with_checkout ? (
-                        <button
-                          type="submit"
-                          style={{ marginTop: 20 }}
-                          className="ps-btn ps-btn--warning"
-                          onClick={handleAddToCart}
-                        >
-                          Add to cartsss
-                        </button>
-                      ) : null}
+                                {product.categories.length - 1 === idx
+                                  ? " "
+                                  : " | "}
+                              </>
+                            )) || <Skeleton />}
+                          </div>
+                        </div>
+
+                        <div className="col-md-12">
+                          <Dialog.Title className={"ps-product__title"}>
+                            <a>{product?.title || <Skeleton />}</a>
+                          </Dialog.Title>
+                        </div>
+
+                        <div className="col-md-12">
+                          <div className="ps-product__desc">
+                            {product?.description ? (
+                              <Dialog.Description
+                                className={"product_modal_desc"}
+                                dangerouslySetInnerHTML={{
+                                  __html: product?.description,
+                                }}
+                              ></Dialog.Description>
+                            ) : (
+                              <Skeleton count={4} />
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="col-md-12">
+                          <div
+                            className="ps-product__meta"
+                            style={{ marginTop: 0 }}
+                          >
+                            {product?.with_checkout ? (
+                              renderVariants()
+                            ) : (
+                              <ModalContentWithForm product={product} />
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="col-md-12">
+                          {product?.with_checkout ? (
+                            <button
+                              type="submit"
+                              className="ps-btn ps-btn--warning"
+                              onClick={handleAddToCart}
+                            >
+                              Add to cart
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

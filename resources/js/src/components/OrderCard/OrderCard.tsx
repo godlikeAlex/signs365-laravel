@@ -43,6 +43,8 @@ const OrderCard: React.FC<Props> = ({
   created_at,
   order_items,
 }: Props) => {
+  console.log(order_items);
+
   return (
     <div className={"order-item"} style={{ marginBottom: 25 }}>
       <div className="order-item-panel-title">
@@ -94,16 +96,26 @@ const OrderCard: React.FC<Props> = ({
         >
           {order_items.map((item) => (
             <div className="mini-order-item" key={item.id}>
-              <img
-                src="https://images.umarket.uz/ccerl62bv5cpn5fb63ug/t_product_240_high.jpg"
-                style={{ width: 100, height: 100, objectFit: "cover" }}
-              />
+              {item.product?.images.length >= 1 ? (
+                <img
+                  src={`/storage/${item.product.images[0]}`}
+                  style={{ width: 100, height: 100, objectFit: "cover" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 100,
+                    height: 100,
+                    background: "rgb(227, 227, 227)",
+                  }}
+                />
+              )}
 
               <div style={{ width: "100%", marginLeft: 25 }}>
                 <div className="row">
                   <div className="col-md-2 col-6 order-item-title">Name:</div>
                   <div className="col-md-10 col-6 order-item-value">
-                    {item.product.title}
+                    {item.product?.title || "Deleted Product"}
                   </div>
                 </div>
 

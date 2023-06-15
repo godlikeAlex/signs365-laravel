@@ -1,10 +1,19 @@
+import { useAppSelector } from "@/src/hooks";
 import classNames from "classnames";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+import "./style.css";
 
 interface MobileHeaderProps {}
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const { isAuthed, authChecked, user } = useAppSelector((state) => state.auth);
+  const { cart } = useAppSelector((state) => state.cart);
+  const { homeCategories } = useAppSelector((state) => state.app);
+
+  const closeMenu = () => setShowMenu(false);
 
   return (
     <>
@@ -50,8 +59,52 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         <div className="ps-menu__content">
           <ul className="menu--mobile">
             <li>
-              <a href="{{route('home', app()->getLocale())}}">Hello</a>
+              <Link onClick={closeMenu} to={"/"}>
+                Home
+              </Link>
             </li>
+
+            <div className="divider" />
+
+            {homeCategories.map((category) => (
+              <li key={category.id}>
+                <Link onClick={closeMenu} to={"/cart"}>
+                  {category.title}
+                </Link>
+              </li>
+            ))}
+
+            <div className="divider" />
+
+            <li>
+              <Link onClick={closeMenu} to={"/cart"}>
+                Shopping Cart | {cart.items.length}
+              </Link>
+            </li>
+
+            {isAuthed && user ? (
+              <>
+                <li>
+                  <Link onClick={closeMenu} to={"/profile"}>
+                    Profile
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link onClick={closeMenu} to={"/login"}>
+                    Login
+                  </Link>
+                </li>
+
+                <li>
+                  <Link onClick={closeMenu} to={"/register"}>
+                    Create account
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
         <div className="ps-menu__footer">
@@ -63,7 +116,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
               </a>
               <br />
               <a href="tel:+998974243004" style={{ color: "#103178" }}>
-                <strong>+998 97 424 30 04</strong>
+                <strong>info@sign7.com</strong>
               </a>
             </div>
           </div>

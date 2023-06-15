@@ -107,37 +107,24 @@ export function withProductControl<T extends WithProductsControlProps>(
     };
 
     const renderVariants = () => (
-      <>
-        {productVaraintsLoaded && currentVaraint ? (
-          <span className="ps-product__price">
-            ${currentVaraint.price.toLocaleString()}
-          </span>
-        ) : (
-          <Skeleton height={52} width={"35%"} />
-        )}
+      <div className="row">
+        <div className="col-md-12">
+          <h6>Variant: {currentVaraint?.label}</h6>
+        </div>
 
-        <h6 style={{ marginTop: 20 }}>Variants</h6>
         {productVaraintsLoaded ? (
-          <div className="row no-gutters" style={{ width: "100%" }}>
+          <div
+            className="col-md-12"
+            style={{ display: "flex", flexWrap: "wrap" }}
+          >
             {productVariants.map((productVariant) => (
-              <div className="col-md-4 cust-padding">
-                <div
-                  className={classNames("product-variant", {
-                    "active-variant": productVariant.id === currentVaraint.id,
-                  })}
-                  onClick={() => handleSelectVariant(productVariant)}
-                >
-                  <h6>{productVariant.label}</h6>
-                  <h6
-                    style={{
-                      color: "#fd8d27",
-                      marginBottom: 0,
-                      marginTop: 5,
-                    }}
-                  >
-                    ${productVariant.price.toLocaleString()}
-                  </h6>
-                </div>
+              <div
+                className={classNames("product-variant", {
+                  "active-variant": productVariant.id === currentVaraint.id,
+                })}
+                onClick={() => handleSelectVariant(productVariant)}
+              >
+                <h6 style={{ marginBottom: 0 }}>{productVariant.label}</h6>
               </div>
             ))}
           </div>
@@ -147,22 +134,29 @@ export function withProductControl<T extends WithProductsControlProps>(
             style={{
               display: "flex",
               justifyContent: "space-between",
+              width: "100%",
             }}
           >
             <div style={{ width: "33%" }}>
-              <Skeleton height={67} width={"100%"} />
+              <Skeleton height={35} width={"100%"} />
             </div>
-
             <div style={{ width: "33%" }}>
-              <Skeleton height={67} width={"100%"} />
+              <Skeleton height={35} width={"100%"} />
             </div>
-
             <div style={{ width: "33%" }}>
-              <Skeleton height={67} width={"100%"} />
+              <Skeleton height={35} width={"100%"} />
             </div>
           </div>
         )}
-      </>
+
+        <div className="col-md-12" style={{ marginTop: 20 }}>
+          {productVaraintsLoaded && currentVaraint ? (
+            <span className="ps-product__price">${currentVaraint.price}</span>
+          ) : (
+            <Skeleton height={52} width={"35%"} />
+          )}
+        </div>
+      </div>
     );
 
     return (
