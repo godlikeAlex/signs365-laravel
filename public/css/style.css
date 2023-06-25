@@ -785,7 +785,8 @@ body {
 button.ps-btn {
   font-size: 18px;
   font-weight: 500;
-  border-radius: 50px;
+  /* border-radius: 50px; */
+  border-radius: 25px;
   box-shadow: none;
   text-shadow: none;
   cursor: pointer;
@@ -18125,4 +18126,14 @@ html .bg--parallax {
 .ps-section--featured .ps-shop__more a {
   min-width: 110px;
   background: white;
+}
+
+@media (max-width: 768px) {
+  .ps-product__title {
+    min-height: unset !important;
+  }
+
+  .ps-product__meta {
+    margin-bottom: 13px;
+  }
 }

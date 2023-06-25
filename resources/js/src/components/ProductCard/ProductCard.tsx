@@ -12,7 +12,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const { title, start_at, id, slug, images } = props;
+  const { title, start_at, id, slug, images, with_checkout } = props;
 
   const [fetching, setIsFetch] = useState(false);
 
@@ -29,7 +29,10 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   return (
     <>
       <div className="ps-section__product" style={{ height: "100%" }}>
-        <div className="ps-product ps-product--standard">
+        <div
+          className="ps-product ps-product--standard"
+          style={{ height: "100%" }}
+        >
           <div className="ps-product__thumbnail">
             <Link
               className="ps-product__image"
@@ -50,7 +53,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 ))}
               </figure>
             </Link>
-            <div className="ps-product__actions">
+            {/* <div className="ps-product__actions">
               <div
                 className="ps-product__item"
                 data-toggle="tooltip"
@@ -93,7 +96,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   <i className="fa fa-shopping-basket"></i>
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="ps-product__content">
             <h5 className="ps-product__title">
@@ -114,7 +117,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
             </h5>
             <div className="ps-product__meta">
               <span className="ps-product__price">
-                ${start_at.toLocaleString()}
+                {with_checkout ? `${start_at.toLocaleString()}` : null}
               </span>
             </div>
 
@@ -159,27 +162,21 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   Add to cart
                 </Link>
               </div>
-              <div
-                className="ps-product__item cart"
-                data-toggle="tooltip"
-                data-placement="left"
-                title="Add to cart"
+
+              <Link
+                to={
+                  !props.fullPage
+                    ? `/home/product/modal/${slug}`
+                    : `/catalog/product/${slug}`
+                }
+                state={{
+                  background: !props.fullPage && location,
+                  product: props,
+                  category: props.category,
+                }}
               >
-                <Link
-                  to={
-                    !props.fullPage
-                      ? `/home/product/modal/${slug}`
-                      : `/catalog/product/${slug}`
-                  }
-                  state={{
-                    background: !props.fullPage && location,
-                    product: props,
-                    category: props.category,
-                  }}
-                >
-                  <i className="fa fa-shopping-basket"></i>
-                </Link>
-              </div>
+                <button className="ps-btn ps-btn--warning">Details</button>
+              </Link>
             </div>
           </div>
         </div>
