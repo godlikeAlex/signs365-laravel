@@ -35,7 +35,7 @@ class ProductVariant extends Model
 
   public function prices(): HasMany
   {
-    return $this->hasMany(ProductPrice::class)->withTrashed();
+    return $this->hasMany(ProductPrice::class);
   }
 
   public function product(): BelongsTo

@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\ProductResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VariantsRelationManager extends RelationManager
@@ -28,9 +30,17 @@ class VariantsRelationManager extends RelationManager
         ->schema([
           Forms\Components\Select::make("city_id")
             ->label("City")
-            ->disabled()
-            ->options(function (RelationManager $livewire): array {
+            ->options(function (
+              RelationManager $livewire,
+              \Closure $get
+            ): array {
+              $currentRepeaterItemCityID = $get("city_id");
+              $selectedVariants = collect($get("../../prices"))
+                ->pluck("city_id")
+                ->filter(fn($id) => $id !== $currentRepeaterItemCityID);
+
               return $livewire->ownerRecord->cities
+                ->whereNotIn("id", $selectedVariants)
                 ->pluck("title", "id")
                 ->toArray();
             })
@@ -38,23 +48,17 @@ class VariantsRelationManager extends RelationManager
           Forms\Components\TextInput::make("price")
             ->prefix('$')
             ->numeric()
+            ->dehydrateStateUsing(fn($state) => $state * 100)
+            ->afterStateHydrated(function (TextInput $component, $state) {
+              $component->state($state / 100);
+            })
             ->required(),
         ])
         ->hiddenOn("create")
         ->columnSpanFull()
-        ->disableItemCreation()
-        ->disableItemDeletion()
-        ->disableItemMovement()
-        ->mutateRelationshipDataBeforeFillUsing(function ($data) {
-          $data["price"] = $data["price"] / 100;
-
-          return $data;
-        })
-        ->mutateRelationshipDataBeforeSaveUsing(function ($data) {
-          $data["price"] = $data["price"] * 100;
-
-          return $data;
-        }),
+        // ->disableItemCreation()
+        // ->disableItemDeletion()
+        ->disableItemMovement(),
     ]);
   }
 
