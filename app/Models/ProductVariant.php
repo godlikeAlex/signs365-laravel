@@ -45,6 +45,6 @@ class ProductVariant extends Model
 
   public function price(): HasOne
   {
-    return $this->hasOne(ProductPrice::class)->withTrashed();
+    return $this->hasOne(ProductPrice::class);
   }
 }
