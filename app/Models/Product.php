@@ -17,18 +17,10 @@ class Product extends Model
 
   protected $casts = [
     "images" => "array",
+    "sizes" => "array",
     "is_published" => "boolean",
     "with_checkout" => "boolean",
   ];
-
-  public function scopeAvailableInCity($query, $city)
-  {
-    $products = $query->whereHas("cities", function ($cityQuery) use ($city) {
-      return $cityQuery->where("city_id", $city);
-    });
-
-    return $products;
-  }
 
   /**
    * Get the route key for the model.
@@ -38,14 +30,24 @@ class Product extends Model
     return "slug";
   }
 
-  public function cities(): BelongsToMany
+  public function options(): BelongsToMany
   {
     return $this->belongsToMany(
-      City::class,
-      "city_product",
+      ProductOption::class,
+      "product_product_option",
       "product_id",
-      "city_id"
-    )->using(CityProduct::class);
+      "product_option_id"
+    );
+  }
+
+  public function addons(): BelongsToMany
+  {
+    return $this->belongsToMany(
+      ProductAddons::class,
+      "product_product_addon",
+      "product_id",
+      "product_addon_id"
+    );
   }
 
   public function categories(): BelongsToMany
@@ -58,7 +60,7 @@ class Product extends Model
     return $this->belongsToManyCategories();
   }
 
-  private function belongsToManyCategories()
+  private function belongsToManyCategories(): BelongsToMany
   {
     return $this->belongsToMany(
       ProductCategory::class,
@@ -66,27 +68,5 @@ class Product extends Model
       "product_id",
       "product_category_id"
     );
-  }
-
-  public function prices(): HasManyThrough
-  {
-    return $this->hasManyThrough(ProductPrice::class, ProductVariant::class);
-  }
-
-  public function variants(): HasMany
-  {
-    return $this->hasMany(ProductVariant::class);
-  }
-
-  public function startPriceInCity($city)
-  {
-    return $this->prices()
-      ->where("city_id", $city)
-      ->min("price");
-  }
-
-  public function startPrice()
-  {
-    return $this->prices()->min("price");
   }
 }

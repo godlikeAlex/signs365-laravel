@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderItemsTable extends Migration
-{
+return new class extends Migration {
   /**
    * Run the migrations.
    *
@@ -13,33 +12,26 @@ class CreateOrderItemsTable extends Migration
    */
   public function up()
   {
-    Schema::create("order_items", function (Blueprint $table) {
+    Schema::create("product_product_option", function (Blueprint $table) {
       $table->id();
 
-      $table->foreignId("order_id")->nullable();
       $table->foreignId("product_id")->nullable();
       $table->foreignId("product_option_id")->nullable();
-
-      $table->integer("quantity")->default(1);
-      $table->integer("price");
 
       $table
         ->foreign("product_id")
         ->references("id")
-        ->on("products");
+        ->on("products")
+        ->onDelete("cascade");
+
       $table
         ->foreign("product_option_id")
         ->references("id")
-        ->on("product_options");
-
-      $table
-        ->foreign("order_id")
-        ->references("id")
-        ->on("orders")
+        ->on("product_options")
         ->onDelete("cascade");
 
-      $table->timestamps();
       $table->softDeletes();
+      $table->timestamps();
     });
   }
 
@@ -50,6 +42,8 @@ class CreateOrderItemsTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists("order_items");
+    Schema::dropIfExists("product_product_option", function (Blueprint $table) {
+      //
+    });
   }
-}
+};

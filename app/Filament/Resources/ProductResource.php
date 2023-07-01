@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Filament\Resources\ProductResource\RelationManagers\AddonsRelationManager;
+use App\Filament\Resources\ProductResource\RelationManagers\OptionsRelationManager;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
@@ -52,20 +55,38 @@ class ProductResource extends Resource
               Forms\Components\RichEditor::make("description")->columnSpan(
                 "full"
               ),
-              Forms\Components\Select::make("cities")
-                ->multiple()
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(function (Closure $set) {
-                  $set("published", false);
-                })
-                ->relationship("cities", "title")
-                ->preload(),
+
               Forms\Components\Select::make("categories")
                 ->multiple()
                 ->required()
                 ->relationship("categories", "title")
                 ->preload(),
+
+              Toggle::make("custom_size")
+                ->reactive()
+                ->dehydrated(false)
+                ->afterStateHydrated(function (
+                  Toggle $component,
+                  $state,
+                  \Closure $get
+                ) {
+                  $sizes = $get("sizes");
+
+                  if ($sizes && count($sizes) > 0) {
+                    $component->state(true);
+                  }
+                })
+                ->default(false),
+
+              Section::make("Custom Sizes")
+                ->schema([
+                  Repeater::make("sizes")
+                    ->schema([Forms\Components\TextInput::make("label")])
+                    ->defaultItems(1),
+                ])
+                ->collapsed()
+                ->hidden(fn(\Closure $get) => $get("custom_size") == false),
+
               Toggle::make("with_checkout")
                 ->reactive()
                 ->hint(
@@ -74,6 +95,7 @@ class ProductResource extends Resource
                     : "Prices will appear at the bottom after saving the product"
                 )
                 ->default(true),
+
               Toggle::make("published")
                 ->columnSpanFull()
                 ->reactive()
@@ -105,11 +127,11 @@ class ProductResource extends Resource
       ->columns([
         Tables\Columns\TextColumn::make("title")->searchable(),
         Tables\Columns\TextColumn::make("slug")->searchable(),
-        Tables\Columns\TextColumn::make("prices_min_price")
-          ->label("Start Price")
-          ->min("prices", "price")
-          ->sortable()
-          ->money("usd"),
+        // Tables\Columns\TextColumn::make("prices_min_price")
+        //   ->label("Start Price")
+        //   ->min("prices", "price")
+        //   ->sortable()
+        //   ->money("usd"),
         Tables\Columns\IconColumn::make("published")
           ->boolean()
           ->sortable(),
@@ -161,7 +183,7 @@ class ProductResource extends Resource
 
   public static function getRelations(): array
   {
-    return [RelationManagers\VariantsRelationManager::class];
+    return [OptionsRelationManager::class, AddonsRelationManager::class];
   }
 
   public static function getPages(): array
