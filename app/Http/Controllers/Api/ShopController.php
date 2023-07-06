@@ -21,9 +21,7 @@ class ShopController extends Controller
 
   public function categories(Request $request)
   {
-    $categoriesWithProducts = ProductCategory::availableInCity(
-      $request->get("city")
-    )
+    $categoriesWithProducts = ProductCategory::query()
       ->orderBy("id", "asc")
       ->get();
 
@@ -38,9 +36,12 @@ class ShopController extends Controller
   {
     $products = $product_category
       ->products()
-      ->availableInCity($request->get("city"))
       ->latest()
       ->paginate(12);
+
+    $products->each(function ($product) {
+      $product->load("options", "addons");
+    });
 
     return ProductResource::collection($products);
   }

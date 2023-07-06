@@ -8,8 +8,11 @@ import MobileHeader from "./MobileHeader";
 import OrderCard from "./OrderCard";
 import OrdersHistory from "./OrdersHistory";
 import PaymentForm from "./PaymentForm";
+import ProductCalculator from "./ProductCalculator";
 import ProductCard from "./ProductCard";
 import ProductCardPlaceholder from "./ProductCardPlaceholder";
+import ProductOptions from "./ProductOptions";
+import ProductQuantity from "./ProductQuantity";
 import ProductSlider from "./ProductSlider";
 import ProtectedRoute from "./ProtectedRoute";
 import Routing from "./Routing";
@@ -19,6 +22,9 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ProductSlider,
+  ProductQuantity,
+  ProductOptions,
+  ProductCalculator,
   VariantsProductPlaceholder,
   UpdatePasswordForm,
   OrderCard,

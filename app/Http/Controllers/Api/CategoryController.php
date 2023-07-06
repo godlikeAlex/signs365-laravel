@@ -11,13 +11,19 @@ class CategoryController extends Controller
 {
   public function index(Request $request)
   {
-    $categoriesWithProducts = ProductCategory::availableInCity(
-      $request->get("city")
-    )
+    $categoriesWithProducts = ProductCategory::query()
       ->orderBy("menu_order", "asc")
       ->where("show_on_home", true)
-      ->publishedProducts($request->get("city"))
+      ->with("products")
       ->get();
+
+    $categoriesWithProducts->each(function ($category) {
+      $category->products->each(function ($product) {
+        if ($product->with_checkout) {
+          $product->load("options", "addons");
+        }
+      });
+    });
 
     return [
       "categories" => CategoryResource::collection($categoriesWithProducts),

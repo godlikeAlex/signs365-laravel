@@ -32,7 +32,25 @@ class ProductAddonsResource extends Resource
         ->maxLength(255),
       Forms\Components\Toggle::make("with_qty")
         ->required()
+        ->columnSpanFull()
+        ->reactive()
         ->label("This addon will be with Quantity?"),
+
+      Forms\Components\TextInput::make("min-qty")
+        ->required()
+        ->numeric()
+        ->label("Minimum Quantity")
+        ->required(fn(\Closure $get) => $get("with_qty"))
+        ->hidden(fn(\Closure $get) => $get("with_qty") == false)
+        ->maxLength(255),
+
+      Forms\Components\TextInput::make("max-qty")
+        ->required()
+        ->numeric()
+        ->label("Maximum Quantity")
+        ->required(fn(\Closure $get) => $get("with_qty"))
+        ->hidden(fn(\Closure $get) => $get("with_qty") == false)
+        ->maxLength(255),
     ];
   }
 

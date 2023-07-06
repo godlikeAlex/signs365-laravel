@@ -30,8 +30,15 @@ class ProductResource extends JsonResource
       "description" => $this->description,
       "with_checkout" => $this->with_checkout,
       "published" => $this->published,
-      "start_at" => $this->startPriceInCity($request->get("city")) / 100,
+      "start_at" => 0,
       "images" => $this->images,
+      // new
+
+      "sizes" => $this->whenNotNull($this->sizes),
+      "options" => OptionResource::collection($this->whenLoaded("options")),
+      "addons" => AddonResource::collection($this->whenLoaded("addons")),
+
+      //
       "categories" => ProductSimpleCategoryResource::collection($categories),
     ];
   }

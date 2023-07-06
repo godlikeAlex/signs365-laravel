@@ -30,13 +30,16 @@ class AddonsRelationManager extends RelationManager
         Tables\Columns\TextColumn::make("condition"),
       ])
       ->filters([Tables\Filters\TrashedFilter::make()])
-      ->headerActions([Tables\Actions\CreateAction::make()])
+      ->headerActions([
+        Tables\Actions\CreateAction::make(),
+        Tables\Actions\AttachAction::make(),
+      ])
       ->actions([
         Tables\Actions\EditAction::make(),
         Tables\Actions\DetachAction::make(),
         Tables\Actions\DeleteAction::make(),
         // Tables\Actions\ForceDeleteAction::make(),
-        // Tables\Actions\RestoreAction::make(),
+        Tables\Actions\RestoreAction::make(),
       ])
       ->bulkActions([
         Tables\Actions\DeleteBulkAction::make(),

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { ComponentType, useEffect } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Path, useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,12 +8,17 @@ import { addToCart } from "../redux/cartSlice";
 import {
   clearProductState,
   getProduct,
-  getProductVariants,
-  selectProductVariant,
   setProduct,
 } from "../redux/singleProductSlice";
 import { IProduct, IProductVaraint } from "../types/models";
 import { Helmet } from "react-helmet";
+import { ProductContext, ProductContextType } from "../contexts/ProductContext";
+import { FormProvider, useForm } from "react-hook-form";
+import {
+  ProductFormContext,
+  ProductFormContextType,
+} from "../contexts/ProductFormContext";
+import { useDebounceEffect } from "ahooks";
 
 interface ILocation extends Path {
   state: {
@@ -38,14 +43,28 @@ export function withProductControl<T extends WithProductsControlProps>(
     const location: ILocation = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { loading, product, addons } = useAppSelector(
+      (state) => state.product
+    );
 
-    const {
-      loading,
-      product,
-      currentVaraint,
-      productVaraintsLoaded,
-      productVariants,
-    } = useAppSelector((state) => state.product);
+    const [state, setState] = useState<ProductFormContextType>({
+      selectedAddons: [],
+      selectedOption: undefined,
+      disabled: false,
+      width: {
+        error: undefined,
+        value: 1,
+        showError: false,
+      },
+      height: {
+        error: undefined,
+        value: 1,
+        showError: false,
+      },
+      unit: "inches",
+      price: 0,
+      quantity: 1,
+    });
 
     useEffect(() => {
       return () => {
@@ -73,32 +92,55 @@ export function withProductControl<T extends WithProductsControlProps>(
     }, [params]);
 
     useEffect(() => {
-      const fetchVariants = async () => {
-        const varinats = await dispatch(
-          getProductVariants({ slug: product.slug })
-        ).unwrap();
+      const selectedAddons = addons
+        .filter((a) => a.isSelected)
+        .map((selectedAddon) => {
+          let error;
 
-        if (varinats.length === 0 && product.with_checkout) {
-          toast("Variants not found, try reload page", { type: "warning" });
-        }
+          if (selectedAddon.withQuantity) {
+            if (selectedAddon.quantity > selectedAddon.validation["max-qty"]) {
+              error = `Max value for addon is - ${selectedAddon.validation["max-qty"]}`;
+            } else if (
+              selectedAddon.quantity < selectedAddon.validation["min-qty"]
+            ) {
+              error = `Min value for addon is - ${selectedAddon.validation["min-qty"]}`;
+            } else {
+              error = undefined;
+            }
+          }
+
+          return {
+            ...selectedAddon,
+            error,
+            showError: error ? true : false,
+          };
+        });
+
+      console.log(selectedAddons);
+
+      setState((state) => ({ ...state, selectedAddons }));
+    }, [addons]);
+
+    // Fetch Prices on update fields.
+    useDebounceEffect(() => {
+      const fetchPriceViaCalculator = async () => {
+        // setState((state) => ({ ...state, disabled: true }));
       };
 
-      if (product) {
-        fetchVariants();
-      }
-    }, [product]);
+      fetchPriceViaCalculator();
+    }, []);
 
     const handleSelectVariant = (productVariant: IProductVaraint) => {
-      dispatch(selectProductVariant(productVariant));
+      // dispatch(selectProductVariant(productVariant));
     };
 
     const handleAddToCart = async () => {
-      dispatch(
-        addToCart({
-          product_id: product.id,
-          product_variant_id: currentVaraint.id,
-        })
-      );
+      // dispatch(
+      //   addToCart({
+      //     product_id: product.id,
+      //     product_variant_id: currentVaraint.id,
+      //   })
+      // );
       toast("Successfully added to cart", { type: "success" });
     };
 
@@ -109,7 +151,7 @@ export function withProductControl<T extends WithProductsControlProps>(
     const renderVariants = () => (
       <div className="row">
         <div className="col-md-12">
-          <h6>Variant: {currentVaraint?.label}</h6>
+          <h6>Options: {currentVaraint?.label}</h6>
         </div>
 
         {productVaraintsLoaded ? (
@@ -160,7 +202,7 @@ export function withProductControl<T extends WithProductsControlProps>(
     );
 
     return (
-      <>
+      <ProductFormContext.Provider value={{ state, setState }}>
         {product ? (
           <Helmet>
             <title>{product?.title}</title>
@@ -177,7 +219,7 @@ export function withProductControl<T extends WithProductsControlProps>(
             renderVariants,
           }}
         />
-      </>
+      </ProductFormContext.Provider>
     );
   };
 }

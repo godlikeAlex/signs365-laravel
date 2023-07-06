@@ -13,24 +13,10 @@ class ProductController extends Controller
 {
   public function product(Request $request, Product $product)
   {
+    if ($product->with_checkout) {
+      $product->load("options", "addons");
+    }
+
     return ["product" => new ProductResource($product)];
-  }
-
-  public function productVariants(Request $request, Product $product)
-  {
-    $city = $request->get("city");
-
-    $variants = $product
-      ->variants()
-      ->with([
-        "price" => function ($query) use ($city) {
-          return $query->where("city_id", $city);
-        },
-      ])
-      ->get();
-
-    return response()->json([
-      "variants" => ProductVaraintResource::collection($variants),
-    ]);
   }
 }

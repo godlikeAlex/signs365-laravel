@@ -38,6 +38,7 @@ class ProductOptionResource extends Resource
         ->required(),
       Forms\Components\Select::make("type")
         ->required()
+        ->reactive()
         ->options(ProductOption::$TYPES_FOR_OPTIONS),
     ];
   }

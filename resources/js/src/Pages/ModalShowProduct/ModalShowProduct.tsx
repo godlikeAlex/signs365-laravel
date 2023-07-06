@@ -5,7 +5,7 @@ import ModalContentWithForm from "./ModalContentWithForm";
 import withProductControl, {
   WithProductsControlProps,
 } from "@/src/hoc/withProductControl";
-import { ProductSlider } from "@/src/components";
+import { ProductOptions, ProductSlider } from "@/src/components";
 import "./style.css";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
@@ -102,6 +102,8 @@ function ModalShowProduct({
                             )}
                           </div>
                         </div>
+
+                        <ProductOptions />
 
                         <div className="col-md-12">
                           <div

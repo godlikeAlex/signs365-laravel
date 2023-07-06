@@ -112,6 +112,7 @@ body {
 .product-variant h5,
 h6 {
   margin: 0px;
+  margin-bottom: 0px !important;
 }
 
 .product-variants-container {
@@ -216,4 +217,73 @@ h6 {
   display: flex;
   align-items: center;
   margin-top: 15px;
+}
+
+.disabled-variant {
+  position: relative;
+  overflow: hidden;
+}
+
+.disabled-variant::after {
+  content: "";
+  background-color: rgba(239, 239, 239, 0.58);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.product-variant.disabled-variant {
+  cursor: not-allowed;
+}
+
+.price-product {
+  font-size: 25px;
+  color: #103178;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.qty-input {
+  border-radius: 40px;
+  height: 44px;
+  border: none;
+  width: 100%;
+  background-color: #f0f2f5;
+  color: #5b6c8f;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.qty-input:focus {
+  box-shadow: unset;
+}
+
+.qty-input-with-btns {
+  position: relative;
+  width: 150px;
+  margin-bottom: 20px;
+  margin-top: 8px;
+}
+
+.qty-input-with-btns button {
+  position: absolute;
+  top: 0;
+  background: unset;
+  box-shadow: unset;
+  border: unset;
+  cursor: pointer;
+  height: 44px;
+  width: 44px;
+}
+
+.qty-input-with-btns button:first-child {
+  left: 0;
+}
+
+.qty-input-with-btns button:last-child {
+  right: 0;
 }

@@ -1,0 +1,44 @@
+.product-addon h6 {
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.product-addon {
+  transition: all;
+}
+
+.product-addon {
+  margin-top: 15px;
+}
+
+.product-addon:first-child {
+  margin-top: 0px;
+}
+
+.quantity-container-addon {
+  margin-top: 6px;
+  display: flex;
+}
+
+.qty-input-addon {
+  background-color: transparent;
+  /* border-bottom: 2px solid #fd8d27; */
+  outline: none !important;
+  /* box-shadow: unset !important; */
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 40px;
+  text-align: center;
+}
+
+.qty-btn-addon {
+  width: 24px;
+  height: 24px;
+  background-color: #fd8d27;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  border-radius: 4px;
+  color: white;
+}

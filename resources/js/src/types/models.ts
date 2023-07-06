@@ -37,17 +37,47 @@ export interface ICategory {
   show_on_home?: null | boolean;
 }
 
-export interface IProduct {
+export type ProductOption = {
+  id: number;
+  title: string;
+  price: string;
+};
+
+type ProudctAddonHasValidation =
+  | { withQuantity: false }
+  | {
+      withQuantity: true;
+      validation: { ["min-qty"]: number; ["max-qty"]: number };
+      quantity: number;
+    };
+
+export type ProductAddon = ProudctAddonHasValidation & {
+  id: number;
+  title: string;
+  condition: string;
+  isSelected: boolean;
+};
+
+type ProductHasCheckout =
+  | { with_checkout: false }
+  | {
+      with_checkout: true;
+      sizes: { title: string }[];
+      options: ProductOption[];
+      addons: ProductAddon[];
+    };
+
+export type IProduct = ProductHasCheckout & {
   id: number;
   title: string;
   slug: string;
   description: string;
-  with_checkout: boolean;
   published: boolean;
   start_at: number;
+
   images?: null | string[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];
-}
+};
 
 export interface ICategoryWithProducts extends ICategory {
   products: IProduct[];

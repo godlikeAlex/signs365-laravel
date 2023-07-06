@@ -12,26 +12,6 @@ class ProductCategory extends Model
 
   protected $guarded = [];
 
-  public function scopeAvailableInCity($query, $city)
-  {
-    $categories = $query->whereHas("cities", function ($cityQuery) use ($city) {
-      return $cityQuery->where("city_id", $city);
-    });
-
-    return $categories;
-  }
-
-  public function scopePublishedProducts($query, $city)
-  {
-    $products = $query
-      ->with("products", function ($productQuery) use ($city) {
-        return $productQuery->where("published", 1)->availableInCity($city);
-      })
-      ->latest();
-
-    return $products;
-  }
-
   public function cities()
   {
     return $this->belongsToMany(

@@ -1,21 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import ProductService from "../services/ProductService";
-import { IProduct, IProductVaraint } from "../types/models";
+import {
+  IProduct,
+  IProductVaraint,
+  ProductAddon,
+  ProductOption,
+} from "../types/models";
+import ProductAddons from "../components/ProductAddons/ProductAddons";
 
 interface IState {
   loading: boolean;
-  productVaraintsLoaded: boolean;
-  productVariants?: IProductVaraint[];
-  currentVaraint?: IProductVaraint;
+  selectedOption?: ProductOption;
   product?: IProduct;
   productSlug?: string;
+  addons: ProductAddon[];
 }
 
 const initialState: IState = {
   loading: true,
-  productVariants: undefined,
-  productVaraintsLoaded: false,
-  currentVaraint: undefined,
+  selectedOption: undefined,
+  addons: [],
   product: undefined,
   productSlug: undefined,
 };
@@ -34,55 +38,86 @@ export const getProduct = createAsyncThunk<
   }
 });
 
-export const getProductVariants = createAsyncThunk<
-  IProductVaraint[],
-  { slug: string },
-  { rejectValue: any }
->("app/getVariantsForProduct", async function ({ slug }, { rejectWithValue }) {
-  try {
-    const { data } = await ProductService.getProductVariants(slug);
-
-    return data.variants;
-  } catch (error) {
-    return rejectWithValue("Error fetch product variants");
-  }
-});
-
 const singleProductSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
     setProduct(state, action: PayloadAction<IProduct>) {
       state.product = action.payload;
+
+      if (action.payload.with_checkout) {
+        const [firstOption] = action.payload.options;
+        state.selectedOption = firstOption;
+
+        state.addons = action.payload.addons.map((addon) => ({
+          ...addon,
+          isSelected: false,
+          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1,
+        }));
+      }
     },
-    selectProductVariant(state, action: PayloadAction<IProductVaraint>) {
-      state.currentVaraint = action.payload;
+
+    selectProductOption(state, action: PayloadAction<ProductOption>) {
+      state.selectedOption = action.payload;
     },
+
     clearProductState(state) {
-      state.currentVaraint = undefined;
+      state.selectedOption = undefined;
       state.loading = false;
       state.product = undefined;
       state.productSlug = undefined;
-      state.productVaraintsLoaded = false;
-      state.productVariants = [];
+    },
+
+    handleAddonChange(state, { payload }: PayloadAction<ProductAddon>) {
+      const currentAddon = state.addons.find(
+        (addon) => addon.id === payload.id
+      );
+
+      if (currentAddon) {
+        currentAddon.isSelected = !currentAddon.isSelected;
+      }
+    },
+
+    updateAddonQuantity(
+      state,
+      { payload }: PayloadAction<{ quantity: number; addonID: number }>
+    ) {
+      const { quantity, addonID } = payload;
+
+      const addon = state.addons.find((addon) => addon.id === addonID);
+
+      if (addon && addon.withQuantity) {
+        addon.quantity = quantity;
+      }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getProduct.fulfilled, (state, action) => {
       state.product = action.payload;
+
+      if (action.payload.with_checkout) {
+        const [firstOption] = action.payload.options;
+        state.selectedOption = firstOption;
+
+        state.addons = action.payload.addons.map((addon) => ({
+          ...addon,
+          isSelected: false,
+          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1,
+        }));
+      }
+
       state.productSlug = action.payload.slug;
       state.loading = false;
-    });
-
-    builder.addCase(getProductVariants.fulfilled, (state, action) => {
-      state.productVaraintsLoaded = true;
-      state.productVariants = action.payload;
-      state.currentVaraint = action.payload[0];
     });
   },
 });
 
-export const { setProduct, selectProductVariant, clearProductState } =
-  singleProductSlice.actions;
+export const {
+  setProduct,
+  clearProductState,
+  selectProductOption,
+  handleAddonChange,
+  updateAddonQuantity,
+} = singleProductSlice.actions;
 
 export default singleProductSlice.reducer;

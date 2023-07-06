@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import withProductControl, {
   WithProductsControlProps,
 } from "@/src/hoc/withProductControl";
 import { Link, Path, useLocation } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { ProductSlider } from "@/src/components";
+import {
+  ProductCalculator,
+  ProductOptions,
+  ProductQuantity,
+  ProductSlider,
+} from "@/src/components";
 import ModalContentWithForm from "../ModalShowProduct/ModalContentWithForm";
 import { ICategory, IProduct } from "@/src/types/models";
+import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
+import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
 interface Props extends WithProductsControlProps {}
 
@@ -25,6 +32,7 @@ const ProductShow: React.FC<Props> = ({
   renderVariants,
 }: Props) => {
   const location: ILocation = useLocation();
+  const { state, setState } = useContext(ProductFormContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,7 +83,7 @@ const ProductShow: React.FC<Props> = ({
             <div className="row">
               <div className="col-md-12">
                 <div className="row">
-                  <div className="col-12 col-xl-5">
+                  <div className="col-12 col-xl-6">
                     {product?.images ? (
                       <ProductSlider
                         images={product.images}
@@ -87,7 +95,7 @@ const ProductShow: React.FC<Props> = ({
                       </div>
                     )}
                   </div>
-                  <div className="col-12 col-xl-7">
+                  <div className="col-12 col-xl-6">
                     <div className="ps-product__info">
                       <div className="ps-product__branch">
                         {product?.categories?.map((category) => (
@@ -130,21 +138,51 @@ const ProductShow: React.FC<Props> = ({
                       <div className="no-gutters row">
                         <div
                           className="ps-product__meta col-md-12"
-                          style={{ marginTop: 0 }}
+                          style={{
+                            marginTop: 0,
+                            borderBottom: "1px solid #f0f2f5",
+                          }}
                         >
                           {product?.with_checkout ? (
-                            renderVariants()
+                            <>
+                              <div>
+                                <ProductOptions />
+                              </div>
+
+                              <div style={{ marginTop: 20 }}>
+                                <ProductAddons />
+                              </div>
+
+                              <div style={{ marginTop: 20 }}>
+                                <ProductCalculator />
+                              </div>
+                            </>
                           ) : (
                             <ModalContentWithForm product={product} />
                           )}
                         </div>
+
                         {product?.with_checkout ? (
-                          <div className="col-md-5">
+                          <div className="col-md-12">
+                            <h6 className="label-product-show">Quantity:</h6>
+
+                            <ProductQuantity
+                              value={state.quantity}
+                              onChange={(value) =>
+                                setState((state) => ({
+                                  ...state,
+                                  quantity: value,
+                                }))
+                              }
+                            />
+
+                            <span className="price-product">250 000 $</span>
+
                             <button
                               type="submit"
-                              style={{ marginTop: 20 }}
                               className="ps-btn ps-btn--warning"
                               onClick={handleAddToCart}
+                              style={{ marginTop: 20 }}
                             >
                               Add to cart
                             </button>
