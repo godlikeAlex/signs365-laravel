@@ -28,18 +28,35 @@ class ProductOptionResource extends Resource
       Forms\Components\TextInput::make("title")
         ->required()
         ->maxLength(255),
+      Forms\Components\Select::make("type")
+        ->required()
+        ->reactive()
+        ->options(ProductOption::$TYPES_FOR_OPTIONS),
       Forms\Components\TextInput::make("price")
         ->prefix('$')
         ->numeric()
+        ->hidden(fn(\Closure $get) => $get("type") == "qty")
         ->dehydrateStateUsing(fn($state) => $state * 100)
         ->afterStateHydrated(function (TextInput $component, $state) {
           $component->state($state / 100);
         })
         ->required(),
-      Forms\Components\Select::make("type")
-        ->required()
-        ->reactive()
-        ->options(ProductOption::$TYPES_FOR_OPTIONS),
+      Forms\Components\Repeater::make("range_prices")
+        ->columns(3)
+        ->hidden(fn(\Closure $get) => $get("type") !== "qty")
+        ->schema([
+          Forms\Components\TextInput::make("from")->numeric(),
+          Forms\Components\TextInput::make("to")->numeric(),
+          Forms\Components\TextInput::make("price")
+            ->numeric()
+            ->dehydrateStateUsing(fn($state) => $state * 100)
+            ->afterStateHydrated(function (TextInput $component, $state) {
+              $component->state($state / 100);
+            })
+            ->postfix('$'),
+        ])
+        ->createItemButtonLabel("Add new range price")
+        ->columnSpanFull(),
     ];
   }
 

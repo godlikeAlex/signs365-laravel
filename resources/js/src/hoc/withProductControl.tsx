@@ -19,6 +19,7 @@ import {
   ProductFormContextType,
 } from "../contexts/ProductFormContext";
 import { useDebounceEffect } from "ahooks";
+import { CartService } from "../services";
 
 interface ILocation extends Path {
   state: {
@@ -43,7 +44,7 @@ export function withProductControl<T extends WithProductsControlProps>(
     const location: ILocation = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { loading, product, addons } = useAppSelector(
+    const { loading, product, addons, selectedOption } = useAppSelector(
       (state) => state.product
     );
 
@@ -62,7 +63,7 @@ export function withProductControl<T extends WithProductsControlProps>(
         showError: false,
       },
       unit: "inches",
-      price: 0,
+      price: 100,
       quantity: 1,
     });
 
@@ -71,6 +72,10 @@ export function withProductControl<T extends WithProductsControlProps>(
         dispatch(clearProductState());
       };
     }, []);
+
+    useEffect(() => {
+      setState((state) => ({ ...state, disabled: state.quantity === 0 }));
+    }, [state.quantity]);
 
     useEffect(() => {
       const fetchProduct = async () => {
@@ -116,19 +121,49 @@ export function withProductControl<T extends WithProductsControlProps>(
           };
         });
 
-      console.log(selectedAddons);
-
       setState((state) => ({ ...state, selectedAddons }));
     }, [addons]);
+
+    useEffect(() => {
+      setState((state) => ({ ...state, selectedOption }));
+    }, [selectedOption]);
 
     // Fetch Prices on update fields.
     useDebounceEffect(() => {
       const fetchPriceViaCalculator = async () => {
-        // setState((state) => ({ ...state, disabled: true }));
+        setState((state) => ({ ...state, disabled: true }));
+
+        const {
+          width,
+          height,
+          quantity,
+          selectedAddons,
+          selectedOption,
+          unit,
+        } = state;
+
+        const { data } = await CartService.calculateSinglePrice(
+          product.id,
+          selectedOption,
+          selectedAddons,
+          unit,
+          width.value,
+          height.value
+        );
+
+        setState((state) => ({ ...state, disabled: false, price: 25 }));
       };
 
       fetchPriceViaCalculator();
-    }, []);
+    }, [
+      state.width,
+      state.height,
+      state.selectedOption,
+      state.selectedAddons,
+      state.quantity,
+      state.unit,
+      product,
+    ]);
 
     const handleSelectVariant = (productVariant: IProductVaraint) => {
       // dispatch(selectProductVariant(productVariant));

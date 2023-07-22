@@ -16,6 +16,11 @@ class ProductOption extends Model
   static $TYPES_FOR_OPTIONS = [
     "sqft" => "SQFT",
     "single" => "SINGLE PRICE",
+    "qty" => "BY QUANTITY",
+  ];
+
+  protected $casts = [
+    "range_prices" => "array",
   ];
 
   public function products(): BelongsToMany

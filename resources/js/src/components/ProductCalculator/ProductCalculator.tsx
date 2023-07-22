@@ -3,18 +3,36 @@ import Input from "../Input";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 import classNames from "classnames";
 
-interface Props {}
+interface Props {
+  validation: { max_width: number; max_height: number };
+}
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];
 
-const ProductCalculator: React.FC<Props> = ({}: Props) => {
+const ProductCalculator: React.FC<Props> = ({ validation }: Props) => {
   const { state, setState } = useContext(ProductFormContext);
 
-  const handleChange = (input: "width" | "height", value: string) => {
+  const handleChange = (input: "width" | "height", value: any) => {
+    const regex = /^[0-9\b]+$/;
+
+    if (!regex.test(value)) {
+      return;
+    }
+
     setState((state) => ({
       ...state,
       [input]: { ...state[input], value },
     }));
+  };
+
+  const handleOnBlur = (input: "width" | "height", currentValue: string) => {
+    if (validation[`max_${input}`] === 0) {
+      return;
+    }
+
+    if (+currentValue > validation[`max_${input}`]) {
+      handleChange(input, validation[`max_${input}`]);
+    }
   };
 
   return (
@@ -40,7 +58,10 @@ const ProductCalculator: React.FC<Props> = ({}: Props) => {
           ))}
 
           <form style={{ width: "100%", marginTop: 10 }}>
-            <div className="ps-form--review" style={{ marginBottom: 0 }}>
+            <div
+              className="ps-form--review ps-form-calculator"
+              style={{ marginBottom: 0 }}
+            >
               <div className="row">
                 <div className="col-md-6">
                   <Input
@@ -51,6 +72,7 @@ const ProductCalculator: React.FC<Props> = ({}: Props) => {
                     formType={"checkout"}
                     disabled={state.disabled}
                     label="Width"
+                    onBlur={(e) => handleOnBlur("width", e.target.value)}
                   />
                 </div>
 
@@ -63,6 +85,7 @@ const ProductCalculator: React.FC<Props> = ({}: Props) => {
                     formType={"checkout"}
                     disabled={state.disabled}
                     label="Height"
+                    onBlur={(e) => handleOnBlur("height", e.target.value)}
                   />
                 </div>
               </div>

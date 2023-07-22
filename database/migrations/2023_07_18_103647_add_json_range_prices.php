@@ -12,12 +12,8 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::table("product_addons", function (Blueprint $table) {
-      $table->integer("min-qty")->default(0);
-
-      $table->enum("type", ["FEE", "SQFT"])->default("FEE"); // fee | sqft
-
-      $table->integer("max-qty")->default(0);
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->json("range_prices")->nullable();
     });
   }
 
@@ -28,8 +24,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::table("product_addons", function (Blueprint $table) {
-      $table->dropColumn(["min-qty", "max-qty", "type"]);
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->dropColumn("range_prices");
     });
   }
 };

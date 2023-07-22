@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\AddonTypeEnum;
 use App\Filament\Resources\ProductAddonsResource\Pages;
 use App\Filament\Resources\ProductAddonsResource\RelationManagers;
 use App\Models\ProductAddons;
@@ -12,6 +13,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Arr;
 
 class ProductAddonsResource extends Resource
 {
@@ -27,8 +29,30 @@ class ProductAddonsResource extends Resource
       Forms\Components\TextInput::make("title")
         ->required()
         ->maxLength(255),
+      Forms\Components\Select::make("type")
+        ->reactive()
+        ->options(function () {
+          return collect(AddonTypeEnum::cases())
+            ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
+            ->all();
+        })
+        ->required(),
+
       Forms\Components\TextInput::make("condition")
         ->required()
+        ->reactive()
+        ->numeric(
+          fn(\Closure $get) => $get("type") === AddonTypeEnum::SQFT->value
+        )
+        ->regex(function (\Closure $get) {
+          if ($get("type") === AddonTypeEnum::SQFT->value) {
+            return "/\d/m";
+          } else {
+            return "/[+-]\d*[%]?$/m";
+          }
+        })
+        // ()
+
         ->maxLength(255),
       Forms\Components\Toggle::make("with_qty")
         ->required()
@@ -64,6 +88,7 @@ class ProductAddonsResource extends Resource
     return $table
       ->columns([
         Tables\Columns\TextColumn::make("title"),
+        Tables\Columns\TextColumn::make("type"),
         Tables\Columns\TextColumn::make("condition"),
         Tables\Columns\IconColumn::make("with_qty")
           ->label("With Quantity?")

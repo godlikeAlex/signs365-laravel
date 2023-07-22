@@ -52,6 +52,11 @@ Route::middleware("handleCityFromRequest")->group(function () {
   Route::prefix("cart")->group(function () {
     Route::get("", [\App\Http\Controllers\Api\CartController::class, "index"]);
 
+    Route::post("calculate-single", [
+      \App\Http\Controllers\Api\CartController::class,
+      "calculateSingle",
+    ]);
+
     Route::post("add", [
       \App\Http\Controllers\Api\CartController::class,
       "addToCart",

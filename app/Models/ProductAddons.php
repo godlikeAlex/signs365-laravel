@@ -13,6 +13,8 @@ class ProductAddons extends Model
 
   protected $guarded = [];
 
+  static $ADDON_TYPES = ["FEE" => "FEE", "SQFT" => "SQFT"];
+
   public function addons(): BelongsToMany
   {
     return $this->belongsToMany(
@@ -20,6 +22,16 @@ class ProductAddons extends Model
       "product_product_addon",
       "product_addon_id",
       "product_id"
+    );
+  }
+
+  public function orderItems(): BelongsToMany
+  {
+    return $this->belongsToMany(
+      OrderItem::class,
+      "addon_order_item",
+      "product_addon_id ",
+      "order_item_id"
     );
   }
 }

@@ -7,12 +7,16 @@ use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\City;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductAddons;
 use App\Models\ProductPrice;
 use App\Models\ProductVariant;
 use App\Models\User;
+use App\Services\Calculator\Service as Calculator;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
@@ -21,6 +25,8 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\isNull;
 
 class OrderResource extends Resource
 {
@@ -85,34 +91,16 @@ class OrderResource extends Resource
           Forms\Components\Select::make("product_id")
             ->relationship("product", "title")
             ->preload()
-            ->options(function (Closure $get) {
-              $city_id = $get("../../city_id");
-
-              return Product::query()
-                ->whereHas("cities", function ($query) use ($city_id) {
-                  return $query->where("city_id", $city_id);
-                })
-                ->pluck("title", "id");
-            })
+            ->options(Product::all()->pluck("title", "id"))
             ->reactive()
-            ->disabled(function (Closure $get) {
-              $cityIsSelected = $get("../../city_id");
-
-              if (is_null($cityIsSelected)) {
-                return true;
-              } else {
-                return false;
-              }
-            })
-            //                            ->afterStateUpdated(fn ($state, callable $set) => $set('total_price', Product::find($state)?->price ?? 0))
             ->required(),
-          Forms\Components\Select::make("product_variant_id")
-            ->relationship("variant", "label")
-            ->label("Product Variant")
+          Forms\Components\Select::make("product_option_id")
+            ->relationship("option", "title")
+            ->label("Option")
             ->disabled(function (Closure $get) {
-              $cityIsSelected = $get("../../city_id");
+              $productIsSelected = $get("product_id");
 
-              if (is_null($cityIsSelected)) {
+              if (is_null($productIsSelected)) {
                 return true;
               } else {
                 return false;
@@ -121,7 +109,6 @@ class OrderResource extends Resource
             ->preload()
             ->options(function (\Closure $get) {
               $product_id = $get("product_id");
-              $city_id = $get("../../city_id");
 
               if (!$product_id) {
                 return [];
@@ -129,127 +116,178 @@ class OrderResource extends Resource
 
               return Product::query()
                 ->find($product_id)
-                ->variants()
-                ->pluck("label", "id");
-            })
-            ->afterStateUpdated(function ($state, callable $set, Closure $get) {
-              $productVariant = ProductVariant::find(
-                $get("product_variant_id")
-              );
-
-              if ($productVariant) {
-                $productPrice = $productVariant
-                  ->prices()
-                  ->where("city_id", $get("../../city_id"))
-                  ->first();
-
-                $price = $productPrice->price;
-
-                $set("product_price_id", $productPrice->id);
-
-                $qty = $get("quantity") === "" ? 0 : $get("quantity");
-
-                $calculatedWithQty = number_format(
-                  ($price * $qty) / 100,
-                  2,
-                  ".",
-                  ""
-                );
-                $set("total_price", $calculatedWithQty);
-                $set("price", $price);
-                $set("unit_price", number_format($price / 100, 2, ".", ""));
-              }
+                ->options()
+                ->get()
+                ->pluck("title", "id");
             })
             ->reactive()
             ->required(),
-          Forms\Components\Hidden::make("product_price_id")->reactive(),
-
           Forms\Components\TextInput::make("quantity")
             ->numeric()
-            ->afterStateUpdated(function ($state, callable $set, Closure $get) {
-              $productVariant = ProductVariant::find(
-                $get("product_variant_id")
-              );
+            ->default(1)
+            ->reactive()
+            ->minValue(1)
+            ->required(),
+          Forms\Components\Repeater::make("addons")
+            ->relationship("addons")
+            ->columnSpanFull()
+            ->hidden(function (Closure $get) {
+              $productIsSelected = $get("product_id");
 
-              if ($productVariant) {
-                $price = $productVariant
-                  ->prices()
-                  ->where("city_id", $get("../../city_id"))
-                  ->first()->price;
-                $qty = $get("quantity") === "" ? 0 : $get("quantity");
-                $calculatedWithQty = number_format(
-                  ($price * $qty) / 100,
-                  2,
-                  ".",
-                  ""
-                );
-
-                $set("total_price", $calculatedWithQty);
-                $set("price", $price);
-                $set("unit_price", number_format($price / 100, 2, ".", ""));
+              if ($productIsSelected) {
+                return false;
+              } else {
+                return true;
               }
             })
-            //                            ->afterStateUpdated(function ($state, callable $set, \Closure $get) {
-            //                                $productPrice = ProductPrice::find($get('product_price_id'));
-            //
-            //                                if ($productPrice) {
-            //                                    $price = $productPrice->price;
-            //                                    $qty = $get('quantity') === '' ? 0 : $get('quantity');
-            //                                    $calculatedWithQty = number_format(
-            //                                        ($price * $qty)/ 100,
-            //                                        2,
-            //                                        '.',
-            //                                        ''
-            //                                    );
-            //
-            //                                    $set('total_price',  $calculatedWithQty);
-            //                                    $set('price', $price);
-            //                                    $set('unit_price', number_format($price / 100, 2, '.', ''));
-            //                                }
-            //                            })
-            ->reactive()
-            ->default(1),
-          Forms\Components\TextInput::make("unit_price")
-            ->prefix('$')
-            ->reactive()
-            ->dehydrated(false)
-            ->label("Price")
-            ->disabled()
-            ->columnSpan(2)
-            ->required(),
-          Forms\Components\TextInput::make("total_price")
-            ->prefix('$')
-            ->reactive()
-            ->dehydrated(false)
-            ->label("Total Price")
-            ->hint("Total with qty")
-            ->disabled()
-            ->numeric()
-            ->required(),
-          Forms\Components\Hidden::make("price")
-            ->afterStateHydrated(function ($state, Closure $get, Closure $set) {
-              $qty = $get("quantity") === "" ? 0 : $get("quantity");
-              $calculatedWithQty = number_format(
-                ($state * $qty) / 100,
-                2,
-                ".",
-                ""
+            ->schema([
+              Forms\Components\Select::make("product_addon_id")
+                ->required()
+                ->options(function (\Closure $get) {
+                  $product_id = $get("../../product_id");
+
+                  if (!$product_id) {
+                    return [];
+                  }
+
+                  return Product::query()
+                    ->find($product_id)
+                    ->addons()
+                    ->get()
+                    ->pluck("title", "id");
+                })
+                ->reactive()
+                ->required(),
+
+              Forms\Components\TextInput::make("quantity")
+                ->numeric()
+                ->default(1)
+                ->reactive()
+                ->hidden(function (\Closure $get) {
+                  $product_addon_id = $get("product_addon_id");
+
+                  info($product_addon_id);
+
+                  if (!$product_addon_id) {
+                    return true;
+                  }
+
+                  $product_addon = ProductAddons::find($product_addon_id);
+
+                  if (!$product_addon) {
+                    return true;
+                  }
+
+                  return $product_addon->with_qty ? false : true;
+                }),
+            ]),
+
+          Grid::make()
+            ->schema([
+              Forms\Components\Select::make("unit")
+                ->options(["inches" => "Inches", "feet" => "Feet"])
+                ->default("inches")
+                ->searchable()
+                ->hidden(function (\Closure $get) {
+                  $product_id = $get("product_id");
+                  $product_option_id = $get("product_option_id");
+
+                  return static::showOnlyForSQFT(
+                    $product_id,
+                    $product_option_id
+                  );
+                })
+                ->reactive()
+                ->required(),
+              Forms\Components\TextInput::make("width")
+                ->numeric()
+                ->hidden(function (\Closure $get) {
+                  $product_id = $get("product_id");
+                  $product_option_id = $get("product_option_id");
+
+                  return static::showOnlyForSQFT(
+                    $product_id,
+                    $product_option_id
+                  );
+                })
+                ->default(1)
+                ->reactive()
+                ->required(),
+              Forms\Components\TextInput::make("height")
+                ->numeric()
+                ->default(1)
+                ->hidden(function (\Closure $get) {
+                  $product_id = $get("product_id");
+                  $product_option_id = $get("product_option_id");
+
+                  return static::showOnlyForSQFT(
+                    $product_id,
+                    $product_option_id
+                  );
+                })
+                ->reactive()
+                ->required(),
+              Forms\Components\Placeholder::make("sqft")
+                ->hidden(function (\Closure $get) {
+                  $product_id = $get("product_id");
+                  $product_option_id = $get("product_option_id");
+
+                  return static::showOnlyForSQFT(
+                    $product_id,
+                    $product_option_id
+                  );
+                })
+                ->label("SQFT")
+                ->reactive()
+                ->content(function (\Closure $get) {
+                  $unit = $get("unit");
+                  $width = $get("width");
+                  $height = $get("height");
+
+                  $sqft = $width * $height;
+
+                  return round($unit === "feet" ? $sqft : $sqft / 144, 2);
+                }),
+            ])
+            ->columns(4),
+
+          Forms\Components\Placeholder::make("price")
+            ->label("Price:")
+            ->columnSpanFull()
+            ->content(function (\Closure $get) {
+              $product_id = $get("product_id");
+              $option_id = $get("product_option_id");
+              $quantity = $get("quantity");
+              $unit = $get("unit");
+              $width = $get("width");
+              $height = $get("height");
+
+              $addons = collect($get("addons"))
+                ->values()
+                ->filter(fn($addon) => $addon["product_addon_id"])
+                ->map(fn($addon) => ["id" => $addon["product_addon_id"]]);
+
+              if (!$product_id || !$option_id) {
+                return;
+              }
+
+              $calculator = new Calculator(
+                $product_id,
+                $width,
+                $height,
+                $addons,
+                $option_id,
+                unit: $unit,
+                quantity: $quantity
               );
-              $set("total_price", $calculatedWithQty);
-              $set("unit_price", number_format($state / 100, 2, ".", ""));
-            })
-            ->disabled(),
+
+              list($priceInCents, $priceInDollars) = $calculator->calculate();
+
+              return $priceInDollars . '$';
+            }),
         ])
         ->columns(3)
         ->columnSpanFull(),
-      //                Forms\Components\TextInput::make('total')
-      //                    ->default(25)
-      //                    ->prefix('$')
-      //                    ->disabled(),
-      //                Forms\Components\TextInput::make('total_with_tax')
-      //                    ->default(25)
-      //                    ->prefix('$')
-      //                    ->disabled()
     ]);
   }
 
@@ -395,5 +433,23 @@ class OrderResource extends Resource
       "create" => Pages\CreateOrder::route("/create"),
       "edit" => Pages\EditOrder::route("/{record}/edit"),
     ];
+  }
+
+  public static function showOnlyForSQFT($product_id, $product_option_id)
+  {
+    if (!$product_id || !$product_option_id) {
+      return true;
+    }
+
+    $productOption = Product::query()
+      ->find($product_id)
+      ->options()
+      ->find($product_option_id);
+
+    if ($productOption) {
+      return $productOption->type !== "sqft";
+    } else {
+      return true;
+    }
   }
 }

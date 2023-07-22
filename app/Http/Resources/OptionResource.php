@@ -18,6 +18,7 @@ class OptionResource extends JsonResource
       "id" => $this->id,
       "title" => $this->title,
       "price" => $this->price,
+      "type" => $this->type,
     ];
   }
 }

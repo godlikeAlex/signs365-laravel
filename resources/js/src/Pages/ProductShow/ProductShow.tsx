@@ -149,13 +149,19 @@ const ProductShow: React.FC<Props> = ({
                                 <ProductOptions />
                               </div>
 
-                              <div style={{ marginTop: 20 }}>
-                                <ProductAddons />
-                              </div>
+                              {state.selectedOption?.type === "sqft" ? (
+                                <div style={{ marginTop: 20 }}>
+                                  <ProductAddons />
+                                </div>
+                              ) : null}
 
-                              <div style={{ marginTop: 20 }}>
-                                <ProductCalculator />
-                              </div>
+                              {state.selectedOption?.type === "sqft" ? (
+                                <div style={{ marginTop: 20 }}>
+                                  <ProductCalculator
+                                    validation={product.validation}
+                                  />
+                                </div>
+                              ) : null}
                             </>
                           ) : (
                             <ModalContentWithForm product={product} />
@@ -176,13 +182,16 @@ const ProductShow: React.FC<Props> = ({
                               }
                             />
 
-                            <span className="price-product">250 000 $</span>
+                            <span className="price-product">
+                              {state.price * state.quantity} $
+                            </span>
 
                             <button
                               type="submit"
                               className="ps-btn ps-btn--warning"
                               onClick={handleAddToCart}
                               style={{ marginTop: 20 }}
+                              disabled={state.disabled}
                             >
                               Add to cart
                             </button>

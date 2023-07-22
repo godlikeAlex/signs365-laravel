@@ -38,6 +38,11 @@ class ProductResource extends JsonResource
       "options" => OptionResource::collection($this->whenLoaded("options")),
       "addons" => AddonResource::collection($this->whenLoaded("addons")),
 
+      "validation" => [
+        "max_width" => $this->max_width,
+        "max_height" => $this->max_height,
+      ],
+
       //
       "categories" => ProductSimpleCategoryResource::collection($categories),
     ];

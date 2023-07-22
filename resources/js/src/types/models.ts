@@ -41,6 +41,7 @@ export type ProductOption = {
   id: number;
   title: string;
   price: string;
+  type: "single" | "sqft";
 };
 
 type ProudctAddonHasValidation =
@@ -74,6 +75,11 @@ export type IProduct = ProductHasCheckout & {
   description: string;
   published: boolean;
   start_at: number;
+
+  validation: {
+    max_width: number;
+    max_height: number;
+  };
 
   images?: null | string[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];

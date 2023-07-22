@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { ProductAddon } from "@/src/types/models";
+import { ProductAddon, ProductOption } from "@/src/types/models";
 
 type ErrorProductContext = {
   error: string;
@@ -7,7 +7,7 @@ type ErrorProductContext = {
 };
 
 export type ProductFormContextType = {
-  selectedOption?: number;
+  selectedOption?: ProductOption;
   selectedAddons: Array<ProductAddon & ErrorProductContext>;
   price?: number;
   unit: "inches" | "feet";

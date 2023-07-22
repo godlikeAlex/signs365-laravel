@@ -12,12 +12,9 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::table("product_addons", function (Blueprint $table) {
-      $table->integer("min-qty")->default(0);
-
-      $table->enum("type", ["FEE", "SQFT"])->default("FEE"); // fee | sqft
-
-      $table->integer("max-qty")->default(0);
+    Schema::table("products", function (Blueprint $table) {
+      $table->integer("max_width")->default(0);
+      $table->integer("max_height")->default(0);
     });
   }
 
@@ -28,8 +25,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::table("product_addons", function (Blueprint $table) {
-      $table->dropColumn(["min-qty", "max-qty", "type"]);
+    Schema::table("products", function (Blueprint $table) {
+      $table->dropColumn(["max_width", "max_height"]);
     });
   }
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\Cart\CalculateSingleItemCartRequest;
 use App\Http\Requests\Installers\GetCartRequest;
 use App\Http\Requests\RemoveItemFromCartRequest;
 use App\Http\Requests\UpdateQuantityRequest;
@@ -152,6 +153,11 @@ class CartController extends Controller
         404
       );
     }
+  }
+
+  public function calculateSingle(CalculateSingleItemCartRequest $request)
+  {
+    return response()->json(["ok" => $request->validated()]);
   }
 
   /**

@@ -62,6 +62,15 @@ class ProductResource extends Resource
                 ->relationship("categories", "title")
                 ->preload(),
 
+              Toggle::make("with_checkout")
+                ->reactive()
+                ->hint(
+                  fn($state) => $state
+                    ? ""
+                    : "Prices will appear at the bottom after saving the product"
+                )
+                ->default(true),
+
               Toggle::make("custom_size")
                 ->reactive()
                 ->dehydrated(false)
@@ -76,7 +85,19 @@ class ProductResource extends Resource
                     $component->state(true);
                   }
                 })
+                ->hidden(fn(\Closure $get) => $get("with_checkout") == false)
                 ->default(false),
+
+              Section::make("Size Validation")
+                ->schema([
+                  Forms\Components\TextInput::make("max_width")
+                    ->reactive()
+                    ->numeric(),
+                  Forms\Components\TextInput::make("max_height")
+                    ->reactive()
+                    ->numeric(),
+                ])
+                ->hidden(fn(\Closure $get) => $get("with_checkout") == false),
 
               Section::make("Custom Sizes")
                 ->schema([
@@ -86,15 +107,6 @@ class ProductResource extends Resource
                 ])
                 ->collapsed()
                 ->hidden(fn(\Closure $get) => $get("custom_size") == false),
-
-              Toggle::make("with_checkout")
-                ->reactive()
-                ->hint(
-                  fn($state) => $state
-                    ? ""
-                    : "Prices will appear at the bottom after saving the product"
-                )
-                ->default(true),
 
               Toggle::make("published")
                 ->columnSpanFull()
