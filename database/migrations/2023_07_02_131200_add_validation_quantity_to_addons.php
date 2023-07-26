@@ -15,7 +15,7 @@ return new class extends Migration {
     Schema::table("product_addons", function (Blueprint $table) {
       $table->integer("min-qty")->default(0);
 
-      $table->enum("type", ["FEE", "SQFT"])->default("FEE"); // fee | sqft
+      $table->string("type")->default("sqft"); // PER ITEM
 
       $table->integer("max-qty")->default(0);
     });

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\AddonTypeEnum;
+use App\Enums\OptionTypeEnum;
 use App\Filament\Resources\ProductAddonsResource\Pages;
 use App\Filament\Resources\ProductAddonsResource\RelationManagers;
 use App\Models\ProductAddons;
@@ -12,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Arr;
 
@@ -37,6 +39,23 @@ class ProductAddonsResource extends Resource
             ->all();
         })
         ->required(),
+
+      Forms\Components\Select::make("options")
+        ->multiple()
+        ->relationship("options", "title")
+        ->reactive()
+        ->preload()
+        ->options(function (\Closure $get, ?Model $record) {
+          $currentTypeAddon = $get("type");
+          $requiredTypes =
+            AddonTypeEnum::from($currentTypeAddon) === AddonTypeEnum::SQFT
+              ? [OptionTypeEnum::SQFT]
+              : [OptionTypeEnum::BY_QTY, OptionTypeEnum::SINGLE];
+
+          return $record->product->options
+            ->whereIn("type", $requiredTypes)
+            ->pluck("title", "id");
+        }),
 
       Forms\Components\TextInput::make("condition")
         ->required()

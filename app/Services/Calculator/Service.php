@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\Calculator;
 
+use App\Enums\AddonTypeEnum;
+use App\Enums\OptionTypeEnum;
 use App\Models\Product;
 use App\Models\ProductOption;
 use App\Services\Calculator\Classes\Addon;
@@ -72,7 +74,9 @@ class Service
 
     $calculatedPrice = $calculatedPriceAddons + $optionPrice;
 
-    if ($selectedOption->currentTypeIs("sqft")) {
+    if ($selectedOption->currentTypeIs(OptionTypeEnum::SQFT)) {
+      $calculatedPrice = $calculatedPrice * $this->quantity;
+    } elseif ($selectedOption->currentTypeIs(OptionTypeEnum::BY_QTY)) {
       $calculatedPrice = $calculatedPrice * $this->quantity;
     }
 

@@ -2,12 +2,14 @@
 
 namespace App\Services\Calculator\Classes;
 
+use App\Enums\OptionTypeEnum;
 use App\Models\ProductOption;
 use Illuminate\Database\Eloquent\Model;
 
 class Option
 {
   public Model $model;
+
   public function __construct($product, $option_id)
   {
     $productOption = $product->options->find($option_id);
@@ -22,11 +24,11 @@ class Option
   public function getPrice($quantity = 1, $sqft = 1)
   {
     switch ($this->model->type) {
-      case "sqft":
+      case OptionTypeEnum::SQFT:
         return $this->calculateSQFT($sqft);
-      case "single":
+      case OptionTypeEnum::SINGLE:
         return $this->calculateSingle();
-      case "qty":
+      case OptionTypeEnum::BY_QTY:
         return $this->calculateByQTY($quantity);
     }
   }
@@ -51,6 +53,26 @@ class Option
 
   private function calculateByQTY($quantity)
   {
-    // return $this->price
+    $rangePrices = collect($this->model->range_prices);
+
+    $priceForSpecificQuantity = $rangePrices
+      ->filter(function ($rangeOfPrice) use ($quantity) {
+        $from = intval($rangeOfPrice["from"]);
+        $to = intval($rangeOfPrice["to"]);
+
+        // -1 from $quanty to infinity
+        if ($quantity >= $from && $to === -1) {
+          return true;
+        }
+
+        if ($quantity >= $from && $quantity <= $to) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      ->first();
+
+    return $priceForSpecificQuantity ? $priceForSpecificQuantity["price"] : 0;
   }
 }

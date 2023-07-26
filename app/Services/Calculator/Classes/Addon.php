@@ -39,10 +39,6 @@ class Addon
     $regExpNumber = "/[+-]\d*$/m";
     $regExpWithPrecentage = "/[+-]\d*%$/m";
 
-    info($condition);
-    info($currentPrice);
-    info($this->model->type);
-
     if ($this->model->type === AddonTypeEnum::SQFT->value) {
       $conditionPrice = intval($condition) * 100;
 

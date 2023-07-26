@@ -124,6 +124,12 @@ class OrderResource extends Resource
             ->required(),
           Forms\Components\TextInput::make("quantity")
             ->numeric()
+            ->mask(
+              fn(TextInput\Mask $mask) => $mask
+                ->numeric()
+                ->integer() // Disallow decimal numbers.
+                ->minValue(1) // Set the minimum value that the number can be.
+            )
             ->default(1)
             ->reactive()
             ->minValue(1)
@@ -145,16 +151,22 @@ class OrderResource extends Resource
                 ->required()
                 ->options(function (\Closure $get) {
                   $product_id = $get("../../product_id");
+                  $product_option_id = $get("../../product_option_id");
 
-                  if (!$product_id) {
+                  if (!$product_id || !$product_option_id) {
                     return [];
                   }
 
-                  return Product::query()
+                  $productOption = Product::query()
                     ->find($product_id)
-                    ->addons()
-                    ->get()
-                    ->pluck("title", "id");
+                    ->options()
+                    ->find($product_option_id);
+
+                  if (!$productOption) {
+                    return [];
+                  }
+
+                  return $productOption->addons->pluck("title", "id");
                 })
                 ->reactive()
                 ->required(),
