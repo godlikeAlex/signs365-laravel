@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\AddonTypeEnum;
 use App\Enums\OptionTypeEnum;
+use App\Enums\ShippingTypeEnum;
 use App\Filament\Resources\ProductOptionResource\Pages;
 use App\Filament\Resources\ProductOptionResource\RelationManagers;
 use App\Models\ProductAddons;
@@ -57,6 +58,33 @@ class ProductOptionResource extends Resource
             ->pluck("title", "id");
         }),
 
+      Forms\Components\Select::make("shipping")
+        ->searchable()
+        ->relationship("shipping", "title")
+        ->reactive()
+        ->preload()
+        ->options(function (\Closure $get, ?Model $record) {
+          $currentTypeOption = $get("type");
+
+          // $requiredTypes =
+          //   OptionTypeEnum::from($currentTypeOption) === OptionTypeEnum::SQFT
+          //     ? [ShippingTypeEnum::SQFT]
+          //     : [ShippingTypeEnum::WIDTHxHEIGHT, ShippingTypeEnum::SINGLE];
+          switch (OptionTypeEnum::from($currentTypeOption)) {
+            case OptionTypeEnum::SQFT:
+              $requiredTypes = [];
+            case OptionTypeEnum::SINGLE:
+              $requiredTypes = [];
+            case OptionTypeEnum::BY_QTY:
+              $requiredTypes = [];
+            default:
+              $requiredTypes = [];
+          }
+
+          return $record->product->addons
+            ->whereIn("type", $requiredTypes)
+            ->pluck("title", "id");
+        }),
       Forms\Components\TextInput::make("price")
         ->prefix('$')
         ->numeric()

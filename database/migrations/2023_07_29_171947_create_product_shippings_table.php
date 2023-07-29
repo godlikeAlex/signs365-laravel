@@ -15,6 +15,7 @@ return new class extends Migration {
     Schema::create("shippings", function (Blueprint $table) {
       $table->id();
 
+      $table->string("title")->default("SHIPPING");
       $table->string("type")->default("sqft");
       $table->json("condition");
 

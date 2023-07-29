@@ -26,6 +26,7 @@ class ShippingResource extends Resource
   static function inputForm(): array
   {
     return [
+      Forms\Components\TextInput::make("title"),
       Forms\Components\Select::make("type")
         ->required()
         ->reactive()
@@ -116,8 +117,8 @@ class ShippingResource extends Resource
   {
     return $table
       ->columns([
+        Tables\Columns\TextColumn::make("title"),
         Tables\Columns\TextColumn::make("type"),
-        Tables\Columns\TextColumn::make("condition"),
         Tables\Columns\TextColumn::make("created_at")->dateTime(),
         Tables\Columns\TextColumn::make("updated_at")->dateTime(),
       ])
