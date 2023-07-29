@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OptionTypeEnum;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\City;
@@ -9,6 +10,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductAddons;
 use App\Models\ProductPrice;
+use App\Models\ProductSize;
 use App\Models\ProductVariant;
 use App\Models\User;
 use App\Services\Calculator\Service as Calculator;
@@ -25,6 +27,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Notification;
 
 use function PHPUnit\Framework\isNull;
 
@@ -203,8 +206,13 @@ class OrderResource extends Resource
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
+                  $size = $get("size");
 
-                  return static::showOnlyForSQFT(
+                  if ($size) {
+                    return true;
+                  }
+
+                  return static::showOnlyForSqftOrSizes(
                     $product_id,
                     $product_option_id
                   );
@@ -213,11 +221,19 @@ class OrderResource extends Resource
                 ->required(),
               Forms\Components\TextInput::make("width")
                 ->numeric()
+                ->mask(
+                  fn(TextInput\Mask $mask) => $mask->numeric()->decimalPlaces(3)
+                )
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
+                  $size = $get("size");
 
-                  return static::showOnlyForSQFT(
+                  if ($size) {
+                    return true;
+                  }
+
+                  return static::showOnlyForSqftOrSizes(
                     $product_id,
                     $product_option_id
                   );
@@ -227,12 +243,22 @@ class OrderResource extends Resource
                 ->required(),
               Forms\Components\TextInput::make("height")
                 ->numeric()
+                ->mask(
+                  fn(TextInput\Mask $mask) => $mask->numeric()->decimalPlaces(3)
+                )
+                ->disabled(fn(\Closure $get) => $get("size"))
                 ->default(1)
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
 
-                  return static::showOnlyForSQFT(
+                  $size = $get("size");
+
+                  if ($size) {
+                    return true;
+                  }
+
+                  return static::showOnlyForSqftOrSizes(
                     $product_id,
                     $product_option_id
                   );
@@ -244,7 +270,13 @@ class OrderResource extends Resource
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
 
-                  return static::showOnlyForSQFT(
+                  $size = $get("size");
+
+                  if ($size) {
+                    return true;
+                  }
+
+                  return static::showOnlyForSqftOrSizes(
                     $product_id,
                     $product_option_id
                   );
@@ -259,6 +291,44 @@ class OrderResource extends Resource
                   $sqft = $width * $height;
 
                   return round($unit === "feet" ? $sqft : $sqft / 144, 2);
+                }),
+              Forms\Components\Select::make("size")
+                ->reactive()
+                ->hidden(function (\Closure $get) {
+                  $product = Product::find($get("product_id"));
+
+                  if (!$product) {
+                    return true;
+                  }
+
+                  if ($product->sizes()->count() >= 1) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                })
+                ->afterStateUpdated(function (
+                  \Closure $set,
+                  \Closure $get,
+                  $state
+                ) {
+                  $size = ProductSize::find($state);
+
+                  if (!$size) {
+                    return;
+                  }
+
+                  $set("width", (string) $size->width);
+                  $set("height", (string) $size->height);
+                })
+                ->options(function (Closure $get) {
+                  $product = Product::find($get("product_id"));
+
+                  if (!$product) {
+                    return [];
+                  }
+
+                  return $product->sizes()->pluck("label", "id");
                 }),
             ])
             ->columns(4),
@@ -447,19 +517,21 @@ class OrderResource extends Resource
     ];
   }
 
-  public static function showOnlyForSQFT($product_id, $product_option_id)
+  public static function showOnlyForSqftOrSizes($product_id, $product_option_id)
   {
     if (!$product_id || !$product_option_id) {
       return true;
     }
+    $product = Product::query()->find($product_id);
 
-    $productOption = Product::query()
-      ->find($product_id)
-      ->options()
-      ->find($product_option_id);
+    if ($product->sizes()->count()) {
+      return false;
+    }
+
+    $productOption = $product->options()->find($product_option_id);
 
     if ($productOption) {
-      return $productOption->type !== "sqft";
+      return $productOption->type !== OptionTypeEnum::SQFT;
     } else {
       return true;
     }

@@ -12,15 +12,8 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::create("product_options", function (Blueprint $table) {
-      $table->id();
-
-      $table->string("title");
-      $table->integer("price")->default(0);
-      $table->string("type")->default("sqft"); // PER ITEM
-
-      $table->softDeletes();
-      $table->timestamps();
+    Schema::table("products", function (Blueprint $table) {
+      $table->dropColumn("sizes");
     });
   }
 
@@ -31,6 +24,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::dropIfExists("product_options");
+    Schema::table("products", function (Blueprint $table) {
+      $table->json("sizes");
+    });
   }
 };

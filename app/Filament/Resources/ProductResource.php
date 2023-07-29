@@ -13,6 +13,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Form;
@@ -76,12 +77,11 @@ class ProductResource extends Resource
                 ->dehydrated(false)
                 ->afterStateHydrated(function (
                   Toggle $component,
+                  Model $record,
                   $state,
                   \Closure $get
                 ) {
-                  $sizes = $get("sizes");
-
-                  if ($sizes && count($sizes) > 0) {
+                  if ($record->sizes()->count() > 0) {
                     $component->state(true);
                   }
                 })
@@ -102,7 +102,45 @@ class ProductResource extends Resource
               Section::make("Custom Sizes")
                 ->schema([
                   Repeater::make("sizes")
-                    ->schema([Forms\Components\TextInput::make("label")])
+                    ->relationship("sizes")
+                    ->schema([
+                      Forms\Components\TextInput::make("width")
+                        ->numeric()
+                        ->reactive()
+                        ->afterStateUpdated(function (
+                          Closure $set,
+                          Closure $get,
+                          $state
+                        ) {
+                          $height = $get("height") ?? 0;
+
+                          $set("label", $state . '" x "' . $height . '"');
+                        })
+                        ->mask(
+                          fn(TextInput\Mask $mask) => $mask
+                            ->numeric()
+                            ->minValue(1) // Set the minimum value that the number can be.
+                        ),
+                      Forms\Components\TextInput::make("height")
+                        ->numeric()
+                        ->reactive()
+                        ->afterStateUpdated(function (
+                          Closure $set,
+                          Closure $get,
+                          $state
+                        ) {
+                          $width = $get("width") ?? 0;
+
+                          $set("label", $width . '" x ' . $state . '"');
+                        })
+                        ->mask(
+                          fn(TextInput\Mask $mask) => $mask
+                            ->numeric()
+                            ->minValue(1) // Set the minimum value that the number can be.
+                        ),
+                      Forms\Components\TextInput::make("label")->reactive(),
+                    ])
+                    ->columns(3)
                     ->defaultItems(1),
                 ])
                 ->collapsed()

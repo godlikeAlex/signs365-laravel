@@ -45,6 +45,7 @@ class ProductAddonsResource extends Resource
         ->relationship("options", "title")
         ->reactive()
         ->preload()
+        ->hiddenOn("create")
         ->options(function (\Closure $get, ?Model $record) {
           $currentTypeAddon = $get("type");
           $requiredTypes =

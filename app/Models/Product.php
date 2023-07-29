@@ -69,4 +69,9 @@ class Product extends Model
       "product_category_id"
     );
   }
+
+  public function sizes(): HasMany
+  {
+    return $this->hasMany(ProductSize::class);
+  }
 }

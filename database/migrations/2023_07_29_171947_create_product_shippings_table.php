@@ -12,14 +12,12 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::create("product_options", function (Blueprint $table) {
+    Schema::create("shippings", function (Blueprint $table) {
       $table->id();
 
-      $table->string("title");
-      $table->integer("price")->default(0);
-      $table->string("type")->default("sqft"); // PER ITEM
+      $table->string("type")->default("sqft");
+      $table->json("condition");
 
-      $table->softDeletes();
       $table->timestamps();
     });
   }
@@ -31,6 +29,6 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::dropIfExists("product_options");
+    Schema::dropIfExists("shippings");
   }
 };

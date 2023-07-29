@@ -13,8 +13,8 @@ return new class extends Migration {
   public function up()
   {
     Schema::table("products", function (Blueprint $table) {
-      $table->integer("max_width")->default(0);
-      $table->integer("max_height")->default(0);
+      $table->decimal("max_width")->default(0);
+      $table->decimal("max_height")->default(0);
     });
   }
 

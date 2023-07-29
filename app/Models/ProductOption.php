@@ -50,4 +50,9 @@ class ProductOption extends Model
   {
     return $this->belongsTo(Product::class);
   }
+
+  public function shipping(): BelongsTo
+  {
+    return $this->belongsTo(Shipping::class);
+  }
 }
