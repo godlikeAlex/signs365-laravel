@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/src/hooks";
 import { removeItemFromCart } from "@/src/redux/cartSlice";
-import { ICartItem, IProduct } from "@/src/types/models";
+import { ICartItem } from "@/src/types/models";
 import React from "react";
 import { toast } from "react-toastify";
 

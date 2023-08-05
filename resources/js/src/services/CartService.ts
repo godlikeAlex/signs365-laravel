@@ -1,10 +1,18 @@
 import api from "../api";
-import { ICart, ProductAddon, ProductOption } from "../types/models";
+import { Addon, ProductOption } from "../types/ProductModel";
+import { ICart } from "../types/models";
 
 export interface UpdateCartParams {
   product_id: number;
+  option_id: number;
+  addons: Addon[];
+  unit: "feet" | "inches";
+  width: string | number;
+  height: string | number;
+  quantity: number;
+  custom_size_id?: number;
+  //
   city?: string;
-  product_variant_id: number;
 }
 
 export interface UpdateQuantityParams {
@@ -23,19 +31,21 @@ export default class CartService {
 
   static calculateSinglePrice(
     productID: number,
-    option: ProductOption,
-    addons: ProductAddon[],
+    option_id: number,
+    addons: Addon[],
     unit: "feet" | "inches",
     width: number | string,
-    height: number | string
+    height: number | string,
+    quantity: number
   ) {
-    return api.post<{ price: number }>("/cart/calculate-single", {
+    return api.post<{ price: string }>("/cart/calculate-single", {
       product_id: productID,
-      option,
+      option_id,
       addons,
       unit,
       width,
       height,
+      quantity,
     });
   }
 

@@ -31,8 +31,6 @@ return new class extends Migration {
   public function down()
   {
     Schema::table("product_options", function (Blueprint $table) {
-      Schema::disableForeignKeyConstraints();
-
       $table->dropIfExists("shipping_id");
     });
   }

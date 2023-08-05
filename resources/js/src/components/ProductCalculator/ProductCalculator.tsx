@@ -1,38 +1,45 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../Input";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 import classNames from "classnames";
+import { useAppSelector } from "@/src/hooks";
+import UnitSelection from "./UnitSelection";
+import CalculatorForm from "./CalculatorForm";
+import CustomSizesDropdown from "./CustomSizesDropdown";
 
-interface Props {
-  validation: { max_width: number; max_height: number };
-}
+interface Props {}
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];
 
-const ProductCalculator: React.FC<Props> = ({ validation }: Props) => {
-  const { state, setState } = useContext(ProductFormContext);
+const ProductCalculator: React.FC<Props> = (Props) => {
+  const { selectedOption } = useAppSelector((state) => state.product);
+  const { state, setState, validationRules } = useContext(ProductFormContext);
 
-  const handleChange = (input: "width" | "height", value: any) => {
-    const regex = /^[0-9\b]+$/;
+  const staticData = React.useMemo(() => {
+    const isSignleType = selectedOption.type === "single";
 
-    if (!regex.test(value)) {
-      return;
+    if (isSignleType) {
+      return selectedOption.show_custom_sizes === false &&
+        selectedOption.size_for_collect
+        ? selectedOption.common_data
+        : undefined;
     }
 
+    return undefined;
+  }, [selectedOption]);
+
+  const hasCustomSize = React.useMemo(() => {
+    if (selectedOption.type === "sqft") return false;
+
+    return selectedOption.size_for_collect && selectedOption.show_custom_sizes;
+  }, [selectedOption]);
+
+  const handleSizeTypeSelect = (type: "default" | "custom") => {
     setState((state) => ({
       ...state,
-      [input]: { ...state[input], value },
+      typeSizeSelection: type,
+      customSize: { value: undefined, error: undefined },
     }));
-  };
-
-  const handleOnBlur = (input: "width" | "height", currentValue: string) => {
-    if (validation[`max_${input}`] === 0) {
-      return;
-    }
-
-    if (+currentValue > validation[`max_${input}`]) {
-      handleChange(input, validation[`max_${input}`]);
-    }
   };
 
   return (
@@ -42,56 +49,52 @@ const ProductCalculator: React.FC<Props> = ({ validation }: Props) => {
           <div style={{ width: "100%" }}>
             <h6 className="label-product-show">Sizes:</h6>
           </div>
-          {units.map((unit) => (
+        </div>
+
+        {selectedOption.show_custom_sizes && (
+          <div className="row">
             <div
               className={classNames("product-variant", {
-                "active-variant": state.unit === unit,
+                "active-variant": state.typeSizeSelection === "default",
                 "disabled-variant": state.disabled,
               })}
-              key={unit}
-              onClick={() =>
-                !state.disabled && setState((state) => ({ ...state, unit }))
-              }
+              onClick={() => !state.disabled && handleSizeTypeSelect("default")}
             >
-              <h6 style={{ textTransform: "capitalize" }}>{unit}</h6>
+              <h6 style={{ textTransform: "capitalize" }}>Default</h6>
             </div>
-          ))}
 
-          <form style={{ width: "100%", marginTop: 10 }}>
             <div
-              className="ps-form--review ps-form-calculator"
-              style={{ marginBottom: 0 }}
+              className={classNames("product-variant", {
+                "active-variant": state.typeSizeSelection === "custom",
+                "disabled-variant": state.disabled,
+              })}
+              onClick={() => !state.disabled && handleSizeTypeSelect("custom")}
             >
-              <div className="row">
-                <div className="col-md-6">
-                  <Input
-                    type="number"
-                    // disabled={isSubmitting}
-                    onChange={(e) => handleChange("width", e.target.value)}
-                    value={state.width.value}
-                    formType={"checkout"}
-                    disabled={state.disabled}
-                    label="Width"
-                    onBlur={(e) => handleOnBlur("width", e.target.value)}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <Input
-                    type="number"
-                    // disabled={isSubmitting}
-                    onChange={(e) => handleChange("height", e.target.value)}
-                    value={state.height.value}
-                    formType={"checkout"}
-                    disabled={state.disabled}
-                    label="Height"
-                    onBlur={(e) => handleOnBlur("height", e.target.value)}
-                  />
-                </div>
-              </div>
+              <h6 style={{ textTransform: "capitalize" }}>Custom</h6>
             </div>
-          </form>
-        </div>
+          </div>
+        )}
+
+        {!staticData && !hasCustomSize ? (
+          <UnitSelection
+            currentUnit={state.unit}
+            units={units}
+            disabled={state.disabled}
+            setUnit={(unit) => setState((state) => ({ ...state, unit }))}
+          />
+        ) : undefined}
+
+        {state.typeSizeSelection === "default" ? (
+          <CalculatorForm staticData={staticData} />
+        ) : null}
+
+        {state.typeSizeSelection === "custom" &&
+        selectedOption.type !== "sqft" ? (
+          <CustomSizesDropdown
+            sizes={selectedOption.customSizes}
+            hasError={state.highlightErrors && !validationRules["customSize"]}
+          />
+        ) : null}
       </div>
     </div>
   );

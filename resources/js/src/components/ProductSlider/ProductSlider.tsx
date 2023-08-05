@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
+import "./style.css";
 
 interface Props {
   images: string[];
@@ -35,37 +36,38 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
       }}
     >
-      <Slider
-        ref={(slider) => setMainSlickRef(slider)}
-        asNavFor={thumbNailSlickRef}
-        {...MainSlick}
-        className="ps-product__thumbnail"
-      >
-        {images.map((img) => (
-          <div className="slide" key={`main-${img}`}>
-            <img src={`/storage/${img}`} alt={productName} />
-          </div>
-        ))}
-      </Slider>
-      <Slider
-        ref={(slider) => setThumbNailSlickRef(slider)}
-        asNavFor={mainSlickRef}
-        {...ThumbnailSlick}
-        slidesToShow={5}
-        className="ps-gallery--image"
-        style={{ display: "block" }}
-      >
-        {images.map((img) => (
-          <div className="slide" key={`thumb-${img}`}>
-            <div className="ps-gallery__item">
+      <div className="sticky-sliders">
+        <Slider
+          ref={(slider) => setMainSlickRef(slider)}
+          asNavFor={thumbNailSlickRef}
+          {...MainSlick}
+          className="ps-product__thumbnail"
+        >
+          {images.map((img) => (
+            <div className="slide" key={`main-${img}`}>
               <img src={`/storage/${img}`} alt={productName} />
             </div>
-          </div>
-        ))}
-      </Slider>
+          ))}
+        </Slider>
+        <Slider
+          ref={(slider) => setThumbNailSlickRef(slider)}
+          asNavFor={mainSlickRef}
+          {...ThumbnailSlick}
+          slidesToShow={5}
+          className="ps-gallery--image"
+          style={{ display: "block" }}
+        >
+          {images.map((img) => (
+            <div className="slide" key={`thumb-${img}`}>
+              <div className="ps-gallery__item">
+                <img src={`/storage/${img}`} alt={productName} />
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
     </div>
   );
 };

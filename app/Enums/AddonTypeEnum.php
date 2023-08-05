@@ -6,6 +6,7 @@ enum AddonTypeEnum: string
 {
   case SQFT = "sqft";
   case FEE = "fee";
+  case LINEAR_FOOT = "linear_foot";
 
   public static function values(): array
   {

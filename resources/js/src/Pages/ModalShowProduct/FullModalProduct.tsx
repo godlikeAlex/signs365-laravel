@@ -1,8 +1,8 @@
-import { IProduct } from "@/src/types/models";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import ModalContentWithForm from "./ModalContentWithForm";
 import Slider from "react-slick";
+import { IProduct } from "@/src/types/ProductModel";
 
 interface Props {
   handleClose: () => void;

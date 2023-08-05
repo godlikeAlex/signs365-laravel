@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Enums\OptionTypeEnum;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\City;
+use App\Models\CustomSize;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductAddons;
+use App\Models\ProductOption;
 use App\Models\ProductPrice;
 use App\Models\ProductSize;
 use App\Models\ProductVariant;
@@ -19,12 +22,14 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Notification;
@@ -93,12 +98,16 @@ class OrderResource extends Resource
         ->schema([
           Forms\Components\Select::make("product_id")
             ->relationship("product", "title")
+            ->searchable()
             ->preload()
             ->options(Product::all()->pluck("title", "id"))
+            ->afterStateUpdated(
+              fn(\Closure $set) => $set("product_option_id", null)
+            )
             ->reactive()
             ->required(),
           Forms\Components\Select::make("product_option_id")
-            ->relationship("option", "title")
+            ->relationship("productOption", "title")
             ->label("Option")
             ->disabled(function (Closure $get) {
               $productIsSelected = $get("product_id");
@@ -139,6 +148,65 @@ class OrderResource extends Resource
             ->required(),
           Forms\Components\Repeater::make("addons")
             ->relationship("addons")
+            ->saveRelationshipsUsing(function (
+              $component,
+              $state,
+              $record,
+              HasForms $livewire
+            ) {
+              if (!is_array($state)) {
+                $state = [];
+              }
+
+              $relationship = $component->getRelationship();
+
+              $existingRecords = $component->getCachedExistingRecords();
+
+              $recordsToDelete = [];
+
+              foreach (
+                $existingRecords->pluck(
+                  $relationship->getRelated()->getKeyName()
+                )
+                as $keyToCheckForDeletion
+              ) {
+                if (
+                  array_key_exists("record-{$keyToCheckForDeletion}", $state)
+                ) {
+                  continue;
+                }
+
+                $recordsToDelete[] = $keyToCheckForDeletion;
+              }
+
+              $relationship
+                ->whereIn(
+                  $relationship->getRelated()->getQualifiedKeyName(),
+                  $recordsToDelete
+                )
+                ->get()
+                ->each(
+                  static fn(Model $relatedRecord) => $record
+                    ->productAddons()
+                    ->detach($relatedRecord)
+                );
+
+              $childComponentContainers = $component->getChildComponentContainers();
+
+              $dataForSyncRelation = [];
+
+              foreach ($childComponentContainers as $itemKey => $item) {
+                $itemData = $item->getState(shouldCallHooksBefore: true);
+
+                info($itemData, ["itemdata" => 1]);
+
+                $dataForSyncRelation[$itemData["product_addons_id"]] = [
+                  "quantity" => $itemData["quantity"] ?? 0,
+                ];
+              }
+
+              $record->addons()->sync($dataForSyncRelation);
+            })
             ->columnSpanFull()
             ->hidden(function (Closure $get) {
               $productIsSelected = $get("product_id");
@@ -150,7 +218,7 @@ class OrderResource extends Resource
               }
             })
             ->schema([
-              Forms\Components\Select::make("product_addon_id")
+              Forms\Components\Select::make("product_addons_id")
                 ->required()
                 ->options(function (\Closure $get) {
                   $product_id = $get("../../product_id");
@@ -171,6 +239,7 @@ class OrderResource extends Resource
 
                   return $productOption->addons->pluck("title", "id");
                 })
+                ->searchable()
                 ->reactive()
                 ->required(),
 
@@ -179,15 +248,15 @@ class OrderResource extends Resource
                 ->default(1)
                 ->reactive()
                 ->hidden(function (\Closure $get) {
-                  $product_addon_id = $get("product_addon_id");
+                  $product_addons_id = $get("product_addons_id");
 
-                  info($product_addon_id);
+                  info($product_addons_id);
 
-                  if (!$product_addon_id) {
+                  if (!$product_addons_id) {
                     return true;
                   }
 
-                  $product_addon = ProductAddons::find($product_addon_id);
+                  $product_addon = ProductAddons::find($product_addons_id);
 
                   if (!$product_addon) {
                     return true;
@@ -196,7 +265,6 @@ class OrderResource extends Resource
                   return $product_addon->with_qty ? false : true;
                 }),
             ]),
-
           Grid::make()
             ->schema([
               Forms\Components\Select::make("unit")
@@ -206,7 +274,7 @@ class OrderResource extends Resource
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
-                  $size = $get("size");
+                  $size = $get("custom_size_id");
 
                   if ($size) {
                     return true;
@@ -224,14 +292,10 @@ class OrderResource extends Resource
                 ->mask(
                   fn(TextInput\Mask $mask) => $mask->numeric()->decimalPlaces(3)
                 )
+                ->disabled(fn(\Closure $get) => $get("custom_size_id"))
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
-                  $size = $get("size");
-
-                  if ($size) {
-                    return true;
-                  }
 
                   return static::showOnlyForSqftOrSizes(
                     $product_id,
@@ -246,17 +310,11 @@ class OrderResource extends Resource
                 ->mask(
                   fn(TextInput\Mask $mask) => $mask->numeric()->decimalPlaces(3)
                 )
-                ->disabled(fn(\Closure $get) => $get("size"))
+                ->disabled(fn(\Closure $get) => $get("custom_size_id"))
                 ->default(1)
                 ->hidden(function (\Closure $get) {
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
-
-                  $size = $get("size");
-
-                  if ($size) {
-                    return true;
-                  }
 
                   return static::showOnlyForSqftOrSizes(
                     $product_id,
@@ -270,7 +328,7 @@ class OrderResource extends Resource
                   $product_id = $get("product_id");
                   $product_option_id = $get("product_option_id");
 
-                  $size = $get("size");
+                  $size = $get("custom_size_id");
 
                   if ($size) {
                     return true;
@@ -292,16 +350,19 @@ class OrderResource extends Resource
 
                   return round($unit === "feet" ? $sqft : $sqft / 144, 2);
                 }),
-              Forms\Components\Select::make("size")
+              Forms\Components\Select::make("custom_size_id")
+                ->relationship("customSize", "title")
                 ->reactive()
                 ->hidden(function (\Closure $get) {
-                  $product = Product::find($get("product_id"));
+                  $productOption = ProductOption::find(
+                    $get("product_option_id")
+                  );
 
-                  if (!$product) {
+                  if (!$productOption) {
                     return true;
                   }
 
-                  if ($product->sizes()->count() >= 1) {
+                  if ($productOption->customSizes()->count() >= 1) {
                     return false;
                   } else {
                     return true;
@@ -312,7 +373,7 @@ class OrderResource extends Resource
                   \Closure $get,
                   $state
                 ) {
-                  $size = ProductSize::find($state);
+                  $size = CustomSize::find($state);
 
                   if (!$size) {
                     return;
@@ -322,21 +383,24 @@ class OrderResource extends Resource
                   $set("height", (string) $size->height);
                 })
                 ->options(function (Closure $get) {
-                  $product = Product::find($get("product_id"));
+                  $productOption = ProductOption::find(
+                    $get("product_option_id")
+                  );
 
-                  if (!$product) {
+                  if (!$productOption) {
                     return [];
                   }
 
-                  return $product->sizes()->pluck("label", "id");
+                  return $productOption->customSizes()->pluck("label", "id");
                 }),
             ])
             ->columns(4),
 
-          Forms\Components\Placeholder::make("price")
+          Forms\Components\Placeholder::make("price_view")
             ->label("Price:")
             ->columnSpanFull()
-            ->content(function (\Closure $get) {
+            ->dehydrated(false)
+            ->content(function (\Closure $get, \Closure $set) {
               $product_id = $get("product_id");
               $option_id = $get("product_option_id");
               $quantity = $get("quantity");
@@ -346,8 +410,8 @@ class OrderResource extends Resource
 
               $addons = collect($get("addons"))
                 ->values()
-                ->filter(fn($addon) => $addon["product_addon_id"])
-                ->map(fn($addon) => ["id" => $addon["product_addon_id"]]);
+                ->filter(fn($addon) => $addon["product_addons_id"])
+                ->map(fn($addon) => ["id" => $addon["product_addons_id"]]);
 
               if (!$product_id || !$option_id) {
                 return;
@@ -363,13 +427,37 @@ class OrderResource extends Resource
                 quantity: $quantity
               );
 
-              list($priceInCents, $priceInDollars) = $calculator->calculate();
+              list(
+                $priceInCents,
+                $priceInDollars,
+                $shippingPrice,
+              ) = $calculator->calculate();
+
+              $set("price", $priceInCents);
+              $set("shipping_price", $shippingPrice);
 
               return $priceInDollars . '$';
             }),
+
+          Forms\Components\TextInput::make("shipping_price")
+            ->disabled()
+            ->dehydrated(false)
+            ->columnSpanFull()
+            ->hint("Already included in the price")
+            ->label("Shipping Price"),
+          Forms\Components\Hidden::make("price")
+            ->disabled()
+            // ->hidden()
+            // ->hidden()
+            ->reactive(),
         ])
         ->columns(3)
         ->columnSpanFull(),
+      Forms\Components\Placeholder::make("unit_total")->content(function (
+        Closure $get
+      ) {
+        info($get("orderItems"));
+      }),
     ]);
   }
 
@@ -498,7 +586,10 @@ class OrderResource extends Resource
           }),
       ])
       ->actions([Tables\Actions\EditAction::make()])
-      ->bulkActions([Tables\Actions\DeleteBulkAction::make()]);
+      ->bulkActions([
+        Tables\Actions\DeleteBulkAction::make(),
+        FilamentExportBulkAction::make("export"),
+      ]);
   }
 
   public static function getRelations(): array
@@ -522,13 +613,14 @@ class OrderResource extends Resource
     if (!$product_id || !$product_option_id) {
       return true;
     }
+
     $product = Product::query()->find($product_id);
 
-    if ($product->sizes()->count()) {
+    $productOption = $product->options()->find($product_option_id);
+
+    if ($productOption->customSizes()->count()) {
       return false;
     }
-
-    $productOption = $product->options()->find($product_option_id);
 
     if ($productOption) {
       return $productOption->type !== OptionTypeEnum::SQFT;

@@ -4,6 +4,7 @@ import { ICartItem } from "@/src/types/models";
 import React from "react";
 import { toast } from "react-toastify";
 import CartItem from "../CartItem";
+import { generateAttributtesCartItem } from "@/src/utils/helpers";
 
 interface Props {
   items: ICartItem[];
@@ -50,6 +51,8 @@ const CartListMobile: React.FC<Props> = ({ items }: Props) => {
             <div className="ps-product__content">
               <h5 className="ps-product__title">
                 <a href="">{cartItem.name}</a>
+
+                <p>{generateAttributtesCartItem(cartItem.attributes)}</p>
               </h5>
               <div className="ps-product__row">
                 <div className="ps-product__label">Price:</div>

@@ -11,9 +11,10 @@ import {
   ProductSlider,
 } from "@/src/components";
 import ModalContentWithForm from "../ModalShowProduct/ModalContentWithForm";
-import { ICategory, IProduct } from "@/src/types/models";
+import { ICategory } from "@/src/types/models";
 import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
+import { IProduct } from "@/src/types/ProductModel";
 
 interface Props extends WithProductsControlProps {}
 
@@ -149,17 +150,16 @@ const ProductShow: React.FC<Props> = ({
                                 <ProductOptions />
                               </div>
 
-                              {state.selectedOption?.type === "sqft" ? (
+                              {state.selectedOption &&
+                              state.selectedOption.addons.length > 0 ? (
                                 <div style={{ marginTop: 20 }}>
                                   <ProductAddons />
                                 </div>
                               ) : null}
 
-                              {state.selectedOption?.type === "sqft" ? (
+                              {state.selectedOption?.showCalculator ? (
                                 <div style={{ marginTop: 20 }}>
-                                  <ProductCalculator
-                                    validation={product.validation}
-                                  />
+                                  <ProductCalculator />
                                 </div>
                               ) : null}
                             </>
@@ -183,7 +183,7 @@ const ProductShow: React.FC<Props> = ({
                             />
 
                             <span className="price-product">
-                              {state.price * state.quantity} $
+                              {state.calculatedPrice || "0.00"} $
                             </span>
 
                             <button

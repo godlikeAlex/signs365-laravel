@@ -1,6 +1,6 @@
 import { Input } from "@/src/components";
 import ProductService from "@/src/services/ProductService";
-import { IProduct } from "@/src/types/models";
+import { IProduct } from "@/src/types/ProductModel";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";

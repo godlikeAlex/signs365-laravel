@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { ProductAddon, ProductOption } from "@/src/types/models";
+import { Addon, ProductOption } from "../types/ProductModel";
 
 type ErrorProductContext = {
   error: string;
@@ -8,14 +8,21 @@ type ErrorProductContext = {
 
 export type ProductFormContextType = {
   selectedOption?: ProductOption;
-  selectedAddons: Array<ProductAddon & ErrorProductContext>;
+  selectedAddons: Array<Addon & ErrorProductContext>;
   price?: number;
+  calculatedPrice: string;
   unit: "inches" | "feet";
   disabled: boolean;
   quantity: number;
+  typeSizeSelection: "default" | "custom";
+  highlightErrors: boolean;
   width: {
     error: string;
     showError: boolean;
+    value: any;
+  };
+  customSize: {
+    error: string;
     value: any;
   };
   height: {
@@ -28,6 +35,7 @@ export type ProductFormContextType = {
 export interface ContextType {
   state: ProductFormContextType;
   setState: React.Dispatch<React.SetStateAction<ProductFormContextType>>;
+  validationRules: { [key: string]: boolean };
 }
 
 export const ProductFormContext = createContext<ContextType | undefined>(

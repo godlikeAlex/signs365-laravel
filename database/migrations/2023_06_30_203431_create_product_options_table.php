@@ -18,6 +18,10 @@ return new class extends Migration {
       $table->string("title");
       $table->integer("price")->default(0);
       $table->string("type")->default("sqft"); // PER ITEM
+      $table->boolean("size_for_collect")->default(false);
+
+      $table->decimal("max_width")->default(0);
+      $table->decimal("max_height")->default(0);
 
       $table->softDeletes();
       $table->timestamps();

@@ -24,9 +24,14 @@ class AddToCartRequest extends FormRequest
   public function rules()
   {
     return [
-      'product_id' => 'required',
-      'product_variant_id' => 'required',
-      'city' => 'nullable',
+      "product_id" => "required",
+      "option_id" => "required",
+      "addons" => ["array"],
+      "unit" => ["in:feet,inches"],
+      "width" => ["required", "numeric"],
+      "height" => ["required", "numeric"],
+      "quantity" => "required",
+      "custom_size_id" => "nullable",
     ];
   }
 }

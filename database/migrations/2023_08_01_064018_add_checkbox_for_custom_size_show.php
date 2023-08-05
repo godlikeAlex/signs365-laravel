@@ -12,9 +12,8 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::table("products", function (Blueprint $table) {
-      $table->decimal("max_width")->default(0);
-      $table->decimal("max_height")->default(0);
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->boolean("show_custom_sizes")->default(false);
     });
   }
 
@@ -25,8 +24,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::table("products", function (Blueprint $table) {
-      $table->dropColumn(["max_width", "max_height"]);
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->dropColumn("show_custom_sizes");
     });
   }
 };

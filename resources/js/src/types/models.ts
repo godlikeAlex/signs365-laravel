@@ -1,3 +1,5 @@
+import { IProduct } from "./ProductModel";
+
 export interface User {
   id: number;
   name: string;
@@ -37,54 +39,6 @@ export interface ICategory {
   show_on_home?: null | boolean;
 }
 
-export type ProductOption = {
-  id: number;
-  title: string;
-  price: string;
-  type: "single" | "sqft";
-};
-
-type ProudctAddonHasValidation =
-  | { withQuantity: false }
-  | {
-      withQuantity: true;
-      validation: { ["min-qty"]: number; ["max-qty"]: number };
-      quantity: number;
-    };
-
-export type ProductAddon = ProudctAddonHasValidation & {
-  id: number;
-  title: string;
-  condition: string;
-  isSelected: boolean;
-};
-
-type ProductHasCheckout =
-  | { with_checkout: false }
-  | {
-      with_checkout: true;
-      sizes: { title: string }[];
-      options: ProductOption[];
-      addons: ProductAddon[];
-    };
-
-export type IProduct = ProductHasCheckout & {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  published: boolean;
-  start_at: number;
-
-  validation: {
-    max_width: number;
-    max_height: number;
-  };
-
-  images?: null | string[];
-  categories?: Pick<ICategory, "title" | "slug" | "id">[];
-};
-
 export interface ICategoryWithProducts extends ICategory {
   products: IProduct[];
 }
@@ -96,9 +50,21 @@ export interface ICartItem {
   quantity: number;
   disabled: boolean;
   attributes: {
-    product_variant: {
+    productOptionType: string;
+    width?: string;
+    height?: string;
+    unit?: string;
+    productOption: {
       id: number;
-      label: string;
+      title: string;
+    };
+    product: {
+      id: number;
+      title: string;
+    };
+    customSize?: {
+      id: number;
+      title: string;
     };
   };
   associatedModel: IProduct;

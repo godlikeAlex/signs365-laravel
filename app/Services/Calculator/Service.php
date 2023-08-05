@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 use App\Services\Calculator\Classes\Addon;
 use App\Services\Calculator\Classes\Option;
+use App\Services\Calculator\Classes\Shipping;
 
 class Service
 {
@@ -38,51 +39,78 @@ class Service
       abort(400, "CalcService Product not found");
     }
 
+    $this->selectedOption = $product->options->find($selectedOptionID);
+
+    if (!$this->selectedOption) {
+      abort(400, "Product Option not found");
+    }
+
     $this->quantity = intval($quantity);
 
     $this->product = $product;
 
     $this->width = intval($width);
     $this->height = intval($height);
-    $this->unit = $unit;
+
+    if ($unit) {
+      $this->unit = $unit;
+    }
 
     $this->addons = $addons;
-
-    $this->selectedOptionID = $selectedOptionID;
   }
 
-  public function calculate()
+  public function getProduct()
   {
+    return $this->product;
+  }
+
+  public function getProductOption()
+  {
+    return $this->selectedOption;
+  }
+
+  public function calculate($originalPrice = null)
+  {
+    if ($originalPrice == null) {
+      $originalPrice = false;
+    }
+
     if ($this->type === "calculator") {
-      return $this->calculateCalculatorProduct();
+      return $this->calculateCalculatorProduct($originalPrice);
     }
 
     return "";
   }
 
-  private function calculateCalculatorProduct()
+  private function calculateCalculatorProduct($originalPrice)
   {
     $sqft = $this->calculateSQFT();
 
-    $selectedOption = new Option($this->product, $this->selectedOptionID);
+    $selectedOption = new Option($this->selectedOption);
+    $shipping = new Shipping($this->selectedOption->shipping);
 
     $optionPrice = $selectedOption->getPrice($this->quantity, $sqft);
 
     list($calculatedPriceAddons, $calculatedAddons) = $this->calculateAddons(
       $optionPrice
     );
+    $shippingPrice = $shipping->calculate($this->width, $this->height, $sqft);
 
-    $calculatedPrice = $calculatedPriceAddons + $optionPrice;
+    $calculatedPrice = $calculatedPriceAddons + $optionPrice + $shippingPrice;
 
-    if ($selectedOption->currentTypeIs(OptionTypeEnum::SQFT)) {
-      $calculatedPrice = $calculatedPrice * $this->quantity;
-    } elseif ($selectedOption->currentTypeIs(OptionTypeEnum::BY_QTY)) {
-      $calculatedPrice = $calculatedPrice * $this->quantity;
-    }
+    info("prices", [
+      "addons" => $calculatedPriceAddons,
+      "optionPrice" => $optionPrice,
+      "shipping" => $shipping->calculate($this->width, $this->height, $sqft),
+    ]);
+
+    $calculatedPrice =
+      $calculatedPrice * ($originalPrice ? 1 : $this->quantity);
 
     return [
       round($calculatedPrice, 3),
-      round($calculatedPrice / 100, 3),
+      number_format(round($calculatedPrice / 100, 3), 2),
+      number_format($shippingPrice / 100, 3),
       $calculatedAddons,
     ];
   }

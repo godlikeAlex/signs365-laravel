@@ -18,7 +18,6 @@ class CreateOrderItemsTable extends Migration
 
       $table->foreignId("order_id")->nullable();
       $table->foreignId("product_id")->nullable();
-      $table->foreignId("product_option_id")->nullable();
 
       $table->integer("quantity")->default(1);
       $table->integer("price");
@@ -27,10 +26,6 @@ class CreateOrderItemsTable extends Migration
         ->foreign("product_id")
         ->references("id")
         ->on("products");
-      $table
-        ->foreign("product_option_id")
-        ->references("id")
-        ->on("product_options");
 
       $table
         ->foreign("order_id")

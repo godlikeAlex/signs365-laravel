@@ -1,5 +1,5 @@
 import api from "../api";
-import { IGetProduct, IGetProductVariants } from "../types/axiosResponses";
+import { IGetProduct } from "../types/axiosResponses";
 
 export default class ProductService {
   static getProduct(slug: string) {
@@ -7,7 +7,7 @@ export default class ProductService {
   }
 
   static getProductVariants(slug: string) {
-    return api.get<IGetProductVariants>(`/products/${slug}/variants`);
+    return api.get<any>(`/products/${slug}/variants`);
   }
 
   static sendRequestProduct(

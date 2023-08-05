@@ -3,8 +3,10 @@
 namespace App\Services\Cart;
 
 use App\Http\Resources\CartItemsResource;
+use App\Models\CustomSize;
 use App\Models\Product;
 use Darryldecode\Cart\CartCondition;
+use App\Services\Calculator\Service as CalculatorService;
 
 class Service
 {
@@ -20,29 +22,65 @@ class Service
     return $this->cart;
   }
 
-  public function add($product, $product_variant_id, $cityID)
-  {
-    $productVariant = $product->variants()->findOrFail($product_variant_id);
+  public function add(
+    $product_id,
+    $option_id,
+    $addons,
+    $quantity,
+    $unit,
+    $width,
+    $height,
+    $custom_size_id
+  ) {
+    $customSize = CustomSize::find($custom_size_id);
 
-    $productPrice = $productVariant
-      ->prices()
-      ->where("city_id", $cityID)
-      ->firstOrFail();
+    $calculator = new CalculatorService(
+      $product_id,
+      $width,
+      $height,
+      $addons,
+      $option_id,
+      $unit,
+      $quantity
+    );
+
+    $product = $calculator->getProduct();
+    $productOption = $calculator->getProductOption();
 
     $options = [
-      "product_variant" => [
-        "id" => $productVariant->id,
-        "label" => $productVariant->label,
+      "productOptionType" => $productOption->type,
+      "addons" => $addons,
+      "width" => $width,
+      "height" => $height,
+      "unit" => $unit,
+      "productOption" => [
+        "id" => $productOption->id,
+        "title" => $productOption->title,
+      ],
+      "product" => [
+        "id" => $product->id,
+        "title" => $product->title,
       ],
     ];
 
-    $id = md5($product->id . serialize($options));
+    if ($customSize) {
+      $options["customSize"] = [
+        "id" => $customSize->id,
+        "title" => $customSize->label,
+      ];
+    }
+
+    $id = md5($product->id . $productOption->id . serialize($options));
+
+    list($priceInCents) = $calculator->calculate(true);
+
+    info("some price bewfore add", ["price" => $priceInCents]);
 
     $this->cart->add([
       "id" => $id,
       "name" => $product->title,
-      "quantity" => 1,
-      "price" => $productPrice->price,
+      "quantity" => $quantity,
+      "price" => $priceInCents,
       "attributes" => $options,
       "associatedModel" => $product,
     ]);
@@ -103,33 +141,32 @@ class Service
   public function format($city)
   {
     $cart = $this->cart->getContent()->map(function ($cart_item) use ($city) {
-      $product = Product::whereHas("cities", function ($query) use ($city) {
-        return $query->where("city_id", $city->id);
-      })->find($cart_item->associatedModel->id);
+      // $product = Product::whereHas("cities", function ($query) use ($city) {
+      //   return $query->where("city_id", $city->id);
+      // })->find($cart_item->associatedModel->id);
 
-      if ($product) {
-        $variant = $cart_item->attributes->get("product_variant");
+      // if ($product) {
+      //   $variant = $cart_item->attributes->get("product_variant");
 
-        $variant = $product->variants()->find($variant["id"]);
+      //   $variant = $product->variants()->find($variant["id"]);
 
-        if ($variant) {
-          $productPrice = $variant
-            ->prices()
-            ->where("city_id", $city->id)
-            ->first();
+      //   if ($variant) {
+      //     $productPrice = $variant
+      //       ->prices()
+      //       ->where("city_id", $city->id)
+      //       ->first();
 
-          $this->cart->update($cart_item->id, [
-            "price" => $productPrice->price,
-          ]);
+      //     $this->cart->update($cart_item->id, [
+      //       "price" => $productPrice->price,
+      //     ]);
 
-          $cart_item["disabled"] = false;
-        } else {
-          $cart_item["disabled"] = true;
-        }
-      } else {
-        $cart_item["disabled"] = true;
-      }
-
+      //     $cart_item["disabled"] = false;
+      //   } else {
+      //     $cart_item["disabled"] = true;
+      //   }
+      // } else {
+      //   $cart_item["disabled"] = true;
+      // }
       return $cart_item;
     });
 
@@ -145,11 +182,13 @@ class Service
     $this->cart->condition($createdTaxCondition);
 
     $sub_total = $cart->reduce(function ($carry, $item) {
-      if ($item["disabled"] === false) {
-        return $carry + $item->getPriceSumWithConditions();
-      } else {
-        return $carry;
-      }
+      return $carry + $item->getPriceSumWithConditions();
+
+      // if ($item["disabled"] === false) {
+      //   return $carry + $item->getPriceSumWithConditions();
+      // } else {
+      //   return $carry;
+      // }
     }, 0);
 
     $condition = $this->cart->getCondition("TAX");
@@ -157,8 +196,8 @@ class Service
 
     return [
       "items" => CartItemsResource::collection($cart->sort()->values()),
-      "tax" => round($tax / 100, 2),
-      "total" => round($sub_total / 100, 2),
+      "tax" => round($tax / 100, 3),
+      "total" => round($sub_total / 100, 3),
       "total_with_tax" => round(($sub_total + $tax) / 100, 2),
     ];
   }

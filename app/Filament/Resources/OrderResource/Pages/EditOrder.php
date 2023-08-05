@@ -33,7 +33,7 @@ class EditOrder extends EditRecord
     $total = 0;
 
     foreach ($this->record->orderItems as $orderItem) {
-      $total += $orderItem->productPrice->price * $orderItem->quantity;
+      $total += $orderItem->price;
     }
 
     $this->record->total = $total * (1 + $this->record->city->tax);

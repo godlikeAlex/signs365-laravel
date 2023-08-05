@@ -26,12 +26,12 @@ class CalculateSingleItemCartRequest extends FormRequest
   {
     return [
       "product_id" => "required",
-      "option" => "nullable",
+      "option_id" => "required",
       "addons" => ["array"],
       "unit" => ["in:feet,inches"],
       "width" => ["required", "numeric"],
       "height" => ["required", "numeric"],
-      // "quantity" => "required",
+      "quantity" => "required",
     ];
   }
 }

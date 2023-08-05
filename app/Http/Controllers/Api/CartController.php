@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 use App\Services\Cart\Service as CartService;
+use App\Services\Calculator\Service as CalculatorService;
 
 class CartController extends Controller
 {
@@ -68,29 +69,29 @@ class CartController extends Controller
   public function addToCart(AddToCartRequest $request)
   {
     try {
-      $data = $request->validated();
-
       $city = City::where("id", $request->get("city"))->firstOrFail();
 
-      info($city->products);
-      info($data);
-
       /** @var Product $product */
-      $product = $city->products()->find($data["product_id"]);
+      $product = Product::find($request->input("product_id"));
 
       if (!$product) {
         return response()->json(
           [
-            "error" => "This product does'nt exists in {$city->domain}",
+            "error" => "This product does'nt exists, please refresh page.",
           ],
           404
         );
       }
 
       $this->cart->add(
-        $product,
-        $request->input("product_variant_id"),
-        $city->id
+        $request->product_id,
+        $request->option_id,
+        $request->addons,
+        $request->quantity,
+        $request->unit,
+        $request->input("width"),
+        $request->input("height"),
+        $request->input("custom_size_id")
       );
 
       return \response()->json($this->cart->format($city));
@@ -157,7 +158,19 @@ class CartController extends Controller
 
   public function calculateSingle(CalculateSingleItemCartRequest $request)
   {
-    return response()->json(["ok" => $request->validated()]);
+    $calculator = new CalculatorService(
+      $request->input("product_id"),
+      width: $request->input("width"),
+      height: $request->input("height"),
+      unit: $request->input("unit"),
+      addons: $request->addons,
+      selectedOptionID: $request->input("option_id"),
+      quantity: $request->input("quantity")
+    );
+
+    list($priceInCents, $priceInDollars) = $calculator->calculate();
+
+    return response()->json(["price" => $priceInDollars]);
   }
 
   /**

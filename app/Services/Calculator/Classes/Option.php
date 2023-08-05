@@ -10,18 +10,12 @@ class Option
 {
   public Model $model;
 
-  public function __construct($product, $option_id)
+  public function __construct($option)
   {
-    $productOption = $product->options->find($option_id);
-
-    if (!$productOption) {
-      abort(400, "Product Option not found");
-    }
-
-    $this->model = $productOption;
+    $this->model = $option;
   }
 
-  public function getPrice($quantity = 1, $sqft = 1)
+  public function getPrice($quantity = 1, $sqft)
   {
     switch ($this->model->type) {
       case OptionTypeEnum::SQFT:
@@ -44,11 +38,16 @@ class Option
 
   private function calculateSQFT($sqft)
   {
+    info("model price", [
+      "price" => $this->model->price,
+      "sqft" => $sqft,
+    ]);
     return $this->model->price * $sqft;
   }
 
   private function calculateSingle()
   {
+    return $this->model->price;
   }
 
   private function calculateByQTY($quantity)

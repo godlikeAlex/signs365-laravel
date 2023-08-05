@@ -1,9 +1,8 @@
+import { IProduct } from "./ProductModel";
 import {
   Domain,
   ICategoryWithProducts,
-  IProductVaraint,
   User,
-  IProduct,
   IOrder,
   ICategory,
 } from "./models";
@@ -26,9 +25,9 @@ export interface IGetCategory {
   count_products: number;
 }
 
-export interface IGetProductVariants {
-  variants: IProductVaraint[];
-}
+// export interface IGetProductVariants {
+// variants: IProductVaraint[];
+// }
 
 export interface IGetProduct {
   product: IProduct;

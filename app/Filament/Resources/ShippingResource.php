@@ -74,8 +74,17 @@ class ShippingResource extends Resource
                 ShippingTypeEnum::WIDTHxHEIGHT;
             })
             ->schema([
-              Forms\Components\TextInput::make("from"),
-              Forms\Components\TextInput::make("to"),
+              Forms\Components\Placeholder::make("hint")
+                ->content(
+                  "(WIDTH * HEIGHT) < X < (WIDTH2 * HEIGHT) or (WIDTH * HEIGHT) < x < -1 (infinity) "
+                )
+                ->label("Formula:"),
+              Forms\Components\TextInput::make("from")->label(
+                "From: Width * Height"
+              ),
+              Forms\Components\TextInput::make("to")->label(
+                "To: Width * Height"
+              ),
               Forms\Components\TextInput::make("price")
                 ->required()
                 ->numeric()

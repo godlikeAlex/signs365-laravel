@@ -16,6 +16,7 @@ class ProductAddons extends Model
   protected $guarded = [];
   protected $casts = [
     "type" => AddonTypeEnum::class,
+    "with_qty" => "boolean",
   ];
 
   static $ADDON_TYPES = ["FEE" => "FEE", "SQFT" => "SQFT"];
@@ -27,16 +28,6 @@ class ProductAddons extends Model
       "product_product_addon",
       "product_addon_id",
       "product_id"
-    );
-  }
-
-  public function orderItems(): BelongsToMany
-  {
-    return $this->belongsToMany(
-      OrderItem::class,
-      "addon_order_item",
-      "product_addon_id ",
-      "order_item_id"
     );
   }
 

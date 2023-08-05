@@ -9,9 +9,14 @@ use App\Filament\Resources\ProductOptionResource\Pages;
 use App\Filament\Resources\ProductOptionResource\RelationManagers;
 use App\Models\ProductAddons;
 use App\Models\ProductOption;
+use App\Models\Shipping;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -38,6 +43,9 @@ class ProductOptionResource extends Resource
       Forms\Components\Select::make("type")
         ->required()
         ->reactive()
+        ->afterStateUpdated(function ($state, Closure $set) {
+          $set("shipping_id", null);
+        })
         ->options(OptionTypeEnum::listOptionsWithLabel()),
 
       Forms\Components\Select::make("addons")
@@ -48,6 +56,11 @@ class ProductOptionResource extends Resource
         ->hiddenOn("create")
         ->options(function (\Closure $get, ?Model $record) {
           $currentTypeOption = $get("type");
+
+          if (!$currentTypeOption) {
+            return [];
+          }
+
           $requiredTypes =
             OptionTypeEnum::from($currentTypeOption) === OptionTypeEnum::SQFT
               ? [AddonTypeEnum::FEE, AddonTypeEnum::SQFT]
@@ -58,30 +71,41 @@ class ProductOptionResource extends Resource
             ->pluck("title", "id");
         }),
 
-      Forms\Components\Select::make("shipping")
+      Forms\Components\Select::make("shipping_id")
         ->searchable()
         ->relationship("shipping", "title")
         ->reactive()
         ->preload()
         ->options(function (\Closure $get, ?Model $record) {
           $currentTypeOption = $get("type");
+          $customSizeIsSet = $get("show_custom_sizes");
 
-          // $requiredTypes =
-          //   OptionTypeEnum::from($currentTypeOption) === OptionTypeEnum::SQFT
-          //     ? [ShippingTypeEnum::SQFT]
-          //     : [ShippingTypeEnum::WIDTHxHEIGHT, ShippingTypeEnum::SINGLE];
-          switch (OptionTypeEnum::from($currentTypeOption)) {
-            case OptionTypeEnum::SQFT:
-              $requiredTypes = [];
-            case OptionTypeEnum::SINGLE:
-              $requiredTypes = [];
-            case OptionTypeEnum::BY_QTY:
-              $requiredTypes = [];
-            default:
-              $requiredTypes = [];
+          if (!$currentTypeOption) {
+            return;
           }
 
-          return $record->product->addons
+          switch (OptionTypeEnum::from($currentTypeOption)) {
+            case OptionTypeEnum::SQFT:
+              $requiredTypes = [ShippingTypeEnum::SQFT];
+              break;
+
+            case OptionTypeEnum::SINGLE:
+              $requiredTypes = $customSizeIsSet
+                ? [ShippingTypeEnum::WIDTHxHEIGHT]
+                : [ShippingTypeEnum::SINGLE];
+              break;
+            case OptionTypeEnum::BY_QTY:
+              $requiredTypes = $customSizeIsSet
+                ? [ShippingTypeEnum::WIDTHxHEIGHT]
+                : [ShippingTypeEnum::SINGLE];
+              break;
+
+            default:
+              $requiredTypes = [];
+              break;
+          }
+
+          return Shipping::query()
             ->whereIn("type", $requiredTypes)
             ->pluck("title", "id");
         }),
@@ -94,6 +118,102 @@ class ProductOptionResource extends Resource
           $component->state($state / 100);
         })
         ->required(),
+
+      Toggle::make("size_for_collect")
+        ->default(false)
+        ->reactive()
+        ->columnSpanFull()
+        ->hidden(
+          fn(Closure $get) => OptionTypeEnum::from($get("type")) ===
+            OptionTypeEnum::SQFT
+        ),
+      Toggle::make("show_custom_sizes")
+        ->default(false)
+        ->reactive()
+        ->hidden(fn(Closure $get) => !$get("size_for_collect")),
+
+      Section::make("Size Validation")
+        ->schema([
+          Forms\Components\TextInput::make("max_width")
+            ->reactive()
+            ->required()
+            ->default(-1)
+            ->numeric(),
+          Forms\Components\TextInput::make("max_height")
+            ->reactive()
+            ->default(-1)
+            ->required()
+            ->numeric(),
+        ])
+        ->hidden(function (\Closure $get) {
+          $type = $get("type");
+          $customSizeIsSet = $get("show_custom_sizes");
+
+          if (!$type) {
+            return true;
+          }
+
+          if ($customSizeIsSet) {
+            return false;
+          }
+
+          return OptionTypeEnum::from($type) !== OptionTypeEnum::SQFT;
+        }),
+
+      Section::make("Custom Sizes")
+        ->schema([
+          Repeater::make("customSizes")
+            ->relationship("customSizes")
+            ->schema([
+              Forms\Components\TextInput::make("width")
+                ->numeric()
+                ->reactive()
+                ->afterStateUpdated(function (
+                  \Closure $set,
+                  \Closure $get,
+                  $state
+                ) {
+                  $height = $get("height") ?? 0;
+
+                  $set("label", $state . '" x "' . $height . '"');
+                })
+                ->mask(
+                  fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
+                ),
+              Forms\Components\TextInput::make("height")
+                ->numeric()
+                ->reactive()
+                ->afterStateUpdated(function (
+                  \Closure $set,
+                  \Closure $get,
+                  $state
+                ) {
+                  $width = $get("width") ?? 0;
+
+                  $set("label", $width . '" x ' . $state . '"');
+                })
+                ->mask(
+                  fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
+                ),
+              Forms\Components\TextInput::make("label")->reactive(),
+            ])
+            ->columns(3)
+            ->defaultItems(1),
+        ])
+        ->collapsed()
+        ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false),
+      Section::make("Common Data")
+        ->reactive()
+        ->hidden(
+          fn(\Closure $get) => !$get("size_for_collect") ||
+            $get("show_custom_sizes")
+        )
+        ->statePath("common_data")
+        ->schema([
+          Forms\Components\TextInput::make("static_width")->default(1),
+          Forms\Components\TextInput::make("static_height")->default(1),
+        ]),
+
       Forms\Components\Repeater::make("range_prices")
         ->columns(3)
         ->reactive()
@@ -101,6 +221,7 @@ class ProductOptionResource extends Resource
         ->afterStateUpdated(function () {
           info("updated");
         })
+        ->minItems(1)
         ->schema([
           Forms\Components\TextInput::make("from")
             ->numeric()
@@ -155,7 +276,13 @@ class ProductOptionResource extends Resource
         ->createItemButtonLabel("Add new range price")
         ->disableItemCreation(function (\Closure $get) {
           $rangePrices = $get("range_prices");
+          info($rangePrices, ["rangePrice" => $rangePrices]);
           $lastRangePrice = end($rangePrices);
+
+          if (!$lastRangePrice) {
+            return false;
+          }
+
           $lastRangePriceTo = $lastRangePrice["to"];
 
           return is_null($lastRangePriceTo) || $lastRangePriceTo == -1;

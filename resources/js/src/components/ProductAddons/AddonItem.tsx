@@ -7,10 +7,10 @@ import {
   handleAddonChange,
   updateAddonQuantity,
 } from "@/src/redux/singleProductSlice";
-import { ProductAddon } from "@/src/types/models";
+import { Addon } from "@/src/types/ProductModel";
 
 interface Props {
-  addon: ProductAddon;
+  addon: Addon;
   error?: string;
   disabled: boolean;
 }

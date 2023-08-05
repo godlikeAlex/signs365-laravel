@@ -1,12 +1,13 @@
 import { ProductCard } from "@/src/components";
 import CatalogService from "@/src/services/CatalogService";
-import { ICategory, IProduct } from "@/src/types/models";
+import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import CatalogProducts from "./CatalogProducts";
 import { Helmet } from "react-helmet";
+import { IProduct } from "@/src/types/ProductModel";
 
 interface CatalogProps {}
 

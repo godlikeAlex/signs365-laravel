@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductOption extends Model
@@ -23,7 +24,10 @@ class ProductOption extends Model
 
   protected $casts = [
     "range_prices" => "array",
+    "common_data" => "json",
     "type" => OptionTypeEnum::class,
+    "show_custom_sizes" => "boolean",
+    "size_for_collect" => "boolean",
   ];
 
   public function products(): BelongsToMany
@@ -54,5 +58,15 @@ class ProductOption extends Model
   public function shipping(): BelongsTo
   {
     return $this->belongsTo(Shipping::class);
+  }
+
+  public function customSizes(): HasMany
+  {
+    return $this->hasMany(CustomSize::class);
+  }
+
+  public function orderItems(): HasMany
+  {
+    return $this->hasMany(OrderItem::class);
   }
 }

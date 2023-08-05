@@ -12,22 +12,23 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::create("custom_sizes", function (Blueprint $table) {
-      $table->id();
-      $table->decimal("width")->default(1);
-      $table->decimal("height")->default(1);
-      $table->string("label")->default("");
-      $table->integer("sheets")->default(0);
+    Schema::table("order_items", function (Blueprint $table) {
+      $table->decimal("width")->nullable();
+      $table->decimal("height")->nullable();
+      $table->string("unit")->nullable();
 
       $table->foreignId("product_option_id")->nullable();
+      $table->foreignId("custom_size_id")->nullable();
 
       $table
         ->foreign("product_option_id")
         ->references("id")
-        ->on("product_options")
-        ->onDelete("cascade");
+        ->on("product_options");
 
-      $table->timestamps();
+      $table
+        ->foreign("custom_size_id")
+        ->references("id")
+        ->on("custom_sizes");
     });
   }
 
@@ -38,6 +39,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::dropIfExists("custom_sizes");
+    Schema::table("order_items", function (Blueprint $table) {
+      //
+    });
   }
 };

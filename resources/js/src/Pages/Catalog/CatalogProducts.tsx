@@ -1,11 +1,12 @@
 import { ProductCard } from "@/src/components";
-import { ICategory, IProduct } from "@/src/types/models";
+import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import React, { useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./style.css";
 import ReactPaginate from "react-paginate";
+import { IProduct } from "@/src/types/ProductModel";
 
 interface Props {
   products: IProduct[];

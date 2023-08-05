@@ -10,7 +10,7 @@ import {
   getProduct,
   setProduct,
 } from "../redux/singleProductSlice";
-import { IProduct, IProductVaraint } from "../types/models";
+import { IProductVaraint } from "../types/models";
 import { Helmet } from "react-helmet";
 import { ProductContext, ProductContextType } from "../contexts/ProductContext";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,6 +20,7 @@ import {
 } from "../contexts/ProductFormContext";
 import { useDebounceEffect } from "ahooks";
 import { CartService } from "../services";
+import { IProduct } from "../types/ProductModel";
 
 interface ILocation extends Path {
   state: {
@@ -51,6 +52,8 @@ export function withProductControl<T extends WithProductsControlProps>(
     const [state, setState] = useState<ProductFormContextType>({
       selectedAddons: [],
       selectedOption: undefined,
+      typeSizeSelection: "default",
+      highlightErrors: false,
       disabled: false,
       width: {
         error: undefined,
@@ -62,10 +65,22 @@ export function withProductControl<T extends WithProductsControlProps>(
         value: 1,
         showError: false,
       },
+      customSize: {
+        error: undefined,
+        value: undefined,
+      },
       unit: "inches",
       price: 100,
       quantity: 1,
+      calculatedPrice: "0.00",
     });
+
+    const validationRules = {
+      customSize:
+        selectedOption?.type !== "sqft" && state.typeSizeSelection === "custom"
+          ? state.customSize.value !== undefined
+          : true,
+    };
 
     useEffect(() => {
       return () => {
@@ -131,6 +146,10 @@ export function withProductControl<T extends WithProductsControlProps>(
     // Fetch Prices on update fields.
     useDebounceEffect(() => {
       const fetchPriceViaCalculator = async () => {
+        if (!product) {
+          return;
+        }
+
         setState((state) => ({ ...state, disabled: true }));
 
         const {
@@ -143,15 +162,20 @@ export function withProductControl<T extends WithProductsControlProps>(
         } = state;
 
         const { data } = await CartService.calculateSinglePrice(
-          product.id,
-          selectedOption,
+          product?.id,
+          selectedOption.id,
           selectedAddons,
           unit,
           width.value,
-          height.value
+          height.value,
+          quantity
         );
 
-        setState((state) => ({ ...state, disabled: false, price: 25 }));
+        setState((state) => ({
+          ...state,
+          disabled: false,
+          calculatedPrice: data.price,
+        }));
       };
 
       fetchPriceViaCalculator();
@@ -170,74 +194,53 @@ export function withProductControl<T extends WithProductsControlProps>(
     };
 
     const handleAddToCart = async () => {
-      // dispatch(
-      //   addToCart({
-      //     product_id: product.id,
-      //     product_variant_id: currentVaraint.id,
-      //   })
-      // );
+      const isValidForm = Object.values(validationRules).every((key) => key);
+
+      if (!isValidForm) {
+        setState((state) => ({
+          ...state,
+          highlightErrors: true,
+          disabled: false,
+        }));
+        toast("Please, fill all fields", { type: "error" });
+
+        return;
+      }
+
+      setState((state) => ({
+        ...state,
+        disabled: true,
+      }));
+
+      await dispatch(
+        addToCart({
+          product_id: product.id,
+          option_id: selectedOption.id,
+          addons: state.selectedAddons,
+          unit: state.unit,
+          width: state.width.value,
+          height: state.height.value,
+          quantity: state.quantity,
+          custom_size_id: state.customSize.value,
+        })
+      ).unwrap();
+
       toast("Successfully added to cart", { type: "success" });
+
+      setState((state) => ({
+        ...state,
+        disabled: false,
+      }));
     };
 
     const handleClose = () => {
       navigate(-1);
     };
 
-    const renderVariants = () => (
-      <div className="row">
-        <div className="col-md-12">
-          <h6>Options: {currentVaraint?.label}</h6>
-        </div>
-
-        {productVaraintsLoaded ? (
-          <div
-            className="col-md-12"
-            style={{ display: "flex", flexWrap: "wrap" }}
-          >
-            {productVariants.map((productVariant) => (
-              <div
-                className={classNames("product-variant", {
-                  "active-variant": productVariant.id === currentVaraint.id,
-                })}
-                onClick={() => handleSelectVariant(productVariant)}
-              >
-                <h6 style={{ marginBottom: 0 }}>{productVariant.label}</h6>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div
-            className="col-md-12"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <div style={{ width: "33%" }}>
-              <Skeleton height={35} width={"100%"} />
-            </div>
-            <div style={{ width: "33%" }}>
-              <Skeleton height={35} width={"100%"} />
-            </div>
-            <div style={{ width: "33%" }}>
-              <Skeleton height={35} width={"100%"} />
-            </div>
-          </div>
-        )}
-
-        <div className="col-md-12" style={{ marginTop: 20 }}>
-          {productVaraintsLoaded && currentVaraint ? (
-            <span className="ps-product__price">${currentVaraint.price}</span>
-          ) : (
-            <Skeleton height={52} width={"35%"} />
-          )}
-        </div>
-      </div>
-    );
+    const renderVariants = () => {};
 
     return (
-      <ProductFormContext.Provider value={{ state, setState }}>
+      <ProductFormContext.Provider value={{ state, setState, validationRules }}>
         {product ? (
           <Helmet>
             <title>{product?.title}</title>

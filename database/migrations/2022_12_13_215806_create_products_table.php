@@ -23,8 +23,6 @@ class CreateProductsTable extends Migration
       $table->boolean("published")->default(false);
       $table->boolean("with_checkout")->default(true);
 
-      $table->json("sizes")->nullable();
-
       $table->integer("order")->nullable();
 
       $table->timestamps();

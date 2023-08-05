@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/src/hooks";
 import { removeItemFromCart, updateQuantity } from "@/src/redux/cartSlice";
 import { CartService } from "@/src/services";
 import { ICartItem } from "@/src/types/models";
+import { generateAttributtesCartItem } from "@/src/utils/helpers";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -72,12 +73,7 @@ const CartItem: React.FC<Props> = ({
       <td className="ps-product__name">
         <a href="">
           {name}
-          {attributes?.product_variant?.label && (
-            <>
-              <br />
-              {attributes.product_variant.label}
-            </>
-          )}
+          <p>{generateAttributtesCartItem(attributes)}</p>
         </a>
       </td>
       <td className="ps-product__meta">
@@ -105,24 +101,6 @@ const CartItem: React.FC<Props> = ({
         ${(price * quantity).toLocaleString()}
       </td>
     </tr>
-  );
-
-  return (
-    <div style={{ border: "1px solid red" }}>
-      <h4>{name}</h4>
-
-      <h5>{attributes.product_variant.label}</h5>
-
-      <div>
-        <button onClick={reduceItem}>Remove one</button>
-        {quantity}
-        <button onClick={addItem}>Add One</button>
-      </div>
-
-      <h5>Price: {(price * quantity).toLocaleString()} $ </h5>
-
-      <button onClick={removeItem}>Remove Item</button>
-    </div>
   );
 };
 

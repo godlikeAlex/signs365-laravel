@@ -18,30 +18,40 @@ const ProductOptions: React.FC<Props> = ({}: Props) => {
 
   return (
     <div className="row">
-      <div className="col-md-12">
-        <h6 className="label-product-show">Option:</h6>
-      </div>
-
       {product && loading === false ? (
-        <div
-          className="col-md-12"
-          style={{ display: "flex", flexWrap: "wrap" }}
-        >
-          {product.options.map((option) => (
-            <div
-              className={classNames("product-variant", {
-                "active-variant": option.id === selectedOption?.id,
-              })}
-              key={`${product.id}-${option.id}-o`}
-              onClick={() => dispatch(selectProductOption(option))}
-            >
-              <h6 style={{ marginBottom: 0 }}>
-                {option.title}
-
-                <div style={{ marginTop: 10 }}>${option.price}</div>
+        <div>
+          {product.options.length === 1 ? (
+            <div className="col-md-12">
+              <h6 className="label-product-show">
+                Option: {product.options[0].title}
               </h6>
             </div>
-          ))}
+          ) : (
+            <div
+              className="col-md-12"
+              style={{ display: "flex", flexWrap: "wrap" }}
+            >
+              <div className="col-md-12">
+                <h6 className="label-product-show">Option:</h6>
+              </div>
+
+              {product.options.map((option) => (
+                <div
+                  className={classNames("product-variant", {
+                    "active-variant": option.id === selectedOption?.id,
+                  })}
+                  key={`${product.id}-${option.id}-o`}
+                  onClick={() => dispatch(selectProductOption(option))}
+                >
+                  <h6 style={{ marginBottom: 0 }}>
+                    {option.title}
+
+                    {/* <div style={{ marginTop: 10 }}>${option.price}</div> */}
+                  </h6>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <div

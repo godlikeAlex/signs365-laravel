@@ -23,6 +23,7 @@ class ProductResource extends JsonResource
         return $query->where("city_id", $request->get("city"));
       })
       ->get();
+
     return [
       "id" => $this->id,
       "title" => $this->title,
@@ -30,20 +31,11 @@ class ProductResource extends JsonResource
       "description" => $this->description,
       "with_checkout" => $this->with_checkout,
       "published" => $this->published,
-      "start_at" => 0,
+      "start_at" => 350,
       "images" => $this->images,
-      // new
 
-      "sizes" => $this->whenNotNull($this->sizes),
       "options" => OptionResource::collection($this->whenLoaded("options")),
-      "addons" => AddonResource::collection($this->whenLoaded("addons")),
 
-      "validation" => [
-        "max_width" => $this->max_width,
-        "max_height" => $this->max_height,
-      ],
-
-      //
       "categories" => ProductSimpleCategoryResource::collection($categories),
     ];
   }

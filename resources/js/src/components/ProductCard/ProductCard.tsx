@@ -1,19 +1,19 @@
 import { useAppDispatch } from "@/src/hooks";
-import { ICategory, IProduct } from "@/src/types/models";
+import { IProduct } from "@/src/types/ProductModel";
+import { ICategory } from "@/src/types/models";
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
-interface Props extends IProduct {
+type Props = IProduct & {
   fullPage?: boolean;
   category?: ICategory;
-}
+};
 
 const ProductCard: React.FC<Props> = (props: Props) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const { title, start_at, id, slug, images, with_checkout } = props;
-
+  const { title, id, slug, images, with_checkout } = props;
   const [fetching, setIsFetch] = useState(false);
 
   const handleAddToCart = async () => {
@@ -117,7 +117,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
             </h5>
             <div className="ps-product__meta">
               <span className="ps-product__price">
-                {with_checkout ? `${start_at.toLocaleString()}` : null}
+                {with_checkout ? `25` : null}
               </span>
             </div>
 
@@ -184,24 +184,24 @@ const ProductCard: React.FC<Props> = (props: Props) => {
     </>
   );
 
-  return (
-    <div>
-      <h4>{title}</h4>
+  // return (
+  //   <div>
+  //     <h4>{title}</h4>
 
-      <h6>{(start_at / 100).toLocaleString()}</h6>
+  //     <h6>{(start_at / 100).toLocaleString()}</h6>
 
-      <Link
-        to={
-          !props.fullPage
-            ? `/home/product/modal/${slug}`
-            : `/catalog/product/${slug}`
-        }
-        state={{ background: !props.fullPage && location, product: props }}
-      >
-        Show Product
-      </Link>
-    </div>
-  );
+  //     <Link
+  //       to={
+  //         !props.fullPage
+  //           ? `/home/product/modal/${slug}`
+  //           : `/catalog/product/${slug}`
+  //       }
+  //       state={{ background: !props.fullPage && location, product: props }}
+  //     >
+  //       Show Product
+  //     </Link>
+  //   </div>
+  // );
 };
 
 export default ProductCard;

@@ -17,13 +17,7 @@ class OrderItem extends Model
    *
    * @var array
    */
-  protected $fillable = [
-    "order_id",
-    "product_id",
-    "product_price_id",
-    "quantity",
-    "price",
-  ];
+  protected $guarded = [];
 
   public function order(): BelongsTo
   {
@@ -35,23 +29,18 @@ class OrderItem extends Model
     return $this->belongsTo(Product::class);
   }
 
-  public function productPrice(): BelongsTo
+  public function productOption(): BelongsTo
   {
-    return $this->belongsTo(ProductPrice::class);
+    return $this->belongsTo(ProductOption::class);
   }
 
-  public function variant(): BelongsTo
+  public function customSize(): BelongsTo
   {
-    return $this->belongsTo(ProductVariant::class, "product_variant_id", "id");
+    return $this->belongsTo(CustomSize::class);
   }
 
   public function addons(): BelongsToMany
   {
-    return $this->belongsToMany(
-      ProductAddons::class,
-      "addon_order_item",
-      "order_item_id",
-      "product_addon_id"
-    );
+    return $this->belongsToMany(ProductAddons::class);
   }
 }

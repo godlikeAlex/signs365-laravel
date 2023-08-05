@@ -12,8 +12,8 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::table("products", function (Blueprint $table) {
-      $table->dropColumn("sizes");
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->json("common_data")->nullable();
     });
   }
 
@@ -24,8 +24,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::table("products", function (Blueprint $table) {
-      $table->json("sizes");
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->dropColumn("common_data");
     });
   }
 };
