@@ -6,21 +6,33 @@ import AddonItem from "./AddonItem";
 import { useFormContext } from "react-hook-form";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
-interface Props {}
+interface Props {
+  loading: boolean;
+}
 
-const ProductAddons: React.FC<Props> = ({}: Props) => {
+const ProductAddons: React.FC<Props> = ({ loading }: Props) => {
   const { state } = useContext(ProductFormContext);
   const { product, addons } = useAppSelector((state) => state.product);
 
   if (product.with_checkout === false) return;
 
-  return (
-    <div className="row">
-      <div className="col-md-12">
-        <h6 className="label-product-show">Addons:</h6>
-      </div>
+  if (loading) {
+    return (
+      <>
+        <Skeleton height={45} />
+        <Skeleton height={45} />
+      </>
+    );
+  }
 
-      <div className="col-md-12" style={{ marginTop: 8 }}>
+  return (
+    <div>
+      <h6 className="label-product-show">Addons</h6>
+
+      <div
+        style={{ marginTop: 8 }}
+        className="ps-product__size ps-select--feature"
+      >
         {addons.map((addon) => (
           <AddonItem
             disabled={state.disabled}

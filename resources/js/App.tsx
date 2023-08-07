@@ -35,7 +35,7 @@ function App() {
     <>
       <BrowserRouter>{appLoaded ? <Routing /> : null}</BrowserRouter>
 
-      <Sugar customLoading={!appLoaded} />
+      {/* <Sugar customLoading={!appLoaded} /> */}
 
       <ToastContainer />
     </>

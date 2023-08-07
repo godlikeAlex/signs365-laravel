@@ -24,10 +24,11 @@
         <link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css">
         <link rel="stylesheet" href="/plugins/lightGallery/dist/css/lightgallery.min.css">
         <link rel="stylesheet" href="/plugins/noUiSlider/nouislider.css">
-        <link rel="stylesheet" href="/css/style.css">
+        {{-- <link rel="stylesheet" href="/css/style.css"> --}}
         <link rel="stylesheet" href="/css/home-4.css">
 
         @viteReactRefresh
+        @vite('resources/css/style.css')
         @vite('resources/js/index.tsx')
     </head>
     <body>

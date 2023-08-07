@@ -5,57 +5,61 @@ import React, { useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 import Input from "../Input";
 import { selectProductOption } from "@/src/redux/singleProductSlice";
+import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
-interface Props {}
+interface Props {
+  loading: boolean;
+}
 
-const ProductOptions: React.FC<Props> = ({}: Props) => {
-  const { product, selectedOption, loading } = useAppSelector(
-    (state) => state.product
-  );
+const ProductOptions: React.FC<Props> = ({ loading }: Props) => {
+  const { state } = useContext(ProductFormContext);
+  const { product, selectedOption } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
 
   if (product.with_checkout === false) return;
 
   return (
-    <div className="row">
+    <div>
       {product && loading === false ? (
         <div>
           {product.options.length === 1 ? (
-            <div className="col-md-12">
-              <h6 className="label-product-show">
-                Option: {product.options[0].title}
-              </h6>
-            </div>
+            <h6>Option: {product.options[0].title}</h6>
           ) : (
-            <div
-              className="col-md-12"
-              style={{ display: "flex", flexWrap: "wrap" }}
-            >
-              <div className="col-md-12">
-                <h6 className="label-product-show">Option:</h6>
-              </div>
+            <>
+              <h6>Options:</h6>
 
-              {product.options.map((option) => (
-                <div
-                  className={classNames("product-variant", {
-                    "active-variant": option.id === selectedOption?.id,
-                  })}
-                  key={`${product.id}-${option.id}-o`}
-                  onClick={() => dispatch(selectProductOption(option))}
-                >
-                  <h6 style={{ marginBottom: 0 }}>
+              <div
+                className="ps-product__size ps-select--feature"
+                style={{ display: "flex", flexWrap: "wrap" }}
+              >
+                {product.options.map((option) => (
+                  <a
+                    className={classNames({
+                      active: option.id === selectedOption?.id,
+                      "disabled-variant": state.disabled,
+                    })}
+                    style={{ marginRight: 10, marginTop: 10 }}
+                    key={`${product.id}-${option.id}-o`}
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      if (state.disabled) {
+                        return;
+                      }
+
+                      dispatch(selectProductOption(option));
+                    }}
+                    href="#"
+                  >
                     {option.title}
-
-                    {/* <div style={{ marginTop: 10 }}>${option.price}</div> */}
-                  </h6>
-                </div>
-              ))}
-            </div>
+                  </a>
+                ))}
+              </div>
+            </>
           )}
         </div>
       ) : (
         <div
-          className="col-md-12"
           style={{
             display: "flex",
             justifyContent: "space-between",

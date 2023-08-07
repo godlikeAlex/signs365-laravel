@@ -22,12 +22,6 @@ import { useDebounceEffect } from "ahooks";
 import { CartService } from "../services";
 import { IProduct } from "../types/ProductModel";
 
-interface ILocation extends Path {
-  state: {
-    product: IProduct;
-  };
-}
-
 export interface WithProductsControlProps {
   product: IProduct;
   loading: boolean;
@@ -42,7 +36,6 @@ export function withProductControl<T extends WithProductsControlProps>(
 ) {
   return function (hocProps: Omit<T, keyof WithProductsControlProps>) {
     const params = useParams<"slug">();
-    const location: ILocation = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { loading, product, addons, selectedOption } = useAppSelector(
@@ -72,8 +65,18 @@ export function withProductControl<T extends WithProductsControlProps>(
       unit: "inches",
       price: 100,
       quantity: 1,
-      calculatedPrice: "0.00",
+      calculatedPrice: undefined,
     });
+
+    const isProductLoading = React.useMemo(() => {
+      if (!product) return true;
+
+      if (product.with_checkout === false) {
+        return loading;
+      } else {
+        return loading || state.calculatedPrice === undefined;
+      }
+    }, [loading, product, state.calculatedPrice]);
 
     const validationRules = {
       customSize:
@@ -94,17 +97,12 @@ export function withProductControl<T extends WithProductsControlProps>(
 
     useEffect(() => {
       const fetchProduct = async () => {
-        if (!location?.state?.product) {
-          // need fetch PRODUCT if joined by link
-          try {
-            dispatch(getProduct({ slug: params.slug })).unwrap();
-          } catch (error) {
-            toast("Product not found", { type: "error" });
-            console.log(error);
-            navigate("/");
-          }
-        } else {
-          dispatch(setProduct(location.state.product));
+        try {
+          dispatch(getProduct({ slug: params.slug }));
+        } catch (error) {
+          toast("Product not found", { type: "error" });
+          console.log("Product SHOW", error);
+          navigate("/");
         }
       };
 
@@ -186,7 +184,7 @@ export function withProductControl<T extends WithProductsControlProps>(
       state.selectedAddons,
       state.quantity,
       state.unit,
-      product,
+      // product,
     ]);
 
     const handleSelectVariant = (productVariant: IProductVaraint) => {
@@ -251,7 +249,7 @@ export function withProductControl<T extends WithProductsControlProps>(
           {...(hocProps as T)}
           {...{
             product,
-            loading,
+            loading: isProductLoading,
             handleAddToCart,
             handleClose,
             renderVariants,

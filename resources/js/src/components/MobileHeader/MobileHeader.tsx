@@ -32,7 +32,10 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
                   <a
                     className="ps-header__item menu-slide"
                     href="#"
-                    onClick={() => setShowMenu(true)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowMenu(true);
+                    }}
                   >
                     <i className="fa fa-bars"></i>
                   </a>

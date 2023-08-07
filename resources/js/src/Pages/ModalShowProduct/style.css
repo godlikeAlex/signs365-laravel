@@ -78,18 +78,18 @@ body {
 }
 
 .product-variant {
-  background-color: #f0f0f0;
+  background-color: white;
   border-radius: 1rem;
   cursor: pointer;
-  border: 2px solid transparent;
   padding: 8px 15px;
+  border: 1px solid #f0f2f5;
 
   margin-top: 8px;
   margin-right: 8px;
 }
 
 .active-variant {
-  border: 2px solid #fd8d27;
+  border-color: #103178 !important;
 }
 
 .headless-content .add-to-cart {
@@ -234,7 +234,7 @@ h6 {
   left: 0;
 }
 
-.product-variant.disabled-variant {
+.disabled-variant {
   cursor: not-allowed;
 }
 

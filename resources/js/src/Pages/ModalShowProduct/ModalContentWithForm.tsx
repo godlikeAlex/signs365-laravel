@@ -4,6 +4,7 @@ import { IProduct } from "@/src/types/ProductModel";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
@@ -21,9 +22,10 @@ type Inputs = {
 
 interface Props {
   product: IProduct;
+  loading: boolean;
 }
 
-const ModalContentWithForm: React.FC<Props> = ({ product }: Props) => {
+const ModalContentWithForm: React.FC<Props> = ({ product, loading }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
@@ -59,6 +61,10 @@ const ModalContentWithForm: React.FC<Props> = ({ product }: Props) => {
       setIsSubmitting(false);
     }
   };
+
+  if (loading) {
+    return <Skeleton height={250} />;
+  }
 
   return (
     <div className="ps-checkout">

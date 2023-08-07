@@ -6,12 +6,15 @@ import { useAppSelector } from "@/src/hooks";
 import UnitSelection from "./UnitSelection";
 import CalculatorForm from "./CalculatorForm";
 import CustomSizesDropdown from "./CustomSizesDropdown";
+import Skeleton from "react-loading-skeleton";
 
-interface Props {}
+interface Props {
+  loading: boolean;
+}
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];
 
-const ProductCalculator: React.FC<Props> = (Props) => {
+const ProductCalculator: React.FC<Props> = ({ loading }: Props) => {
   const { selectedOption } = useAppSelector((state) => state.product);
   const { state, setState, validationRules } = useContext(ProductFormContext);
 
@@ -42,12 +45,16 @@ const ProductCalculator: React.FC<Props> = (Props) => {
     }));
   };
 
+  if (loading) {
+    return <Skeleton height={140} />;
+  }
+
   return (
     <div className="ps-checkout">
       <div className="container">
         <div className="row">
           <div style={{ width: "100%" }}>
-            <h6 className="label-product-show">Sizes:</h6>
+            <h6>Sizes:</h6>
           </div>
         </div>
 

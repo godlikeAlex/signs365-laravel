@@ -8,19 +8,19 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input: React.FC<Props> = React.forwardRef<HTMLInputElement, Props>(
-  (props, ref) => {
+  ({ formType, ...props }, ref) => {
     return (
       <div
         className={classNames({
-          "ps-checkout__group": props.formType === "checkout",
-          "ps-form__group": props.formType === "profile",
+          "ps-checkout__group": formType === "checkout",
+          "ps-form__group": formType === "profile",
         })}
       >
         {props.label ? (
           <label
             className={classNames({
-              "ps-checkout__label": props.formType === "checkout",
-              "ps-form__label": props.formType === "profile",
+              "ps-checkout__label": formType === "checkout",
+              "ps-form__label": formType === "profile",
             })}
           >
             {props.label}
@@ -28,13 +28,13 @@ const Input: React.FC<Props> = React.forwardRef<HTMLInputElement, Props>(
         ) : null}
 
         <input
-          type="text"
-          {...props}
+          type={props.type || "text"}
           ref={ref}
           className={classNames({
-            "ps-input": props.formType === "checkout",
-            "form-control ps-form__input": props.formType === "profile",
+            "ps-input": formType === "checkout",
+            "form-control ps-form__input": formType === "profile",
           })}
+          {...props}
         />
 
         {props.error ? (

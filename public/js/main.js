@@ -310,7 +310,7 @@
     $(window).scroll(function (event) {
       var scroll = $(window).scrollTop();
       var innerWidth = $(window).innerWidth();
-      if (scroll > 200 && innerWidth > 760) {
+      if (scroll > 32 && innerWidth > 760) {
         $(".ps-header").addClass("ps-header--sticky");
       } else if (scroll > 700 && innerWidth < 760) {
         $(".ps-header").addClass("ps-header--sticky");

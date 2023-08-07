@@ -11,12 +11,16 @@ export default defineConfig({
       host: "localhost",
     },
   },
+  css: {
+    devSourcemap: true,
+  },
   plugins: [
     laravel({
       input: [
         "resources/js/index.tsx",
         "resources/js/fillament-app.js",
         "resources/css/app.css",
+        "resources/css/style.css",
       ],
       refresh: true,
     }),

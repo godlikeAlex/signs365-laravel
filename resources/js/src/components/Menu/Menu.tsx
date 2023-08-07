@@ -106,9 +106,9 @@ const Menu: React.FC<Props> = ({}: Props) => {
 
         <div className="ps-header__middle">
           <div className="container">
-            <a className="ps-menu--sticky" href="#">
+            {/* <a className="ps-menu--sticky" href="#">
               <i className="fa fa-bars"></i>
-            </a>
+            </a> */}
             <div className="ps-header__menu" style={{ width: "100%" }}>
               <ul className="menu-custom">
                 <li className="ps-logo custom-logo">

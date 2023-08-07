@@ -10,7 +10,7 @@ export type ProductFormContextType = {
   selectedOption?: ProductOption;
   selectedAddons: Array<Addon & ErrorProductContext>;
   price?: number;
-  calculatedPrice: string;
+  calculatedPrice?: string;
   unit: "inches" | "feet";
   disabled: boolean;
   quantity: number;

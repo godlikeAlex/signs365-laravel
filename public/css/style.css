@@ -1,10 +1,4 @@
 /*
-    Project: My Medi HTML Template
-    Version: 1.0
-    Date Created: 20/02/2021
-    Developed by: nouthemes
-*/
-/*
     TABLE OF CONTENT
         1. RESET AND TYPHOGRAPHY
             1.1 typhography
@@ -4085,7 +4079,7 @@ textarea.form-control {
 
 .ps-product--detail h6 {
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #103178;
 }
@@ -14313,7 +14307,7 @@ textarea.form-control {
 }
 
 .ps-header.ps-header--sticky .ps-header__top {
-  display: none;
+  /* display: none; */
 }
 
 .ps-header.ps-header--sticky::before {

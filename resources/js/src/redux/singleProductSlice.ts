@@ -101,7 +101,7 @@ const singleProductSlice = createSlice({
       if (action.payload.with_checkout) {
         const [firstOption] = action.payload.options;
         state.selectedOption = firstOption;
-        console.log(firstOption.addons, "singleProductSlice");
+
         state.addons = firstOption.addons.map((addon) => ({
           ...addon,
           isSelected: false,
