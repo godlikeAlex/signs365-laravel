@@ -98,12 +98,6 @@ class Service
 
     $calculatedPrice = $calculatedPriceAddons + $optionPrice + $shippingPrice;
 
-    info("prices", [
-      "addons" => $calculatedPriceAddons,
-      "optionPrice" => $optionPrice,
-      "shipping" => $shipping->calculate($this->width, $this->height, $sqft),
-    ]);
-
     $calculatedPrice =
       $calculatedPrice * ($originalPrice ? 1 : $this->quantity);
 

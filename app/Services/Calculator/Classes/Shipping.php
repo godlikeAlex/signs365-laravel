@@ -27,15 +27,71 @@ class Shipping
           $this->shipping->condition["range_sqft"],
           $sqft
         );
-        return $result;
+        return 0;
       case ShippingTypeEnum::WIDTHxHEIGHT:
-        return $this->getRangedPrice(
+        $result = $this->getRangedPriceWidthHeight(
           $this->shipping->condition["range_wh"],
-          $width * $height
+          $width,
+          $height
         );
+
+        info("Shipping price {price}", ["price" => $result]);
+
+        return $result;
       default:
         return 0;
     }
+  }
+
+  private function getRangedPriceWidthHeight($array, $width, $height)
+  {
+    $rangePrices = collect($array);
+    // 1 range width[0-23] && height[0-35] // ok
+    // 2 range width[24-48] && height[36-48] // ok
+    // 3 range width[49-(-1)] && height[49-(-1)] // ok
+    // 4 range width[49-(-1)] && height[(-1)-(-1)] // ok
+
+    $priceFromRange = $rangePrices->first(function ($rangeOfPrice) use (
+      $width,
+      $height
+    ) {
+      $fromWidth = intval($rangeOfPrice["from_width"]);
+      $toWidth = intval($rangeOfPrice["to_width"]);
+
+      $fromHeight = intval($rangeOfPrice["from_height"]);
+      $toHeight = intval($rangeOfPrice["to_height"]);
+
+      $anyHeight = $fromHeight === -1 && $toHeight === -1;
+
+      if (
+        $this->isNumberInRange($fromWidth, $toWidth, $width) &&
+        $this->isNumberInRange($fromHeight, $toHeight, $height)
+      ) {
+        return true;
+      }
+
+      if (
+        $width >= $fromWidth &&
+        $toWidth === -1 &&
+        $height >= $fromHeight &&
+        $height <= $toHeight
+      ) {
+        return true;
+      }
+
+      if (
+        $width >= $fromWidth &&
+        $toWidth === -1 &&
+        $fromHeight === -1 &&
+        $toHeight === -1
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return $priceFromRange ? $priceFromRange["price"] : 0;
   }
 
   private function getRangedPrice($array, $desiredNumber)
@@ -52,7 +108,7 @@ class Shipping
           return true;
         }
 
-        if ($desiredNumber >= $from && $desiredNumber <= $to) {
+        if ($this->isNumberInRange($from, $to, $desiredNumber)) {
           return true;
         } else {
           return false;
@@ -61,5 +117,10 @@ class Shipping
       ->first();
 
     return $priceFromRange ? $priceFromRange["price"] : 0;
+  }
+
+  private function isNumberInRange($from, $to, $target)
+  {
+    return $target >= $from && $target <= $to;
   }
 }
