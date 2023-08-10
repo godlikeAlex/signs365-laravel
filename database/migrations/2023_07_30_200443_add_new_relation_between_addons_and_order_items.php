@@ -17,11 +17,17 @@ return new class extends Migration {
     Schema::create("order_item_product_addons", function (Blueprint $table) {
       $table
         ->foreignIdFor(OrderItem::class, "order_item_id")
-        ->constrained("order_items");
+        ->nullable()
+        ->unsigned()
+        ->constrained("order_items")
+        ->nullOnDelete();
 
       $table
         ->foreignIdFor(ProductAddons::class, "product_addons_id")
-        ->constrained("product_addons");
+        ->unsigned()
+        ->nullable()
+        ->constrained("product_addons")
+        ->nullOnDelete();
 
       $table->integer("quantity")->default(0);
     });

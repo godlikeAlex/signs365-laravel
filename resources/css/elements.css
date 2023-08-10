@@ -3131,6 +3131,12 @@ textarea.form-control {
   /* padding: 20px 20px 0; */
 }
 
+.ps-product__thumbnail-card {
+  position: relative;
+  margin-bottom: 15px;
+  padding: 20px 20px 0;
+}
+
 .ps-product__thumbnail img {
   width: 100%;
   margin: auto;

@@ -27,7 +27,7 @@ class Shipping
           $this->shipping->condition["range_sqft"],
           $sqft
         );
-        return 0;
+        return $result;
       case ShippingTypeEnum::WIDTHxHEIGHT:
         $result = $this->getRangedPriceWidthHeight(
           $this->shipping->condition["range_wh"],

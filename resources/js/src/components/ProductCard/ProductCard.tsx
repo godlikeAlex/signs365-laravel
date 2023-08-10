@@ -33,7 +33,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           className="ps-product ps-product--standard"
           style={{ height: "100%" }}
         >
-          <div className="ps-product__thumbnail">
+          <div className="ps-product__thumbnail ps-product__thumbnail-card">
             <Link
               className="ps-product__image"
               to={

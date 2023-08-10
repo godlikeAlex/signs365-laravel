@@ -25,14 +25,14 @@ class CreateOrder extends CreateRecord
 
   protected function afterCreate()
   {
-    $total = 0;
+    // $total = 0;
 
-    foreach ($this->record->orderItems as $orderItem) {
-      $total += $orderItem->price;
-    }
+    // foreach ($this->record->orderItems as $orderItem) {
+    //   $total += $orderItem->price;
+    // }
 
-    $this->record->total = $total * (1 + $this->record->city->tax);
-    $this->record->total_without_tax = $total;
-    $this->record->save();
+    // $this->record->total = $total * (1 + $this->record->city->tax);
+    // $this->record->total_without_tax = $total;
+    // $this->record->save();
   }
 }

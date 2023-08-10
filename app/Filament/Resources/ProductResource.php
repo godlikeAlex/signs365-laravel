@@ -52,6 +52,7 @@ class ProductResource extends Resource
                 ->maxLength(50),
               Forms\Components\TextInput::make("slug")
                 ->required()
+                ->unique(table: Product::class)
                 ->maxLength(75),
               Forms\Components\RichEditor::make("description")->columnSpan(
                 "full"

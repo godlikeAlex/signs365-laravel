@@ -104,7 +104,7 @@ class Service
     return [
       round($calculatedPrice, 3),
       number_format(round($calculatedPrice / 100, 3), 2),
-      number_format($shippingPrice / 100, 3),
+      $shippingPrice,
       $calculatedAddons,
     ];
   }

@@ -86,7 +86,10 @@ class ProductOptionResource extends Resource
 
           switch (OptionTypeEnum::from($currentTypeOption)) {
             case OptionTypeEnum::SQFT:
-              $requiredTypes = [ShippingTypeEnum::SQFT];
+              $requiredTypes = [
+                ShippingTypeEnum::SQFT,
+                ShippingTypeEnum::SINGLE,
+              ];
               break;
 
             case OptionTypeEnum::SINGLE:
@@ -124,8 +127,8 @@ class ProductOptionResource extends Resource
         ->reactive()
         ->columnSpanFull()
         ->hidden(
-          fn(Closure $get) => OptionTypeEnum::from($get("type")) ===
-            OptionTypeEnum::SQFT
+          fn(Closure $get) => $get("type") &&
+            OptionTypeEnum::from($get("type")) === OptionTypeEnum::SQFT
         ),
       Toggle::make("show_custom_sizes")
         ->default(false)
@@ -177,11 +180,13 @@ class ProductOptionResource extends Resource
 
                   $set("label", $state . '" x "' . $height . '"');
                 })
+                ->required()
                 ->mask(
                   fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
                 ),
               Forms\Components\TextInput::make("height")
                 ->numeric()
+                ->required()
                 ->reactive()
                 ->afterStateUpdated(function (
                   \Closure $set,
@@ -195,12 +200,13 @@ class ProductOptionResource extends Resource
                 ->mask(
                   fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
                 ),
-              Forms\Components\TextInput::make("label")->reactive(),
+              Forms\Components\TextInput::make("label")
+                ->reactive()
+                ->required(),
             ])
             ->columns(3)
             ->defaultItems(1),
         ])
-        ->collapsed()
         ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false),
       Section::make("Common Data")
         ->reactive()
