@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductOption extends Model
@@ -60,9 +61,9 @@ class ProductOption extends Model
     return $this->belongsTo(Shipping::class);
   }
 
-  public function customSizes(): HasMany
+  public function sizeList(): BelongsTo
   {
-    return $this->hasMany(CustomSize::class);
+    return $this->belongsTo(SizeList::class);
   }
 
   public function orderItems(): HasMany

@@ -36,7 +36,8 @@ export default class CartService {
     unit: "feet" | "inches",
     width: number | string,
     height: number | string,
-    quantity: number
+    quantity: number,
+    custom_size_id?: number
   ) {
     return api.post<{ price: string }>("/cart/calculate-single", {
       product_id: productID,
@@ -46,6 +47,7 @@ export default class CartService {
       width,
       height,
       quantity,
+      custom_size_id,
     });
   }
 

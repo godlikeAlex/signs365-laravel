@@ -184,6 +184,7 @@ export function withProductControl<T extends WithProductsControlProps>(
       state.selectedAddons,
       state.quantity,
       state.unit,
+      state.customSize,
       // product,
     ]);
 

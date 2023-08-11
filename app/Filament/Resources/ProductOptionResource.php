@@ -10,11 +10,13 @@ use App\Filament\Resources\ProductOptionResource\RelationManagers;
 use App\Models\ProductAddons;
 use App\Models\ProductOption;
 use App\Models\Shipping;
+use App\Models\SizeList;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
@@ -89,6 +91,7 @@ class ProductOptionResource extends Resource
               $requiredTypes = [
                 ShippingTypeEnum::SQFT,
                 ShippingTypeEnum::SINGLE,
+                ShippingTypeEnum::WIDTHxHEIGHT,
               ];
               break;
 
@@ -163,50 +166,10 @@ class ProductOptionResource extends Resource
           return OptionTypeEnum::from($type) !== OptionTypeEnum::SQFT;
         }),
 
-      Section::make("Custom Sizes")
-        ->schema([
-          Repeater::make("customSizes")
-            ->relationship("customSizes")
-            ->schema([
-              Forms\Components\TextInput::make("width")
-                ->numeric()
-                ->reactive()
-                ->afterStateUpdated(function (
-                  \Closure $set,
-                  \Closure $get,
-                  $state
-                ) {
-                  $height = $get("height") ?? 0;
-
-                  $set("label", $state . '" x "' . $height . '"');
-                })
-                ->required()
-                ->mask(
-                  fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
-                ),
-              Forms\Components\TextInput::make("height")
-                ->numeric()
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(function (
-                  \Closure $set,
-                  \Closure $get,
-                  $state
-                ) {
-                  $width = $get("width") ?? 0;
-
-                  $set("label", $width . '" x ' . $state . '"');
-                })
-                ->mask(
-                  fn(TextInput\Mask $mask) => $mask->numeric()->minValue(1) // Set the minimum value that the number can be.
-                ),
-              Forms\Components\TextInput::make("label")
-                ->reactive()
-                ->required(),
-            ])
-            ->columns(3)
-            ->defaultItems(1),
-        ])
+      Select::make("size_list_id")
+        ->label("Size List")
+        ->columnSpanFull()
+        ->options(fn() => SizeList::query()->pluck("title", "id"))
         ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false),
       Section::make("Common Data")
         ->reactive()

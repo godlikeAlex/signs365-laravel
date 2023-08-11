@@ -13,16 +13,13 @@ return new class extends Migration {
   public function up()
   {
     Schema::table("order_items", function (Blueprint $table) {
-      $table->decimal("width")->nullable();
-      $table->decimal("height")->nullable();
-      $table->string("unit")->nullable();
-
-      $table->foreignId("product_option_id")->nullable();
+      $table->foreignId("size_item_id")->nullable();
 
       $table
-        ->foreign("product_option_id")
+        ->foreign("size_item_id")
         ->references("id")
-        ->on("product_options");
+        ->nullOnDelete()
+        ->on("size_items");
     });
   }
 
@@ -34,7 +31,8 @@ return new class extends Migration {
   public function down()
   {
     Schema::table("order_items", function (Blueprint $table) {
-      //
+      //   $table->dropForeign(["size_item_id"]);
+      $table->dropColumn("size_item_id");
     });
   }
 };

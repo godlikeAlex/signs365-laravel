@@ -12,17 +12,14 @@ return new class extends Migration {
    */
   public function up()
   {
-    Schema::table("order_items", function (Blueprint $table) {
-      $table->decimal("width")->nullable();
-      $table->decimal("height")->nullable();
-      $table->string("unit")->nullable();
-
-      $table->foreignId("product_option_id")->nullable();
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->foreignId("size_list_id")->nullable();
 
       $table
-        ->foreign("product_option_id")
+        ->foreign("size_list_id")
         ->references("id")
-        ->on("product_options");
+        ->on("size_lists")
+        ->onDelete("cascade");
     });
   }
 
@@ -33,8 +30,8 @@ return new class extends Migration {
    */
   public function down()
   {
-    Schema::table("order_items", function (Blueprint $table) {
-      //
+    Schema::table("product_options", function (Blueprint $table) {
+      $table->dropColumn("size_list_id");
     });
   }
 };

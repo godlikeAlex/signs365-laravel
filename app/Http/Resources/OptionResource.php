@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Enums\OptionTypeEnum;
-use App\Models\CustomSize;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OptionResource extends JsonResource
@@ -16,6 +15,8 @@ class OptionResource extends JsonResource
    */
   public function toArray($request)
   {
+    $sizeList = $this->sizeList;
+
     return [
       "id" => $this->id,
       "title" => $this->title,
@@ -27,7 +28,7 @@ class OptionResource extends JsonResource
       ],
       "showCalculator" =>
         $this->size_for_collect ||
-        $this->customSizes()->count() > 0 ||
+        $this->sizeList ||
         $this->type === OptionTypeEnum::SQFT,
       "show_custom_sizes" => $this->show_custom_sizes,
       "size_for_collect" => $this->size_for_collect,
@@ -35,10 +36,9 @@ class OptionResource extends JsonResource
         $this->size_for_collect && !$this->show_custom_sizes,
         $this->common_data
       ),
-      "customSizes" => $this->when(
-        $this->show_custom_sizes,
-        CustomSizeResource::collection($this->customSizes)
-      ),
+      "customSizes" => is_null($this->sizeList)
+        ? []
+        : CustomSizeResource::collection($this->sizeList->sizeItems),
       "addons" => AddonResource::collection($this->addons),
     ];
   }

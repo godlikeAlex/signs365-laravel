@@ -68,7 +68,8 @@ class ProductAddonsResource extends Resource
           if ($get("type") === AddonTypeEnum::SQFT->value) {
             return "/\d/m";
           } else {
-            return "/[+-]\d*[%]?$/m";
+            // return "/[+-]\d*[%]?$/m";
+            return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
           }
         })
         // ()

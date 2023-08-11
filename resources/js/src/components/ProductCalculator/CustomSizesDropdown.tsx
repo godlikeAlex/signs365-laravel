@@ -12,7 +12,12 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
   const { state, setState } = useContext(ProductFormContext);
 
   const options = React.useMemo(() => {
-    return sizes.map((size) => ({ value: size.id, label: size.label }));
+    return sizes.map((size) => ({
+      value: size.id,
+      label: size.label,
+      width: size.width,
+      height: size.height,
+    }));
   }, [sizes]);
 
   return (
@@ -25,13 +30,18 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
           <div className="row">
             <div className="col-md-12">
               <div className={"ps-checkout__group"}>
-                <label className={"ps-checkout__label"}>Adjusted size</label>
+                <label className={"ps-checkout__label"}>Adjusted sizes</label>
                 <Select
+                  maxMenuHeight={220}
+                  isSearchable
+                  menuPlacement="auto"
                   options={options}
                   onChange={(e) =>
                     setState((state) => ({
                       ...state,
                       customSize: { ...state.customSize, value: e.value },
+                      width: { ...state.width, value: e.width },
+                      height: { ...state.width, value: e.height },
                     }))
                   }
                   value={options.find(
@@ -57,7 +67,8 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
                         borderColor: "#fd8d27",
                       },
                     }),
-                    menuList: () => ({
+                    menuList: (base) => ({
+                      ...base,
                       background: "#f0f2f5",
                       color: "5b6c8f",
                     }),
