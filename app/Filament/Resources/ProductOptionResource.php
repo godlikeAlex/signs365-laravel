@@ -125,6 +125,16 @@ class ProductOptionResource extends Resource
         })
         ->required(),
 
+      Forms\Components\TextInput::make("min_price")
+        ->prefix('$')
+        ->numeric()
+        ->default(0)
+        ->dehydrateStateUsing(fn($state) => $state * 100)
+        ->afterStateHydrated(function (TextInput $component, $state) {
+          $component->state($state / 100);
+        })
+        ->required(),
+
       Toggle::make("size_for_collect")
         ->default(false)
         ->reactive()

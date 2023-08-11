@@ -94,6 +94,7 @@ class Service
     list($calculatedPriceAddons, $calculatedAddons) = $this->calculateAddons(
       $optionPrice
     );
+
     $shippingPrice = $shipping->calculate($this->width, $this->height, $sqft);
 
     $calculatedPrice = $calculatedPriceAddons + $optionPrice + $shippingPrice;

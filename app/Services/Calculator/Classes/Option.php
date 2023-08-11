@@ -17,14 +17,22 @@ class Option
 
   public function getPrice($quantity = 1, $sqft)
   {
+    $calculatedPrice = 0;
+    $minPrice = $this->model->min_price;
+
     switch ($this->model->type) {
       case OptionTypeEnum::SQFT:
-        return $this->calculateSQFT($sqft);
+        $calculatedPrice = $this->calculateSQFT($sqft);
+        break;
       case OptionTypeEnum::SINGLE:
-        return $this->calculateSingle();
+        $calculatedPrice = $this->calculateSingle();
+        break;
       case OptionTypeEnum::BY_QTY:
-        return $this->calculateByQTY($quantity);
+        $calculatedPrice = $this->calculateByQTY($quantity);
+        break;
     }
+
+    return $calculatedPrice > $minPrice ? $calculatedPrice : $minPrice;
   }
 
   public function currentTypeIs($type)

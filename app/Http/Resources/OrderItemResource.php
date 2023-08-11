@@ -18,7 +18,6 @@ class OrderItemResource extends JsonResource
       "id" => $this->id,
       "quantity" => $this->quantity,
       "price" => $this->price / 100,
-      "product_variant_title" => $this->variant->label,
       "product" => $this->product()
         ->withTrashed()
         ->first(),
