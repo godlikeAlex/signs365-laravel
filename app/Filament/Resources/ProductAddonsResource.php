@@ -119,7 +119,7 @@ class ProductAddonsResource extends Resource
       ->actions([Tables\Actions\EditAction::make()])
       ->bulkActions([
         Tables\Actions\DeleteBulkAction::make(),
-        Tables\Actions\ForceDeleteBulkAction::make(),
+        // Tables\Actions\ForceDeleteBulkAction::make(),
         Tables\Actions\RestoreBulkAction::make(),
       ]);
   }
