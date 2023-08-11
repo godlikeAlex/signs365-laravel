@@ -16,6 +16,14 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   const { title, id, slug, images, with_checkout } = props;
   const [fetching, setIsFetch] = useState(false);
 
+  const productURL = React.useMemo(
+    () =>
+      !props.fullPage
+        ? `/home/product/modal/${slug}`
+        : `/catalog/product/${slug}`,
+    [props]
+  );
+
   const handleAddToCart = async () => {
     setIsFetch(true);
 
@@ -36,13 +44,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           <div className="ps-product__thumbnail ps-product__thumbnail-card">
             <Link
               className="ps-product__image"
-              to={
-                !props.fullPage
-                  ? `/home/product/modal/${slug}`
-                  : `/catalog/product/${slug}`
-              }
+              to={productURL}
               state={{
-                background: !props.fullPage && location,
+                background: props.fullPage ? null : location,
                 product: props,
                 category: props.category,
               }}
@@ -101,13 +105,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           <div className="ps-product__content">
             <h5 className="ps-product__title">
               <Link
-                to={
-                  !props.fullPage
-                    ? `/home/product/modal/${slug}`
-                    : `/catalog/product/${slug}`
-                }
+                to={productURL}
                 state={{
-                  background: !props.fullPage && location,
+                  background: props.fullPage ? null : location,
                   product: props,
                   category: props.category,
                 }}
@@ -148,13 +148,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="ps-product__cart">
                 <Link
                   className="ps-btn ps-btn--warning"
-                  to={
-                    !props.fullPage
-                      ? `/home/product/modal/${slug}`
-                      : `/catalog/product/${slug}`
-                  }
+                  to={productURL}
                   state={{
-                    background: !props.fullPage && location,
+                    background: props.fullPage ? null : location,
                     product: props,
                     category: props.category,
                   }}
@@ -164,13 +160,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               </div>
 
               <Link
-                to={
-                  !props.fullPage
-                    ? `/home/product/modal/${slug}`
-                    : `/catalog/product/${slug}`
-                }
+                to={productURL}
                 state={{
-                  background: !props.fullPage && location,
+                  background: props.fullPage ? null : location,
                   product: props,
                   category: props.category,
                 }}
@@ -183,25 +175,6 @@ const ProductCard: React.FC<Props> = (props: Props) => {
       </div>
     </>
   );
-
-  // return (
-  //   <div>
-  //     <h4>{title}</h4>
-
-  //     <h6>{(start_at / 100).toLocaleString()}</h6>
-
-  //     <Link
-  //       to={
-  //         !props.fullPage
-  //           ? `/home/product/modal/${slug}`
-  //           : `/catalog/product/${slug}`
-  //       }
-  //       state={{ background: !props.fullPage && location, product: props }}
-  //     >
-  //       Show Product
-  //     </Link>
-  //   </div>
-  // );
 };
 
 export default ProductCard;

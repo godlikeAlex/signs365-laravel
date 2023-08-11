@@ -45,7 +45,7 @@ function Routing() {
 
           <Route path="/catalog/:categorySlug" element={<Catalog />} />
 
-          <Route path="/catalog/product/:slug" element={<ProductShow />} />
+          <Route path="catalog/product/:slug" element={<ProductShow />} />
 
           <Route
             path="/cart/checkout/success-payment"

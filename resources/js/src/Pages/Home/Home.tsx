@@ -48,6 +48,7 @@ export default function Home() {
                         <ProductCard
                           {...product}
                           key={`${product.id}-${idx}`}
+                          fullPage={product.with_checkout}
                         />
                       </div>
                     ))}
