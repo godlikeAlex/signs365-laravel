@@ -87,6 +87,7 @@ export type IProduct = ProductHasCheckout & {
   slug: string;
   description: string;
   published: boolean;
+  min_price: number;
 
   images?: null | string[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];

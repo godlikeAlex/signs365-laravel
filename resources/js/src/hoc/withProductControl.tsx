@@ -98,11 +98,11 @@ export function withProductControl<T extends WithProductsControlProps>(
     useEffect(() => {
       const fetchProduct = async () => {
         try {
-          dispatch(getProduct({ slug: params.slug }));
+          await dispatch(getProduct({ slug: params.slug })).unwrap();
         } catch (error) {
           toast("Product not found", { type: "error" });
           console.log("Product SHOW", error);
-          navigate("/");
+          navigate("/not-found", { replace: true });
         }
       };
 

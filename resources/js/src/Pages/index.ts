@@ -11,9 +11,11 @@ import Checkout from "./Checkout";
 import SuccessPayment from "./SuccessPayment/";
 import Catalog from "./Catalog";
 import ProductShow from "./ProductShow";
+import NotFound from "./NotFound";
 
 export {
   Home,
+  NotFound,
   ModalShowProduct,
   SuccessPayment,
   Checkout,

@@ -235,6 +235,8 @@ const ProductShow: React.FC<Props> = ({
               </div>
             </div>
           </div>
+
+          <section className="ps-section--latest"></section>
         </div>
       </div>
     </div>

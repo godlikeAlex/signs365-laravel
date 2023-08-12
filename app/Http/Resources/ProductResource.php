@@ -31,7 +31,8 @@ class ProductResource extends JsonResource
       "description" => $this->description,
       "with_checkout" => $this->with_checkout,
       "published" => $this->published,
-      "start_at" => 350,
+      // "min_price" => $this->min_price / 100,
+      "min_price" => 0,
       "images" => $this->images,
 
       "options" => OptionResource::collection($this->whenLoaded("options")),

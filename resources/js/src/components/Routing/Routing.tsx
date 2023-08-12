@@ -9,6 +9,7 @@ import {
   Home,
   Login,
   ModalShowProduct,
+  NotFound,
   ProductShow,
   Profile,
   Register,
@@ -31,6 +32,8 @@ function Routing() {
       <Routes location={background || location}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+
+          <Route path="*" element={<NotFound />} />
 
           <Route path="home/*" element={<Home />}>
             <Route path="product/modal/:slug" element={<ModalShowProduct />} />

@@ -13,7 +13,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const { title, id, slug, images, with_checkout } = props;
+  const { title, id, slug, images, with_checkout, min_price } = props;
   const [fetching, setIsFetch] = useState(false);
 
   const productURL = React.useMemo(
@@ -117,7 +117,11 @@ const ProductCard: React.FC<Props> = (props: Props) => {
             </h5>
             <div className="ps-product__meta">
               <span className="ps-product__price">
-                {with_checkout ? `25` : null}
+                {with_checkout
+                  ? min_price > 0
+                    ? new Intl.NumberFormat("en-US").format(min_price)
+                    : null
+                  : null}
               </span>
             </div>
 
