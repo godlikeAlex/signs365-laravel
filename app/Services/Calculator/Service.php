@@ -118,7 +118,11 @@ class Service
     foreach ($this->addons as $addon) {
       $actualAddon = new Addon($this->product, $addon["id"]);
 
-      $total += $actualAddon->calculate($price, $this->calculateSQFT());
+      $total += $actualAddon->calculate(
+        $price,
+        $this->calculateSQFT(),
+        $addon["quantity"] ?? 0
+      );
 
       $actualAddons->push($actualAddon->getModel());
     }

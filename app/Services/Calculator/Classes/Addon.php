@@ -18,13 +18,17 @@ class Addon
     }
   }
 
-  public function calculate($price, $sqft)
+  public function calculate($price, $sqft, $qty)
   {
     $calculatedPrice = $this->getPriceByCondition(
       $this->model->condition,
       $price,
       $sqft
     );
+
+    if ($this->model->with_qty) {
+      $calculatedPrice += $this->model->per_item_price * $qty;
+    }
 
     return $calculatedPrice;
   }

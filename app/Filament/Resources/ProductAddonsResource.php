@@ -8,6 +8,7 @@ use App\Filament\Resources\ProductAddonsResource\Pages;
 use App\Filament\Resources\ProductAddonsResource\RelationManagers;
 use App\Models\ProductAddons;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -75,6 +76,18 @@ class ProductAddonsResource extends Resource
         // ()
 
         ->maxLength(255),
+
+      Forms\Components\TextInput::make("per_item_price")
+        ->required()
+        ->numeric()
+        ->label("Per item price")
+        ->dehydrateStateUsing(fn($state) => $state * 100)
+        ->afterStateHydrated(function (TextInput $component, $state) {
+          $component->state($state / 100);
+        })
+        ->required(fn(\Closure $get) => $get("with_qty"))
+        ->hidden(fn(\Closure $get) => $get("with_qty") == false),
+
       Forms\Components\Toggle::make("with_qty")
         ->required()
         ->columnSpanFull()

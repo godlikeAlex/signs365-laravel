@@ -31,19 +31,42 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
 
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+    let currentValue = +value;
 
     if (disabled) return;
 
-    dispatch(updateAddonQuantity({ addonID: addon.id, quantity: +value }));
+    if (addon.withQuantity) {
+      if (currentValue >= addon.validation["max-qty"]) {
+        currentValue = addon.validation["max-qty"];
+      }
+
+      if (currentValue <= addon.validation["min-qty"]) {
+        currentValue = addon.validation["min-qty"];
+      }
+    }
+
+    dispatch(
+      updateAddonQuantity({ addonID: addon.id, quantity: currentValue })
+    );
   };
 
   const handlePressButtonQuantity = (type: "+" | "-") => {
     if (!addon.withQuantity) return;
 
+    const increasedQuantity =
+      addon.quantity + 1 >= addon.validation["max-qty"]
+        ? addon.validation["max-qty"]
+        : addon.quantity + 1;
+
+    const decreasedQuantity =
+      addon.quantity - 1 <= addon.validation["min-qty"]
+        ? addon.validation["min-qty"]
+        : addon.quantity - 1;
+
     dispatch(
       updateAddonQuantity({
         addonID: addon.id,
-        quantity: type === "+" ? addon.quantity + 1 : addon.quantity - 1,
+        quantity: type === "+" ? increasedQuantity : decreasedQuantity,
       })
     );
   };
