@@ -460,7 +460,12 @@ class OrderResource extends Resource
                 $addons = collect($get("addons"))
                   ->values()
                   ->filter(fn($addon) => $addon["product_addons_id"])
-                  ->map(fn($addon) => ["id" => $addon["product_addons_id"]]);
+                  ->map(
+                    fn($addon) => [
+                      "id" => $addon["product_addons_id"],
+                      "quantity" => $addon["quantity"] ?? 0,
+                    ]
+                  );
 
                 if (!$product_id || !$option_id) {
                   return;
