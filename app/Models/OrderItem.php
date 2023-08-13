@@ -34,9 +34,9 @@ class OrderItem extends Model
     return $this->belongsTo(ProductOption::class);
   }
 
-  public function customSize(): BelongsTo
+  public function sizeItem(): BelongsTo
   {
-    return $this->belongsTo(CustomSize::class);
+    return $this->belongsTo(sizeItem::class);
   }
 
   public function addons(): BelongsToMany

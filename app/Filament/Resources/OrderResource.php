@@ -15,6 +15,7 @@ use App\Models\ProductOption;
 use App\Models\ProductPrice;
 use App\Models\ProductSize;
 use App\Models\ProductVariant;
+use App\Models\SizeItem;
 use App\Models\User;
 use App\Services\Calculator\Service as Calculator;
 use Carbon\Carbon;
@@ -297,7 +298,7 @@ class OrderResource extends Resource
                   ->hidden(function (\Closure $get) {
                     $product_id = $get("product_id");
                     $product_option_id = $get("product_option_id");
-                    $size = $get("custom_size_id");
+                    $size = $get("size_item_id");
 
                     if ($size) {
                       return true;
@@ -317,7 +318,7 @@ class OrderResource extends Resource
                       ->numeric()
                       ->decimalPlaces(3)
                   )
-                  ->disabled(fn(\Closure $get) => $get("custom_size_id"))
+                  ->disabled(fn(\Closure $get) => $get("size_item_id"))
                   ->hidden(function (\Closure $get) {
                     $product_id = $get("product_id");
                     $product_option_id = $get("product_option_id");
@@ -337,7 +338,7 @@ class OrderResource extends Resource
                       ->numeric()
                       ->decimalPlaces(3)
                   )
-                  ->disabled(fn(\Closure $get) => $get("custom_size_id"))
+                  ->disabled(fn(\Closure $get) => $get("size_item_id"))
                   ->default(1)
                   ->hidden(function (\Closure $get) {
                     $product_id = $get("product_id");
@@ -355,7 +356,7 @@ class OrderResource extends Resource
                     $product_id = $get("product_id");
                     $product_option_id = $get("product_option_id");
 
-                    $size = $get("custom_size_id");
+                    $size = $get("size_item_id");
 
                     if ($size) {
                       return true;
@@ -377,8 +378,8 @@ class OrderResource extends Resource
 
                     return round($unit === "feet" ? $sqft : $sqft / 144, 2);
                   }),
-                Forms\Components\Select::make("custom_size_id")
-                  ->relationship("customSize", "title")
+                Forms\Components\Select::make("size_item_id")
+                  ->relationship("sizeItem", "title")
                   ->reactive()
                   ->hidden(function (\Closure $get) {
                     $productOption = ProductOption::find(
@@ -389,7 +390,7 @@ class OrderResource extends Resource
                       return true;
                     }
 
-                    if ($productOption->customSizes()->count() >= 1) {
+                    if ($productOption->sizeList) {
                       return false;
                     } else {
                       return true;
@@ -400,7 +401,7 @@ class OrderResource extends Resource
                     \Closure $get,
                     $state
                   ) {
-                    $size = CustomSize::find($state);
+                    $size = SizeItem::find($state);
 
                     if (!$size) {
                       return;
@@ -418,7 +419,10 @@ class OrderResource extends Resource
                       return [];
                     }
 
-                    return $productOption->customSizes()->pluck("label", "id");
+                    return $productOption->sizeList->sizeItems->pluck(
+                      "label",
+                      "id"
+                    );
                   }),
               ])
               ->columns(4),
@@ -450,6 +454,8 @@ class OrderResource extends Resource
                 $unit = $get("unit");
                 $width = $get("width");
                 $height = $get("height");
+
+                info($get("addons"));
 
                 $addons = collect($get("addons"))
                   ->values()
@@ -716,7 +722,7 @@ class OrderResource extends Resource
 
     $productOption = $product->options()->find($product_option_id);
 
-    if ($productOption->customSizes()->count()) {
+    if ($productOption->sizeList) {
       return false;
     }
 
