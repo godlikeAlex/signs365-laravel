@@ -74,8 +74,6 @@ class Service
 
     list($priceInCents) = $calculator->calculate(true);
 
-    info("some price bewfore add", ["price" => $priceInCents]);
-
     $this->cart->add([
       "id" => $id,
       "name" => $product->title,

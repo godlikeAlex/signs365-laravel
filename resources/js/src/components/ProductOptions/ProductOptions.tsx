@@ -8,7 +8,7 @@ import { selectProductOption } from "@/src/redux/singleProductSlice";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
 interface Props {
-  loading: boolean;
+  loading?: boolean;
 }
 
 const ProductOptions: React.FC<Props> = ({ loading }: Props) => {

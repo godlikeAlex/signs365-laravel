@@ -79,7 +79,7 @@ class Service
       return $this->calculateCalculatorProduct($originalPrice);
     }
 
-    return "";
+    return 0;
   }
 
   private function calculateCalculatorProduct($originalPrice)

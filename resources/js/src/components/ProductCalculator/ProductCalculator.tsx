@@ -9,7 +9,7 @@ import CustomSizesDropdown from "./CustomSizesDropdown";
 import Skeleton from "react-loading-skeleton";
 
 interface Props {
-  loading: boolean;
+  loading?: boolean;
 }
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];

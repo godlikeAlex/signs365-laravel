@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductAddons;
+use App\Models\ProductOption;
 use App\Models\ProductPrice;
 use App\Models\ProductVariant;
 use App\Models\TemporaryOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\Calculator\Service as CalculatorService;
 
 class StripeWebHookController extends Controller
 {
@@ -69,6 +72,7 @@ class StripeWebHookController extends Controller
           }
 
           $order->save();
+
           $tempOrder->update([
             "main_order_uuid" => $randomUUID,
           ]);
@@ -78,20 +82,42 @@ class StripeWebHookController extends Controller
           foreach ($tempOrder->cart_data->items as $cartItem) {
             $orderItem = new OrderItem();
 
-            $productVariant = ProductVariant::find(
-              $cartItem->attributes->product_variant->id
-            );
-            $productPrice = $productVariant
-              ->prices()
-              ->where("city_id", $city->id)
-              ->first();
+            $width = $cartItem->attributes->width;
+            $height = $cartItem->attributes->height;
+            $unit = $cartItem->attributes->unit;
+            $addons = $cartItem->attributes->addons;
+            $selectedOptionID = $cartItem->attributes->productOption->id;
 
-            $orderItem->price = $productPrice->price;
-            $orderItem->quantity = $cartItem->quantity;
-            $orderItem->order()->associate($order);
-            $orderItem->productPrice()->associate($productPrice);
-            $orderItem->variant()->associate($productVariant);
+            $calculator = new CalculatorService(
+              $cartItem->associatedModel->id,
+              width: $width,
+              height: $height,
+              unit: $unit,
+              addons: $addons,
+              selectedOptionID: $selectedOptionID,
+              quantity: $cartItem->quantity
+            );
+
+            foreach ($addons as $cartAddon) {
+              $addon = ProductAddons::find($cartAddon["id"]);
+
+              if (!$addon) {
+                continue;
+              }
+
+              $orderItem->addons()->attach($addon->id, [
+                "quantity" => $cartAddon["quantity"] ?? 0,
+              ]);
+            }
+
+            list($priceInCents, $_, $shippingPrice) = $calculator->calculate();
+
+            $orderItem->price = $priceInCents;
+            $orderItem->shipping_price = $shippingPrice;
             $orderItem->product_id = $cartItem->associatedModel->id;
+            $orderItem->quantity = $cartItem->quantity;
+
+            $orderItem->order()->associate($order);
 
             $orderItem->save();
           }

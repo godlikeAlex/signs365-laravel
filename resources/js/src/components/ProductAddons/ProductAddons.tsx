@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
 interface Props {
-  loading: boolean;
+  loading?: boolean;
 }
 
 const ProductAddons: React.FC<Props> = ({ loading }: Props) => {

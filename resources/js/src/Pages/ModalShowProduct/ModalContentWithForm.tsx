@@ -22,7 +22,7 @@ type Inputs = {
 
 interface Props {
   product: IProduct;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const ModalContentWithForm: React.FC<Props> = ({ product, loading }: Props) => {
