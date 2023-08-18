@@ -220,7 +220,7 @@ export function withProductControl<T extends WithProductsControlProps>(
           width: state.width.value,
           height: state.height.value,
           quantity: state.quantity,
-          custom_size_id: state.customSize.value,
+          size_id: state.customSize.value,
         })
       ).unwrap();
 

@@ -10,7 +10,7 @@ export interface UpdateCartParams {
   width: string | number;
   height: string | number;
   quantity: number;
-  custom_size_id?: number;
+  size_id?: number;
   //
   city?: string;
 }
@@ -37,7 +37,7 @@ export default class CartService {
     width: number | string,
     height: number | string,
     quantity: number,
-    custom_size_id?: number
+    size_id?: number
   ) {
     return api.post<{ price: string }>("/cart/calculate-single", {
       product_id: productID,
@@ -47,7 +47,7 @@ export default class CartService {
       width,
       height,
       quantity,
-      custom_size_id,
+      size_id,
     });
   }
 

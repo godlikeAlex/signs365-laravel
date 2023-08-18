@@ -91,7 +91,7 @@ class CartController extends Controller
         $request->unit,
         $request->input("width"),
         $request->input("height"),
-        $request->input("custom_size_id")
+        $request->input("size_id")
       );
 
       return \response()->json($this->cart->format($city));

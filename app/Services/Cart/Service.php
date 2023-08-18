@@ -3,8 +3,8 @@
 namespace App\Services\Cart;
 
 use App\Http\Resources\CartItemsResource;
-use App\Models\CustomSize;
 use App\Models\Product;
+use App\Models\SizeItem;
 use Darryldecode\Cart\CartCondition;
 use App\Services\Calculator\Service as CalculatorService;
 
@@ -30,9 +30,9 @@ class Service
     $unit,
     $width,
     $height,
-    $custom_size_id
+    $size_id
   ) {
-    $customSize = CustomSize::find($custom_size_id);
+    $sizeItem = SizeItem::find($size_id);
 
     $calculator = new CalculatorService(
       $product_id,
@@ -63,10 +63,10 @@ class Service
       ],
     ];
 
-    if ($customSize) {
-      $options["customSize"] = [
-        "id" => $customSize->id,
-        "title" => $customSize->label,
+    if ($sizeItem) {
+      $options["sizeItem"] = [
+        "id" => $sizeItem->id,
+        "title" => $sizeItem->label,
       ];
     }
 

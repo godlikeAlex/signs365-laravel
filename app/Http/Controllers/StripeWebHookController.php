@@ -8,6 +8,7 @@ use App\Models\ProductAddons;
 use App\Models\ProductOption;
 use App\Models\ProductPrice;
 use App\Models\ProductVariant;
+use App\Models\SizeItem;
 use App\Models\TemporaryOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -85,8 +86,22 @@ class StripeWebHookController extends Controller
             $width = $cartItem->attributes->width;
             $height = $cartItem->attributes->height;
             $unit = $cartItem->attributes->unit;
-            $addons = $cartItem->attributes->addons;
+            $addons = json_decode(
+              json_encode($cartItem->attributes->addons),
+              true
+            );
             $selectedOptionID = $cartItem->attributes->productOption->id;
+
+            if (property_exists($cartItem->attributes, "sizeItem")) {
+              $sizeItem = SizeItem::find($cartItem->attributes->sizeItem->id);
+
+              if ($sizeItem) {
+                $width = $sizeItem->width;
+                $width = $sizeItem->height;
+
+                $orderItem->size_item_id = $sizeItem->id;
+              }
+            }
 
             $calculator = new CalculatorService(
               $cartItem->associatedModel->id,
@@ -98,6 +113,21 @@ class StripeWebHookController extends Controller
               quantity: $cartItem->quantity
             );
 
+            list($priceInCents, $_, $shippingPrice) = $calculator->calculate();
+
+            $orderItem->price = $priceInCents;
+            $orderItem->shipping_price = $shippingPrice;
+            $orderItem->product_id = $cartItem->associatedModel->id;
+            $orderItem->product_option_id = $selectedOptionID;
+            $orderItem->width = $width;
+            $orderItem->height = $height;
+            $orderItem->unit = $unit;
+            $orderItem->quantity = $cartItem->quantity;
+
+            $orderItem->order()->associate($order);
+
+            $orderItem->save();
+
             foreach ($addons as $cartAddon) {
               $addon = ProductAddons::find($cartAddon["id"]);
 
@@ -105,21 +135,12 @@ class StripeWebHookController extends Controller
                 continue;
               }
 
+              info("addon added", ["addon" => $addon]);
+
               $orderItem->addons()->attach($addon->id, [
                 "quantity" => $cartAddon["quantity"] ?? 0,
               ]);
             }
-
-            list($priceInCents, $_, $shippingPrice) = $calculator->calculate();
-
-            $orderItem->price = $priceInCents;
-            $orderItem->shipping_price = $shippingPrice;
-            $orderItem->product_id = $cartItem->associatedModel->id;
-            $orderItem->quantity = $cartItem->quantity;
-
-            $orderItem->order()->associate($order);
-
-            $orderItem->save();
           }
         }
 
