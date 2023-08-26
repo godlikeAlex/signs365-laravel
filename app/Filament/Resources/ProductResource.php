@@ -8,6 +8,12 @@ use App\Filament\Resources\ProductResource\RelationManagers\AddonsRelationManage
 use App\Filament\Resources\ProductResource\RelationManagers\OptionsRelationManager;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Awcodes\Curator\Components\Forms\CuratorPicker;
+use Awcodes\Curator\Components\Tables\CuratorColumn;
+use Awcodes\Curator\CurationPreset;
+use Awcodes\Curator\Curator;
+use Awcodes\Curator\Facades\Curator as FacadesCurator;
+// use Awcodes\Curator\Facades\Curator as FacadesCurator;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
@@ -25,6 +31,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Awcodes\Curator\GliderFallback;
 
 class ProductResource extends Resource
 {
@@ -57,6 +64,10 @@ class ProductResource extends Resource
               Forms\Components\RichEditor::make("description")->columnSpan(
                 "full"
               ),
+              Forms\Components\TextInput::make("order")
+                ->label("Order in list")
+                ->minValue(1)
+                ->columnSpan("full"),
 
               Forms\Components\Select::make("categories")
                 ->multiple()
@@ -83,11 +94,14 @@ class ProductResource extends Resource
           Forms\Components\Tabs\Tab::make("Product Images")
             ->icon("heroicon-s-camera")
             ->schema([
-              Forms\Components\FileUpload::make("images")
-                ->columnSpanFull()
-                ->multiple()
-                ->enableReordering()
-                ->directory("products"),
+              CuratorPicker::make("images")->multiple(),
+
+              // Forms\Components\FileUpload::make("images")
+              //   ->columnSpanFull()
+              //   ->enableDownload()
+              //   ->multiple()
+              //   ->enableReordering()
+              //   ->directory("products"),
             ]),
         ]),
     ];
@@ -102,6 +116,14 @@ class ProductResource extends Resource
   {
     return $table
       ->columns([
+        Tables\Columns\TextColumn::make("order")
+          ->sortable(
+            query: function (Builder $query, string $direction): Builder {
+              info($direction);
+              return $query->orderBy("order", $direction);
+            }
+          )
+          ->searchable(),
         Tables\Columns\TextColumn::make("title")->searchable(),
         Tables\Columns\TextColumn::make("slug")->searchable(),
         // Tables\Columns\TextColumn::make("prices_min_price")
@@ -109,9 +131,8 @@ class ProductResource extends Resource
         //   ->min("prices", "price")
         //   ->sortable()
         //   ->money("usd"),
-        Tables\Columns\IconColumn::make("published")
-          ->boolean()
-          ->sortable(),
+        Tables\Columns\IconColumn::make("published")->boolean(),
+        // ->sortable(),
         Tables\Columns\TagsColumn::make("categories.title")->separator(","),
         Tables\Columns\TextColumn::make("created_at")->date($format = "F j, Y"),
       ])
@@ -138,6 +159,7 @@ class ProductResource extends Resource
             }
           }),
       ])
+      ->defaultSort("order", "asc")
       ->actions([
         Tables\Actions\EditAction::make(),
         Tables\Actions\DeleteAction::make(),

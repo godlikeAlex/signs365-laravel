@@ -1,4 +1,4 @@
-import { ProductCard } from "@/src/components";
+import { EmptyPage, ProductCard } from "@/src/components";
 import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import React, { useEffect } from "react";
@@ -62,14 +62,22 @@ const CatalogProducts: React.FC<Props> = ({
     <>
       <div className="ps-categogy--grid">
         <div className="row m-0">
-          {products.map((product, idx) => (
-            <div
-              className="col-6 col-lg-4 col-xl-3 p-0"
-              key={`${product.id}-${idx}`}
-            >
-              <ProductCard {...product} fullPage category={currentCategory} />
-            </div>
-          ))}
+          {products.length > 0 ? (
+            products.map((product, idx) => (
+              <div
+                className="col-6 col-lg-4 col-xl-3 p-0"
+                key={`${product.id}-${idx}`}
+              >
+                <ProductCard {...product} fullPage category={currentCategory} />
+              </div>
+            ))
+          ) : (
+            <EmptyPage
+              iconClass="fa fa-shopping-basket"
+              title="No Products Here"
+              size="small"
+            />
+          )}
         </div>
       </div>
 

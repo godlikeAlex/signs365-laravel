@@ -1,4 +1,4 @@
-import { ProductCard } from "@/src/components";
+import { EmptyPage, ProductCard } from "@/src/components";
 import CatalogService from "@/src/services/CatalogService";
 import { ICategory } from "@/src/types/models";
 import classNames from "classnames";

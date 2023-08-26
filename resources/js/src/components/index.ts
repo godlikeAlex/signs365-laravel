@@ -1,5 +1,6 @@
 import CartItem from "./CartItem";
 import CartList from "./CartList";
+import EmptyPage from "./EmptyPage";
 import Footer from "./Footer";
 import Input from "./Input";
 import Layout from "./Layout";
@@ -22,6 +23,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ProductSlider,
+  EmptyPage,
   ProductQuantity,
   ProductOptions,
   ProductCalculator,

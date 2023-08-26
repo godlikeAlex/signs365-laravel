@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import MobileOrderList from "./MobileOrderList";
 import OrdersList from "./OrdersList";
 import Table from "./Table";
+import EmptyPage from "../EmptyPage";
 
 interface Props {}
 
@@ -23,27 +24,14 @@ const OrdersHistory: React.FC<Props> = ({}: Props) => {
     setLoading(false);
   }, []);
 
-  const renderEmptyOrders = () => {
-    return (
-      <div
-        className="cart-empty text-center title-with-icon-section"
-        style={{ height: "50vh" }}
-      >
-        <div className="ps-cart__icon">
-          <i
-            className="fa fa-shopping-basket"
-            style={{ color: "#5b6c8f", fontSize: 120 }}
-          ></i>
-        </div>
-        <h1 className="cart-title" style={{ color: "#103178", marginTop: 20 }}>
-          No Orders
-        </h1>
-      </div>
-    );
-  };
-
   if (data.length === 0) {
-    return renderEmptyOrders();
+    return (
+      <EmptyPage
+        iconClass="fa fa-shopping-basket"
+        title="No Orders"
+        size="small"
+      />
+    );
   }
 
   return (
