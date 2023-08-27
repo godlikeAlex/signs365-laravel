@@ -242,9 +242,23 @@ export function withProductControl<T extends WithProductsControlProps>(
       <ProductFormContext.Provider value={{ state, setState, validationRules }}>
         {product ? (
           <Helmet>
-            <title>{product?.title}</title>
+            <title>
+              {product.seo_title ? product.seo_title : product.title}
+            </title>
+
+            {product.seo_desc ? (
+              <meta name="description" content={product.seo_desc} />
+            ) : null}
+
+            {product.seo_keywords ? (
+              <meta name="keywords" content={product.seo_keywords} />
+            ) : null}
           </Helmet>
-        ) : null}
+        ) : (
+          <Helmet>
+            <title>Loading Product</title>
+          </Helmet>
+        )}
 
         <Component
           {...(hocProps as T)}

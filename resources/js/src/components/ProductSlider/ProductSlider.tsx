@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import "./style.css";
+import { ProductImage } from "@/src/types/ProductModel";
 
 interface Props {
-  images: string[];
+  images: ProductImage[];
   productName: string;
 }
 
@@ -46,8 +47,11 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           className="ps-product__thumbnail"
         >
           {images.map((img) => (
-            <div className="slide" key={`main-${img}`}>
-              <img src={`/storage/${img}`} alt={productName} />
+            <div className="slide" key={`main-${img.id}`}>
+              <img
+                src={`/storage/${img.path}`}
+                alt={img.alt ? img.alt : productName}
+              />
             </div>
           ))}
         </Slider>
@@ -60,9 +64,12 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           style={{ display: "block" }}
         >
           {images.map((img) => (
-            <div className="slide" key={`thumb-${img}`}>
+            <div className="slide" key={`thumb-${img.id}`}>
               <div className="ps-gallery__item">
-                <img src={`/storage/${img}`} alt={productName} />
+                <img
+                  src={`/storage/${img.path}`}
+                  alt={img.alt ? img.alt : productName}
+                />
               </div>
             </div>
           ))}

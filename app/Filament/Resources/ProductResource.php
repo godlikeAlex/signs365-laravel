@@ -55,15 +55,16 @@ class ProductResource extends Resource
                 ->reactive()
                 ->afterStateUpdated(function (Closure $set, $state) {
                   $set("slug", Str::slug($state));
+                  $set("seo_title", $state);
                 })
                 ->maxLength(50),
               Forms\Components\TextInput::make("slug")
                 ->required()
                 ->unique(table: Product::class, ignoreRecord: true)
                 ->maxLength(75),
-              Forms\Components\RichEditor::make("description")->columnSpan(
-                "full"
-              ),
+              Forms\Components\RichEditor::make("description")
+                ->columnSpan("full")
+                ->reactive(),
               Forms\Components\TextInput::make("order")
                 ->label("Order in list")
                 ->minValue(1)
@@ -94,7 +95,10 @@ class ProductResource extends Resource
           Forms\Components\Tabs\Tab::make("Product Images")
             ->icon("heroicon-s-camera")
             ->schema([
-              CuratorPicker::make("images")->multiple(),
+              CuratorPicker::make("product_picture_ids")
+                ->multiple()
+                ->relationship("images", "id")
+                ->orderColumn("order"),
 
               // Forms\Components\FileUpload::make("images")
               //   ->columnSpanFull()
@@ -102,6 +106,22 @@ class ProductResource extends Resource
               //   ->multiple()
               //   ->enableReordering()
               //   ->directory("products"),
+            ]),
+
+          Forms\Components\Tabs\Tab::make("SEO")
+            ->icon("heroicon-s-search")
+            ->schema([
+              Forms\Components\TextInput::make("seo_title")
+                ->label("Title")
+                ->maxLength(55),
+
+              Forms\Components\Textarea::make("seo_description")
+                ->label("Description")
+                ->maxLength(150),
+
+              Forms\Components\TextArea::make("seo_keywords")->label(
+                "Keywords"
+              ),
             ]),
         ]),
     ];

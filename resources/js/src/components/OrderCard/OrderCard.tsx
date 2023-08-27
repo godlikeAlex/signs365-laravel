@@ -98,7 +98,8 @@ const OrderCard: React.FC<Props> = ({
             <div className="mini-order-item" key={item.id}>
               {item.product?.images.length >= 1 ? (
                 <img
-                  src={`/storage/${item.product.images[0]}`}
+                  src={`/storage/${item.product.images[0].path}`}
+                  alt={item.product.images[0].alt}
                   style={{ width: 100, height: 100, objectFit: "cover" }}
                 />
               ) : (

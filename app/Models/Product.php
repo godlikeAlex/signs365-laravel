@@ -17,7 +17,6 @@ class Product extends Model
   protected $guarded = [];
 
   protected $casts = [
-    "images" => "array",
     "sizes" => "array",
     "is_published" => "boolean",
     "with_checkout" => "boolean",
@@ -61,12 +60,12 @@ class Product extends Model
     return $this->belongsToManyCategories();
   }
 
-  public function productPictures(): BelongsToMany
+  public function images(): BelongsToMany
   {
     return $this->belongsToMany(
       Media::class,
-      "media_post",
-      "post_id",
+      "media_product",
+      "product_id",
       "media_id"
     )
       ->withPivot("order")

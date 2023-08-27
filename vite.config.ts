@@ -22,6 +22,12 @@ export default defineConfig({
         "resources/css/app.css",
         "resources/css/style.css",
       ],
+      ssr: [
+        "resources/js/index.tsx",
+        "resources/js/fillament-app.js",
+        "resources/css/app.css",
+        "resources/css/style.css",
+      ],
       refresh: true,
     }),
     react(),

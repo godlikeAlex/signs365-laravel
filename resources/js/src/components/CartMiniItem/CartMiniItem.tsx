@@ -35,7 +35,14 @@ const CartMiniItem: React.FC<CartMiniItemProps> = ({
     <div className="ps-product--mini-cart">
       <a className="ps-product__thumbnail" href="">
         {associatedModel.images && associatedModel.images.length > 0 ? (
-          <img src={`/storage/${associatedModel.images[0]}`} alt={name} />
+          <img
+            src={`/storage/${associatedModel.images[0].path}`}
+            alt={
+              associatedModel.images[0].alt
+                ? associatedModel.images[0].alt
+                : name
+            }
+          />
         ) : null}
       </a>
       <div className="ps-product__content">

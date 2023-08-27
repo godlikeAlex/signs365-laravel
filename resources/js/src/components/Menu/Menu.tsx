@@ -29,9 +29,36 @@ const Menu: React.FC<Props> = ({}: Props) => {
       >
         <div className="ps-header__top">
           <div className="container">
-            <a href="tel:(949)9421363" className="ps-header__text">
-              <strong>+ (949) 942-1363 - Call Us</strong>
-            </a>
+            <div className="header-left d-flex">
+              <a
+                href="tel:(949)9421363"
+                className="ps-header__text d-flex align-items-center"
+              >
+                <i className="icon-telephone" />
+                <strong style={{ marginLeft: 5 }}>
+                  +(949) 942-1363 - Call Us
+                </strong>
+              </a>
+
+              <a
+                href="http://google.com"
+                className="ps-header__text d-flex align-items-center"
+              >
+                <i className="icon-envelope" />
+
+                <strong style={{ marginLeft: 5 }}>info@signs7.com</strong>
+              </a>
+
+              <a
+                href="http://google.com"
+                className="ps-header__text d-flex align-items-center"
+              >
+                <i className="icon-map-marker" />
+
+                <strong style={{ marginLeft: 5 }}>New York</strong>
+              </a>
+            </div>
+
             <div className="ps-top__right">
               <div className="ps-language-currency">
                 <div

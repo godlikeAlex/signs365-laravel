@@ -2915,3 +2915,8 @@
 .ps-footer--14 {
   background-color: white;
 }
+
+.ps-header__text {
+  width: unset !important;
+  padding-right: 25px;
+}

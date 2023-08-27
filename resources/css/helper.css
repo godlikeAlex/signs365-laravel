@@ -1157,6 +1157,12 @@ html .bg--parallax {
   min-width: 145px;
 }
 
+.ps-category__item-custom:hover a {
+  /* display: none; */
+
+  color: #ffc800 !important;
+}
+
 .ps-category__item-custom:nth-of-type(n + 5) {
   order: 2;
 }

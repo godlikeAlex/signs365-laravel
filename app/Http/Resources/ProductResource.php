@@ -33,7 +33,11 @@ class ProductResource extends JsonResource
       "published" => $this->published,
       // "min_price" => $this->min_price / 100,
       "min_price" => 0,
-      "images" => $this->images,
+      "images" => ProductImageResource::collection($this->images),
+
+      "seo_title" => $this->seo_title,
+      "seo_desc" => $this->seo_desc,
+      "seo_keywords" => $this->seo_keywords,
 
       "options" => OptionResource::collection($this->whenLoaded("options")),
 

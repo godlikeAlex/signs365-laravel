@@ -81,6 +81,12 @@ type ProductHasCheckout =
       start_at: number;
     };
 
+export type ProductImage = {
+  id: number;
+  path: string;
+  alt?: null | string;
+};
+
 export type IProduct = ProductHasCheckout & {
   id: number;
   title: string;
@@ -89,6 +95,10 @@ export type IProduct = ProductHasCheckout & {
   published: boolean;
   min_price: number;
 
-  images?: null | string[];
+  seo_title?: string;
+  seo_desc?: string;
+  seo_keywords?: string;
+
+  images?: null | ProductImage[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];
 };

@@ -53,7 +53,10 @@ const ProductCard: React.FC<Props> = (props: Props) => {
             >
               <figure>
                 {images.slice(0, 2).map((image) => (
-                  <img src={`/storage/${image}`} alt={title} />
+                  <img
+                    src={`/storage/${image.path}`}
+                    alt={image.alt ? image.alt : title}
+                  />
                 ))}
               </figure>
             </Link>

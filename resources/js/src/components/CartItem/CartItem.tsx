@@ -65,7 +65,14 @@ const CartItem: React.FC<Props> = ({
         <a className="ps-product__image">
           <figure>
             {associatedModel.images && associatedModel.images.length > 0 ? (
-              <img src={`/storage/${associatedModel.images[0]}`} alt={name} />
+              <img
+                src={`/storage/${associatedModel.images[0].path}`}
+                alt={
+                  associatedModel.images[0].alt
+                    ? associatedModel.images[0].alt
+                    : name
+                }
+              />
             ) : null}
           </figure>
         </a>
