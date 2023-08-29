@@ -1157,10 +1157,15 @@ html .bg--parallax {
   min-width: 145px;
 }
 
-.ps-category__item-custom:hover a {
+.ps-category__item-custom:hover .ps-category__name a {
   /* display: none; */
 
-  color: #ffc800 !important;
+  color: #fd8d27 !important;
+}
+
+.home_show_more {
+  width: 250px;
+  margin: auto;
 }
 
 .ps-category__item-custom:nth-of-type(n + 5) {
@@ -1222,6 +1227,10 @@ html .bg--parallax {
 @media (max-width: 768px) {
   .ps-product__title {
     min-height: unset !important;
+  }
+
+  .home_show_more {
+    width: 100% !important;
   }
 
   .ps-product__meta {

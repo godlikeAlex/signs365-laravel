@@ -96,7 +96,7 @@ const ModalContentWithForm: React.FC<Props> = ({ product, loading }: Props) => {
                   className="ps-btn ps-btn--warning custom-button"
                   disabled={isSubmitting}
                 >
-                  Submit Request
+                  Let's Talk
                 </button>
               </div>
             </div>

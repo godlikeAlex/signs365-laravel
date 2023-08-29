@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "./style.css";
 import { ProductImage } from "@/src/types/ProductModel";
+import { NextArrow, PrevArrow } from "./Arrows";
 
 interface Props {
   images: ProductImage[];
@@ -21,7 +22,7 @@ const ThumbnailSlick = {
 const MainSlick = {
   slidesToShow: 1,
   slidesToScroll: 1,
-  arrows: false,
+  arrows: true,
   dots: false,
   lazyLoad: "ondemand",
 };
@@ -44,6 +45,8 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           ref={(slider) => setMainSlickRef(slider)}
           asNavFor={thumbNailSlickRef}
           {...MainSlick}
+          nextArrow={<NextArrow />}
+          prevArrow={<PrevArrow />}
           className="ps-product__thumbnail"
         >
           {images.map((img) => (

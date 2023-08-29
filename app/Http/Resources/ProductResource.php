@@ -17,12 +17,7 @@ class ProductResource extends JsonResource
    */
   public function toArray($request)
   {
-    $categories = $this->categories()
-      ->whereHas("cities", function ($query) use ($request) {
-        info($request->get("city"));
-        return $query->where("city_id", $request->get("city"));
-      })
-      ->get();
+    $categories = $this->categories()->get();
 
     return [
       "id" => $this->id,
@@ -32,7 +27,7 @@ class ProductResource extends JsonResource
       "with_checkout" => $this->with_checkout,
       "published" => $this->published,
       // "min_price" => $this->min_price / 100,
-      "min_price" => 0,
+      "min_price" => 35.0,
       "images" => ProductImageResource::collection($this->images),
 
       "seo_title" => $this->seo_title,

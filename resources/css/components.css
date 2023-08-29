@@ -1672,7 +1672,7 @@
 }
 
 .ps-categogy--grid .ps-product--standard .ps-product__branch {
-  display: none;
+  /* display: none; */
 }
 
 .ps-categogy--detail

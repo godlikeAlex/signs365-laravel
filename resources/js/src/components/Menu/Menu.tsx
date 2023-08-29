@@ -3,6 +3,7 @@ import { useAppSelector } from "@/src/hooks";
 import { Link } from "react-router-dom";
 import MiniAuthModal from "./MiniAuthModal";
 import MiniCartModal from "./MiniCartModal";
+import "./style.css";
 
 interface Props {}
 
@@ -144,23 +145,39 @@ const Menu: React.FC<Props> = ({}: Props) => {
                     <img className="sticky-logo" src="/img/logo.png" alt="" />
                   </Link>
                 </li>
-                {homeCategories.map(({ id, title, icon, slug }, index) => (
-                  <li
-                    className="ps-category__item ps-category__item-custom"
-                    key={id}
-                  >
-                    <Link to={`/catalog/${slug}`} className="ps-category__link">
-                      <img
-                        src={`/storage/${icon}`}
-                        alt={title}
-                        style={{ width: "34px", height: "34px" }}
-                      />
-                    </Link>
-                    <div className="ps-category__name">
-                      <Link to={`/catalog/${slug}`}>{title}</Link>
-                    </div>
-                  </li>
-                ))}
+                {homeCategories.map(
+                  ({ id, title, icon, slug, products }, index) => (
+                    <li
+                      className="ps-category__item ps-category__item-custom has-dropdown"
+                      key={id}
+                    >
+                      <Link
+                        to={`/catalog/${slug}`}
+                        className="ps-category__link"
+                      >
+                        <img
+                          src={`/storage/${icon}`}
+                          alt={title}
+                          style={{ width: "34px", height: "34px" }}
+                        />
+                      </Link>
+                      <div className="ps-category__name">
+                        <Link to={`/catalog/${slug}`}>{title}</Link>
+                      </div>
+
+                      <div className="dropdown-content-menu">
+                        {products.map((product) => (
+                          <Link
+                            to={`/catalog/product/${product.slug}`}
+                            key={`${id}-${product.id}`}
+                          >
+                            {product.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
           </div>

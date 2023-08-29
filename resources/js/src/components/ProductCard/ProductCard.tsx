@@ -92,7 +92,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   to={
                     !props.fullPage
                       ? `/home/product/modal/${slug}`
-                      : `/catalog/product/${slug}`
+                      : `/catalog/product/${slug}`2
                   }
                   state={{
                     background: !props.fullPage && location,
@@ -105,7 +105,23 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               </div>
             </div> */}
           </div>
+
           <div className="ps-product__content">
+            <div className="product-wrapper">
+              <div className="meta-wrapper">
+                {props.categories.map((category, index) => (
+                  <Link
+                    to={`/catalog/${category.slug}`}
+                    className="ps-product__branch"
+                    key={`category-card-product-${category.id}`}
+                  >
+                    {category.title}{" "}
+                    {index < props.categories.length - 1 ? " | " : ""}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
             <h5 className="ps-product__title">
               <Link
                 to={productURL}
@@ -114,6 +130,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   product: props,
                   category: props.category,
                 }}
+                style={{ fontWeight: 600 }}
               >
                 {title}
               </Link>
@@ -122,12 +139,12 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <span className="ps-product__price">
                 {with_checkout
                   ? min_price > 0
-                    ? new Intl.NumberFormat("en-US").format(min_price)
-                    : null
+                    ? `$${min_price.toFixed(2)}`
+                    : // ? `$${new Intl.NumberFormat("en-US").format(min_price)}`
+                      null
                   : null}
               </span>
             </div>
-
             <div className="ps-product__actions ps-product__group-mobile">
               <div className="ps-product__quantity">
                 <div className="def-number-input number-input safari_only">

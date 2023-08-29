@@ -2,3 +2,27 @@
   position: sticky;
   top: 110px;
 }
+
+.custom-arrow {
+  z-index: 9;
+  cursor: pointer;
+}
+
+.custom-arrow i {
+  font-size: 52px;
+  color: #103178;
+}
+
+.right-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+}
+
+.left-arrow {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+}

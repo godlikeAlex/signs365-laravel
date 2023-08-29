@@ -54,7 +54,13 @@ export default function Home() {
                     ))}
                   </div>
                   <div className="ps-shop__more">
-                    <Link to={`/catalog/${slug}`}>Show all</Link>
+                    <Link
+                      to={`/catalog/${slug}`}
+                      style={{ display: "block" }}
+                      className="home_show_more"
+                    >
+                      Show all
+                    </Link>
                   </div>
                 </div>
               </div>

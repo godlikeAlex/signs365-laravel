@@ -22,7 +22,7 @@ class ShopController extends Controller
   public function categories(Request $request)
   {
     $categoriesWithProducts = ProductCategory::query()
-      ->orderBy("id", "asc")
+      ->orderBy("id", "desc")
       ->get();
 
     return [
@@ -36,7 +36,7 @@ class ShopController extends Controller
   {
     $products = $product_category
       ->products()
-      ->latest()
+      ->orderby("order")
       ->paginate(12);
 
     $products->each(function ($product) {
