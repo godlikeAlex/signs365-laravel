@@ -135,16 +135,6 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 {title}
               </Link>
             </h5>
-            <div className="ps-product__meta">
-              <span className="ps-product__price">
-                {with_checkout
-                  ? min_price > 0
-                    ? `$${min_price.toFixed(2)}`
-                    : // ? `$${new Intl.NumberFormat("en-US").format(min_price)}`
-                      null
-                  : null}
-              </span>
-            </div>
             <div className="ps-product__actions ps-product__group-mobile">
               <div className="ps-product__quantity">
                 <div className="def-number-input number-input safari_only">
