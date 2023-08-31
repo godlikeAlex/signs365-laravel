@@ -37,7 +37,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
                       setShowMenu(true);
                     }}
                   >
-                    <i className="fa fa-bars"></i>
+                    <i className="fa-solid fa-bars"></i>
                   </a>
                 </li>
               </ul>

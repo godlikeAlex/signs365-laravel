@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AddonExtraDataTypeEnum;
 use App\Enums\AddonTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +15,12 @@ class ProductAddons extends Model
   use HasFactory, SoftDeletes;
 
   protected $guarded = [];
+
   protected $casts = [
     "type" => AddonTypeEnum::class,
+    "extra_data_type" => AddonExtraDataTypeEnum::class,
     "with_qty" => "boolean",
+    "extra_data_content" => "json",
   ];
 
   static $ADDON_TYPES = ["FEE" => "FEE", "SQFT" => "SQFT"];

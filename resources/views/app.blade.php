@@ -13,7 +13,7 @@
         <meta name="keywords" content="">
         <meta name="description" content="">
 
-        <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css">
+        {{-- <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css"> --}}
         <link rel="stylesheet" href="/fonts/Linearicons/Font/demo-files/demo.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700&amp;display=swap&amp;ver=1607580870">
         <link rel="stylesheet" href="/plugins/bootstrap4/css/bootstrap.min.css">
@@ -30,6 +30,9 @@
         @vite('resources/css/style.css')
         @vite('resources/js/index.tsx')
         <link rel="stylesheet" href="/css/home-4.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
     </head>
     <body>

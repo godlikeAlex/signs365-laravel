@@ -209,7 +209,7 @@
 }
 
 .ps-header .ps-header__icons .ps-header__item i {
-  font-weight: 500;
+  /* font-weight: 500; */
 }
 
 .ps-header .ps-header__icons .ps-header__item:hover {

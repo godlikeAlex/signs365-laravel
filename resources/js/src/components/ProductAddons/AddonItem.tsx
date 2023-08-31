@@ -78,12 +78,17 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
         "disabled-variant": disabled,
       })}
       onClick={handleOnClick}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
     >
       <h6 className="can-toggle">{title}</h6>
 
       {withQuantity && isSelected ? (
-        <div style={{ marginTop: 12 }} className="can-toggle">
-          Quantity
+        <div className="can-toggle">
           <div className="quantity-container-addon">
             <div
               className="qty-btn-addon"
