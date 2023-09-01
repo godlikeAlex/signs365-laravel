@@ -5,9 +5,11 @@ namespace App\Models;
 use Awcodes\Curator\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -70,6 +72,16 @@ class Product extends Model
     )
       ->withPivot("order")
       ->orderBy("order");
+  }
+
+  // public function faqs(): BelongsToMany
+  // {
+  //   return $this->belongsToMany(Faq::class);
+  // }
+
+  public function faq(): BelongsTo
+  {
+    return $this->belongsTo(Faq::class);
   }
 
   private function belongsToManyCategories(): BelongsToMany

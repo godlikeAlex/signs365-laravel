@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Awcodes\Curator\GliderFallback;
+use Illuminate\Support\HtmlString;
 
 class ProductResource extends Resource
 {
@@ -70,11 +71,31 @@ class ProductResource extends Resource
                 ->minValue(1)
                 ->columnSpan("full"),
 
+              Forms\Components\Select::make("faq_id")->relationship(
+                "faq",
+                "title"
+              ),
+
               Forms\Components\Select::make("categories")
                 ->multiple()
                 ->required()
                 ->relationship("categories", "title")
-                ->preload(),
+                ->preload()
+                ->helperText(function ($record) {
+                  // dd($record);
+
+                  // $url = UserResource::getUrl("edit", [
+                  //   // "record" => $record->user,
+                  // ]);
+
+                  return new HtmlString(
+                    "You can change it on FAQ Page: <a href={}>naxuy</a>"
+                  );
+                }),
+
+              // Forms\Components\Placeholder::make("faq")->content(
+              // "<h1>Hello world  </h1>"
+              // ),
 
               Toggle::make("with_checkout")
                 ->reactive()
