@@ -5,6 +5,7 @@ import withProductControl, {
 import { Link, Path, useLocation } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import {
+  FAQProduct,
   ProductCalculator,
   ProductOptions,
   ProductQuantity,
@@ -94,7 +95,7 @@ const ProductShow: React.FC<Props> = ({
           </div>
         )}
 
-        <div className="ps-page__content">
+        <div className="ps-page__content" style={{ marginBottom: "20px" }}>
           <div className="ps-product--detail">
             <div className="row">
               <div className="col-md-12">
@@ -234,9 +235,17 @@ const ProductShow: React.FC<Props> = ({
                 </div>
               </div>
             </div>
+
+            {product?.faq && (
+              <div className="ps-product__content mt-50">
+                <h2 className="ps-title">F.A.Q</h2>
+
+                <FAQProduct questions={product.faq} />
+              </div>
+            )}
           </div>
 
-          <section className="ps-section--latest"></section>
+          {/* <section className="ps-section--latest"></section> */}
         </div>
       </div>
     </div>

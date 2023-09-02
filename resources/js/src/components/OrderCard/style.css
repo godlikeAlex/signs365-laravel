@@ -55,7 +55,8 @@
 }
 
 .rc-collapse-content {
-  transition: 0.5s;
+  /* transition: 0.3s; */
+  transition: height 0.2s ease-out;
 }
 
 .mini-order-item {

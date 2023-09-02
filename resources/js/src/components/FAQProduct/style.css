@@ -1,0 +1,18 @@
+.faq-product .rc-collapse-header {
+  background-color: #f0f2f5;
+  border: unset !important;
+}
+
+.faq-product .rc-collapse-content {
+  /* background-color: red; */
+  border: 1px solid #f0f2f5;
+  border-top: unset;
+}
+
+.faq-product {
+  margin-top: 10px;
+}
+
+.rc-collapse {
+  background: unset;
+}

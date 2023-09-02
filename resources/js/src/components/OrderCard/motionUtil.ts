@@ -18,6 +18,8 @@ const getCurrentHeight: MotionEventHandler = (node) => ({
 const skipOpacityTransition: MotionEndEventHandler = (_, event) =>
   (event as TransitionEvent).propertyName === "height";
 
+console.log(skipOpacityTransition);
+
 const collapseMotion: CSSMotionProps = {
   motionName: "rc-collapse-motion",
   onEnterStart: getCollapsedHeight,

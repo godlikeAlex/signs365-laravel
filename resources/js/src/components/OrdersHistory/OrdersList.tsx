@@ -2,6 +2,7 @@ import { IOrder } from "@/src/types/models";
 import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import OrderCard from "../OrderCard";
+import EmptyPage from "../EmptyPage";
 
 interface Props {
   data: IOrder[];
@@ -29,6 +30,16 @@ const OrdersList: React.FC<Props> = ({
       </div>
     );
   }
+
+  // if (data.length === 0) {
+  //   return (
+  //     <EmptyPage
+  //       iconClass="fa fa-shopping-basket"
+  //       title="No Orders"
+  //       size="small"
+  //     />
+  //   );
+  // }
 
   return (
     <div>

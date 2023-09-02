@@ -1,6 +1,7 @@
 import CartItem from "./CartItem";
 import CartList from "./CartList";
 import EmptyPage from "./EmptyPage";
+import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
 import Input from "./Input";
 import Layout from "./Layout";
@@ -25,6 +26,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 export {
   ProductSlider,
   EmptyPage,
+  FAQProduct,
   SocialFixedButtons,
   ProductQuantity,
   ProductOptions,

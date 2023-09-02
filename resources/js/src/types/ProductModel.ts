@@ -99,6 +99,8 @@ export type IProduct = ProductHasCheckout & {
   seo_desc?: string;
   seo_keywords?: string;
 
+  faq?: { question: string; answer: string }[];
+
   images?: null | ProductImage[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];
 };

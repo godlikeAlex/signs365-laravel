@@ -34,6 +34,8 @@ class ProductResource extends JsonResource
       "seo_desc" => $this->seo_desc,
       "seo_keywords" => $this->seo_keywords,
 
+      "faq" => $this->faq ? $this->faq->content : null,
+
       "options" => OptionResource::collection($this->whenLoaded("options")),
 
       "categories" => ProductSimpleCategoryResource::collection($categories),

@@ -39,7 +39,18 @@ class FaqResource extends Resource
         ->columnSpanFull()
         ->schema([
           Forms\Components\TextInput::make("question"),
-          Forms\Components\Textarea::make("answer"),
+          Forms\Components\RichEditor::make("answer")->toolbarButtons([
+            "h2",
+            "h3",
+            "bulletList",
+            "orderedList",
+            "bold",
+            "italic",
+            "link",
+            "strike",
+            "undo",
+            "redo",
+          ]),
         ])
         ->createItemButtonLabel("Add new question")
         ->label("FAQ")
@@ -50,12 +61,7 @@ class FaqResource extends Resource
   public static function table(Table $table): Table
   {
     return $table
-      ->columns([
-        Tables\Columns\TextColumn::make("title"),
-
-        Tables\Columns\TextColumn::make("created_at")->dateTime(),
-        Tables\Columns\TextColumn::make("updated_at")->dateTime(),
-      ])
+      ->columns([Tables\Columns\TextColumn::make("title")])
       ->filters([
         //
       ])

@@ -19,20 +19,11 @@ const OrdersHistory: React.FC<Props> = ({}: Props) => {
     const currentPage = pageIndex + 1;
 
     const { data } = await OrderService.orders(currentPage);
+
     setData(data.data);
     setPageCount(data.meta.last_page);
     setLoading(false);
   }, []);
-
-  if (data.length === 0) {
-    return (
-      <EmptyPage
-        iconClass="fa fa-shopping-basket"
-        title="No Orders"
-        size="small"
-      />
-    );
-  }
 
   return (
     <>
