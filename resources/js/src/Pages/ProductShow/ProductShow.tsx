@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import withProductControl, {
   WithProductsControlProps,
 } from "@/src/hoc/withProductControl";
@@ -17,6 +17,8 @@ import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 import { IProduct } from "@/src/types/ProductModel";
 import { lock, unlock } from "tua-body-scroll-lock";
+import SelectProductFile from "@/src/components/SelectProductFile";
+import { SelectProductFileRef } from "@/src/components/SelectProductFile/SelectProductFile";
 
 interface Props extends WithProductsControlProps {}
 
@@ -30,12 +32,13 @@ interface ILocation extends Path {
 const ProductShow: React.FC<Props> = ({
   product,
   loading,
-  handleAddToCart,
+  submitAddToCart,
   handleClose,
   renderVariants,
 }: Props) => {
   const location: ILocation = useLocation();
   const { state, setState } = useContext(ProductFormContext);
+  const dragAndDropRef = useRef<SelectProductFileRef>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,6 +57,14 @@ const ProductShow: React.FC<Props> = ({
       unlock(target);
     }
   }, [loading]);
+
+  const handleAddToCart = () => {
+    if (state.selectedOption.need_file) {
+      dragAndDropRef.current.showModal();
+    } else {
+      submitAddToCart();
+    }
+  };
 
   return (
     <div className="ps-page--product-variable">
@@ -244,6 +255,11 @@ const ProductShow: React.FC<Props> = ({
               </div>
             )}
           </div>
+
+          <SelectProductFile
+            ref={dragAndDropRef}
+            submitHandler={(files) => submitAddToCart(files)}
+          />
 
           {/* <section className="ps-section--latest"></section> */}
         </div>

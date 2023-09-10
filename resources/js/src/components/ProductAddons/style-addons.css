@@ -17,7 +17,7 @@
 }
 
 .quantity-container-addon {
-  margin-top: 6px;
+  /* margin-top: 6px; */
   display: flex;
 }
 
@@ -42,4 +42,21 @@
   font-size: 12px;
   border-radius: 4px;
   color: white;
+}
+
+.extra-data-container {
+  display: flex;
+  width: 100%;
+  margin-top: 8px;
+  justify-content: space-between;
+}
+
+.extra-data-item {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.extra-data-item:first-child {
+  margin-left: 0px;
 }

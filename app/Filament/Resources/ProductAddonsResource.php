@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\AddonExtraDataTypeEnum;
 use App\Enums\AddonTypeEnum;
 use App\Enums\OptionTypeEnum;
 use App\Filament\Resources\ProductAddonsResource\Pages;
@@ -63,10 +64,18 @@ class ProductAddonsResource extends Resource
         ->required()
         ->reactive()
         ->numeric(
-          fn(\Closure $get) => $get("type") === AddonTypeEnum::SQFT->value
+          fn(\Closure $get) => in_array($get("type"), [
+            AddonTypeEnum::SQFT->value,
+            AddonTypeEnum::LINEAR_FOOT->value,
+          ])
         )
         ->regex(function (\Closure $get) {
-          if ($get("type") === AddonTypeEnum::SQFT->value) {
+          if (
+            in_array($get("type"), [
+              AddonTypeEnum::SQFT->value,
+              AddonTypeEnum::LINEAR_FOOT->value,
+            ])
+          ) {
             return "/\d/m";
           } else {
             // return "/[+-]\d*[%]?$/m";
@@ -76,7 +85,13 @@ class ProductAddonsResource extends Resource
         // ()
 
         ->maxLength(255),
-
+      Forms\Components\Select::make("extra_data_type")
+        ->reactive()
+        ->options(function () {
+          return collect(AddonExtraDataTypeEnum::cases())
+            ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
+            ->all();
+        }),
       Forms\Components\TextInput::make("per_item_price")
         ->required()
         ->numeric()

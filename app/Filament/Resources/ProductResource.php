@@ -80,18 +80,7 @@ class ProductResource extends Resource
                 ->multiple()
                 ->required()
                 ->relationship("categories", "title")
-                ->preload()
-                ->helperText(function ($record) {
-                  // dd($record);
-
-                  // $url = UserResource::getUrl("edit", [
-                  //   // "record" => $record->user,
-                  // ]);
-
-                  return new HtmlString(
-                    "You can change it on FAQ Page: <a href={}>naxuy</a>"
-                  );
-                }),
+                ->preload(),
 
               // Forms\Components\Placeholder::make("faq")->content(
               // "<h1>Hello world  </h1>"
@@ -136,9 +125,10 @@ class ProductResource extends Resource
                 ->label("Title")
                 ->maxLength(55),
 
-              Forms\Components\Textarea::make("seo_description")
-                ->label("Description")
-                ->maxLength(150),
+              Forms\Components\Textarea::make("seo_description")->label(
+                "Description"
+              ),
+              // ->maxLength(249),
 
               Forms\Components\TextArea::make("seo_keywords")->label(
                 "Keywords"

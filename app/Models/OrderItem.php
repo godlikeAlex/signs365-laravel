@@ -19,6 +19,10 @@ class OrderItem extends Model
    */
   protected $guarded = [];
 
+  protected $casts = [
+    "images" => "array",
+  ];
+
   public function order(): BelongsTo
   {
     return $this->belongsTo(Order::class);

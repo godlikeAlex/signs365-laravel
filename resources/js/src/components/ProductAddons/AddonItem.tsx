@@ -4,13 +4,15 @@ import React, { MouseEventHandler } from "react";
 import "./style-addons.css";
 import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import {
+  AddonWithExtraFields,
   handleAddonChange,
   updateAddonQuantity,
 } from "@/src/redux/singleProductSlice";
 import { Addon } from "@/src/types/ProductModel";
+import ExtraDataSelect from "./ExtraDataSelect";
 
 interface Props {
-  addon: Addon;
+  addon: AddonWithExtraFields;
   error?: string;
   disabled: boolean;
 }
@@ -32,6 +34,8 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     let currentValue = +value;
+
+    if (!currentValue) return;
 
     if (disabled) return;
 
@@ -116,6 +120,10 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
             </div>
           )}
         </div>
+      ) : null}
+
+      {isSelected ? (
+        <ExtraDataSelect addon={addon} type={addon.extra_data_type} />
       ) : null}
     </div>
   );

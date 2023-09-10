@@ -65,7 +65,11 @@ class ProductOptionResource extends Resource
 
           $requiredTypes =
             OptionTypeEnum::from($currentTypeOption) === OptionTypeEnum::SQFT
-              ? [AddonTypeEnum::FEE, AddonTypeEnum::SQFT]
+              ? [
+                AddonTypeEnum::FEE,
+                AddonTypeEnum::SQFT,
+                AddonTypeEnum::LINEAR_FOOT,
+              ]
               : [AddonTypeEnum::FEE];
 
           return $record->product->addons
@@ -134,6 +138,12 @@ class ProductOptionResource extends Resource
           $component->state($state / 100);
         })
         ->required(),
+
+      Toggle::make("need_file")
+        ->label("Need file?")
+        ->default(false)
+        ->columnSpanFull()
+        ->reactive(),
 
       Toggle::make("size_for_collect")
         ->default(false)

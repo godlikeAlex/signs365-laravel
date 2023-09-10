@@ -19,6 +19,7 @@ class AddonResource extends JsonResource
       "title" => $this->title,
       "condition" => $this->condition,
       "withQuantity" => $this->with_qty,
+      "extra_data_type" => $this->extra_data_type,
       "validation" => $this->when($this->with_qty, [
         "min-qty" => $this["min-qty"],
         "max-qty" => $this["max-qty"],

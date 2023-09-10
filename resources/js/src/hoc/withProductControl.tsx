@@ -1,7 +1,13 @@
 import classNames from "classnames";
 import React, { ComponentType, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import { Path, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Path,
+  useBeforeUnload,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addToCart } from "../redux/cartSlice";
@@ -21,6 +27,7 @@ import {
 import { useDebounceEffect } from "ahooks";
 import { CartService } from "../services";
 import { IProduct } from "../types/ProductModel";
+import { FileState } from "../components/Dropzone/Dropzone";
 
 export interface WithProductsControlProps {
   product: IProduct;
@@ -28,7 +35,7 @@ export interface WithProductsControlProps {
 
   handleClose: () => void;
   renderVariants: () => JSX.Element;
-  handleAddToCart: () => void;
+  submitAddToCart: (files?: FileState[]) => void;
 }
 
 export function withProductControl<T extends WithProductsControlProps>(
@@ -41,11 +48,12 @@ export function withProductControl<T extends WithProductsControlProps>(
     const { loading, product, addons, selectedOption } = useAppSelector(
       (state) => state.product
     );
+    const location = useLocation();
 
     const [state, setState] = useState<ProductFormContextType>({
       selectedAddons: [],
       selectedOption: undefined,
-      typeSizeSelection: "default",
+      typeSizeSelection: "custom",
       highlightErrors: false,
       disabled: false,
       width: {
@@ -80,16 +88,17 @@ export function withProductControl<T extends WithProductsControlProps>(
 
     const validationRules = {
       customSize:
-        selectedOption?.type !== "sqft" && state.typeSizeSelection === "custom"
+        selectedOption?.type !== "sqft" && state.typeSizeSelection === "default"
           ? state.customSize.value !== undefined
           : true,
     };
 
-    useEffect(() => {
-      return () => {
-        dispatch(clearProductState());
-      };
-    }, []);
+    // useEffect(() => {
+    //   return () => {
+    //     console.log("Hello World");
+    //     // dispatch(clearProductState());
+    //   };
+    // }, []);
 
     useEffect(() => {
       setState((state) => ({ ...state, disabled: state.quantity === 0 }));
@@ -107,6 +116,35 @@ export function withProductControl<T extends WithProductsControlProps>(
       };
 
       fetchProduct();
+
+      return () => {
+        dispatch(clearProductState());
+        setState({
+          selectedAddons: [],
+          selectedOption: undefined,
+          typeSizeSelection: "custom",
+          highlightErrors: false,
+          disabled: false,
+          width: {
+            error: undefined,
+            value: 1,
+            showError: false,
+          },
+          height: {
+            error: undefined,
+            value: 1,
+            showError: false,
+          },
+          customSize: {
+            error: undefined,
+            value: undefined,
+          },
+          unit: "inches",
+          price: 100,
+          quantity: 1,
+          calculatedPrice: undefined,
+        });
+      };
     }, [params]);
 
     useEffect(() => {
@@ -192,7 +230,7 @@ export function withProductControl<T extends WithProductsControlProps>(
       // dispatch(selectProductVariant(productVariant));
     };
 
-    const handleAddToCart = async () => {
+    const submitAddToCart = async (files?: FileState[]) => {
       const isValidForm = Object.values(validationRules).every((key) => key);
 
       if (!isValidForm) {
@@ -221,6 +259,7 @@ export function withProductControl<T extends WithProductsControlProps>(
           height: state.height.value,
           quantity: state.quantity,
           size_id: state.customSize.value,
+          files,
         })
       ).unwrap();
 
@@ -265,7 +304,7 @@ export function withProductControl<T extends WithProductsControlProps>(
           {...{
             product,
             loading: isProductLoading,
-            handleAddToCart,
+            submitAddToCart,
             handleClose,
             renderVariants,
           }}

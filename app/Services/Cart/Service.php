@@ -30,7 +30,8 @@ class Service
     $unit,
     $width,
     $height,
-    $size_id
+    $size_id,
+    $images = null
   ) {
     $sizeItem = SizeItem::find($size_id);
 
@@ -57,6 +58,7 @@ class Service
         "id" => $productOption->id,
         "title" => $productOption->title,
       ],
+      "images" => $images,
       "product" => [
         "id" => $product->id,
         "title" => $product->title,

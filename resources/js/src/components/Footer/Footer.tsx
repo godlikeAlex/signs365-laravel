@@ -72,6 +72,7 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                 {homeCategories.map((category) => (
                   <div
                     className="col-md-4"
+                    key={category.id}
                     style={{ textAlign: "center", marginTop: 20 }}
                   >
                     <div className="ps-footer--block">

@@ -1,4 +1,5 @@
 import api from "../api";
+import { FileState } from "../components/Dropzone/Dropzone";
 import { Addon, ProductOption } from "../types/ProductModel";
 import { ICart } from "../types/models";
 
@@ -11,6 +12,7 @@ export interface UpdateCartParams {
   height: string | number;
   quantity: number;
   size_id?: number;
+  files?: FileState[];
   //
   city?: string;
 }
@@ -52,7 +54,39 @@ export default class CartService {
   }
 
   static addToCart(body: UpdateCartParams) {
-    return api.post<ICart>("/cart/add", body);
+    const formData = new FormData();
+
+    console.log(body);
+
+    for (const [key, value] of Object.entries(body)) {
+      if (!value) continue;
+
+      if (key === "addons") {
+        for (let i = 0; i < value.length; i++) {
+          for (let keyOfAddon of Object.keys(value[i])) {
+            const field = value[i][keyOfAddon];
+            formData.append(
+              `addons[${i}][${keyOfAddon}]`,
+              field instanceof Array ? JSON.stringify(field) : field
+            );
+          }
+        }
+
+        continue;
+      }
+
+      if (key === "files") {
+        value.forEach((item) => formData.append(`files[]`, item));
+
+        continue;
+      }
+
+      formData.append(key, value);
+    }
+
+    return api.post<ICart>("/cart/add", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   }
 
   static updateQuantity(body: UpdateQuantityParams) {

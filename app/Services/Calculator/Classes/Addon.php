@@ -18,12 +18,21 @@ class Addon
     }
   }
 
-  public function calculate($price, $sqft, $qty)
-  {
+  public function calculate(
+    $price,
+    $sqft,
+    $qty,
+    $unit = "feet",
+    $width = 1,
+    $height = 1
+  ) {
     $calculatedPrice = $this->getPriceByCondition(
       $this->model->condition,
       $price,
-      $sqft
+      $sqft,
+      $unit,
+      $width,
+      $height
     );
 
     if ($this->model->with_qty) {
@@ -38,15 +47,34 @@ class Addon
     return $this->model;
   }
 
-  private function getPriceByCondition($condition, $currentPrice, $sqft = 1)
-  {
+  private function getPriceByCondition(
+    $condition,
+    $currentPrice,
+    $sqft = 1,
+    $unit,
+    $width,
+    $height
+  ) {
     $regExpNumber = "/[+-]\d*$/m";
     $regExpWithPrecentage = "/[+-]\d*%$/m";
 
-    if ($this->model->type === AddonTypeEnum::SQFT->value) {
+    if ($this->model->type === AddonTypeEnum::SQFT) {
       $conditionPrice = intval($condition) * 100;
 
       return $conditionPrice * $sqft;
+    }
+
+    if ($this->model->type === AddonTypeEnum::LINEAR_FOOT) {
+      $linerfoot = 1;
+      $conditionPrice = intval($condition) * 100;
+
+      if ($unit === "feet") {
+        $linerfoot = ($width + $height) * 2;
+      } else {
+        $linerfoot = (($width + $height) * 2) / 12;
+      }
+
+      return $linerfoot * $conditionPrice;
     }
 
     // Check condition is number

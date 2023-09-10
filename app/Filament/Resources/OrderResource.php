@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Enums\OptionTypeEnum;
+use App\Enums\OrderStatusEnum;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\City;
@@ -22,21 +23,15 @@ use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
-use Notification;
-
-use function PHPUnit\Framework\isNull;
+use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
 {
@@ -52,11 +47,18 @@ class OrderResource extends Resource
         ->heading("Order Information")
         ->columns(2)
         ->schema([
-          Forms\Components\Select::make("status")
-            ->options(Order::$ORDERS_STATUSES)
-            ->searchable()
-            ->default(Order::$ORDERS_STATUSES["pending"])
-            ->required(),
+          Forms\Components\Grid::make("")->schema([
+            Forms\Components\Select::make("status")
+              ->options(function () {
+                return collect(OrderStatusEnum::cases())
+                  ->mapWithKeys(fn($enum) => [$enum->value => $enum->name])
+                  ->all();
+              })
+              ->searchable()
+              ->required(),
+            Forms\Components\Checkbox::make("skipNotification")->default(false),
+          ]),
+
           Forms\Components\Select::make("user_id")
             ->searchable()
             ->preload()
@@ -80,6 +82,14 @@ class OrderResource extends Resource
             ->label("UUID")
             ->hiddenOn("create"),
 
+          Forms\Components\TextInput::make("supplier_id")
+            ->label("Supplier ID")
+            ->hiddenOn("create"),
+
+          Forms\Components\TextInput::make("tracking_id")
+            ->label("Tracking ID")
+            ->hiddenOn("create"),
+
           Forms\Components\Select::make("city_id")
             ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
               $repeaterProducts = $get("orderItems");
@@ -101,22 +111,22 @@ class OrderResource extends Resource
         ]),
 
       Forms\Components\Section::make("Order Items")->schema([
-        Forms\Components\Toggle::make("update_order")
-          ->dehydrated(false)
-          ->default(false)
-          ->reactive()
-          ->hidden(fn(string $context) => $context != "edit")
-          ->hint(
-            "Updating the order will affect the price at the client if they have changed"
-          ),
+        // Forms\Components\Toggle::make("update_order")
+        //   ->dehydrated(false)
+        //   ->default(false)
+        //   ->reactive()
+        //   ->hidden(fn(string $context) => $context != "edit")
+        //   ->hint(
+        //     "Updating the order will affect the price at the client if they have changed"
+        //   ),
         Forms\Components\Repeater::make("orderItems")
           ->label(false)
           ->disabled(function (\Closure $get, string $context) {
-            if ($context == "edit") {
-              return !$get("update_order");
-            } else {
-              return false;
-            }
+            // if ($context === "edit") {
+            // return !$get("update_order");
+            // }
+
+            // return true;
           })
           ->relationship()
           ->schema([
@@ -287,6 +297,31 @@ class OrderResource extends Resource
                     }
 
                     return $product_addon->with_qty ? false : true;
+                  }),
+
+                Forms\Components\Placeholder::make("extra_data")
+                  ->hiddenOn("create")
+                  ->content(function ($record) {
+                    if (!$record) {
+                      return;
+                    }
+
+                    if (!$record->extra_data || is_null($record->extra_data)) {
+                      return;
+                    }
+
+                    list($extra_data) = json_decode($record->extra_data, true);
+
+                    $mappedData = array_map(
+                      fn($item) => $item["title"],
+                      $extra_data["data"]
+                    );
+
+                    $selectedString = implode(", ", $mappedData);
+
+                    return new HtmlString(
+                      "<h3>Type: {$extra_data["title"]}:</h3> <p>Selected: {$selectedString}</p>"
+                    );
                   }),
               ]),
             Grid::make()
@@ -513,6 +548,19 @@ class OrderResource extends Resource
               // ->hidden()
               // ->hidden()
               ->reactive(),
+            Forms\Components\FileUpload::make("images")
+              ->multiple()
+              ->columnSpanFull()
+              ->hiddenOn("create")
+              ->hidden(
+                fn($record) => $record &&
+                  $record->images &&
+                  count($record->images ?? []) === 0
+              )
+              ->directory("cart")
+              ->enableDownload(true)
+              ->enableOpen(true)
+              ->disablePreview(false),
           ])
           ->columns(3)
           ->columnSpanFull(),
@@ -661,7 +709,11 @@ class OrderResource extends Resource
         Tables\Filters\Filter::make("status")
           ->form([
             Forms\Components\Select::make("status")
-              ->options(Order::$ORDERS_STATUSES)
+              ->options(function () {
+                return collect(OrderStatusEnum::cases())
+                  ->mapWithKeys(fn($enum) => [$enum->value => $enum->name])
+                  ->all();
+              })
               ->searchable(),
           ])
           ->query(function (Builder $query, array $data) {

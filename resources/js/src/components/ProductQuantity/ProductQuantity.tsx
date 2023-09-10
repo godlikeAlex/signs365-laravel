@@ -7,6 +7,8 @@ interface Props {
 
 const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
   const handleChange = (quantity: number) => {
+    console.log(value, "value");
+
     const regex = /^[0-9\b]+$/;
 
     if (!regex.test(value)) {

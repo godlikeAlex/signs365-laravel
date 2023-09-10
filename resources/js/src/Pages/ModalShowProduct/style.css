@@ -36,6 +36,12 @@ body {
   position: relative;
 }
 
+@media (max-width: 750px) {
+  .headless-popup {
+    width: 80%;
+  }
+}
+
 .ps-gallery--image {
   display: block !important;
 }

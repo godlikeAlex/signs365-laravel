@@ -6,6 +6,7 @@ use App\Filament\Resources\OrderResource;
 use App\Models\User;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditOrder extends EditRecord
 {
@@ -39,5 +40,9 @@ class EditOrder extends EditRecord
     // $this->record->total = $total * (1 + $this->record->city->tax);
     // $this->record->total_without_tax = $total;
     // $this->record->save();
+  }
+
+  public function beforeSave(): void
+  {
   }
 }

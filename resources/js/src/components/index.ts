@@ -1,5 +1,6 @@
 import CartItem from "./CartItem";
 import CartList from "./CartList";
+import Dropzone from "./Dropzone";
 import EmptyPage from "./EmptyPage";
 import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
@@ -25,6 +26,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ProductSlider,
+  Dropzone,
   EmptyPage,
   FAQProduct,
   SocialFixedButtons,

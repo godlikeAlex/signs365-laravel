@@ -22,6 +22,7 @@ class OptionResource extends JsonResource
       "title" => $this->title,
       "price" => $this->price,
       "type" => $this->type,
+      "need_file" => $this->need_file,
       "validation" => [
         "max_width" => $this->max_width,
         "max_height" => $this->max_height,

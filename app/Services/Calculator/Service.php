@@ -33,7 +33,7 @@ class Service
     $unit = "inches",
     $quantity = 1
   ) {
-    $product = Product::find($productID);
+    $product = Product::with("images")->find($productID);
 
     if (!$product) {
       abort(400, "CalcService Product not found");
@@ -121,7 +121,10 @@ class Service
       $total += $actualAddon->calculate(
         $price,
         $this->calculateSQFT(),
-        $addon["quantity"] ?? 0
+        $addon["quantity"] ?? 0,
+        $this->unit,
+        $this->width,
+        $this->height
       );
 
       $actualAddons->push($actualAddon->getModel());

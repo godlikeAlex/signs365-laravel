@@ -91,11 +91,11 @@ const ProductCalculator: React.FC<Props> = ({ loading }: Props) => {
           />
         ) : undefined}
 
-        {state.typeSizeSelection === "default" ? (
+        {state.typeSizeSelection === "custom" ? (
           <CalculatorForm staticData={staticData} />
         ) : null}
 
-        {state.typeSizeSelection === "custom" &&
+        {state.typeSizeSelection === "default" &&
         selectedOption.type !== "sqft" ? (
           <CustomSizesDropdown
             sizes={selectedOption.customSizes}

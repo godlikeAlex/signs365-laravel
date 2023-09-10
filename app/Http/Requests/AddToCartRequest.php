@@ -26,7 +26,7 @@ class AddToCartRequest extends FormRequest
     return [
       "product_id" => "required",
       "option_id" => "required",
-      "addons" => ["array"],
+      "addons" => "nullable",
       "unit" => ["in:feet,inches"],
       "width" => ["required", "numeric"],
       "height" => ["required", "numeric"],

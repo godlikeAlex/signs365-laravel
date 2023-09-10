@@ -29,6 +29,7 @@ class ProductOption extends Model
     "type" => OptionTypeEnum::class,
     "show_custom_sizes" => "boolean",
     "size_for_collect" => "boolean",
+    "need_file" => "boolean",
   ];
 
   public function products(): BelongsToMany

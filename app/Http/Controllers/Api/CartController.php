@@ -69,10 +69,12 @@ class CartController extends Controller
   public function addToCart(AddToCartRequest $request)
   {
     try {
+      $images = null;
+
       $city = City::where("id", $request->get("city"))->firstOrFail();
 
       /** @var Product $product */
-      $product = Product::find($request->input("product_id"));
+      $product = Product::with("images")->find($request->input("product_id"));
 
       if (!$product) {
         return response()->json(
@@ -83,15 +85,26 @@ class CartController extends Controller
         );
       }
 
+      if ($request->hasFile("files")) {
+        $images = [];
+
+        foreach ($request->file("files") as $file) {
+          $path = $file->store("cart", "public");
+
+          $images[] = $path;
+        }
+      }
+
       $this->cart->add(
         $request->product_id,
         $request->option_id,
-        $request->addons,
+        $request->addons ?? [],
         $request->quantity,
         $request->unit,
         $request->input("width"),
         $request->input("height"),
-        $request->input("size_id")
+        $request->input("size_id"),
+        $images
       );
 
       return \response()->json($this->cart->format($city));

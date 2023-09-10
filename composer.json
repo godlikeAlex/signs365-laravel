@@ -20,6 +20,7 @@
     "laravel/framework": "^9.0",
     "laravel/sanctum": "^3.0",
     "laravel/tinker": "^2.5",
+    "snowfire/beautymail": "^1.1",
     "spatie/laravel-image-optimizer": "^1.7",
     "spatie/laravel-medialibrary": "^10.11",
     "stripe/stripe-php": "^10.3",

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,12 @@ use Illuminate\Support\Str;
 class Order extends Model
 {
   use HasFactory;
+
+  private $skipNotification;
+
+  protected $casts = [
+    "status" => OrderStatusEnum::class,
+  ];
 
   protected $guarded = [];
 

@@ -52,6 +52,7 @@ export type ProductOption = ProductOptionType & {
   price: string;
   addons: Addon[];
   showCalculator: boolean;
+  need_file: boolean;
   validation: {
     max_width: string;
     max_height: string;
@@ -66,11 +67,14 @@ type ProudctAddonHasValidation =
       quantity: number;
     };
 
+export type ExtraDataType = "unset" | "grommets" | "pole_pocket";
+
 export type Addon = ProudctAddonHasValidation & {
   id: number;
   title: string;
   condition: string;
   isSelected: boolean;
+  extra_data_type: ExtraDataType;
 };
 
 type ProductHasCheckout =

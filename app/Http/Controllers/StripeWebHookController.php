@@ -86,6 +86,7 @@ class StripeWebHookController extends Controller
             $width = $cartItem->attributes->width;
             $height = $cartItem->attributes->height;
             $unit = $cartItem->attributes->unit;
+            $images = $cartItem->attributes->images ?? [];
             $addons = json_decode(
               json_encode($cartItem->attributes->addons),
               true
@@ -123,6 +124,7 @@ class StripeWebHookController extends Controller
             $orderItem->height = $height;
             $orderItem->unit = $unit;
             $orderItem->quantity = $cartItem->quantity;
+            $orderItem->images = $images;
 
             $orderItem->order()->associate($order);
 
@@ -135,10 +137,21 @@ class StripeWebHookController extends Controller
                 continue;
               }
 
-              info("addon added", ["addon" => $addon]);
+              $extraData = [];
+
+              if (
+                $cartAddon["extra_data_selected"] &&
+                $cartAddon["extra_data_type"]
+              ) {
+                $extraData[] = [
+                  "title" => $cartAddon["extra_data_type"],
+                  "data" => json_decode($cartAddon["extra_data_selected"]),
+                ];
+              }
 
               $orderItem->addons()->attach($addon->id, [
                 "quantity" => $cartAddon["quantity"] ?? 0,
+                "extra_data" => json_encode($extraData),
               ]);
             }
           }
