@@ -7,11 +7,9 @@ import Input from "../Input";
 import { selectProductOption } from "@/src/redux/singleProductSlice";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
-interface Props {
-  loading?: boolean;
-}
+interface Props {}
 
-const ProductOptions: React.FC<Props> = ({ loading }: Props) => {
+const ProductOptions: React.FC<Props> = ({}: Props) => {
   const { state } = useContext(ProductFormContext);
   const { product, selectedOption } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
@@ -20,7 +18,7 @@ const ProductOptions: React.FC<Props> = ({ loading }: Props) => {
 
   return (
     <div>
-      {product && loading === false ? (
+      {product ? (
         <div>
           {product.options.length === 1 ? (
             <h6>Option: {product.options[0].title}</h6>
@@ -77,14 +75,6 @@ const ProductOptions: React.FC<Props> = ({ loading }: Props) => {
           </div>
         </div>
       )}
-
-      {/* <div className="col-md-12" style={{ marginTop: 20 }}>
-        {productVaraintsLoaded && currentVaraint ? (
-          <span className="ps-product__price">${currentVaraint.price}</span>
-        ) : (
-          <Skeleton height={52} width={"35%"} />
-        )}
-      </div> */}
     </div>
   );
 };

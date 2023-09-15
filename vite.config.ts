@@ -3,6 +3,7 @@ import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 const path = require("path");
+import commonjs from "vite-plugin-commonjs";
 
 export default defineConfig({
   server: {
@@ -22,12 +23,7 @@ export default defineConfig({
         "resources/css/app.css",
         "resources/css/style.css",
       ],
-      ssr: [
-        "resources/js/index.tsx",
-        "resources/js/fillament-app.js",
-        "resources/css/app.css",
-        "resources/css/style.css",
-      ],
+      ssr: "resources/js/ssr.tsx",
       refresh: true,
     }),
     react(),
@@ -43,7 +39,16 @@ export default defineConfig({
         return modules;
       },
     },
+    commonjs(),
   ],
+  build: {
+    commonjsOptions: {
+      include: [/.js$/],
+    },
+  },
+  optimizeDeps: {
+    include: ["react-spinners"],
+  },
   resolve: {
     alias: {
       "@": path.join(__dirname, "./resources/js"),

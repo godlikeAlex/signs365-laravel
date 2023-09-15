@@ -79,6 +79,8 @@ class Shipping
 
     if ($priceRangeBetween) {
       return $priceRangeBetween["price"];
+    } else {
+      return $rangePrices[0]["price"] ?? 0;
     }
 
     return 0;

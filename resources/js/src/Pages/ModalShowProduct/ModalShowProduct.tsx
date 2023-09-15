@@ -17,14 +17,13 @@ import { useMediaQuery } from "react-responsive";
 import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
-interface Props extends WithProductsControlProps {}
+type Props = WithProductsControlProps;
 
 function ModalShowProduct({
-  product,
-  loading,
-  handleAddToCart,
+  submitAddToCart,
   handleClose,
   renderVariants,
+  ...props
 }: Props) {
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
   const navigate = useNavigate();
@@ -37,6 +36,12 @@ function ModalShowProduct({
       navigate(`/catalog/product/${params.slug}`, { replace: true });
     }
   }, [isMobile, params, location]);
+
+  if (props.loading === true) {
+    return <></>;
+  }
+
+  const { product } = props;
 
   return (
     <Dialog open onClose={handleClose}>
@@ -166,7 +171,7 @@ function ModalShowProduct({
                                 <button
                                   type="submit"
                                   className="ps-btn ps-btn--warning"
-                                  onClick={handleAddToCart}
+                                  onClick={() => submitAddToCart()}
                                   style={{ marginTop: 20 }}
                                   disabled={state.disabled}
                                 >

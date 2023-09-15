@@ -1,5 +1,5 @@
 // import React from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, BrowserRouter } from "react-router-dom";
 import {
   Cart,
   Catalog,
@@ -18,8 +18,7 @@ import {
 } from "@/src/Pages";
 import ProtectedRoute from "../ProtectedRoute";
 import Layout from "../Layout";
-import { useMediaQuery } from "react-responsive";
-import ShowProduct from "../ShowProduct/ShowProduct";
+import { useEffect } from "react";
 
 function Routing() {
   const location = useLocation();
@@ -27,9 +26,16 @@ function Routing() {
   const navigate = useNavigate();
   const background = location.state && location.state.background;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <>
+      {/* <ScrollToTop /> */}
+
       <Routes location={background || location}>
+
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
 

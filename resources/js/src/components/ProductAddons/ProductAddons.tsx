@@ -6,24 +6,13 @@ import AddonItem from "./AddonItem";
 import { useFormContext } from "react-hook-form";
 import { ProductFormContext } from "@/src/contexts/ProductFormContext";
 
-interface Props {
-  loading?: boolean;
-}
+interface Props {}
 
-const ProductAddons: React.FC<Props> = ({ loading }: Props) => {
+const ProductAddons: React.FC<Props> = ({}: Props) => {
   const { state } = useContext(ProductFormContext);
   const { product, addons } = useAppSelector((state) => state.product);
 
   if (product.with_checkout === false) return;
-
-  if (loading) {
-    return (
-      <>
-        <Skeleton height={45} />
-        <Skeleton height={45} />
-      </>
-    );
-  }
 
   return (
     <div>

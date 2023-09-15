@@ -29,19 +29,27 @@ import { CartService } from "../services";
 import { IProduct } from "../types/ProductModel";
 import { FileState } from "../components/Dropzone/Dropzone";
 
-export interface WithProductsControlProps {
-  product: IProduct;
-  loading: boolean;
-
+interface MethodsProductProps {
   handleClose: () => void;
   renderVariants: () => JSX.Element;
-  submitAddToCart: (files?: FileState[]) => void;
+  submitAddToCart: (files?: FileState[]) => Promise<void>;
 }
 
-export function withProductControl<T extends WithProductsControlProps>(
-  Component: ComponentType<T>
-) {
-  return function (hocProps: Omit<T, keyof WithProductsControlProps>) {
+type LoadingProudctProps = MethodsProductProps & {
+  loading: true;
+};
+
+type LoadedProductProps = MethodsProductProps & {
+  loading: false;
+  product: IProduct;
+};
+
+export type WithProductsControlProps = LoadingProudctProps | LoadedProductProps;
+
+export function withProductControl<
+  T extends WithProductsControlProps = WithProductsControlProps
+>(Component: ComponentType<T>) {
+  return function (props: Omit<T, keyof WithProductsControlProps>) {
     const params = useParams<"slug">();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -300,14 +308,13 @@ export function withProductControl<T extends WithProductsControlProps>(
         )}
 
         <Component
-          {...(hocProps as T)}
-          {...{
+          {...({
             product,
             loading: isProductLoading,
             submitAddToCart,
             handleClose,
             renderVariants,
-          }}
+          } as T)}
         />
       </ProductFormContext.Provider>
     );

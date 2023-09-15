@@ -1,14 +1,13 @@
 import * as jsxRuntime from "react/jsx-runtime";
-import { createRoot } from "react-dom/client";
+import React, { useState, useEffect, useMemo, createElement, createContext, useContext, forwardRef, useImperativeHandle, useRef } from "react";
 import { useDispatch, useSelector, Provider } from "react-redux";
 import { Link, Outlet, useLocation, Navigate, useNavigate, useParams, useSearchParams, Routes, Route, BrowserRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { createAsyncThunk, createSlice, configureStore } from "@reduxjs/toolkit";
 import axios from "axios";
-import classNames from "classnames";
-import React, { createElement, useState, createContext, useContext, useEffect } from "react";
 import Collapse, { Panel } from "rc-collapse";
 import dayjs from "dayjs";
+import classNames from "classnames";
 import Skeleton from "react-loading-skeleton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useStripe, useElements, PaymentElement, Elements } from "@stripe/react-stripe-js";
@@ -21,11 +20,13 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Helmet } from "react-helmet";
 import ReactPaginate from "react-paginate";
 import { unlock, lock } from "tua-body-scroll-lock";
-import { loadStripe } from "@stripe/stripe-js";
+import { useDropzone } from "react-dropzone";
 import { Dialog } from "@headlessui/react";
+import { loadStripe } from "@stripe/stripe-js";
 import { useDebounceEffect } from "ahooks";
 import Select from "react-select";
 import { useMediaQuery } from "react-responsive";
+import ReactDOMServer from "react-dom/server";
 const Fragment = jsxRuntime.Fragment;
 const jsx = jsxRuntime.jsx;
 const jsxs = jsxRuntime.jsxs;
@@ -85,7 +86,32 @@ class CartService {
     });
   }
   static addToCart(body) {
-    return api.post("/cart/add", body);
+    const formData = new FormData();
+    console.log(body);
+    for (const [key, value] of Object.entries(body)) {
+      if (!value)
+        continue;
+      if (key === "addons") {
+        for (let i = 0; i < value.length; i++) {
+          for (let keyOfAddon of Object.keys(value[i])) {
+            const field = value[i][keyOfAddon];
+            formData.append(
+              `addons[${i}][${keyOfAddon}]`,
+              field instanceof Array ? JSON.stringify(field) : field
+            );
+          }
+        }
+        continue;
+      }
+      if (key === "files") {
+        value.forEach((item) => formData.append(`files[]`, item));
+        continue;
+      }
+      formData.append(key, value);
+    }
+    return api.post("/cart/add", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
   }
   static updateQuantity(body) {
     return api.post("/cart/update-quantity", body);
@@ -313,6 +339,110 @@ const CartList = ({ items }) => {
     /* @__PURE__ */ jsx("tbody", { children: items.map((cartItem) => /* @__PURE__ */ jsx(CartItem, { ...cartItem, id: cartItem.id })) })
   ] }) });
 };
+const baseStyle = {
+  flex: 1,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  padding: "20px",
+  borderWidth: 2,
+  borderRadius: 2,
+  borderColor: "#eeeeee",
+  borderStyle: "dashed",
+  backgroundColor: "#fafafa",
+  color: "#bdbdbd",
+  outline: "none",
+  flexDirection: "column",
+  transition: "border .24s ease-in-out"
+};
+const focusedStyle = {
+  borderColor: "#2196f3"
+};
+const acceptStyle = {
+  borderColor: "#00e676"
+};
+const rejectStyle = {
+  borderColor: "#ff1744"
+};
+const thumb = {
+  display: "inline-flex",
+  borderRadius: 2,
+  border: "1px solid #eaeaea",
+  marginBottom: 8,
+  marginRight: 8,
+  width: 100,
+  height: 100,
+  padding: 4
+};
+const thumbInner = {
+  display: "flex",
+  minWidth: 0,
+  overflow: "hidden"
+};
+const img = {
+  display: "block",
+  width: "auto",
+  height: "100%"
+};
+const Dropzone = ({ onDrop }) => {
+  const [files, setFiles] = useState([]);
+  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = useDropzone({
+    accept: { "image/*": [] },
+    onDrop(acceptedFiles, fileRejections, event) {
+      setFiles(
+        acceptedFiles.map(
+          (file) => Object.assign(file, { preview: URL.createObjectURL(file) })
+        )
+      );
+      console.log(acceptedFiles);
+    }
+  });
+  useEffect(() => {
+    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
+  }, []);
+  useEffect(() => {
+    if (onDrop) {
+      onDrop(files);
+    }
+  }, [files]);
+  const style2 = useMemo(
+    () => ({
+      ...baseStyle,
+      ...isFocused ? focusedStyle : {},
+      ...isDragAccept ? acceptStyle : {},
+      ...isDragReject ? rejectStyle : {}
+    }),
+    [isFocused, isDragAccept, isDragReject]
+  );
+  const thumbs = files.map((file) => /* @__PURE__ */ jsx("div", { style: thumb, children: /* @__PURE__ */ jsx("div", { style: thumbInner, children: /* @__PURE__ */ jsx(
+    "img",
+    {
+      src: file.preview,
+      style: img,
+      onLoad: () => {
+        URL.revokeObjectURL(file.preview);
+      }
+    }
+  ) }) }, file.name));
+  return /* @__PURE__ */ jsxs("div", { className: "container", children: [
+    /* @__PURE__ */ jsxs("div", { ...getRootProps({ style: { ...style2, flexDirection: "column" } }), children: [
+      /* @__PURE__ */ jsx("input", { ...getInputProps() }),
+      /* @__PURE__ */ jsx("div", { children: "Drag 'n' drop some files here, or click to select files" })
+    ] }),
+    /* @__PURE__ */ jsx(
+      "aside",
+      {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          marginTop: 15,
+          flexWrap: "wrap"
+        },
+        children: thumbs
+      }
+    )
+  ] });
+};
 const EmptyPage = ({
   size = "default",
   iconClass,
@@ -336,404 +466,6 @@ const EmptyPage = ({
     }
   );
 };
-const Footer = ({}) => {
-  const { homeCategories } = useAppSelector((state) => state.app);
-  return /* @__PURE__ */ jsxs("footer", { className: "ps-footer ps-footer--1", children: [
-    /* @__PURE__ */ jsx("div", { className: "ps-footer--top", children: /* @__PURE__ */ jsx("div", { className: "container", children: /* @__PURE__ */ jsxs("div", { className: "row m-0", children: [
-      /* @__PURE__ */ jsx("div", { className: "col-12 col-sm-4 p-0", children: /* @__PURE__ */ jsx("p", { className: "text-center", children: /* @__PURE__ */ jsxs("a", { className: "ps-footer__link", href: "", children: [
-        /* @__PURE__ */ jsx("i", { className: "icon-wallet" }),
-        "100% Money back"
-      ] }) }) }),
-      /* @__PURE__ */ jsx("div", { className: "col-12 col-sm-4 p-0", children: /* @__PURE__ */ jsx("p", { className: "text-center", children: /* @__PURE__ */ jsxs("a", { className: "ps-footer__link", href: "", children: [
-        /* @__PURE__ */ jsx("i", { className: "icon-bag2" }),
-        "Non-contact shipping"
-      ] }) }) }),
-      /* @__PURE__ */ jsx("div", { className: "col-12 col-sm-4 p-0", children: /* @__PURE__ */ jsx("p", { className: "text-center", children: /* @__PURE__ */ jsxs("a", { className: "ps-footer__link", href: "", children: [
-        /* @__PURE__ */ jsx("i", { className: "icon-truck" }),
-        "Free delivery for order over"
-      ] }) }) })
-    ] }) }) }),
-    /* @__PURE__ */ jsxs("div", { className: "container", children: [
-      /* @__PURE__ */ jsx("div", { className: "ps-footer__middle", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
-        /* @__PURE__ */ jsx("div", { className: "col-12 col-md-7", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
-          /* @__PURE__ */ jsx("div", { className: "col-12 col-md-4", children: /* @__PURE__ */ jsxs("div", { className: "ps-footer--address", children: [
-            /* @__PURE__ */ jsx("div", { className: "ps-logo", children: /* @__PURE__ */ jsx("a", { href: "index.html", children: /* @__PURE__ */ jsx("img", { src: "/img/logo.png" }) }) }),
-            /* @__PURE__ */ jsx("div", { className: "ps-footer__title", children: "Our store" })
-          ] }) }),
-          /* @__PURE__ */ jsx("div", { className: "col-12 col-md-8", children: /* @__PURE__ */ jsxs("div", { className: "ps-footer--contact", children: [
-            /* @__PURE__ */ jsx("h5", { className: "ps-footer__title", children: "Need help" }),
-            /* @__PURE__ */ jsxs("div", { className: "ps-footer__fax", children: [
-              /* @__PURE__ */ jsx("i", { className: "icon-telephone" }),
-              " (949) 942-1363",
-              " "
-            ] }),
-            /* @__PURE__ */ jsxs("p", { className: "ps-footer__work", children: [
-              "Monday – Friday: 9:00-20:00",
-              /* @__PURE__ */ jsx("br", {}),
-              "Saturday: 11:00 – 15:00"
-            ] }),
-            /* @__PURE__ */ jsx("hr", {}),
-            /* @__PURE__ */ jsx("p", { children: /* @__PURE__ */ jsxs(
-              "a",
-              {
-                className: "ps-footer__email",
-                href: "../../cdn-cgi/l/email-protection.html#8be8e4e5ffeae8ffcbeef3eae6fbe7eea5e8e4e6",
-                children: [
-                  " ",
-                  /* @__PURE__ */ jsx("i", { className: "icon-envelope" }),
-                  /* @__PURE__ */ jsx(
-                    "span",
-                    {
-                      className: "__cf_email__",
-                      "data-cfemail": "15767a7b6174766155706d74786579703b767a78",
-                      children: "info@signs7.com"
-                    }
-                  ),
-                  " "
-                ]
-              }
-            ) })
-          ] }) })
-        ] }) }),
-        /* @__PURE__ */ jsx("div", { className: "col-12 col-md-5", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
-          /* @__PURE__ */ jsx("div", { className: "col-6 col-md-8", children: /* @__PURE__ */ jsxs("div", { className: "ps-footer--block", children: [
-            /* @__PURE__ */ jsx("h5", { className: "ps-block__title", children: "Information" }),
-            /* @__PURE__ */ jsxs("ul", { className: "ps-block__list", children: [
-              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("a", { href: "#", children: "About us" }) }),
-              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("a", { href: "#", children: "Delivery information" }) }),
-              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("a", { href: "#", children: "Privacy Policy" }) })
-            ] })
-          ] }) }),
-          /* @__PURE__ */ jsx("div", { className: "col-6 col-md-4", children: /* @__PURE__ */ jsxs("div", { className: "ps-footer--block", children: [
-            /* @__PURE__ */ jsx("h5", { className: "ps-block__title", children: "Store" }),
-            /* @__PURE__ */ jsx("ul", { className: "ps-block__list", children: homeCategories.map((category) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${category.slug}`, children: category.title }) }, `footer-category-${category.id}`)) })
-          ] }) })
-        ] }) })
-      ] }) }),
-      /* @__PURE__ */ jsx("div", { className: "ps-footer--bottom", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
-        /* @__PURE__ */ jsx("div", { className: "col-12 col-md-6", children: /* @__PURE__ */ jsx("p", { children: "Copyright © 2023 Signs7. All Rights Reserved" }) }),
-        /* @__PURE__ */ jsxs("div", { className: "col-12 col-md-6 text-right", children: [
-          /* @__PURE__ */ jsx("img", { src: "img/payment.png", alt: "" }),
-          /* @__PURE__ */ jsx(
-            "img",
-            {
-              className: "payment-light",
-              src: "img/payment-light.png",
-              alt: ""
-            }
-          )
-        ] })
-      ] }) })
-    ] })
-  ] });
-};
-const Input = React.forwardRef(
-  ({ formType, ...props }, ref) => {
-    return /* @__PURE__ */ jsxs(
-      "div",
-      {
-        className: classNames({
-          "ps-checkout__group": formType === "checkout",
-          "ps-form__group": formType === "profile"
-        }),
-        children: [
-          props.label ? /* @__PURE__ */ jsx(
-            "label",
-            {
-              className: classNames({
-                "ps-checkout__label": formType === "checkout",
-                "ps-form__label": formType === "profile"
-              }),
-              children: props.label
-            }
-          ) : null,
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              type: props.type || "text",
-              ref,
-              className: classNames({
-                "ps-input": formType === "checkout",
-                "form-control ps-form__input": formType === "profile"
-              }),
-              ...props
-            }
-          ),
-          props.error ? /* @__PURE__ */ jsx(
-            "p",
-            {
-              style: {
-                textTransform: "capitalize",
-                color: "#ff5252",
-                fontSize: 12,
-                marginTop: 8
-              },
-              children: props.error
-            }
-          ) : null
-        ]
-      }
-    );
-  }
-);
-const CartMiniItem = ({
-  name: name2,
-  price,
-  quantity,
-  id,
-  associatedModel
-}) => {
-  const dispatch = useAppDispatch();
-  const removeItem = async () => {
-    try {
-      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
-      toast(`Successfully removed ${name2}`, {
-        type: "success"
-      });
-    } catch (error) {
-      toast("An error occurred while removing item", { type: "error" });
-    }
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "ps-product--mini-cart", children: [
-    /* @__PURE__ */ jsx("a", { className: "ps-product__thumbnail", href: "", children: associatedModel.images && associatedModel.images.length > 0 ? /* @__PURE__ */ jsx(
-      "img",
-      {
-        src: `/storage/${associatedModel.images[0].path}`,
-        alt: associatedModel.images[0].alt ? associatedModel.images[0].alt : name2
-      }
-    ) : null }),
-    /* @__PURE__ */ jsxs("div", { className: "ps-product__content", children: [
-      /* @__PURE__ */ jsxs("a", { className: "ps-product__name", href: "", children: [
-        name2,
-        " x",
-        quantity
-      ] }),
-      /* @__PURE__ */ jsx("p", { className: "ps-product__meta", children: /* @__PURE__ */ jsxs("span", { className: "ps-product__price", children: [
-        "$",
-        price.toLocaleString()
-      ] }) })
-    ] }),
-    /* @__PURE__ */ jsx(
-      "a",
-      {
-        className: "ps-product__remove",
-        onClick: () => removeItem(),
-        style: { cursor: "pointer" },
-        children: /* @__PURE__ */ jsx("i", { className: "icon-cross" })
-      }
-    )
-  ] });
-};
-const MiniCartModal = ({ active }) => {
-  const { loaded, cart } = useAppSelector((state) => state.cart);
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      className: classNames("ps-cart--mini", {
-        active
-      }),
-      children: loaded ? /* @__PURE__ */ jsx(Fragment, { children: cart.items.length > 0 ? /* @__PURE__ */ jsxs(Fragment, { children: [
-        /* @__PURE__ */ jsx("ul", { className: "ps-cart__items", children: /* @__PURE__ */ jsx("li", { className: "ps-cart__item", children: cart.items.map((item, index) => {
-          if (index <= 2) {
-            return /* @__PURE__ */ createElement(CartMiniItem, { ...item, key: item.id });
-          }
-        }) }) }),
-        /* @__PURE__ */ jsxs("div", { className: "ps-cart__total", children: [
-          /* @__PURE__ */ jsx("span", { children: "Subtotal " }),
-          /* @__PURE__ */ jsxs("span", { children: [
-            "$",
-            cart.total_with_tax.toLocaleString()
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "ps-cart__footer", children: [
-          /* @__PURE__ */ jsx(Link, { className: "ps-btn ps-btn--outline", to: "/cart", children: "View Cart" }),
-          /* @__PURE__ */ jsx(Link, { className: "ps-btn ps-btn--warning", to: "/cart/checkout", children: "Checkout" })
-        ] })
-      ] }) : /* @__PURE__ */ jsxs("div", { className: "ps-cart__empty", children: [
-        /* @__PURE__ */ jsx("div", { className: "ps-cart__icon", children: /* @__PURE__ */ jsx("i", { className: "fa fa-shopping-basket" }) }),
-        /* @__PURE__ */ jsx("p", { className: "ps-cart__text", children: "Your cart is currently empty" })
-      ] }) }) : /* @__PURE__ */ jsx("div", { style: { display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsx(BeatLoader, {}) })
-    }
-  );
-};
-const Menu = ({}) => {
-  const { isAuthed, user } = useAppSelector((state2) => state2.auth);
-  const { cart, loaded } = useAppSelector((state2) => state2.cart);
-  const { homeCategories } = useAppSelector((state2) => state2.app);
-  const [state, setState] = useState({
-    showMiniAuth: false,
-    showMiniCart: false
-  });
-  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
-    "header",
-    {
-      className: "ps-header ps-header--2 ps-header--7 ps-header--4",
-      style: { borderBottom: "1px solid #d9dee8" },
-      children: [
-        /* @__PURE__ */ jsx("div", { className: "ps-header__top", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
-          /* @__PURE__ */ jsx("a", { href: "tel:(949)9421363", className: "ps-header__text", children: /* @__PURE__ */ jsx("strong", { children: "+ (949) 942-1363 - Call Us" }) }),
-          /* @__PURE__ */ jsx("a", { href: "tel:(949)9421363", className: "ps-header__text", children: /* @__PURE__ */ jsx("strong", { children: "+ (949) 942-1363 - Call Us" }) }),
-          /* @__PURE__ */ jsxs("div", { className: "ps-top__right", children: [
-            /* @__PURE__ */ jsxs("div", { className: "ps-language-currency", children: [
-              /* @__PURE__ */ jsx(
-                "div",
-                {
-                  className: "ps-dropdown-value with-dp-modal",
-                  onMouseLeave: () => setState((oldState) => ({
-                    ...oldState,
-                    showMiniAuth: false
-                  })),
-                  onMouseEnter: () => setState((oldState) => ({
-                    ...oldState,
-                    showMiniAuth: true
-                  })),
-                  children: /* @__PURE__ */ jsx(
-                    Link,
-                    {
-                      className: "ps-header__item",
-                      to: user ? "/profile" : "/login",
-                      children: /* @__PURE__ */ jsx("i", { className: "icon-user" })
-                    }
-                  )
-                }
-              ),
-              /* @__PURE__ */ jsxs(
-                "div",
-                {
-                  onMouseLeave: () => setState((oldState) => ({
-                    ...oldState,
-                    showMiniCart: false
-                  })),
-                  onMouseEnter: () => setState((oldState) => ({
-                    ...oldState,
-                    showMiniCart: true
-                  })),
-                  className: "ps-dropdown-value with-dp-modal",
-                  children: [
-                    /* @__PURE__ */ jsxs(Link, { className: "ps-header__item", to: "/cart", id: "cart-mini", children: [
-                      /* @__PURE__ */ jsx("i", { className: "icon-cart-empty" }),
-                      loaded && cart.items.length > 0 ? /* @__PURE__ */ jsx("span", { className: "badge-mini", children: cart.items.length }) : null
-                    ] }),
-                    /* @__PURE__ */ jsx(MiniCartModal, { active: state.showMiniCart })
-                  ]
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("ul", { className: "menu-top", children: [
-              /* @__PURE__ */ jsx("li", { className: "nav-item", children: /* @__PURE__ */ jsx("a", { className: "nav-link", href: "#", children: "About" }) }),
-              /* @__PURE__ */ jsx("li", { className: "nav-item", children: /* @__PURE__ */ jsx("a", { className: "nav-link", href: "#", children: "Contact" }) })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "ps-header__text", children: [
-              "Need help? ",
-              /* @__PURE__ */ jsx("strong", { children: "0020 500 - MYMEDI - 000" })
-            ] })
-          ] })
-        ] }) }),
-        /* @__PURE__ */ jsx("div", { className: "ps-header__middle", children: /* @__PURE__ */ jsx("div", { className: "container", children: /* @__PURE__ */ jsx("div", { className: "ps-header__menu", style: { width: "100%" }, children: /* @__PURE__ */ jsxs("ul", { className: "menu-custom", children: [
-          /* @__PURE__ */ jsx("li", { className: "ps-logo custom-logo", children: /* @__PURE__ */ jsxs(Link, { to: "/", children: [
-            /* @__PURE__ */ jsx("img", { src: "/img/logo.png", alt: "" }),
-            /* @__PURE__ */ jsx("img", { className: "sticky-logo", src: "/img/logo.png", alt: "" })
-          ] }) }),
-          homeCategories.map(({ id, title, icon, slug }, index) => /* @__PURE__ */ jsxs(
-            "li",
-            {
-              className: "ps-category__item ps-category__item-custom",
-              children: [
-                /* @__PURE__ */ jsx(Link, { to: `/catalog/${slug}`, className: "ps-category__link", children: /* @__PURE__ */ jsx(
-                  "img",
-                  {
-                    src: `/storage/${icon}`,
-                    alt: title,
-                    style: { width: "34px", height: "34px" }
-                  }
-                ) }),
-                /* @__PURE__ */ jsx("div", { className: "ps-category__name", children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${slug}`, children: title }) })
-              ]
-            },
-            id
-          ))
-        ] }) }) }) })
-      ]
-    }
-  ) });
-};
-const style$4 = "";
-const MobileHeader = ({}) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const { isAuthed, authChecked, user } = useAppSelector((state) => state.auth);
-  const { cart } = useAppSelector((state) => state.cart);
-  const { homeCategories } = useAppSelector((state) => state.app);
-  const closeMenu = () => setShowMenu(false);
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx("header", { className: "ps-header ps-header--6 ps-header--mobile", children: /* @__PURE__ */ jsx("div", { className: "ps-header__middle", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
-      /* @__PURE__ */ jsx("div", { className: "ps-logo", children: /* @__PURE__ */ jsxs("a", { href: "/", children: [
-        " ",
-        /* @__PURE__ */ jsx("img", { src: "/img/logo.png", alt: "", style: { width: 80 } })
-      ] }) }),
-      /* @__PURE__ */ jsx("div", { className: "ps-header__right", children: /* @__PURE__ */ jsx("ul", { className: "ps-header__icons", children: /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
-        "a",
-        {
-          className: "ps-header__item menu-slide",
-          href: "#",
-          onClick: (e) => {
-            e.preventDefault();
-            setShowMenu(true);
-          },
-          children: /* @__PURE__ */ jsx("i", { className: "fa fa-bars" })
-        }
-      ) }) }) })
-    ] }) }) }),
-    /* @__PURE__ */ jsxs(
-      "div",
-      {
-        className: classNames("ps-menu--slidebar has-close-icon", {
-          active: showMenu
-        }),
-        children: [
-          /* @__PURE__ */ jsx(
-            "a",
-            {
-              href: "#",
-              id: "close-menu",
-              className: "ic-mobile-menu-close-button close-menu",
-              onClick: () => setShowMenu(false),
-              children: /* @__PURE__ */ jsx("i", { className: "icon-cross" })
-            }
-          ),
-          /* @__PURE__ */ jsx("div", { className: "ps-menu__content", children: /* @__PURE__ */ jsxs("ul", { className: "menu--mobile", children: [
-            /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/", children: "Home" }) }),
-            /* @__PURE__ */ jsx("div", { className: "divider" }),
-            homeCategories.map((category) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/cart", children: category.title }) }, category.id)),
-            /* @__PURE__ */ jsx("div", { className: "divider" }),
-            /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(Link, { onClick: closeMenu, to: "/cart", children: [
-              "Shopping Cart | ",
-              cart.items.length
-            ] }) }),
-            isAuthed && user ? /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/profile", children: "Profile" }) }) }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/login", children: "Login" }) }),
-              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/register", children: "Create account" }) })
-            ] })
-          ] }) }),
-          /* @__PURE__ */ jsx("div", { className: "ps-menu__footer", children: /* @__PURE__ */ jsx("div", { className: "ps-menu__item", children: /* @__PURE__ */ jsxs("div", { className: "ps-menu__contact", children: [
-            /* @__PURE__ */ jsx("br", {}),
-            /* @__PURE__ */ jsx("a", { href: "tel:+998999010033", style: { color: "#103178" }, children: /* @__PURE__ */ jsx("strong", { children: "+998 99 901 00 33" }) }),
-            /* @__PURE__ */ jsx("br", {}),
-            /* @__PURE__ */ jsx("a", { href: "tel:+998974243004", style: { color: "#103178" }, children: /* @__PURE__ */ jsx("strong", { children: "info@sign7.com" }) })
-          ] }) }) })
-        ]
-      }
-    )
-  ] });
-};
-const Layout = ({}) => {
-  return /* @__PURE__ */ jsxs("div", { className: "ps-page", children: [
-    /* @__PURE__ */ jsx(Menu, {}),
-    /* @__PURE__ */ jsx(MobileHeader, {}),
-    /* @__PURE__ */ jsx("div", { className: "main", children: /* @__PURE__ */ jsx(Outlet, {}) }),
-    /* @__PURE__ */ jsx(Footer, {})
-  ] });
-};
-const style$3 = "";
 const getCollapsedHeight = () => ({
   height: 0,
   opacity: 0
@@ -757,6 +489,8 @@ const collapseMotion = {
   motionDeadline: 500,
   leavedClassName: "rc-collapse-content-hidden"
 };
+const index = "";
+const style$7 = "";
 const arrowPath = "M869 487.8L491.2 159.9c-2.9-2.5-6.6-3.9-10.5-3.9h-88.5c-7.4 0-10.8 9.2-5.2 14l350.2 304H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h585.1L386.9 854c-5.6 4.9-2.2 14 5.2 14h91.5c1.9 0 3.8-0.7 5.2-2L869 536.2c14.7-12.8 14.7-35.6 0-48.4z";
 function expandIcon({ isActive }) {
   return /* @__PURE__ */ jsx("i", { style: { marginRight: ".5rem" }, children: /* @__PURE__ */ jsx(
@@ -867,6 +601,461 @@ const OrderCard = ({
     ) })
   ] });
 };
+const style$6 = "";
+const FAQProduct = ({ questions }) => {
+  return /* @__PURE__ */ jsx(Collapse, { accordion: true, openMotion: collapseMotion, children: questions.map(({ question, answer }, index2) => /* @__PURE__ */ jsx(
+    Panel,
+    {
+      header: question,
+      expandIcon,
+      className: "faq-product",
+      children: /* @__PURE__ */ jsx("div", { dangerouslySetInnerHTML: { __html: answer } })
+    },
+    index2
+  )) });
+};
+const Footer = ({}) => {
+  const { homeCategories } = useAppSelector((state) => state.app);
+  return /* @__PURE__ */ jsx("footer", { className: "ps-footer ps-footer--5 pt-50", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
+    /* @__PURE__ */ jsx("div", { className: "ps-footer__middle", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
+      /* @__PURE__ */ jsx("div", { className: "col-12 col-md-12", children: /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("div", { className: "col-md-12", children: /* @__PURE__ */ jsx("div", { className: "ps-footer--address", children: /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "ps-logo-footer",
+          style: { textAlign: "center" },
+          children: /* @__PURE__ */ jsxs("a", { href: "/", children: [
+            /* @__PURE__ */ jsx("img", { src: "/img/logo-white.png", style: { width: 250 } }),
+            /* @__PURE__ */ jsx(
+              "h3",
+              {
+                style: {
+                  color: "white",
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  marginTop: 10,
+                  marginBottom: 50
+                },
+                children: "Everything for your business"
+              }
+            )
+          ] })
+        }
+      ) }) }) }) }),
+      /* @__PURE__ */ jsx("div", { className: "col-md-12", children: /* @__PURE__ */ jsx("div", { className: "row", children: homeCategories.map((category) => /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "col-md-4",
+          style: { textAlign: "center", marginTop: 20 },
+          children: /* @__PURE__ */ jsxs("div", { className: "ps-footer--block", children: [
+            /* @__PURE__ */ jsx(
+              "h5",
+              {
+                className: "ps-block__title",
+                style: { textTransform: "uppercase" },
+                children: category.title
+              }
+            ),
+            /* @__PURE__ */ jsx("ul", { className: "ps-block__list", children: category.products.map((product) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${product.slug}`, children: product.title }) }, `footer-product-${product.id}`)) })
+          ] })
+        },
+        category.id
+      )) }) })
+    ] }) }),
+    /* @__PURE__ */ jsx("div", { className: "ps-footer--bottom", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
+      /* @__PURE__ */ jsx("div", { className: "col-12 col-md-6", children: /* @__PURE__ */ jsx("p", { children: "Copyright © 2023 Signs7. All Rights Reserved" }) }),
+      /* @__PURE__ */ jsxs("div", { className: "col-12 col-md-6 text-right", children: [
+        /* @__PURE__ */ jsx("img", { src: "img/payment.png", alt: "" }),
+        /* @__PURE__ */ jsx(
+          "img",
+          {
+            className: "payment-light",
+            src: "img/payment-light.png",
+            alt: ""
+          }
+        )
+      ] })
+    ] }) })
+  ] }) });
+};
+const Input = React.forwardRef(
+  ({ formType, ...props }, ref) => {
+    return /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: classNames({
+          "ps-checkout__group": formType === "checkout",
+          "ps-form__group": formType === "profile"
+        }),
+        children: [
+          props.label ? /* @__PURE__ */ jsx(
+            "label",
+            {
+              className: classNames({
+                "ps-checkout__label": formType === "checkout",
+                "ps-form__label": formType === "profile"
+              }),
+              children: props.label
+            }
+          ) : null,
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: props.type || "text",
+              ref,
+              className: classNames({
+                "ps-input": formType === "checkout",
+                "form-control ps-form__input": formType === "profile"
+              }),
+              ...props
+            }
+          ),
+          props.error ? /* @__PURE__ */ jsx(
+            "p",
+            {
+              style: {
+                textTransform: "capitalize",
+                color: "#ff5252",
+                fontSize: 12,
+                marginTop: 8
+              },
+              children: props.error
+            }
+          ) : null
+        ]
+      }
+    );
+  }
+);
+const CartMiniItem = ({
+  name: name2,
+  price,
+  quantity,
+  id,
+  associatedModel
+}) => {
+  const dispatch = useAppDispatch();
+  const removeItem = async () => {
+    try {
+      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
+      toast(`Successfully removed ${name2}`, {
+        type: "success"
+      });
+    } catch (error) {
+      toast("An error occurred while removing item", { type: "error" });
+    }
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "ps-product--mini-cart", children: [
+    /* @__PURE__ */ jsx("a", { className: "ps-product__thumbnail", href: "", children: associatedModel.images && associatedModel.images.length > 0 ? /* @__PURE__ */ jsx(
+      "img",
+      {
+        src: `/storage/${associatedModel.images[0].path}`,
+        alt: associatedModel.images[0].alt ? associatedModel.images[0].alt : name2
+      }
+    ) : null }),
+    /* @__PURE__ */ jsxs("div", { className: "ps-product__content", children: [
+      /* @__PURE__ */ jsxs("a", { className: "ps-product__name", href: "", children: [
+        name2,
+        " x",
+        quantity
+      ] }),
+      /* @__PURE__ */ jsx("p", { className: "ps-product__meta", children: /* @__PURE__ */ jsxs("span", { className: "ps-product__price", children: [
+        "$",
+        price.toLocaleString()
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsx(
+      "a",
+      {
+        className: "ps-product__remove",
+        onClick: () => removeItem(),
+        style: { cursor: "pointer" },
+        children: /* @__PURE__ */ jsx("i", { className: "icon-cross" })
+      }
+    )
+  ] });
+};
+const MiniCartModal = ({ active }) => {
+  const { loaded, cart } = useAppSelector((state) => state.cart);
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: classNames("ps-cart--mini", {
+        active
+      }),
+      children: loaded ? /* @__PURE__ */ jsx(Fragment, { children: cart.items.length > 0 ? /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx("ul", { className: "ps-cart__items", children: /* @__PURE__ */ jsx("li", { className: "ps-cart__item", children: cart.items.map((item, index2) => {
+          if (index2 <= 2) {
+            return /* @__PURE__ */ createElement(CartMiniItem, { ...item, key: item.id });
+          }
+        }) }) }),
+        /* @__PURE__ */ jsxs("div", { className: "ps-cart__total", children: [
+          /* @__PURE__ */ jsx("span", { children: "Subtotal " }),
+          /* @__PURE__ */ jsxs("span", { children: [
+            "$",
+            cart.total_with_tax.toLocaleString()
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "ps-cart__footer", children: [
+          /* @__PURE__ */ jsx(Link, { className: "ps-btn ps-btn--outline", to: "/cart", children: "View Cart" }),
+          /* @__PURE__ */ jsx(Link, { className: "ps-btn ps-btn--warning", to: "/cart/checkout", children: "Checkout" })
+        ] })
+      ] }) : /* @__PURE__ */ jsxs("div", { className: "ps-cart__empty", children: [
+        /* @__PURE__ */ jsx("div", { className: "ps-cart__icon", children: /* @__PURE__ */ jsx("i", { className: "fa fa-shopping-basket" }) }),
+        /* @__PURE__ */ jsx("p", { className: "ps-cart__text", children: "Your cart is currently empty" })
+      ] }) }) : /* @__PURE__ */ jsx("div", { style: { display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsx(BeatLoader, {}) })
+    }
+  );
+};
+const style$5 = "";
+const Menu = ({}) => {
+  const { isAuthed, user } = useAppSelector((state2) => state2.auth);
+  const { cart, loaded } = useAppSelector((state2) => state2.cart);
+  const { homeCategories } = useAppSelector((state2) => state2.app);
+  const [state, setState] = useState({
+    showMiniAuth: false,
+    showMiniCart: false
+  });
+  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
+    "header",
+    {
+      className: "ps-header ps-header--2 ps-header--7 ps-header--4",
+      style: { borderBottom: "1px solid #d9dee8" },
+      children: [
+        /* @__PURE__ */ jsx("div", { className: "ps-header__top", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
+          /* @__PURE__ */ jsxs("div", { className: "header-left d-flex", children: [
+            /* @__PURE__ */ jsxs(
+              "a",
+              {
+                href: "tel:(949)9421363",
+                className: "ps-header__text d-flex align-items-center",
+                children: [
+                  /* @__PURE__ */ jsx("i", { className: "icon-telephone" }),
+                  /* @__PURE__ */ jsx("strong", { style: { marginLeft: 5 }, children: "+(949) 942-1363 - Call Us" })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxs(
+              "a",
+              {
+                href: "http://google.com",
+                className: "ps-header__text d-flex align-items-center",
+                children: [
+                  /* @__PURE__ */ jsx("i", { className: "icon-envelope" }),
+                  /* @__PURE__ */ jsx("strong", { style: { marginLeft: 5 }, children: "info@signs7.com" })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxs(
+              "a",
+              {
+                href: "http://google.com",
+                className: "ps-header__text d-flex align-items-center",
+                children: [
+                  /* @__PURE__ */ jsx("i", { className: "icon-map-marker" }),
+                  /* @__PURE__ */ jsx("strong", { style: { marginLeft: 5 }, children: "New York" })
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "ps-top__right", children: [
+            /* @__PURE__ */ jsxs("div", { className: "ps-language-currency", children: [
+              /* @__PURE__ */ jsx(
+                "div",
+                {
+                  className: "ps-dropdown-value with-dp-modal",
+                  onMouseLeave: () => setState((oldState) => ({
+                    ...oldState,
+                    showMiniAuth: false
+                  })),
+                  onMouseEnter: () => setState((oldState) => ({
+                    ...oldState,
+                    showMiniAuth: true
+                  })),
+                  children: /* @__PURE__ */ jsx(
+                    Link,
+                    {
+                      className: "ps-header__item",
+                      to: user ? "/profile" : "/login",
+                      children: /* @__PURE__ */ jsx("i", { className: "icon-user" })
+                    }
+                  )
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                "div",
+                {
+                  onMouseLeave: () => setState((oldState) => ({
+                    ...oldState,
+                    showMiniCart: false
+                  })),
+                  onMouseEnter: () => setState((oldState) => ({
+                    ...oldState,
+                    showMiniCart: true
+                  })),
+                  className: "ps-dropdown-value with-dp-modal",
+                  children: [
+                    /* @__PURE__ */ jsxs(Link, { className: "ps-header__item", to: "/cart", id: "cart-mini", children: [
+                      /* @__PURE__ */ jsx("i", { className: "icon-cart-empty" }),
+                      loaded && cart.items.length > 0 ? /* @__PURE__ */ jsx("span", { className: "badge-mini", children: cart.items.length }) : null
+                    ] }),
+                    /* @__PURE__ */ jsx(MiniCartModal, { active: state.showMiniCart })
+                  ]
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("ul", { className: "menu-top", children: [
+              /* @__PURE__ */ jsx("li", { className: "nav-item", children: /* @__PURE__ */ jsx("a", { className: "nav-link", href: "#", children: "About" }) }),
+              /* @__PURE__ */ jsx("li", { className: "nav-item", children: /* @__PURE__ */ jsx("a", { className: "nav-link", href: "#", children: "Contact" }) })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "ps-header__text", children: [
+              "Need help? ",
+              /* @__PURE__ */ jsx("strong", { children: "0020 500 - MYMEDI - 000" })
+            ] })
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsx("div", { className: "ps-header__middle", children: /* @__PURE__ */ jsx("div", { className: "container", children: /* @__PURE__ */ jsx("div", { className: "ps-header__menu", style: { width: "100%" }, children: /* @__PURE__ */ jsxs("ul", { className: "menu-custom", children: [
+          /* @__PURE__ */ jsx("li", { className: "ps-logo custom-logo", children: /* @__PURE__ */ jsxs(Link, { to: "/", children: [
+            /* @__PURE__ */ jsx("img", { src: "/img/logo.png", alt: "" }),
+            /* @__PURE__ */ jsx("img", { className: "sticky-logo", src: "/img/logo.png", alt: "" })
+          ] }) }),
+          homeCategories.map(
+            ({ id, title, icon, slug, products }, index2) => /* @__PURE__ */ jsxs(
+              "li",
+              {
+                className: "ps-category__item ps-category__item-custom has-dropdown",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    Link,
+                    {
+                      to: `/catalog/${slug}`,
+                      className: "ps-category__link",
+                      children: /* @__PURE__ */ jsx(
+                        "img",
+                        {
+                          src: `/storage/${icon}`,
+                          alt: title,
+                          style: { width: "34px", height: "34px" }
+                        }
+                      )
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("div", { className: "ps-category__name", children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${slug}`, children: title }) }),
+                  /* @__PURE__ */ jsx("div", { className: "dropdown-content-menu", children: products.map((product) => /* @__PURE__ */ jsx(
+                    Link,
+                    {
+                      to: `/catalog/product/${product.slug}`,
+                      children: product.title
+                    },
+                    `${id}-${product.id}`
+                  )) })
+                ]
+              },
+              id
+            )
+          )
+        ] }) }) }) })
+      ]
+    }
+  ) });
+};
+const style$4 = "";
+const MobileHeader = ({}) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const { isAuthed, authChecked, user } = useAppSelector((state) => state.auth);
+  const { cart } = useAppSelector((state) => state.cart);
+  const { homeCategories } = useAppSelector((state) => state.app);
+  const closeMenu = () => setShowMenu(false);
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx("header", { className: "ps-header ps-header--6 ps-header--mobile", children: /* @__PURE__ */ jsx("div", { className: "ps-header__middle", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
+      /* @__PURE__ */ jsx("div", { className: "ps-logo", children: /* @__PURE__ */ jsxs("a", { href: "/", children: [
+        " ",
+        /* @__PURE__ */ jsx("img", { src: "/img/logo.png", alt: "", style: { width: 80 } })
+      ] }) }),
+      /* @__PURE__ */ jsx("div", { className: "ps-header__right", children: /* @__PURE__ */ jsx("ul", { className: "ps-header__icons", children: /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
+        "a",
+        {
+          className: "ps-header__item menu-slide",
+          href: "#",
+          onClick: (e) => {
+            e.preventDefault();
+            setShowMenu(true);
+          },
+          children: /* @__PURE__ */ jsx("i", { className: "fa-solid fa-bars" })
+        }
+      ) }) }) })
+    ] }) }) }),
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: classNames("ps-menu--slidebar has-close-icon", {
+          active: showMenu
+        }),
+        children: [
+          /* @__PURE__ */ jsx(
+            "a",
+            {
+              href: "#",
+              id: "close-menu",
+              className: "ic-mobile-menu-close-button close-menu",
+              onClick: () => setShowMenu(false),
+              children: /* @__PURE__ */ jsx("i", { className: "icon-cross" })
+            }
+          ),
+          /* @__PURE__ */ jsx("div", { className: "ps-menu__content", children: /* @__PURE__ */ jsxs("ul", { className: "menu--mobile", children: [
+            /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/", children: "Home" }) }),
+            /* @__PURE__ */ jsx("div", { className: "divider" }),
+            homeCategories.map((category) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/cart", children: category.title }) }, category.id)),
+            /* @__PURE__ */ jsx("div", { className: "divider" }),
+            /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(Link, { onClick: closeMenu, to: "/cart", children: [
+              "Shopping Cart | ",
+              cart.items.length
+            ] }) }),
+            isAuthed && user ? /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/profile", children: "Profile" }) }) }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/login", children: "Login" }) }),
+              /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { onClick: closeMenu, to: "/register", children: "Create account" }) })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ jsx("div", { className: "ps-menu__footer", children: /* @__PURE__ */ jsx("div", { className: "ps-menu__item", children: /* @__PURE__ */ jsxs("div", { className: "ps-menu__contact", children: [
+            /* @__PURE__ */ jsx("br", {}),
+            /* @__PURE__ */ jsx("a", { href: "tel:+998999010033", style: { color: "#103178" }, children: /* @__PURE__ */ jsx("strong", { children: "+998 99 901 00 33" }) }),
+            /* @__PURE__ */ jsx("br", {}),
+            /* @__PURE__ */ jsx("a", { href: "tel:+998974243004", style: { color: "#103178" }, children: /* @__PURE__ */ jsx("strong", { children: "info@sign7.com" }) })
+          ] }) }) })
+        ]
+      }
+    )
+  ] });
+};
+const style$3 = "";
+const SocialFixedButtons = ({}) => {
+  return /* @__PURE__ */ jsxs("ul", { className: "social-fixed-btns", children: [
+    /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: "mailto:info@signs.com", children: [
+      /* @__PURE__ */ jsx("div", { className: "icon-box-social", children: /* @__PURE__ */ jsx("i", { className: "fas fa-envelope" }) }),
+      /* @__PURE__ */ jsx("span", { children: "E-Mail" })
+    ] }) }),
+    /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: "https://api.whatsapp.com/send?phone=123123", children: [
+      /* @__PURE__ */ jsx("div", { className: "icon-box-social", children: /* @__PURE__ */ jsx("i", { className: "fab fa-whatsapp" }) }),
+      /* @__PURE__ */ jsx("span", { children: "WhatsApp" })
+    ] }) }),
+    /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: "tel:+1", children: [
+      /* @__PURE__ */ jsx("div", { className: "icon-box-social", children: /* @__PURE__ */ jsx("i", { "aria-hidden": "true", className: "fas fa-phone" }) }),
+      /* @__PURE__ */ jsx("span", { children: "Call us" })
+    ] }) }),
+    /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("a", { href: "tel:+1", children: [
+      /* @__PURE__ */ jsx("div", { className: "icon-box-social", children: /* @__PURE__ */ jsx("i", { "aria-hidden": "true", className: "fab fa-instagram" }) }),
+      /* @__PURE__ */ jsx("span", { children: "Instagram" })
+    ] }) })
+  ] });
+};
+const Layout = ({}) => {
+  return /* @__PURE__ */ jsxs("div", { className: "ps-page", children: [
+    /* @__PURE__ */ jsx(Menu, {}),
+    /* @__PURE__ */ jsx(MobileHeader, {}),
+    /* @__PURE__ */ jsx(SocialFixedButtons, {}),
+    /* @__PURE__ */ jsx("div", { className: "main", children: /* @__PURE__ */ jsx(Outlet, {}) }),
+    /* @__PURE__ */ jsx(Footer, {})
+  ] });
+};
 class OrderService {
   static async orders(page) {
     return api.get(`/orders?page=${page}`);
@@ -930,16 +1119,6 @@ const OrdersHistory = ({}) => {
     setPageCount(data2.meta.last_page);
     setLoading(false);
   }, []);
-  if (data.length === 0) {
-    return /* @__PURE__ */ jsx(
-      EmptyPage,
-      {
-        iconClass: "fa fa-shopping-basket",
-        title: "No Orders",
-        size: "small"
-      }
-    );
-  }
   return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(
     OrdersList,
     {
@@ -1306,8 +1485,8 @@ const CustomSizesDropdown = ({ sizes, hasError }) => {
                 ...baseStyles,
                 color: "#5b6c8f"
               }),
-              placeholder: (baseStyle) => ({
-                ...baseStyle,
+              placeholder: (baseStyle2) => ({
+                ...baseStyle2,
                 color: "#5b6c8f"
               })
             }
@@ -1318,7 +1497,7 @@ const CustomSizesDropdown = ({ sizes, hasError }) => {
   ) }) });
 };
 const units = ["inches", "feet"];
-const ProductCalculator = ({ loading }) => {
+const ProductCalculator = ({}) => {
   const { selectedOption } = useAppSelector((state2) => state2.product);
   const { state, setState, validationRules } = useContext(ProductFormContext);
   const staticData = React.useMemo(() => {
@@ -1340,9 +1519,6 @@ const ProductCalculator = ({ loading }) => {
       customSize: { value: void 0, error: void 0 }
     }));
   };
-  if (loading) {
-    return /* @__PURE__ */ jsx(Skeleton, { height: 140 });
-  }
   return /* @__PURE__ */ jsx("div", { className: "ps-checkout", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
     /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("div", { style: { width: "100%" }, children: /* @__PURE__ */ jsx("h6", { children: "Sizes:" }) }) }),
     selectedOption.show_custom_sizes && /* @__PURE__ */ jsxs("div", { className: "row", children: [
@@ -1378,8 +1554,8 @@ const ProductCalculator = ({ loading }) => {
         setUnit: (unit) => setState((state2) => ({ ...state2, unit }))
       }
     ) : void 0,
-    state.typeSizeSelection === "default" ? /* @__PURE__ */ jsx(CalculatorForm, { staticData }) : null,
-    state.typeSizeSelection === "custom" && selectedOption.type !== "sqft" ? /* @__PURE__ */ jsx(
+    state.typeSizeSelection === "custom" ? /* @__PURE__ */ jsx(CalculatorForm, { staticData }) : null,
+    state.typeSizeSelection === "default" && selectedOption.type !== "sqft" ? /* @__PURE__ */ jsx(
       CustomSizesDropdown,
       {
         sizes: selectedOption.customSizes,
@@ -1423,6 +1599,19 @@ const ProductCard = (props) => {
           }
         ) }),
         /* @__PURE__ */ jsxs("div", { className: "ps-product__content", children: [
+          /* @__PURE__ */ jsx("div", { className: "product-wrapper", children: /* @__PURE__ */ jsx("div", { className: "meta-wrapper", children: props.categories.map((category, index2) => /* @__PURE__ */ jsxs(
+            Link,
+            {
+              to: `/catalog/${category.slug}`,
+              className: "ps-product__branch",
+              children: [
+                category.title,
+                " ",
+                index2 < props.categories.length - 1 ? " | " : ""
+              ]
+            },
+            `category-card-product-${category.id}`
+          )) }) }),
           /* @__PURE__ */ jsx("h5", { className: "ps-product__title", children: /* @__PURE__ */ jsx(
             Link,
             {
@@ -1432,10 +1621,10 @@ const ProductCard = (props) => {
                 product: props,
                 category: props.category
               },
+              style: { fontWeight: 600 },
               children: title
             }
           ) }),
-          /* @__PURE__ */ jsx("div", { className: "ps-product__meta", children: /* @__PURE__ */ jsx("span", { className: "ps-product__price", children: with_checkout ? min_price > 0 ? new Intl.NumberFormat("en-US").format(min_price) : null : null }) }),
           /* @__PURE__ */ jsxs("div", { className: "ps-product__actions ps-product__group-mobile", children: [
             /* @__PURE__ */ jsx("div", { className: "ps-product__quantity", children: /* @__PURE__ */ jsxs("div", { className: "def-number-input number-input safari_only", children: [
               /* @__PURE__ */ jsx(
@@ -1532,7 +1721,8 @@ const singleProductSlice = createSlice({
         state.addons = firstOption.addons.map((addon) => ({
           ...addon,
           isSelected: false,
-          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1
+          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1,
+          extra_data_selected: []
         }));
       }
       state.loading = false;
@@ -1542,12 +1732,13 @@ const singleProductSlice = createSlice({
       state.addons = action.payload.addons.map((addon) => ({
         ...addon,
         isSelected: false,
-        quantity: addon.withQuantity ? addon.validation["min-qty"] : 1
+        quantity: addon.withQuantity ? addon.validation["min-qty"] : 1,
+        extra_data_selected: []
       }));
     },
     clearProductState(state) {
       state.selectedOption = void 0;
-      state.loading = false;
+      state.loading = true;
       state.product = void 0;
       state.productSlug = void 0;
     },
@@ -1565,6 +1756,29 @@ const singleProductSlice = createSlice({
       if (addon && addon.withQuantity) {
         addon.quantity = quantity;
       }
+    },
+    selectExtraDataItems(state, {
+      payload
+    }) {
+      const { addonID, targetExtraData, isMultiSelect } = payload;
+      const addon = state.addons.find((addon2) => addon2.id === addonID);
+      if (!addon) {
+        return;
+      }
+      const indexOfSelected = addon.extra_data_selected.findIndex(
+        (extraData) => extraData.id === targetExtraData.id
+      );
+      if (indexOfSelected === -1) {
+        if (isMultiSelect) {
+          addon.extra_data_selected.push(targetExtraData);
+        } else {
+          const emptySelectedList = [];
+          emptySelectedList.push(targetExtraData);
+          addon.extra_data_selected = emptySelectedList;
+        }
+      } else {
+        addon.extra_data_selected.splice(indexOfSelected, 1);
+      }
     }
   },
   extraReducers: (builder) => {
@@ -1576,7 +1790,8 @@ const singleProductSlice = createSlice({
         state.addons = firstOption.addons.map((addon) => ({
           ...addon,
           isSelected: false,
-          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1
+          quantity: addon.withQuantity ? addon.validation["min-qty"] : 1,
+          extra_data_selected: []
         }));
       }
       state.productSlug = action.payload.slug;
@@ -1589,16 +1804,17 @@ const {
   clearProductState,
   selectProductOption,
   handleAddonChange,
-  updateAddonQuantity
+  updateAddonQuantity,
+  selectExtraDataItems
 } = singleProductSlice.actions;
 const singleProductSliceReducer = singleProductSlice.reducer;
-const ProductOptions = ({ loading }) => {
+const ProductOptions = ({}) => {
   const { state } = useContext(ProductFormContext);
   const { product, selectedOption } = useAppSelector((state2) => state2.product);
   const dispatch = useAppDispatch();
   if (product.with_checkout === false)
     return;
-  return /* @__PURE__ */ jsx("div", { children: product && loading === false ? /* @__PURE__ */ jsx("div", { children: product.options.length === 1 ? /* @__PURE__ */ jsxs("h6", { children: [
+  return /* @__PURE__ */ jsx("div", { children: product ? /* @__PURE__ */ jsx("div", { children: product.options.length === 1 ? /* @__PURE__ */ jsxs("h6", { children: [
     "Option: ",
     product.options[0].title
   ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
@@ -1648,6 +1864,7 @@ const ProductOptions = ({ loading }) => {
 };
 const ProductQuantity = ({ value, onChange }) => {
   const handleChange = (quantity) => {
+    console.log(value, "value");
     const regex = /^[0-9\b]+$/;
     if (!regex.test(value)) {
       return;
@@ -1674,6 +1891,24 @@ const ProductQuantity = ({ value, onChange }) => {
   ] });
 };
 const style$2 = "";
+const PrevArrow = ({ className, style: style2, onClick }) => /* @__PURE__ */ jsx(
+  "div",
+  {
+    className: `${className} custom-arrow left-arrow`,
+    style: { ...style2, display: "block" },
+    onClick,
+    children: /* @__PURE__ */ jsx("i", { className: "icon-chevron-left" })
+  }
+);
+const NextArrow = ({ className, style: style2, onClick }) => /* @__PURE__ */ jsx(
+  "div",
+  {
+    className: `${className} custom-arrow right-arrow`,
+    style: { ...style2, display: "block" },
+    onClick,
+    children: /* @__PURE__ */ jsx("i", { className: "icon-chevron-right" })
+  }
+);
 const ThumbnailSlick = {
   // slidesToShow: 5,
   slidesToScroll: 1,
@@ -1686,7 +1921,7 @@ const ThumbnailSlick = {
 const MainSlick = {
   slidesToShow: 1,
   slidesToScroll: 1,
-  arrows: false,
+  arrows: true,
   dots: false,
   lazyLoad: "ondemand"
 };
@@ -1709,14 +1944,16 @@ const ProductSlider = ({ images, productName }) => {
             ref: (slider) => setMainSlickRef(slider),
             asNavFor: thumbNailSlickRef,
             ...MainSlick,
+            nextArrow: /* @__PURE__ */ jsx(NextArrow, {}),
+            prevArrow: /* @__PURE__ */ jsx(PrevArrow, {}),
             className: "ps-product__thumbnail",
-            children: images.map((img) => /* @__PURE__ */ jsx("div", { className: "slide", children: /* @__PURE__ */ jsx(
+            children: images.map((img2) => /* @__PURE__ */ jsx("div", { className: "slide", children: /* @__PURE__ */ jsx(
               "img",
               {
-                src: `/storage/${img.path}`,
-                alt: img.alt ? img.alt : productName
+                src: `/storage/${img2.path}`,
+                alt: img2.alt ? img2.alt : productName
               }
-            ) }, `main-${img.id}`))
+            ) }, `main-${img2.id}`))
           }
         ),
         /* @__PURE__ */ jsx(
@@ -1728,13 +1965,13 @@ const ProductSlider = ({ images, productName }) => {
             slidesToShow: 5,
             className: "ps-gallery--image",
             style: { display: "block" },
-            children: images.map((img) => /* @__PURE__ */ jsx("div", { className: "slide", children: /* @__PURE__ */ jsx("div", { className: "ps-gallery__item", children: /* @__PURE__ */ jsx(
+            children: images.map((img2) => /* @__PURE__ */ jsx("div", { className: "slide", children: /* @__PURE__ */ jsx("div", { className: "ps-gallery__item", children: /* @__PURE__ */ jsx(
               "img",
               {
-                src: `/storage/${img.path}`,
-                alt: img.alt ? img.alt : productName
+                src: `/storage/${img2.path}`,
+                alt: img2.alt ? img2.alt : productName
               }
-            ) }) }, `thumb-${img.id}`))
+            ) }) }, `thumb-${img2.id}`))
           }
         )
       ] })
@@ -1889,7 +2126,15 @@ function Home() {
                     fullPage: product.with_checkout
                   }
                 ) })) }),
-                /* @__PURE__ */ jsx("div", { className: "ps-shop__more", children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${slug}`, children: "Show all" }) })
+                /* @__PURE__ */ jsx("div", { className: "ps-shop__more", children: /* @__PURE__ */ jsx(
+                  Link,
+                  {
+                    to: `/catalog/${slug}`,
+                    style: { display: "block" },
+                    className: "home_show_more",
+                    children: "Show all"
+                  }
+                ) })
               ] })
             ] })
           }
@@ -2508,7 +2753,7 @@ const LoginSchema = yup.object({
   name: yup.string().min(2).required(),
   email: yup.string().email().required()
 }).required();
-const ModalContentWithForm = ({ product, loading }) => {
+const ModalContentWithForm = ({ product }) => {
   var _a, _b;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -2541,9 +2786,6 @@ const ModalContentWithForm = ({ product, loading }) => {
       setIsSubmitting(false);
     }
   };
-  if (loading) {
-    return /* @__PURE__ */ jsx(Skeleton, { height: 250 });
-  }
   return /* @__PURE__ */ jsx("div", { className: "ps-checkout", children: /* @__PURE__ */ jsx("div", { className: "container", children: /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("form", { style: { width: "100%" }, onSubmit: handleSubmit(onSubmit), children: /* @__PURE__ */ jsxs("div", { className: "ps-form--review", style: { marginBottom: 0 }, children: [
     /* @__PURE__ */ jsx(
       Input,
@@ -2574,23 +2816,24 @@ const ModalContentWithForm = ({ product, loading }) => {
         style: { width: "100%" },
         className: "ps-btn ps-btn--warning custom-button",
         disabled: isSubmitting,
-        children: "Submit Request"
+        children: "Let's Talk"
       }
     ) })
   ] }) }) }) }) });
 };
 function withProductControl(Component) {
-  return function(hocProps) {
+  return function(props) {
     const params = useParams();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { loading, product, addons, selectedOption } = useAppSelector(
       (state2) => state2.product
     );
+    useLocation();
     const [state, setState] = useState({
       selectedAddons: [],
       selectedOption: void 0,
-      typeSizeSelection: "default",
+      typeSizeSelection: "custom",
       highlightErrors: false,
       disabled: false,
       width: {
@@ -2622,13 +2865,8 @@ function withProductControl(Component) {
       }
     }, [loading, product, state.calculatedPrice]);
     const validationRules = {
-      customSize: (selectedOption == null ? void 0 : selectedOption.type) !== "sqft" && state.typeSizeSelection === "custom" ? state.customSize.value !== void 0 : true
+      customSize: (selectedOption == null ? void 0 : selectedOption.type) !== "sqft" && state.typeSizeSelection === "default" ? state.customSize.value !== void 0 : true
     };
-    useEffect(() => {
-      return () => {
-        dispatch(clearProductState());
-      };
-    }, []);
     useEffect(() => {
       setState((state2) => ({ ...state2, disabled: state2.quantity === 0 }));
     }, [state.quantity]);
@@ -2643,6 +2881,34 @@ function withProductControl(Component) {
         }
       };
       fetchProduct();
+      return () => {
+        dispatch(clearProductState());
+        setState({
+          selectedAddons: [],
+          selectedOption: void 0,
+          typeSizeSelection: "custom",
+          highlightErrors: false,
+          disabled: false,
+          width: {
+            error: void 0,
+            value: 1,
+            showError: false
+          },
+          height: {
+            error: void 0,
+            value: 1,
+            showError: false
+          },
+          customSize: {
+            error: void 0,
+            value: void 0
+          },
+          unit: "inches",
+          price: 100,
+          quantity: 1,
+          calculatedPrice: void 0
+        });
+      };
     }, [params]);
     useEffect(() => {
       const selectedAddons = addons.filter((a) => a.isSelected).map((selectedAddon) => {
@@ -2707,7 +2973,7 @@ function withProductControl(Component) {
       state.customSize
       // product,
     ]);
-    const handleAddToCart = async () => {
+    const submitAddToCart = async (files) => {
       const isValidForm = Object.values(validationRules).every((key) => key);
       if (!isValidForm) {
         setState((state2) => ({
@@ -2731,7 +2997,8 @@ function withProductControl(Component) {
           width: state.width.value,
           height: state.height.value,
           quantity: state.quantity,
-          size_id: state.customSize.value
+          size_id: state.customSize.value,
+          files
         })
       ).unwrap();
       toast("Successfully added to cart", { type: "success" });
@@ -2746,15 +3013,18 @@ function withProductControl(Component) {
     const renderVariants = () => {
     };
     return /* @__PURE__ */ jsxs(ProductFormContext.Provider, { value: { state, setState, validationRules }, children: [
-      product ? /* @__PURE__ */ jsx(Helmet, { children: /* @__PURE__ */ jsx("title", { children: product == null ? void 0 : product.title }) }) : null,
+      product ? /* @__PURE__ */ jsxs(Helmet, { children: [
+        /* @__PURE__ */ jsx("title", { children: product.seo_title ? product.seo_title : product.title }),
+        product.seo_desc ? /* @__PURE__ */ jsx("meta", { name: "description", content: product.seo_desc }) : null,
+        product.seo_keywords ? /* @__PURE__ */ jsx("meta", { name: "keywords", content: product.seo_keywords }) : null
+      ] }) : /* @__PURE__ */ jsx(Helmet, { children: /* @__PURE__ */ jsx("title", { children: "Loading Product" }) }),
       /* @__PURE__ */ jsx(
         Component,
         {
-          ...hocProps,
           ...{
             product,
             loading: isProductLoading,
-            handleAddToCart,
+            submitAddToCart,
             handleClose,
             renderVariants
           }
@@ -2765,6 +3035,81 @@ function withProductControl(Component) {
 }
 const style$1 = "";
 const styleAddons = "";
+const grommetsData = {
+  multiSelect: false,
+  data: [
+    {
+      id: 1,
+      title: "Every 1-2 feet"
+    },
+    {
+      id: 2,
+      title: "Every 2-3 feet"
+    },
+    {
+      id: 3,
+      title: "Corners only"
+    }
+  ]
+};
+const polePocketData = {
+  multiSelect: true,
+  data: [
+    {
+      id: 1,
+      title: "Top"
+    },
+    {
+      id: 2,
+      title: "Bottom"
+    },
+    {
+      id: 3,
+      title: "Left"
+    },
+    {
+      id: 4,
+      title: "Right"
+    }
+  ]
+};
+const ExtraDataSelect = ({ type, addon }) => {
+  const dispatch = useAppDispatch();
+  const [data, isMultiSelect] = React.useMemo(() => {
+    switch (type) {
+      case "grommets":
+        return [grommetsData.data, grommetsData.multiSelect];
+      case "pole_pocket":
+        return [polePocketData.data, polePocketData.multiSelect];
+      default:
+        return [[], false];
+    }
+  }, [type]);
+  if (type === "unset")
+    return null;
+  const handleChange = (extraData) => {
+    dispatch(
+      selectExtraDataItems({
+        targetExtraData: extraData,
+        addonID: addon.id,
+        isMultiSelect
+      })
+    );
+  };
+  return /* @__PURE__ */ jsx("div", { className: "extra-data-container", children: data.map((extraData) => /* @__PURE__ */ jsxs("label", { className: "extra-data-item", children: [
+    /* @__PURE__ */ jsx(
+      "input",
+      {
+        type: "checkbox",
+        onChange: () => handleChange(extraData),
+        checked: addon.extra_data_selected.find(
+          (selectedData) => selectedData.id === extraData.id
+        ) ? true : false
+      }
+    ),
+    /* @__PURE__ */ jsx("span", { style: { marginLeft: 5 }, children: extraData.title })
+  ] }, extraData.id)) });
+};
 const AddonItem = ({ addon, error, disabled }) => {
   const { withQuantity, title, id, condition, isSelected } = addon;
   const dispatch = useAppDispatch();
@@ -2779,6 +3124,8 @@ const AddonItem = ({ addon, error, disabled }) => {
   const handleChangeQuantity = (e) => {
     const { value } = e.target;
     let currentValue = +value;
+    if (!currentValue)
+      return;
     if (disabled)
       return;
     if (addon.withQuantity) {
@@ -2813,10 +3160,15 @@ const AddonItem = ({ addon, error, disabled }) => {
         "disabled-variant": disabled
       }),
       onClick: handleOnClick,
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap"
+      },
       children: [
         /* @__PURE__ */ jsx("h6", { className: "can-toggle", children: title }),
-        withQuantity && isSelected ? /* @__PURE__ */ jsxs("div", { style: { marginTop: 12 }, className: "can-toggle", children: [
-          "Quantity",
+        withQuantity && isSelected ? /* @__PURE__ */ jsxs("div", { className: "can-toggle", children: [
           /* @__PURE__ */ jsxs("div", { className: "quantity-container-addon", children: [
             /* @__PURE__ */ jsx(
               "div",
@@ -2846,22 +3198,17 @@ const AddonItem = ({ addon, error, disabled }) => {
             )
           ] }),
           error && /* @__PURE__ */ jsx("div", { style: { color: "red", fontSize: 12, marginTop: 5 }, children: error })
-        ] }) : null
+        ] }) : null,
+        isSelected ? /* @__PURE__ */ jsx(ExtraDataSelect, { addon, type: addon.extra_data_type }) : null
       ]
     }
   );
 };
-const ProductAddons = ({ loading }) => {
+const ProductAddons = ({}) => {
   const { state } = useContext(ProductFormContext);
   const { product, addons } = useAppSelector((state2) => state2.product);
   if (product.with_checkout === false)
     return;
-  if (loading) {
-    return /* @__PURE__ */ jsxs(Fragment, { children: [
-      /* @__PURE__ */ jsx(Skeleton, { height: 45 }),
-      /* @__PURE__ */ jsx(Skeleton, { height: 45 })
-    ] });
-  }
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsx("h6", { className: "label-product-show", children: "Addons" }),
     /* @__PURE__ */ jsx(
@@ -2888,11 +3235,10 @@ const ProductAddons = ({ loading }) => {
   ] });
 };
 function ModalShowProduct({
-  product,
-  loading,
-  handleAddToCart,
+  submitAddToCart,
   handleClose,
-  renderVariants
+  renderVariants,
+  ...props
 }) {
   var _a, _b;
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
@@ -2905,6 +3251,10 @@ function ModalShowProduct({
       navigate(`/catalog/product/${params.slug}`, { replace: true });
     }
   }, [isMobile, params, location]);
+  if (props.loading === true) {
+    return /* @__PURE__ */ jsx(Fragment, {});
+  }
+  const { product } = props;
   return /* @__PURE__ */ jsx(Dialog, { open: true, onClose: handleClose, children: /* @__PURE__ */ jsx("div", { className: "headless-bg", children: /* @__PURE__ */ jsx(Dialog.Panel, { className: "headless-popup", children: /* @__PURE__ */ jsx("div", { className: "modal-body headless-content", children: /* @__PURE__ */ jsxs("div", { className: "wrap-modal-slider  ps-quickview__body", children: [
     /* @__PURE__ */ jsx(
       "button",
@@ -2989,7 +3339,7 @@ function ModalShowProduct({
               {
                 type: "submit",
                 className: "ps-btn ps-btn--warning",
-                onClick: handleAddToCart,
+                onClick: () => submitAddToCart(),
                 style: { marginTop: 20 },
                 disabled: state.disabled,
                 children: "Add to cart"
@@ -3398,16 +3748,114 @@ const Catalog = ({}) => {
     ] }) })
   ] });
 };
-const ProductShow = ({
-  product,
-  loading,
-  handleAddToCart,
-  handleClose,
-  renderVariants
-}) => {
+const SelectProductFile = forwardRef(
+  function SelectProductFile2(props, ref) {
+    const [state, setState] = useState({
+      files: [],
+      showModal: false,
+      disabled: true
+    });
+    useImperativeHandle(ref, () => {
+      return {
+        showModal() {
+          setState({
+            showModal: true,
+            files: [],
+            disabled: true
+          });
+        },
+        closeModal() {
+          setState({
+            showModal: false,
+            files: [],
+            disabled: true
+          });
+        }
+      };
+    });
+    useEffect(() => {
+      setState((currentState) => ({
+        ...currentState,
+        disabled: state.files.length === 0
+      }));
+    }, [state.files]);
+    const onAddCart = async () => {
+      setState((currentState) => ({ ...currentState, disabled: true }));
+      await props.submitHandler(state.files);
+      setState({ files: [], showModal: false, disabled: false });
+    };
+    return /* @__PURE__ */ jsx(
+      Dialog,
+      {
+        open: state.showModal,
+        onClose: () => setState({ files: [], showModal: false, disabled: true }),
+        children: /* @__PURE__ */ jsx("div", { className: "headless-bg", children: /* @__PURE__ */ jsx(Dialog.Panel, { className: "headless-popup", children: /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "modal-body headless-content",
+            style: { textAlign: "center" },
+            children: [
+              /* @__PURE__ */ jsx("h3", { style: { color: "#103178", marginBottom: 25 }, children: "Please Specify An Image" }),
+              /* @__PURE__ */ jsx(
+                Dropzone,
+                {
+                  onDrop: (files) => setState((currentState) => ({ ...currentState, files }))
+                }
+              ),
+              /* @__PURE__ */ jsx("div", { className: "col-md-6", style: { margin: "auto" }, children: /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "submit",
+                  className: "ps-btn ps-btn--warning",
+                  onClick: onAddCart,
+                  style: { marginTop: 25 },
+                  disabled: state.disabled,
+                  children: "Add to cart"
+                }
+              ) })
+            ]
+          }
+        ) }) })
+      }
+    );
+  }
+);
+const ProductSkeleton = ({}) => {
+  return /* @__PURE__ */ jsx("div", { className: "ps-page--product-variable", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
+    /* @__PURE__ */ jsx("div", { className: "ps-breadcrumb", children: /* @__PURE__ */ jsx(Skeleton, {}) }),
+    /* @__PURE__ */ jsx("div", { className: "ps-page__content", style: { marginBottom: "20px" }, children: /* @__PURE__ */ jsx("div", { className: "ps-product--detail", children: /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("div", { className: "col-md-12", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
+      /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: /* @__PURE__ */ jsx("div", { style: { height: 650, marginBottom: 30 }, children: /* @__PURE__ */ jsx(Skeleton, { height: "100%" }) }) }),
+      /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: /* @__PURE__ */ jsxs("div", { className: "ps-product__info", children: [
+        /* @__PURE__ */ jsx("div", { className: "ps-product__branch", children: /* @__PURE__ */ jsx(Skeleton, {}) }),
+        /* @__PURE__ */ jsx("div", { className: "ps-product__title", children: /* @__PURE__ */ jsx(Skeleton, { height: 45 }) }),
+        /* @__PURE__ */ jsx("div", { className: "ps-product__desc", children: /* @__PURE__ */ jsx(Skeleton, { count: 5 }) }),
+        /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(Skeleton, { count: 3 }) }),
+        /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "ps-product__meta",
+            style: {
+              marginTop: 0,
+              borderBottom: "1px solid #f0f2f5"
+            },
+            children: [
+              /* @__PURE__ */ jsxs("div", { style: { marginTop: 20 }, children: [
+                /* @__PURE__ */ jsx(Skeleton, { height: 45 }),
+                /* @__PURE__ */ jsx(Skeleton, { height: 45 })
+              ] }),
+              /* @__PURE__ */ jsx("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ jsx(Skeleton, { height: 140 }) })
+            ]
+          }
+        ) })
+      ] }) })
+    ] }) }) }) }) })
+  ] }) });
+};
+const ProductShow = ({ submitAddToCart, ...props }) => {
   var _a, _b, _c;
   const location = useLocation();
   const { state, setState } = useContext(ProductFormContext);
+  const dragAndDropRef = useRef(null);
   useEffect(() => {
     window.scrollTo(0, 0);
     return () => {
@@ -3416,122 +3864,138 @@ const ProductShow = ({
   }, []);
   useEffect(() => {
     const target = document.body;
-    if (loading) {
+    if (props.loading) {
       lock(target);
     } else {
       unlock(target);
     }
-  }, [loading]);
+  }, [props.loading]);
+  const handleAddToCart = () => {
+    if (state.selectedOption.need_file) {
+      dragAndDropRef.current.showModal();
+    } else {
+      submitAddToCart();
+    }
+  };
+  if (props.loading === true) {
+    return /* @__PURE__ */ jsx(ProductSkeleton, {});
+  }
   return /* @__PURE__ */ jsx("div", { className: "ps-page--product-variable", children: /* @__PURE__ */ jsxs("div", { className: "container", children: [
-    product && !loading ? /* @__PURE__ */ jsxs("ul", { className: "ps-breadcrumb", children: [
+    /* @__PURE__ */ jsxs("ul", { className: "ps-breadcrumb", children: [
       /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx(Link, { to: "/", children: "Home" }) }),
       /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx("span", { children: "Shop" }) }),
-      ((_a = location.state) == null ? void 0 : _a.category) ? /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${location.state.category.slug}`, children: location.state.category.title }) }) : product.categories.length > 0 && /* @__PURE__ */ jsx(
+      ((_a = location.state) == null ? void 0 : _a.category) ? /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${location.state.category.slug}`, children: location.state.category.title }) }) : props.product.categories.length > 0 && /* @__PURE__ */ jsx(
         "li",
         {
           className: "ps-breadcrumb__item",
-          children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${product.categories[0].slug}`, children: product.categories[0].title })
+          children: /* @__PURE__ */ jsx(Link, { to: `/catalog/${props.product.categories[0].slug}`, children: props.product.categories[0].title })
         },
-        `breadcumbs-${product.categories[0].slug}`
+        `breadcumbs-${props.product.categories[0].slug}`
       ),
-      /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx("span", { children: product.title }) })
-    ] }) : /* @__PURE__ */ jsx("div", { className: "ps-breadcrumb", children: /* @__PURE__ */ jsx(Skeleton, {}) }),
-    /* @__PURE__ */ jsxs("div", { className: "ps-page__content", children: [
-      /* @__PURE__ */ jsx("div", { className: "ps-product--detail", children: /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("div", { className: "col-md-12", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
-        /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: (product == null ? void 0 : product.images) && !loading ? /* @__PURE__ */ jsx(
-          ProductSlider,
-          {
-            images: product.images,
-            productName: product.title
-          }
-        ) : /* @__PURE__ */ jsx("div", { style: { height: 650, marginBottom: 30 }, children: /* @__PURE__ */ jsx(Skeleton, { height: "100%" }) }) }),
-        /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: /* @__PURE__ */ jsxs("div", { className: "ps-product__info", children: [
-          /* @__PURE__ */ jsx("div", { className: "ps-product__branch", children: !(product == null ? void 0 : product.categories) || loading ? /* @__PURE__ */ jsx(Skeleton, {}) : (_b = product == null ? void 0 : product.categories) == null ? void 0 : _b.map((category) => /* @__PURE__ */ jsx(
-            Link,
+      /* @__PURE__ */ jsx("li", { className: "ps-breadcrumb__item", children: /* @__PURE__ */ jsx("span", { children: props.product.title }) })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "ps-page__content", style: { marginBottom: "20px" }, children: [
+      /* @__PURE__ */ jsxs("div", { className: "ps-product--detail", children: [
+        /* @__PURE__ */ jsx("div", { className: "row", children: /* @__PURE__ */ jsx("div", { className: "col-md-12", children: /* @__PURE__ */ jsxs("div", { className: "row", children: [
+          /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: /* @__PURE__ */ jsx(
+            ProductSlider,
             {
-              to: `/catalog/${category.slug}`,
-              children: category.title
-            },
-            `cat-${category.slug}`
-          )) }),
-          /* @__PURE__ */ jsx("div", { className: "ps-product__title", children: !(product == null ? void 0 : product.title) || loading ? /* @__PURE__ */ jsx(Skeleton, { height: 45 }) : /* @__PURE__ */ jsx("a", { children: product.title }) }),
-          /* @__PURE__ */ jsx("div", { className: "ps-product__desc", children: !(product == null ? void 0 : product.description) || loading ? /* @__PURE__ */ jsx(Skeleton, { count: 5 }) : /* @__PURE__ */ jsx(
-            "p",
-            {
-              className: "product_modal_desc",
-              dangerouslySetInnerHTML: {
-                __html: product == null ? void 0 : product.description
-              }
+              images: props.product.images,
+              productName: props.product.title
             }
           ) }),
-          /* @__PURE__ */ jsx("div", { children: !product || loading ? /* @__PURE__ */ jsx(Skeleton, { count: 3 }) : /* @__PURE__ */ jsxs("ul", { className: "ps-product__bundle", children: [
-            /* @__PURE__ */ jsxs("li", { children: [
-              /* @__PURE__ */ jsx("i", { className: "icon-wallet" }),
-              "100% Money back"
-            ] }),
-            /* @__PURE__ */ jsxs("li", { children: [
-              /* @__PURE__ */ jsx("i", { className: "icon-bag2" }),
-              "Non-contact shipping"
-            ] }),
-            /* @__PURE__ */ jsxs("li", { children: [
-              /* @__PURE__ */ jsx("i", { className: "icon-truck" }),
-              "Free delivery for order over $200"
-            ] })
-          ] }) }),
-          /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx(
-              "div",
+          /* @__PURE__ */ jsx("div", { className: "col-12 col-xl-6", children: /* @__PURE__ */ jsxs("div", { className: "ps-product__info", children: [
+            /* @__PURE__ */ jsx("div", { className: "ps-product__branch", children: (_b = props.product.categories) == null ? void 0 : _b.map((category) => /* @__PURE__ */ jsx(
+              Link,
               {
-                className: "ps-product__meta",
-                style: {
-                  marginTop: 0,
-                  borderBottom: "1px solid #f0f2f5"
-                },
-                children: (product == null ? void 0 : product.with_checkout) ? /* @__PURE__ */ jsxs(Fragment, { children: [
-                  /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(ProductOptions, { loading }) }),
-                  state.selectedOption && state.selectedOption.addons.length > 0 ? /* @__PURE__ */ jsx("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ jsx(ProductAddons, { loading }) }) : null,
-                  ((_c = state.selectedOption) == null ? void 0 : _c.showCalculator) ? /* @__PURE__ */ jsx("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ jsx(ProductCalculator, { loading }) }) : null
-                ] }) : /* @__PURE__ */ jsx(
-                  ModalContentWithForm,
-                  {
-                    product,
-                    loading
-                  }
-                )
+                to: `/catalog/${category.slug}`,
+                children: category.title
+              },
+              `cat-${category.slug}`
+            )) }),
+            /* @__PURE__ */ jsx("div", { className: "ps-product__title", children: /* @__PURE__ */ jsx("a", { children: props.product.title }) }),
+            /* @__PURE__ */ jsx("div", { className: "ps-product__desc", children: /* @__PURE__ */ jsx(
+              "p",
+              {
+                className: "product_modal_desc",
+                dangerouslySetInnerHTML: {
+                  __html: props.product.description
+                }
               }
-            ),
-            (product == null ? void 0 : product.with_checkout) && !loading ? /* @__PURE__ */ jsxs("div", { children: [
-              /* @__PURE__ */ jsx("h6", { className: "label-product-show", children: "Quantity:" }),
+            ) }),
+            /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("ul", { className: "ps-product__bundle", children: [
+              /* @__PURE__ */ jsxs("li", { children: [
+                /* @__PURE__ */ jsx("i", { className: "icon-wallet" }),
+                "100% Money back"
+              ] }),
+              /* @__PURE__ */ jsxs("li", { children: [
+                /* @__PURE__ */ jsx("i", { className: "icon-bag2" }),
+                "Non-contact shipping"
+              ] }),
+              /* @__PURE__ */ jsxs("li", { children: [
+                /* @__PURE__ */ jsx("i", { className: "icon-truck" }),
+                "Free delivery for order over $200"
+              ] })
+            ] }) }),
+            /* @__PURE__ */ jsxs("div", { children: [
               /* @__PURE__ */ jsx(
-                ProductQuantity,
+                "div",
                 {
-                  value: state.quantity,
-                  onChange: (value) => setState((state2) => ({
-                    ...state2,
-                    quantity: value
-                  }))
+                  className: "ps-product__meta",
+                  style: {
+                    marginTop: 0,
+                    borderBottom: "1px solid #f0f2f5"
+                  },
+                  children: props.product.with_checkout ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(ProductOptions, {}) }),
+                    state.selectedOption && state.selectedOption.addons.length > 0 ? /* @__PURE__ */ jsx("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ jsx(ProductAddons, {}) }) : null,
+                    ((_c = state.selectedOption) == null ? void 0 : _c.showCalculator) ? /* @__PURE__ */ jsx("div", { style: { marginTop: 20 }, children: /* @__PURE__ */ jsx(ProductCalculator, {}) }) : null
+                  ] }) : /* @__PURE__ */ jsx(ModalContentWithForm, { product: props.product })
                 }
               ),
-              /* @__PURE__ */ jsxs("span", { className: "ps-product__price", children: [
-                state.calculatedPrice || "0.00",
-                " $"
-              ] }),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "submit",
-                  className: "ps-btn ps-btn--warning",
-                  onClick: handleAddToCart,
-                  style: { marginTop: 20 },
-                  disabled: state.disabled,
-                  children: "Add to cart"
-                }
-              )
-            ] }) : null
-          ] })
-        ] }) })
-      ] }) }) }) }),
-      /* @__PURE__ */ jsx("section", { className: "ps-section--latest" })
+              props.product.with_checkout ? /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h6", { className: "label-product-show", children: "Quantity:" }),
+                /* @__PURE__ */ jsx(
+                  ProductQuantity,
+                  {
+                    value: state.quantity,
+                    onChange: (value) => setState((state2) => ({
+                      ...state2,
+                      quantity: value
+                    }))
+                  }
+                ),
+                /* @__PURE__ */ jsxs("span", { className: "ps-product__price", children: [
+                  state.calculatedPrice || "0.00",
+                  " $"
+                ] }),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "submit",
+                    className: "ps-btn ps-btn--warning",
+                    onClick: handleAddToCart,
+                    style: { marginTop: 20 },
+                    disabled: state.disabled,
+                    children: "Add to cart"
+                  }
+                )
+              ] }) : null
+            ] })
+          ] }) })
+        ] }) }) }),
+        props.product.faq && /* @__PURE__ */ jsxs("div", { className: "ps-product__content mt-50", children: [
+          /* @__PURE__ */ jsx("h2", { className: "ps-title", children: "F.A.Q" }),
+          /* @__PURE__ */ jsx(FAQProduct, { questions: props.product.faq })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx(
+        SelectProductFile,
+        {
+          ref: dragAndDropRef,
+          submitHandler: (files) => submitAddToCart(files)
+        }
+      )
     ] })
   ] }) });
 };
@@ -3552,6 +4016,9 @@ function Routing() {
   location.state;
   useNavigate();
   const background = location.state && location.state.background;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(Routes, { location: background || location, children: /* @__PURE__ */ jsxs(Route, { path: "/", element: /* @__PURE__ */ jsx(Layout, {}), children: [
       /* @__PURE__ */ jsx(Route, { index: true, element: /* @__PURE__ */ jsx(Home, {}) }),
@@ -3852,8 +4319,12 @@ const store = configureStore({
     product: singleProductSliceReducer
   }
 });
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(
-  /* @__PURE__ */ jsx(Provider, { store, children: /* @__PURE__ */ jsx(App, {}) })
-);
+function render() {
+  const html = ReactDOMServer.renderToString(
+    /* @__PURE__ */ jsx(React.StrictMode, { children: /* @__PURE__ */ jsx(Provider, { store, children: /* @__PURE__ */ jsx(App, {}) }) })
+  );
+  return { html };
+}
+export {
+  render as default
+};

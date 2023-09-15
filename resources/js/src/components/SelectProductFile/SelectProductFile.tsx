@@ -9,7 +9,7 @@ import { FileState } from "../Dropzone/Dropzone";
 import { Dialog } from "@headlessui/react";
 
 interface Props {
-  submitHandler: (files?: FileState[]) => void;
+  submitHandler: (files?: FileState[]) => Promise<void>;
 }
 
 export interface SelectProductFileRef {
@@ -55,12 +55,13 @@ const SelectProductFile = forwardRef<SelectProductFileRef, Props>(
       }));
     }, [state.files]);
 
-    const onAddCart = () => {
-      props.submitHandler(state.files);
+    const onAddCart = async () => {
+      setState((currentState) => ({...currentState, disabled: true }));
+
+      await props.submitHandler(state.files);
+
       setState({ files: [], showModal: false, disabled: false });
     };
-
-    console.log(state.files);
 
     return (
       <Dialog

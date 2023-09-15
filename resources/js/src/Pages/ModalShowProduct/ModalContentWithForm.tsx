@@ -22,10 +22,9 @@ type Inputs = {
 
 interface Props {
   product: IProduct;
-  loading?: boolean;
 }
 
-const ModalContentWithForm: React.FC<Props> = ({ product, loading }: Props) => {
+const ModalContentWithForm: React.FC<Props> = ({ product }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
@@ -61,10 +60,6 @@ const ModalContentWithForm: React.FC<Props> = ({ product, loading }: Props) => {
       setIsSubmitting(false);
     }
   };
-
-  if (loading) {
-    return <Skeleton height={250} />;
-  }
 
   return (
     <div className="ps-checkout">

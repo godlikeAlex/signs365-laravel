@@ -3,7 +3,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "ssr": "tsc && vite build && vite build --ssr"
+    "ssr": "vite build && vite build --ssr",
+    "postbuild": "react-snap"
+  },
+  "reactSnap": {
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
+    "puppeteer": {
+      "waitUntil": "networkidle0"
+    }
   },
   "devDependencies": {
     "@headlessui/react": "^1.7.7",
@@ -42,6 +52,7 @@
     "js-cookie": "^3.0.1",
     "laravel-vite-plugin": "^0.7.3",
     "less": "^4.2.0",
+    "puppeteer": "^21.2.1",
     "rc-collapse": "^3.5.2",
     "react-content-loader": "^6.2.0",
     "react-drag-drop-files": "^2.3.10",
@@ -56,12 +67,14 @@
     "react-router-dom": "^6.6.0",
     "react-select": "^5.7.4",
     "react-slick": "^0.29.0",
+    "react-snap": "^1.23.0",
     "react-spinners": "^0.13.8",
     "react-table": "^7.8.0",
     "react-toastify": "^9.1.1",
     "swiper": "^8.4.7",
     "tua-body-scroll-lock": "^1.4.0",
     "vite": "^4.4.9",
+    "vite-plugin-commonjs": "^0.9.0",
     "yup": "^0.32.11"
   }
 }
