@@ -14,7 +14,7 @@ const ProductOptions: React.FC<Props> = ({}: Props) => {
   const { product, selectedOption } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
 
-  if (product.with_checkout === false) return;
+  if (product?.with_checkout === false) return;
 
   return (
     <div>

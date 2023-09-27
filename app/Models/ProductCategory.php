@@ -12,6 +12,25 @@ class ProductCategory extends Model
 
   protected $guarded = [];
 
+  static function getCategoriesWithProducts()
+  {
+    $categoriesWithProducts = ProductCategory::query()
+      ->orderBy("menu_order", "asc")
+      ->where("show_on_home", true)
+      ->with("products")
+      ->get();
+
+    $categoriesWithProducts->each(function ($category) {
+      $category->products->each(function ($product) {
+        if ($product->with_checkout) {
+          $product->load("options", "addons");
+        }
+      });
+    });
+
+    return $categoriesWithProducts;
+  }
+
   public function cities()
   {
     return $this->belongsToMany(

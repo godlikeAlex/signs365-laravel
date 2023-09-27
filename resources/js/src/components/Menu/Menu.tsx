@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useAppSelector } from "@/src/hooks";
-import { Link } from "react-router-dom";
 import MiniAuthModal from "./MiniAuthModal";
 import MiniCartModal from "./MiniCartModal";
+import { usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+
 import "./style.css";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {}
 
@@ -13,9 +15,7 @@ interface MenuState {
 }
 
 const Menu: React.FC<Props> = ({}: Props) => {
-  const { isAuthed, user } = useAppSelector((state) => state.auth);
-  const { cart, loaded } = useAppSelector((state) => state.cart);
-  const { homeCategories } = useAppSelector((state) => state.app);
+  const { homeCategories, cart, auth } = usePage<SharedInertiaData>().props;
 
   const [state, setState] = useState<MenuState>({
     showMiniAuth: false,
@@ -79,11 +79,10 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 >
                   <Link
                     className="ps-header__item"
-                    to={user ? "/profile" : "/login"}
+                    href={auth.user ? "/profile" : "/login"}
                   >
                     <i className="icon-user"></i>
                   </Link>
-                  {/*  */}
                 </div>
 
                 <div
@@ -101,9 +100,9 @@ const Menu: React.FC<Props> = ({}: Props) => {
                   }
                   className="ps-dropdown-value with-dp-modal"
                 >
-                  <Link className="ps-header__item" to="/cart" id="cart-mini">
+                  <Link className="ps-header__item" href="/cart" id="cart-mini">
                     <i className="icon-cart-empty"></i>
-                    {loaded && cart.items.length > 0 ? (
+                    {cart.items.length > 0 ? (
                       <span className="badge-mini">{cart.items.length}</span>
                     ) : null}
                   </Link>
@@ -140,7 +139,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
             <div className="ps-header__menu" style={{ width: "100%" }}>
               <ul className="menu-custom">
                 <li className="ps-logo custom-logo">
-                  <Link to="/">
+                  <Link href="/">
                     <img src="/img/logo.png" alt="" />
                     <img className="sticky-logo" src="/img/logo.png" alt="" />
                   </Link>
@@ -152,7 +151,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
                       key={id}
                     >
                       <Link
-                        to={`/catalog/${slug}`}
+                        href={`/shop/category/${slug}`}
                         className="ps-category__link"
                       >
                         <img
@@ -162,13 +161,13 @@ const Menu: React.FC<Props> = ({}: Props) => {
                         />
                       </Link>
                       <div className="ps-category__name">
-                        <Link to={`/catalog/${slug}`}>{title}</Link>
+                        <Link href={`/shop/category/${slug}`}>{title}</Link>
                       </div>
 
                       <div className="dropdown-content-menu">
                         {products.map((product) => (
                           <Link
-                            to={`/catalog/product/${product.slug}`}
+                            href={`/shop/product/${product.slug}`}
                             key={`${id}-${product.id}`}
                           >
                             {product.title}
@@ -183,27 +182,6 @@ const Menu: React.FC<Props> = ({}: Props) => {
           </div>
         </div>
       </header>
-    </>
-  );
-
-  return (
-    <>
-      <Link to={"/"}>Home</Link>
-
-      {isAuthed && user ? (
-        <Link to={"/profile"} style={{ marginLeft: 20 }}>
-          Profile
-        </Link>
-      ) : (
-        <>
-          <Link to={"/login"} style={{ marginLeft: 20 }}>
-            Login
-          </Link>
-          <Link to={"/register"} style={{ marginLeft: 20 }}>
-            Register
-          </Link>
-        </>
-      )}
     </>
   );
 };

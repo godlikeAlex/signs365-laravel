@@ -124,9 +124,13 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
                 <CatalogProducts
                   currentCategory={state.currentCategory}
                   products={state.products}
-                  loading={state.productsLoading}
-                  fetchProducts={fetchProducts}
                   pageCount={state.pageCount}
+                  currentPage={1}
+                  // currentCategory={state.currentCategory}
+                  // products={state.products}
+                  // loading={state.productsLoading}
+                  // fetchProducts={fetchProducts}
+                  // pageCount={state.pageCount}
                 />
               </div>
               <div className="col-12 col-md-3">

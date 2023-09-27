@@ -1,15 +1,16 @@
 import { useAppSelector } from "@/src/hooks";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import { usePage } from "@inertiajs/react";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-interface CheckoutSidebarProps {
+interface Props {
   submiting: boolean;
 }
 
-const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
-  submiting,
-}: CheckoutSidebarProps) => {
-  const { cart } = useAppSelector((state) => state.cart);
+const CheckoutSidebar: React.FC<Props> = ({ submiting }: Props) => {
+  const { cart } = usePage<SharedInertiaData>().props;
+
   return (
     <div
       className="ps-checkout__order"

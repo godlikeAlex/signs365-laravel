@@ -1,11 +1,12 @@
-import { useAppSelector } from "@/src/hooks";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
 interface FooterProps {}
 
 const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
-  const { homeCategories } = useAppSelector((state) => state.app);
+  const { homeCategories, cart } = usePage<SharedInertiaData>().props;
 
   return (
     <footer className="ps-footer ps-footer--5 pt-50">
@@ -85,7 +86,7 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       <ul className="ps-block__list">
                         {category.products.map((product) => (
                           <li key={`footer-product-${product.id}`}>
-                            <Link to={`/catalog/${product.slug}`}>
+                            <Link href={`/shop/product/${product.slug}`}>
                               {product.title}
                             </Link>
                           </li>

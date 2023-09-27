@@ -2,7 +2,8 @@ import { useAppDispatch } from "@/src/hooks";
 import { IProduct } from "@/src/types/ProductModel";
 import { ICategory } from "@/src/types/models";
 import React, { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 
 type Props = IProduct & {
   fullPage?: boolean;
@@ -10,17 +11,11 @@ type Props = IProduct & {
 };
 
 const ProductCard: React.FC<Props> = (props: Props) => {
-  const dispatch = useAppDispatch();
-  const location = useLocation();
-
   const { title, id, slug, images, with_checkout, min_price } = props;
   const [fetching, setIsFetch] = useState(false);
 
   const productURL = React.useMemo(
-    () =>
-      !props.fullPage
-        ? `/home/product/modal/${slug}`
-        : `/catalog/product/${slug}`,
+    () => (!props.fullPage ? `/shop/product/${slug}` : `/shop/product/${slug}`),
     [props]
   );
 
@@ -42,15 +37,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           style={{ height: "100%" }}
         >
           <div className="ps-product__thumbnail ps-product__thumbnail-card">
-            <Link
-              className="ps-product__image"
-              to={productURL}
-              state={{
-                background: props.fullPage ? null : location,
-                product: props,
-                category: props.category,
-              }}
-            >
+            <Link className="ps-product__image" href={productURL}>
               <figure>
                 {images.slice(0, 2).map((image) => (
                   <img
@@ -111,7 +98,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="meta-wrapper">
                 {props.categories.map((category, index) => (
                   <Link
-                    to={`/catalog/${category.slug}`}
+                    href={`/catalog/${category.slug}`}
                     className="ps-product__branch"
                     key={`category-card-product-${category.id}`}
                   >
@@ -124,12 +111,12 @@ const ProductCard: React.FC<Props> = (props: Props) => {
 
             <h5 className="ps-product__title">
               <Link
-                to={productURL}
-                state={{
-                  background: props.fullPage ? null : location,
-                  product: props,
-                  category: props.category,
-                }}
+                href={productURL}
+                // state={{
+                //   background: props.fullPage ? null : location,
+                //   product: props,
+                //   category: props.category,
+                // }}
                 style={{ fontWeight: 600 }}
               >
                 {title}
@@ -162,24 +149,24 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="ps-product__cart">
                 <Link
                   className="ps-btn ps-btn--warning"
-                  to={productURL}
-                  state={{
-                    background: props.fullPage ? null : location,
-                    product: props,
-                    category: props.category,
-                  }}
+                  href={productURL}
+                  // state={{
+                  //   background: props.fullPage ? null : location,
+                  //   product: props,
+                  //   category: props.category,
+                  // }}
                 >
                   Add to cart
                 </Link>
               </div>
 
               <Link
-                to={productURL}
-                state={{
-                  background: props.fullPage ? null : location,
-                  product: props,
-                  category: props.category,
-                }}
+                href={productURL}
+                // state={{
+                //   background: props.fullPage ? null : location,
+                //   product: props,
+                //   category: props.category,
+                // }}
               >
                 <button className="ps-btn ps-btn--warning">Details</button>
               </Link>

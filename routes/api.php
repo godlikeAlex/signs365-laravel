@@ -39,7 +39,7 @@ Route::middleware("handleCityFromRequest")->group(function () {
     "category",
   ]);
 
-  Route::get("/shop/category/{product_category:slug}/products", [
+  Route::get("/shop/category/{product_category:slug}  ", [
     \App\Http\Controllers\Api\ShopController::class,
     "products",
   ]);

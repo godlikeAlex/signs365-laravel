@@ -3,6 +3,7 @@ import { removeItemFromCart, updateQuantity } from "@/src/redux/cartSlice";
 import { CartService } from "@/src/services";
 import { ICartItem } from "@/src/types/models";
 import { generateAttributtesCartItem } from "@/src/utils/helpers";
+import { router } from "@inertiajs/react";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -20,11 +21,20 @@ const CartItem: React.FC<Props> = ({
 
   const addItem = async () => {
     try {
-      await dispatch(updateQuantity({ type: "add", item_id: id })).unwrap();
-
-      toast(`Successfully increased the quantity of ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/update-quantity",
+        {
+          item_id: id,
+          type: "add",
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully increased the quantity of ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while adding to cart", { type: "error" });
     }
@@ -32,11 +42,20 @@ const CartItem: React.FC<Props> = ({
 
   const reduceItem = async () => {
     try {
-      await dispatch(updateQuantity({ type: "reduce", item_id: id })).unwrap();
-
-      toast(`Successfully reduced the quantity of ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/update-quantity",
+        {
+          item_id: id,
+          type: "reduce",
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully reduced the quantity of ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while reducing item", { type: "error" });
     }

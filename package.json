@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@headlessui/react": "^1.7.7",
-    "@inertiajs/inertia": "^0.11.0",
+    "@inertiajs/inertia": "^0.11.1",
     "@inertiajs/inertia-react": "^0.8.1",
     "@inertiajs/progress": "^0.2.6",
     "@prettier/plugin-php": "^0.19.3",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
+    "@inertiajs/react": "^1.0.11",
     "@reduxjs/toolkit": "^1.9.1",
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",

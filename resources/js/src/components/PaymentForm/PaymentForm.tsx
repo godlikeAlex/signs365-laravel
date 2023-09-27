@@ -13,6 +13,8 @@ import Input from "../Input";
 import ClipLoader from "react-spinners/ClipLoader";
 import { BeatLoader } from "react-spinners";
 import PaymentService from "@/src/services/PaymentService";
+import { usePage } from "@inertiajs/react";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {
   tempOrderID: number | string;
@@ -39,11 +41,10 @@ const CheckOutSchema = yup.object({
 const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
+  const { auth } = usePage<SharedInertiaData>().props;
 
   const [submiting, setSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-
-  const { user } = useAppSelector((state) => state.auth);
 
   const {
     register,
@@ -52,9 +53,9 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
   } = useForm<Inputs>({
     resolver: yupResolver(CheckOutSchema),
     defaultValues: {
-      name: user?.name ?? "",
-      email: user?.email ?? "",
-      user_id: user?.id ?? undefined,
+      name: auth?.user?.name ?? "",
+      email: auth?.user?.email ?? "",
+      user_id: auth?.user?.id ?? undefined,
     },
   });
 
@@ -109,7 +110,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
             <h3 className="ps-checkout__heading">Billing details</h3>
             <div className="row">
               <div className="col-12 col-md-12">
-                {!user ? (
+                {!auth.user ? (
                   <Input
                     {...register("name")}
                     error={errors.name?.message}
@@ -132,7 +133,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
                 />
               </div>
               <div className="col-12 col-md-12">
-                {!user ? (
+                {!auth.user ? (
                   <Input
                     {...register("email")}
                     type="email"

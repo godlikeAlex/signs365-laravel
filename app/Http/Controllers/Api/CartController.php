@@ -107,7 +107,9 @@ class CartController extends Controller
         $images
       );
 
-      return \response()->json($this->cart->format($city));
+      // return \response()->json($this->cart->format($city));
+
+      return back();
     } catch (ModelNotFoundException $e) {
       return response()->json(
         [
@@ -135,7 +137,9 @@ class CartController extends Controller
         $this->cart->reduceQuantity($request->input("item_id"));
       }
 
-      return \response()->json($this->cart->format($city));
+      return back();
+
+      // return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json(
         [

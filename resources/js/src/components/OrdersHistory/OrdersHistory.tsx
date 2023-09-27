@@ -28,12 +28,7 @@ const OrdersHistory: React.FC<Props> = ({}: Props) => {
   return (
     <>
       <div>
-        <OrdersList
-          data={data}
-          pageCount={pageCount}
-          loading={loading}
-          fetchData={fetchData}
-        />
+        <OrdersList data={data} pageCount={pageCount} currentPage={1} />
       </div>
     </>
   );

@@ -7,55 +7,45 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./style.css";
 import ReactPaginate from "react-paginate";
 import { IProduct } from "@/src/types/ProductModel";
+import { router } from "@inertiajs/react";
 
 interface Props {
   products: IProduct[];
-  loading: boolean;
   currentCategory: ICategory;
-  fetchProducts: (page: number | string, currentCategory: ICategory) => void;
   pageCount: number;
+  currentPage: number;
 }
 
 const CatalogProducts: React.FC<Props> = ({
   products,
-  loading,
   currentCategory,
   pageCount,
-  fetchProducts,
+  currentPage,
 }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = searchParams.get("page") || 1;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentCategory) {
-      fetchProducts(page, currentCategory);
-    }
-  }, [page, currentCategory]);
-
-  if (loading) {
-    return (
-      <div className="row" style={{ marginBottom: 20 }}>
-        {new Array(12).fill("").map(() => (
-          <div
-            className="col-6 col-lg-4 col-xl-3 "
-            style={{ marginBottom: 10 }}
-          >
-            <Skeleton height={160} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   const handlePageClick = ({ selected }: { selected: number }) => {
-    if (selected + 1 == page) {
+    if (selected + 1 === currentPage) {
       return;
     }
 
-    navigate(`?page=${selected + 1}`);
-
-    console.log("why you rendered!", selected + 1, page);
+    router.visit(`?page=${selected + 1}`, {
+      method: "get",
+      data: {},
+      replace: false,
+      preserveState: false,
+      preserveScroll: false,
+      only: [],
+      headers: {},
+      errorBag: null,
+      forceFormData: false,
+      onCancelToken: (cancelToken) => {},
+      onCancel: () => {},
+      onBefore: (visit) => {},
+      onStart: (visit) => {},
+      onProgress: (progress) => {},
+      onSuccess: (page) => {},
+      onError: (errors) => {},
+      onFinish: (visit) => {},
+    });
   };
 
   return (
@@ -91,9 +81,9 @@ const CatalogProducts: React.FC<Props> = ({
               hide_on_mob_items: pageCount >= 7,
             })}
             nextLabel={<i className="fa fa-angle-double-right"></i>}
-            initialPage={+page - 1}
+            initialPage={currentPage > 0 ? currentPage - 1 : 0}
             onPageChange={handlePageClick}
-            pageRangeDisplayed={2}
+            pageRangeDisplayed={pageCount}
             pageCount={pageCount}
             previousLabel={<i className="fa fa-angle-double-left"></i>}
             pageClassName="page-paginate"

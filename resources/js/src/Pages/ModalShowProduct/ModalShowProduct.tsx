@@ -139,7 +139,7 @@ function ModalShowProduct({
 
                                   {state.selectedOption?.showCalculator ? (
                                     <div style={{ marginTop: 20 }}>
-                                      <ProductCalculator />
+                                      {/* <ProductCalculator /> */}
                                     </div>
                                   ) : null}
                                 </>

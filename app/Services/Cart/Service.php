@@ -195,7 +195,9 @@ class Service
     $tax = $condition->getCalculatedValue($sub_total);
 
     return [
-      "items" => CartItemsResource::collection($cart->sort()->values()),
+      "items" => json_decode(
+        CartItemsResource::collection($cart->sort()->values())->toJson()
+      ),
       "tax" => round($tax / 100, 3),
       "total" => round($sub_total / 100, 3),
       "total_with_tax" => round(($sub_total + $tax) / 100, 2),

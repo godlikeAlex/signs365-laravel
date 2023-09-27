@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react";
 import Input from "../Input";
-import { ProductFormContext } from "@/src/contexts/ProductFormContext";
+import {
+  ContextType,
+  ProductFormContext,
+} from "@/src/contexts/ProductFormContext";
 import classNames from "classnames";
 import { useAppSelector } from "@/src/hooks";
 import UnitSelection from "./UnitSelection";
@@ -8,13 +11,16 @@ import CalculatorForm from "./CalculatorForm";
 import CustomSizesDropdown from "./CustomSizesDropdown";
 import Skeleton from "react-loading-skeleton";
 
-interface Props {}
+interface Props extends ContextType {}
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];
 
-const ProductCalculator: React.FC<Props> = ({}: Props) => {
+const ProductCalculator: React.FC<Props> = ({
+  state,
+  setState,
+  validationRules,
+}: Props) => {
   const { selectedOption } = useAppSelector((state) => state.product);
-  const { state, setState, validationRules } = useContext(ProductFormContext);
 
   const staticData = React.useMemo(() => {
     const isSignleType = selectedOption.type === "single";

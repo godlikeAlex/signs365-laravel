@@ -26,7 +26,9 @@ class CategoryController extends Controller
     });
 
     return [
-      "categories" => CategoryResource::collection($categoriesWithProducts),
+      "categories" => CategoryResource::collection(
+        ProductCategory::getCategoriesWithProducts()
+      ),
     ];
   }
 }

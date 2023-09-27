@@ -13,6 +13,7 @@ interface Props {
 
 const MiniCartModal: React.FC<Props> = ({ active }: Props) => {
   const { loaded, cart } = useAppSelector((state) => state.cart);
+
   return (
     <div
       className={classNames("ps-cart--mini", {
