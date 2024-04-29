@@ -1,4 +1,4 @@
-import { Input } from "@/src/components";
+import { Input, SEOHead } from "@/src/components";
 import { Head, Link, useForm } from "@inertiajs/react";
 import React from "react";
 import { toast } from "react-toastify";
@@ -25,9 +25,7 @@ const Register: React.FC<Props> = ({}: Props) => {
 
   return (
     <>
-      <Head>
-        <title>Register</title>
-      </Head>
+      <SEOHead title="Register" />
 
       <div className="ps-account">
         <div className="container">

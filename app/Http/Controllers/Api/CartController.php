@@ -162,14 +162,17 @@ class CartController extends Controller
 
       $this->cart->removeItem($request->input("item_id"));
 
-      return \response()->json($this->cart->format($city));
+      return back();
+      // return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json(
-        [
-          "error" => "This product does'nt exists",
-        ],
-        404
-      );
+      return back();
+
+      // return response()->json(
+      //   [
+      //     "error" => "This product does'nt exists",
+      //   ],
+      //   404
+      // );
     }
   }
 

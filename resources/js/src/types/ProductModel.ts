@@ -89,6 +89,7 @@ export type ProductImage = {
   id: number;
   path: string;
   alt?: null | string;
+  thumbnail: string;
 };
 
 export type IProduct = ProductHasCheckout & {

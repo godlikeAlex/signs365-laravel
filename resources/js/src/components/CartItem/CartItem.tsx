@@ -63,11 +63,19 @@ const CartItem: React.FC<Props> = ({
 
   const removeItem = async () => {
     try {
-      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
-
-      toast(`Successfully removed ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/remove-item",
+        {
+          item_id: id,
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully removed ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while removing item", { type: "error" });
     }

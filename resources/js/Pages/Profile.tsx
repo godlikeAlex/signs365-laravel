@@ -1,4 +1,4 @@
-import { OrdersHistory } from "@/src/components";
+import { OrdersHistory, SEOHead } from "@/src/components";
 import OrdersList from "@/src/components/OrdersHistory/OrdersList";
 import { IOrdersPagenation } from "@/src/types/axiosResponses";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
@@ -12,9 +12,7 @@ interface Props extends SharedInertiaData {
 const Profile: React.FC<Props> = ({ auth, orders }: Props) => {
   return (
     <>
-      <Head>
-        <title>My profile</title>
-      </Head>
+      <SEOHead title="My Profile" />
       <div className="ps-shopping">
         <div className="container">
           <ul className="ps-breadcrumb">

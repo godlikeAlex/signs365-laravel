@@ -1,22 +1,24 @@
 import React from "react";
-import { usePage } from "@inertiajs/react";
+import { router, usePage, useRemember } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
-import { CartList } from "@/src/components";
+import { CartList, SEOHead } from "@/src/components";
 import CartListMobile from "@/src/components/CartList/CartListMobile";
 
-interface Props {}
+interface Props {
+  with_installation: boolean;
+}
 
 const Cart: React.FC<Props> = (props: Props) => {
   const { cart } = usePage<SharedInertiaData>().props;
 
+  console.log(props, "kerixar daun");
+
   const renderCart = () => {
     return (
       <>
-        <Head>
-          <title>Shopping Cart</title>
-        </Head>
+        <SEOHead title="Shopping Cart" />
 
         <h3 className="ps-shopping__title">
           Shopping cart<sup>({cart.items.length})</sup>
@@ -60,7 +62,26 @@ const Cart: React.FC<Props> = (props: Props) => {
                     ${cart.total_with_tax.toLocaleString()}
                   </div>
                 </div>
-                <div className="ps-shopping__checkout">
+
+                <div style={{ marginTop: 15, marginBottom: 15 }}>
+                  <label style={{ display: "flex" }}>
+                    <input
+                      type="checkbox"
+                      checked={props.with_installation}
+                      onChange={() =>
+                        router.post("/cart/toggle-with-installation")
+                      }
+                    />{" "}
+                    <span style={{ marginLeft: 10 }}>Add installation</span>
+                  </label>
+                  <div>Aproximat Estimate: $</div>
+                  <div>(we will contact you with price)</div>
+                </div>
+
+                <div
+                  className="ps-shopping__checkout"
+                  style={{ paddingTop: 0 }}
+                >
                   <Link className="ps-btn ps-btn--warning" href="checkout">
                     Proceed to checkout
                   </Link>

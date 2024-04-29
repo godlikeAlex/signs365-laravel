@@ -19,6 +19,7 @@ import ProductQuantity from "./ProductQuantity";
 import ProductSlider from "./ProductSlider";
 import ProtectedRoute from "./ProtectedRoute";
 import Routing from "./Routing";
+import SEOHead from "./SEOHead";
 import SocialFixedButtons from "./SocialFixedButtons";
 import UpdatePasswordForm from "./UpdatePasswordForm";
 import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
@@ -26,6 +27,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ProductSlider,
+  SEOHead,
   Dropzone,
   EmptyPage,
   FAQProduct,

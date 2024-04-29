@@ -5,6 +5,9 @@ import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import CatalogProducts from "@/src/Pages/Catalog/CatalogProducts";
 import { Head } from "@inertiajs/react";
+import { SEOHead } from "@/src/components";
+import { jsonLdScriptProps } from "react-schemaorg";
+import DTS from "schema-dts";
 
 interface Props {
   productsWithPagenation: IProductsPagenation;
@@ -34,9 +37,7 @@ const Catalog: React.FC<Props> = ({
 
   return (
     <>
-      <Head>
-        <title>{currentCategory.title}</title>
-      </Head>
+      <SEOHead title={currentCategory.title}></SEOHead>
 
       <div className="ps-categogy">
         <div className="container">
@@ -46,7 +47,7 @@ const Catalog: React.FC<Props> = ({
             </li>
 
             <li className="ps-breadcrumb__item active" aria-current="page">
-              Catalog
+              Shop
             </li>
 
             <li className="ps-breadcrumb__item active" aria-current="page">

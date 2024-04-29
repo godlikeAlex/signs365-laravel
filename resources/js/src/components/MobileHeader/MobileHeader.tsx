@@ -1,17 +1,16 @@
 import { useAppSelector } from "@/src/hooks";
 import classNames from "classnames";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
 import "./style.css";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import { Link, usePage } from "@inertiajs/react";
 
 interface MobileHeaderProps {}
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const { isAuthed, authChecked, user } = useAppSelector((state) => state.auth);
-  const { cart } = useAppSelector((state) => state.cart);
-  const { homeCategories } = useAppSelector((state) => state.app);
+  const { homeCategories, cart, auth } = usePage<SharedInertiaData>().props;
 
   const closeMenu = () => setShowMenu(false);
 
@@ -55,14 +54,17 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
           href="#"
           id="close-menu"
           className="ic-mobile-menu-close-button close-menu"
-          onClick={() => setShowMenu(false)}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowMenu(false);
+          }}
         >
           <i className="icon-cross"></i>
         </a>
         <div className="ps-menu__content">
           <ul className="menu--mobile">
             <li>
-              <Link onClick={closeMenu} to={"/"}>
+              <Link onClick={closeMenu} href={"/"}>
                 Home
               </Link>
             </li>
@@ -71,7 +73,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
 
             {homeCategories.map((category) => (
               <li key={category.id}>
-                <Link onClick={closeMenu} to={"/cart"}>
+                <Link onClick={closeMenu} href={"/cart"}>
                   {category.title}
                 </Link>
               </li>
@@ -80,15 +82,15 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
             <div className="divider" />
 
             <li>
-              <Link onClick={closeMenu} to={"/cart"}>
+              <Link onClick={closeMenu} href={"/cart"}>
                 Shopping Cart | {cart.items.length}
               </Link>
             </li>
 
-            {isAuthed && user ? (
+            {auth.user ? (
               <>
                 <li>
-                  <Link onClick={closeMenu} to={"/profile"}>
+                  <Link onClick={closeMenu} href={"/profile"}>
                     Profile
                   </Link>
                 </li>
@@ -96,13 +98,13 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
             ) : (
               <>
                 <li>
-                  <Link onClick={closeMenu} to={"/login"}>
+                  <Link onClick={closeMenu} href={"/login"}>
                     Login
                   </Link>
                 </li>
 
                 <li>
-                  <Link onClick={closeMenu} to={"/register"}>
+                  <Link onClick={closeMenu} href={"/register"}>
                     Create account
                   </Link>
                 </li>

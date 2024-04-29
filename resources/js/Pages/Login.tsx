@@ -2,7 +2,7 @@ import { isCustomAxisError } from "@/src/helpers/axiosErrorGrabber";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { Input } from "@/src/components";
+import { Input, SEOHead } from "@/src/components";
 import { toast } from "react-toastify";
 
 interface Props {}
@@ -26,9 +26,7 @@ const Login: React.FC<Props> = ({}: Props) => {
 
   return (
     <>
-      <Head>
-        <title>Login</title>
-      </Head>
+      <SEOHead title="Login" />
 
       <div className="ps-account">
         <div className="container">

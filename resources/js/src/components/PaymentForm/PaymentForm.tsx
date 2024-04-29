@@ -13,7 +13,7 @@ import Input from "../Input";
 import ClipLoader from "react-spinners/ClipLoader";
 import { BeatLoader } from "react-spinners";
 import PaymentService from "@/src/services/PaymentService";
-import { usePage } from "@inertiajs/react";
+import { usePage, useRemember } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {
@@ -42,6 +42,14 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
   const { auth } = usePage<SharedInertiaData>().props;
+  const [state, setState] = useRemember(
+    {
+      with_installation: false,
+    },
+    "Pages/Checkout"
+  );
+
+  console.log(state, "op");
 
   const [submiting, setSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);

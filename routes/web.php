@@ -6,8 +6,13 @@ use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
 use App\Http\Controllers\Inertia\ShopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeWebHookController;
+use App\Models\Product;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
+use App\Services\Thumbnail\Service as Thumbnail;
+use Inertia\Inertia;
 
 $DOMAIN = env("APP_DOMAIN");
 
@@ -47,7 +52,7 @@ Route::prefix("api/auth")->group(function () {
   ]);
 });
 
-Route::get("", [HomeController::class, "index"]);
+Route::get("", [HomeController::class, "index"])->name("home");
 
 Route::get("/shop/category/{product_category:slug}", [
   ShopController::class,
@@ -57,6 +62,10 @@ Route::get("/shop/category/{product_category:slug}", [
 Route::get("/shop/product/{product}", [ShopController::class, "product"]);
 
 Route::get("/cart", [CartController::class, "renderCart"]);
+Route::post("/cart/toggle-with-installation", [
+  CartController::class,
+  "toggleExtraInstallation",
+]);
 Route::get("/checkout/success-payment", [
   CartController::class,
   "renderSuccess",
@@ -100,6 +109,21 @@ Route::post("logout", [
   \App\Http\Controllers\Inertia\AuthController::class,
   "logout",
 ]);
+
+Route::get("/test/images", function () {
+  $product = Product::first();
+
+  foreach (Product::all() as $product) {
+    foreach ($product->images as $image) {
+      $thumbnail = new Thumbnail($image->path);
+
+      $path = $thumbnail->generate(348, 348, 55);
+
+      // $image->path_thumb = $path;
+      // $image->save();
+    }
+  }
+});
 
 // Route::post("forgot", [
 //   \App\Http\Controllers\Api\ForgotPassword::class,

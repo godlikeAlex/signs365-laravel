@@ -41,6 +41,7 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
       }}
     >
       <div className="sticky-sliders">
+        {/* <div className="sticky-sliders"> */}
         <Slider
           ref={(slider) => setMainSlickRef(slider)}
           asNavFor={thumbNailSlickRef}
@@ -51,10 +52,25 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
         >
           {images.map((img) => (
             <div className="slide" key={`main-${img.id}`}>
-              <img
-                src={`/storage/${img.path}`}
-                alt={img.alt ? img.alt : productName}
-              />
+              <div
+                style={{
+                  paddingBottom: "100%",
+                  background: "#EEE",
+                  height: 0,
+                  position: "relative",
+                }}
+              >
+                <img
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    position: "absolute",
+                  }}
+                  src={`/storage/${img.path}`}
+                  alt={img.alt ? img.alt : productName}
+                />
+              </div>
             </div>
           ))}
         </Slider>

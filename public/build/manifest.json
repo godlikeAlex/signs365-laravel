@@ -1,11 +1,11 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-ee10154d.css",
+    "file": "assets/app-b4560b3a.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-e64c8eda.css",
+    "file": "assets/style-c352425a.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -15,14 +15,14 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-aeda4612.css",
+    "file": "assets/index-15de0ff9.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
     "css": [
-      "assets/index-aeda4612.css"
+      "assets/index-15de0ff9.css"
     ],
-    "file": "assets/index-d2895ecc.js",
+    "file": "assets/index-064d13a5.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   }

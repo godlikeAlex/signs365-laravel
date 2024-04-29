@@ -80,7 +80,7 @@ function ModalShowProduct({
                         <div className="ps-product__info">
                           <div className="ps-product__branch">
                             {product?.categories?.map((category) => (
-                              <Link to={`/catalog/${category.slug}`}>
+                              <Link to={`/shop/category/${category.slug}`}>
                                 {category.title}
                               </Link>
                             )) || <Skeleton />}

@@ -17,7 +17,7 @@ const DefaultLayout: React.FC<Props> = ({ children }: Props) => {
     <>
       <div className="ps-page">
         <Menu />
-        {/* <MobileHeader /> */}
+        <MobileHeader />
         <SocialFixedButtons />
 
         <div className="main">{children}</div>

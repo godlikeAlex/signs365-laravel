@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head } from "@inertiajs/react";
 import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
 import classNames from "classnames";
-import { ProductCard } from "@/src/components";
+import { ProductCard, SEOHead } from "@/src/components";
+import { IProduct } from "@/src/types/ProductModel";
+import ProductShowModal from "@/Modals/ProductShowModal";
 
 interface Props {
   title: string;
@@ -12,12 +14,26 @@ interface Props {
 
 const Home: React.FC<Props> = ({ title }: Props) => {
   const { homeCategories, cart } = usePage<SharedInertiaData>().props;
+  const [product, setProduct] = useState<IProduct>();
 
   return (
     <>
-      <Head>
-        <title>{title}</title>
-      </Head>
+      {!product ? (
+        <SEOHead title={title} />
+      ) : (
+        <SEOHead
+          title={product.seo_title}
+          description={product.seo_desc}
+          keywords={product.seo_keywords}
+        />
+      )}
+
+      {product ? (
+        <ProductShowModal
+          product={product}
+          handleClose={() => setProduct(undefined)}
+        />
+      ) : null}
 
       <div className="ps-home ps-home--4">
         <section className="ps-section--banner">
@@ -45,7 +61,10 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                         <ProductCard
                           {...product}
                           key={`${product.id}-${idx}`}
-                          fullPage={product.with_checkout}
+                          allowFullPage={product.with_checkout === false}
+                          onClickQuickView={(quickViewProduct) =>
+                            setProduct(quickViewProduct)
+                          }
                         />
                       </div>
                     ))}

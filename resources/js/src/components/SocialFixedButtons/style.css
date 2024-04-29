@@ -147,3 +147,7 @@ margin-left: 1px;
     display: none !important;
   }
 }
+
+.active-right li {
+  right: 0 !important;
+}

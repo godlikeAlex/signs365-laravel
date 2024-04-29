@@ -2,9 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "ssr": "vite build && vite build --ssr",
-    "postbuild": "react-snap"
+    "build": "php artisan ziggy:generate && tsc && vite build",
+    "ssr": "vite build && vite build --ssr"
   },
   "reactSnap": {
     "puppeteerArgs": [
@@ -44,6 +43,7 @@
     "@reduxjs/toolkit": "^1.9.1",
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",
+    "@types/ziggy-js": "^1.3.3",
     "ahooks": "^3.7.8",
     "axios": "^1.2.1",
     "body-scroll-lock": "^4.0.0-beta.0",
@@ -66,16 +66,19 @@
     "react-redux": "^8.0.5",
     "react-responsive": "^9.0.2",
     "react-router-dom": "^6.6.0",
+    "react-schemaorg": "^2.0.0",
     "react-select": "^5.7.4",
     "react-slick": "^0.29.0",
     "react-snap": "^1.23.0",
     "react-spinners": "^0.13.8",
     "react-table": "^7.8.0",
     "react-toastify": "^9.1.1",
+    "schema-dts": "^1.1.2",
     "swiper": "^8.4.7",
     "tua-body-scroll-lock": "^1.4.0",
     "vite": "^4.4.9",
     "vite-plugin-commonjs": "^0.9.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "ziggy-js": "^1.6.2"
   }
 }

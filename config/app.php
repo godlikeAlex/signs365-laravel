@@ -167,6 +167,7 @@ return [
     \Torann\GeoIP\GeoIPServiceProvider::class,
     Darryldecode\Cart\CartServiceProvider::class,
     \App\Providers\FilamentServiceProvider::class,
+    Intervention\Image\ImageServiceProvider::class,
 
     /*
      * Application Service Providers...
@@ -231,5 +232,6 @@ return [
     "View" => Illuminate\Support\Facades\View::class,
     "GeoIP" => \Torann\GeoIP\Facades\GeoIP::class,
     "Cart" => Darryldecode\Cart\Facades\CartFacade::class,
+    "Image" => Intervention\Image\Facades\Image::class,
   ],
 ];

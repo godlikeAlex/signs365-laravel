@@ -1,7 +1,7 @@
-import { PaymentForm } from "@/src/components";
+import { PaymentForm, SEOHead } from "@/src/components";
 import PaymentService from "@/src/services/PaymentService";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage, useRemember } from "@inertiajs/react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import React, { useEffect, useState } from "react";
@@ -18,8 +18,16 @@ interface State {
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
-const Checkout: React.FC<Props> = ({}: Props) => {
+const Checkout: React.FC<Props> = (props: Props) => {
   const { cart } = usePage<SharedInertiaData>().props;
+  const [state1, setState1] = useRemember(
+    {
+      with_installation: false,
+    },
+    "Pages/Cart"
+  );
+
+  console.log(state1, "state1");
 
   const [state, setState] = useState<State>({
     clientSecret: undefined,
@@ -52,9 +60,7 @@ const Checkout: React.FC<Props> = ({}: Props) => {
 
   return (
     <>
-      <Head>
-        <title>Checkout</title>
-      </Head>
+      <SEOHead title="Checkout" />
 
       <div className="ps-checkout">
         <div className="container">

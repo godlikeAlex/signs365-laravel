@@ -78,7 +78,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 />
                 <img
                   className="ps-banner__image"
-                  src="/img/promotion/slide3.png"
+                  src="/img/promotion/slide3.webp"
                   alt="alt"
                 />
               </div>
@@ -117,7 +117,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 />
                 <img
                   className="ps-banner__image"
-                  src="/img/promotion/slide1.png"
+                  src="/img/promotion/slide1.webp"
                   alt="alt"
                 />
               </div>

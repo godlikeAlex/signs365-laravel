@@ -1,3 +1,4 @@
+import { SEOHead } from "@/src/components";
 import PaymentService from "@/src/services/PaymentService";
 import { Head, router } from "@inertiajs/react";
 import classNames from "classnames";
@@ -58,9 +59,7 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
 
   return (
     <>
-      <Head>
-        <title>Success</title>
-      </Head>
+      <SEOHead title="Success" />
 
       <div className="container">
         <div className="cart-empty text-center title-with-icon-section">

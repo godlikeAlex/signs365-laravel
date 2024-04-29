@@ -4,15 +4,29 @@ import { ICategory } from "@/src/types/models";
 import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "@inertiajs/react";
+import { useMediaQuery } from "react-responsive";
+import Product from "@/Pages/Product";
 
 type Props = IProduct & {
   fullPage?: boolean;
   category?: ICategory;
+  onClickQuickView?: (product: IProduct) => void;
+  allowFullPage: boolean;
 };
 
 const ProductCard: React.FC<Props> = (props: Props) => {
-  const { title, id, slug, images, with_checkout, min_price } = props;
+  const {
+    title,
+    id,
+    slug,
+    images,
+    with_checkout,
+    min_price,
+    allowFullPage,
+    onClickQuickView,
+  } = props;
   const [fetching, setIsFetch] = useState(false);
+  const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
   const productURL = React.useMemo(
     () => (!props.fullPage ? `/shop/product/${slug}` : `/shop/product/${slug}`),
@@ -29,6 +43,18 @@ const ProductCard: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const handleLinkClick = (e: React.MouseEvent<any>) => {
+    if (isMobile || allowFullPage === false) {
+      return;
+    }
+
+    if (onClickQuickView) {
+      e.preventDefault();
+
+      onClickQuickView({ ...(props as IProduct) });
+    }
+  };
+
   return (
     <>
       <div className="ps-section__product" style={{ height: "100%" }}>
@@ -37,11 +63,15 @@ const ProductCard: React.FC<Props> = (props: Props) => {
           style={{ height: "100%" }}
         >
           <div className="ps-product__thumbnail ps-product__thumbnail-card">
-            <Link className="ps-product__image" href={productURL}>
+            <Link
+              className="ps-product__image"
+              onClick={handleLinkClick}
+              href={productURL}
+            >
               <figure>
                 {images.slice(0, 2).map((image) => (
                   <img
-                    src={`/storage/${image.path}`}
+                    src={`/storage/${image.thumbnail}`}
                     alt={image.alt ? image.alt : title}
                   />
                 ))}
@@ -98,7 +128,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="meta-wrapper">
                 {props.categories.map((category, index) => (
                   <Link
-                    href={`/catalog/${category.slug}`}
+                    href={`/shop/category/${category.slug}`}
                     className="ps-product__branch"
                     key={`category-card-product-${category.id}`}
                   >
@@ -117,6 +147,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 //   product: props,
                 //   category: props.category,
                 // }}
+                onClick={handleLinkClick}
                 style={{ fontWeight: 600 }}
               >
                 {title}
@@ -150,11 +181,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                 <Link
                   className="ps-btn ps-btn--warning"
                   href={productURL}
-                  // state={{
-                  //   background: props.fullPage ? null : location,
-                  //   product: props,
-                  //   category: props.category,
-                  // }}
+                  onClick={handleLinkClick}
                 >
                   Add to cart
                 </Link>
@@ -162,6 +189,8 @@ const ProductCard: React.FC<Props> = (props: Props) => {
 
               <Link
                 href={productURL}
+                onClick={handleLinkClick}
+
                 // state={{
                 //   background: props.fullPage ? null : location,
                 //   product: props,

@@ -6,6 +6,7 @@ import {
   ProductOptions,
   ProductQuantity,
   ProductSlider,
+  SEOHead,
 } from "@/src/components";
 import { FileState } from "@/src/components/Dropzone/Dropzone";
 import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
@@ -21,11 +22,15 @@ import { addToCart } from "@/src/redux/cartSlice";
 import { getProduct, setProduct } from "@/src/redux/singleProductSlice";
 import { CartService } from "@/src/services";
 import { IProduct } from "@/src/types/ProductModel";
-import { Head, Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useDebounceEffect } from "ahooks";
 import React, { useEffect, useRef, useState } from "react";
 import Skeleton from "react-loading-skeleton";
+import { JsonLd, helmetJsonLdProp, jsonLdScriptProps } from "react-schemaorg";
 import { toast } from "react-toastify";
+import DTS from "schema-dts";
+import { Helmet } from "react-helmet";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {
   product: { data: IProduct };
@@ -111,7 +116,14 @@ const Product: React.FC<Props> = ({ product: productFromServer }: Props) => {
   // Fetch Prices on update fields.
   useDebounceEffect(() => {
     const fetchPriceViaCalculator = async () => {
-      if (!product || !state.selectedOption) {
+      const isValidSizes = Object.values({
+        width: state.width.value !== "" && state.width.value > 0,
+        height: state.height.value !== "" && state.height.value > 0,
+      }).every((key) => key);
+
+      console.log(isValidSizes, "is valid siEs");
+
+      if (!product || !state.selectedOption || !isValidSizes) {
         return;
       }
 
@@ -119,6 +131,8 @@ const Product: React.FC<Props> = ({ product: productFromServer }: Props) => {
 
       const { width, height, quantity, selectedAddons, selectedOption, unit } =
         state;
+
+      console.log("Hello world!", width);
 
       const { data } = await CartService.calculateSinglePrice(
         product?.id,
@@ -307,21 +321,24 @@ const Product: React.FC<Props> = ({ product: productFromServer }: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          {productFromServer.data.seo_title
-            ? productFromServer.data.seo_title
-            : productFromServer.data.title}
-        </title>
-
-        {productFromServer.data.seo_desc ? (
-          <meta name="description" content={productFromServer.data.seo_desc} />
-        ) : null}
-
-        {productFromServer.data.seo_keywords ? (
-          <meta name="keywords" content={productFromServer.data.seo_keywords} />
-        ) : null}
-      </Head>
+      <SEOHead
+        title={productFromServer.data.seo_title}
+        description={productFromServer.data.seo_desc}
+        keywords={productFromServer.data.seo_keywords}
+      >
+        <script
+          {...jsonLdScriptProps<DTS.Product>({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: productFromServer.data.title,
+            brand: "Signs7",
+            image:
+              productFromServer.data.images.length > 0
+                ? `/storage/${productFromServer.data.images[0].path}`
+                : undefined,
+          })}
+        />
+      </SEOHead>
 
       <ProductFormContext.Provider value={{ state, setState, validationRules }}>
         <div className="ps-page--product-variable">

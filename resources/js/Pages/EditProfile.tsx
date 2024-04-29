@@ -1,4 +1,5 @@
 import {
+  SEOHead,
   UpdatePasswordForm,
   UpdatePersonalInformationForm,
 } from "@/src/components";
@@ -10,9 +11,7 @@ interface Props {}
 const EditProfile: React.FC<Props> = ({}: Props) => {
   return (
     <>
-      <Head>
-        <title>Edit Profile</title>
-      </Head>
+      <SEOHead title="Edit Profile" />
 
       <div className="ps-account">
         <div className="container">

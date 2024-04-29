@@ -6,4 +6,7 @@ export type SharedInertiaData = {
   auth: {
     user?: User | null;
   };
+  ziggy: {
+    url: string;
+  };
 };

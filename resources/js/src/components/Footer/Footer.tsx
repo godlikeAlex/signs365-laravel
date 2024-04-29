@@ -49,7 +49,11 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       style={{ textAlign: "center" }}
                     >
                       <a href="/">
-                        <img src="/img/logo-white.png" style={{ width: 250 }} />
+                        <img
+                          src="/img/logo-white.png"
+                          style={{ width: 250 }}
+                          alt="Signs7"
+                        />
 
                         <h3
                           style={{

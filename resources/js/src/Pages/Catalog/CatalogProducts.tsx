@@ -58,7 +58,12 @@ const CatalogProducts: React.FC<Props> = ({
                 className="col-6 col-lg-4 col-xl-3 p-0"
                 key={`${product.id}-${idx}`}
               >
-                <ProductCard {...product} fullPage category={currentCategory} />
+                <ProductCard
+                  {...product}
+                  fullPage
+                  category={currentCategory}
+                  allowFullPage={false}
+                />
               </div>
             ))
           ) : (

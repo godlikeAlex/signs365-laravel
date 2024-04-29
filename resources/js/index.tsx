@@ -12,8 +12,12 @@ createInertiaApp({
     const pages = import.meta.glob("./Pages/**/*.tsx", { eager: true });
     let page: any = pages[`./Pages/${name}.tsx`];
 
-    page.default.layout =
-      page.default.layout || ((page) => <DefaultLayout>{page}</DefaultLayout>);
+    if (name !== "Error") {
+      page.default.layout =
+        page.default.layout ||
+        ((page) => <DefaultLayout>{page}</DefaultLayout>);
+    }
+
     return page;
   },
   setup({ el, App, props }) {
