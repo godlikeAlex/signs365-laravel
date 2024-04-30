@@ -11,6 +11,7 @@
     "php": "^8.0",
     "alperenersoy/filament-export": "^0.3.7",
     "awcodes/filament-curator": "^2.9",
+    "cweagans/composer-patches": "~2.0",
     "darryldecode/cart": "^4.2",
     "filament/filament": "^2.0",
     "filament/forms": "^2.0",
@@ -73,12 +74,20 @@
       "dont-discover": [
         "barryvdh/laravel-ide-helper"
       ]
+    },
+    "patches": {
+      "filament/support": {
+        "Fix auto focus filament": "patches/fixed-auto-focus-in-modals.patch"
+      }
     }
   },
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

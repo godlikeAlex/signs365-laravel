@@ -1,0 +1,17 @@
+{
+    "_hash": "11b230e51e27e240250cafefdd1eb0540b63a7988a09b18622d3d55a8a29aa5e",
+    "patches": {
+        "filament/support": [
+            {
+                "package": "filament/support",
+                "description": "Fix auto focus filament",
+                "url": "patches/fixed-auto-focus-in-modals.patch",
+                "sha256": "f6dabefa627e6694358725d8195c43cdf66d590f6af03acc4c4656d178f98fcd",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ]
+    }
+}

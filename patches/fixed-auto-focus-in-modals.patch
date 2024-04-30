@@ -1,0 +1,24 @@
+From 4a33d76bb3f629f7a49e8771ca2cad3bdee251ac Mon Sep 17 00:00:00 2001
+From: godlikeAlex <godlikedesigner@gmail.com>
+Date: Tue, 30 Apr 2024 18:27:45 +0500
+Subject: [PATCH] fixed auto focus on modal
+
+---
+ /resources/views/components/modal/index.blade.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/resources/views/components/modal/index.blade.php b/support/resources/views/components/modal/index.blade.php
+index da3d3ad..4de3b26 100644
+--- a/resources/views/components/modal/index.blade.php
++++ b/resources/views/components/modal/index.blade.php
+@@ -44,7 +44,6 @@
+             )
+         },
+     }"
+-    x-trap.noscroll="isOpen"
+     @if ($id)
+         x-on:{{ $closeEventName }}.window="if ($event.detail.id === '{{ $id }}') close()"
+         x-on:{{ $openEventName }}.window="if ($event.detail.id === '{{ $id }}') open()"
+-- 
+2.39.3 (Apple Git-146)
+
