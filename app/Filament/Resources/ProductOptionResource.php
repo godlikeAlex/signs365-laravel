@@ -242,9 +242,32 @@ class ProductOptionResource extends Resource
               return $prevTo === -1 ? 99999 : $prevTo + 1;
             })
             ->reactive(),
-          Forms\Components\TextInput::make("to")
-            ->numeric()
-            ->required(),
+          Forms\Components\Group::make([
+            Forms\Components\TextInput::make("to")
+              ->numeric()
+              ->required(),
+            Forms\Components\Toggle::make("infinity")
+              ->hidden(function (Closure $get) {
+                $rangePrices = $get("../../range_prices");
+                $lastRangePrice = end($rangePrices);
+                $currentRangeUUID = $get("uuid");
+
+                if ($lastRangePrice["uuid"] === $currentRangeUUID) {
+                  return false;
+                }
+
+                return true;
+              })
+              ->dehydrated(false)
+              ->reactive()
+              ->label("To Infinity")
+              ->afterStateHydrated(function (Toggle $component, Closure $get) {
+                $component->state($get("to") == -1);
+              })
+              ->afterStateUpdated(
+                fn(Closure $set, $state) => $set("to", $state ? -1 : "")
+              ),
+          ]),
           Forms\Components\TextInput::make("price")
             ->numeric()
             ->required()
@@ -265,7 +288,6 @@ class ProductOptionResource extends Resource
         ->createItemButtonLabel("Add new range price")
         ->disableItemCreation(function (\Closure $get) {
           $rangePrices = $get("range_prices");
-          info($rangePrices, ["rangePrice" => $rangePrices]);
           $lastRangePrice = end($rangePrices);
 
           if (!$lastRangePrice) {

@@ -109,7 +109,6 @@ class ProductResource extends Resource
                 ->multiple()
                 ->relationship("images", "id")
                 ->orderColumn("order"),
-
               // Forms\Components\FileUpload::make("images")
               //   ->columnSpanFull()
               //   ->enableDownload()

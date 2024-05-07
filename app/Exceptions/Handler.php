@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Config;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
 use Throwable;
@@ -49,6 +50,10 @@ class Handler extends ExceptionHandler
   public function render($request, Throwable $e)
   {
     $response = parent::render($request, $e);
+
+    if (Config::get("app.debug")) {
+      return $response;
+    }
 
     if (
       // !app()->environment(["local", "testing"]) &&

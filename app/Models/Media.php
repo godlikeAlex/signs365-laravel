@@ -146,4 +146,18 @@ class Media extends Model
       })
     );
   }
+
+  public function loadPrettyName(): void
+  {
+    $this->attributes["prettyName"] = $this->getPrettyName();
+  }
+
+  public function getPrettyName(): string
+  {
+    if (filled($this->title)) {
+      return $this->title;
+    }
+
+    return $this->name . "." . $this->ext;
+  }
 }

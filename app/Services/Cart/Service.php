@@ -2,11 +2,13 @@
 
 namespace App\Services\Cart;
 
+use App\DTO\AddToCartDTO;
+use App\DTO\CalculatorDTO;
 use App\Http\Resources\CartItemsResource;
 use App\Models\Product;
 use App\Models\SizeItem;
+use App\Services\CalculatorService;
 use Darryldecode\Cart\CartCondition;
-use App\Services\Calculator\Service as CalculatorService;
 
 class Service
 {
@@ -23,30 +25,44 @@ class Service
   }
 
   public function add(
-    $product_id,
-    $option_id,
-    $addons,
-    $quantity,
-    $unit,
-    $width,
-    $height,
-    $size_id,
-    $images = null
+    AddToCartDTO $addToCartDTO,
   ) {
+    $product_id = $addToCartDTO->productID;
+    $option_id = $addToCartDTO->optionID;
+    $addons = $addToCartDTO->addons;
+    $quantity = $addToCartDTO->quantity;
+    $unit = $addToCartDTO->unit;
+    $width = $addToCartDTO->width;
+    $height = $addToCartDTO->height;
+    $size_id = $addToCartDTO->size_id;
+    $images = $addToCartDTO->images;
+
     $sizeItem = SizeItem::find($size_id);
 
-    $calculator = new CalculatorService(
-      $product_id,
-      $width,
-      $height,
-      $addons,
-      $option_id,
-      $unit,
-      $quantity
+    $calculatorService = new CalculatorService(
+//      $product_id,
+//      $width,
+//      $height,
+//      $addons,
+//      $option_id,
+//      $unit,
+//      $quantity
     );
 
-    $product = $calculator->getProduct();
-    $productOption = $calculator->getProductOption();
+    $calculatorDTO = new CalculatorDTO(
+      $product_id,
+      $option_id,
+      $width,
+      $height,
+      $quantity,
+      $addons,
+      $unit,
+    );
+
+    list($priceInCents) = $calculatorService->calculate($calculatorDTO, true);
+
+    $product = $calculatorService->getProduct();
+    $productOption = $calculatorService->getProductOption();
 
     $options = [
       "productOptionType" => $productOption->type,
@@ -73,8 +89,6 @@ class Service
     }
 
     $id = md5($product->id . $productOption->id . serialize($options));
-
-    list($priceInCents) = $calculator->calculate(true);
 
     $this->cart->add([
       "id" => $id,
