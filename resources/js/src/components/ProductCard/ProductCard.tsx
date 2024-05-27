@@ -25,6 +25,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
     allowFullPage,
     onClickQuickView,
   } = props;
+
+  console.log(images, title);
+
   const [fetching, setIsFetch] = useState(false);
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
@@ -71,7 +74,9 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <figure>
                 {images.slice(0, 2).map((image) => (
                   <img
-                    src={`/storage/${image.thumbnail}`}
+                    src={`/storage/${
+                      image.thumbnail ? image.thumbnail : image.path
+                    }`}
                     alt={image.alt ? image.alt : title}
                   />
                 ))}

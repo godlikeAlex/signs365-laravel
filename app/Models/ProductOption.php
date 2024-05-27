@@ -30,6 +30,7 @@ class ProductOption extends Model
     "show_custom_sizes" => "boolean",
     "size_for_collect" => "boolean",
     "need_file" => "boolean",
+    "prevent_user_input_size" => "boolean"
   ];
 
   public function products(): BelongsToMany

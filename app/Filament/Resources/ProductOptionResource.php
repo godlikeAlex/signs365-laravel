@@ -158,39 +158,47 @@ class ProductOptionResource extends Resource
         ->reactive()
         ->hidden(fn(Closure $get) => !$get("size_for_collect")),
 
-      Section::make("Size Validation")
+      Section::make('Sizes')
+        ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false)
         ->schema([
-          Forms\Components\TextInput::make("max_width")
+          Section::make("Size Validation")
+            ->schema([
+              Forms\Components\TextInput::make("max_width")
+                ->reactive()
+                ->required()
+                ->default(-1)
+                ->numeric(),
+              Forms\Components\TextInput::make("max_height")
+                ->reactive()
+                ->default(-1)
+                ->required()
+                ->numeric(),
+            ])
+            ->hidden(function (\Closure $get) {
+              $type = $get("type");
+              $customSizeIsSet = $get("show_custom_sizes");
+
+              if (!$type) {
+                return true;
+              }
+
+              if ($customSizeIsSet) {
+                return false;
+              }
+
+              return OptionTypeEnum::from($type) !== OptionTypeEnum::SQFT;
+            }),
+          Select::make("size_list_id")
+            ->label("Size List")
+            ->columnSpanFull()
             ->reactive()
-            ->required()
-            ->default(-1)
-            ->numeric(),
-          Forms\Components\TextInput::make("max_height")
-            ->reactive()
-            ->default(-1)
-            ->required()
-            ->numeric(),
-        ])
-        ->hidden(function (\Closure $get) {
-          $type = $get("type");
-          $customSizeIsSet = $get("show_custom_sizes");
+            ->options(fn() => SizeList::query()->pluck("title", "id")),
+          Toggle::make('prevent_user_input_size')
+            ->hidden(fn (Closure $get) => !$get('size_list_id'))
+            ->default(false)
+            ->label("Prevent the user from entering their size?"),
+        ]),
 
-          if (!$type) {
-            return true;
-          }
-
-          if ($customSizeIsSet) {
-            return false;
-          }
-
-          return OptionTypeEnum::from($type) !== OptionTypeEnum::SQFT;
-        }),
-
-      Select::make("size_list_id")
-        ->label("Size List")
-        ->columnSpanFull()
-        ->options(fn() => SizeList::query()->pluck("title", "id"))
-        ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false),
       Section::make("Common Data")
         ->reactive()
         ->hidden(

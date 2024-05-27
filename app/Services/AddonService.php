@@ -9,12 +9,17 @@ use App\Models\ProductAddons;
 
 class AddonService
 {
-  public function calculate(CalculateAddonsDTO $calculateAddonsDTO): array {
+  public function calculate(CalculateAddonsDTO $calculateAddonsDTO): array
+  {
     $totalAddonsPrice = 0;
     $actualAddons = collect([]);
 
     foreach ($calculateAddonsDTO->addons as $addon) {
-      $actualAddon = $this->getAddonInProduct($calculateAddonsDTO->product);
+      info($addon);
+      $actualAddon = $this->getAddonInProduct(
+        $calculateAddonsDTO->product,
+        $addon["id"]
+      );
 
       if (!$actualAddon) {
         continue;
@@ -22,10 +27,14 @@ class AddonService
 
       $calculateAddonsDTO->addon = $actualAddon;
 
-      $totalAddonsPrice += $this->calculateSingleAddon($calculateAddonsDTO, $actualAddon);
+      $totalAddonsPrice += $this->calculateSingleAddon(
+        $calculateAddonsDTO,
+        $actualAddon
+      );
 
       if ($actualAddon->with_qty) {
-        $totalAddonsPrice += $actualAddon->per_item_price * ($addon["quantity"] ?? 0);
+        $totalAddonsPrice +=
+          $actualAddon->per_item_price * ($addon["quantity"] ?? 0);
       }
 
       $actualAddons->push($actualAddon);
@@ -34,7 +43,8 @@ class AddonService
     return [$totalAddonsPrice, $actualAddons];
   }
 
-  private function calculateSingleAddon(CalculateAddonsDTO $calculateAddonDTO) {
+  private function calculateSingleAddon(CalculateAddonsDTO $calculateAddonDTO)
+  {
     $addon = $calculateAddonDTO->addon;
     $width = $calculateAddonDTO->width;
     $height = $calculateAddonDTO->height;
@@ -81,7 +91,8 @@ class AddonService
     return 0;
   }
 
-  private function getAddonInProduct(Product $product, int $addonID) {
-    return $product->addons()->where('id', $addonID)->first();
+  private function getAddonInProduct(Product $product, int $addonID)
+  {
+    return $product->addons()->find($addonID);
   }
 }

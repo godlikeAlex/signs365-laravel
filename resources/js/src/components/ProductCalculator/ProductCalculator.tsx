@@ -22,10 +22,12 @@ const ProductCalculator: React.FC<Props> = ({
 }: Props) => {
   const { selectedOption } = useAppSelector((state) => state.product);
 
-  const staticData = React.useMemo(() => {
-    const isSignleType = selectedOption.type === "single";
+  console.log(selectedOption);
 
-    if (isSignleType) {
+  const staticData = React.useMemo(() => {
+    const hasStaticData = selectedOption.type !== "sqft";
+
+    if (hasStaticData) {
       return selectedOption.show_custom_sizes === false &&
         selectedOption.size_for_collect
         ? selectedOption.common_data

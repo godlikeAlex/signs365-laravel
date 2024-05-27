@@ -33,6 +33,7 @@ class OptionResource extends JsonResource
         $this->type === OptionTypeEnum::SQFT,
       "show_custom_sizes" => $this->show_custom_sizes,
       "size_for_collect" => $this->size_for_collect,
+      "prevent_user_input_size" => $this->prevent_user_input_size,
       "common_data" => $this->when(
         $this->size_for_collect && !$this->show_custom_sizes,
         $this->common_data

@@ -1,18 +1,15 @@
-import { useAppSelector } from "@/src/hooks";
-import classNames from "classnames";
-import React, { useContext } from "react";
-import Skeleton from "react-loading-skeleton";
+import React from "react";
 import AddonItem from "./AddonItem";
-import { useFormContext } from "react-hook-form";
-import { ProductFormContext } from "@/src/contexts/ProductFormContext";
+import { useProductContext } from "@/src/contexts/MainProductContext";
+import { IProductCheckout } from "@/src/types/ProductModel";
 
-interface Props {}
+interface Props {
+  product: IProductCheckout;
+}
 
-const ProductAddons: React.FC<Props> = ({}: Props) => {
-  const { state } = useContext(ProductFormContext);
-  const { product, addons } = useAppSelector((state) => state.product);
-
-  if (product.with_checkout === false) return;
+const ProductAddons: React.FC<Props> = ({ product }: Props) => {
+  const { state, dispatch } = useProductContext();
+  const disabled = state.status === "fetching";
 
   return (
     <div>
@@ -22,16 +19,11 @@ const ProductAddons: React.FC<Props> = ({}: Props) => {
         style={{ marginTop: 8 }}
         className="ps-product__size ps-select--feature"
       >
-        {addons.map((addon) => (
+        {state.selectedOption?.addons.map((addon) => (
           <AddonItem
-            disabled={state.disabled}
+            disabled={disabled}
             key={`${product.id}-${addon.id}-a`}
             addon={addon}
-            error={
-              state.selectedAddons.find(
-                (selectedAddon) => selectedAddon.id === addon.id
-              )?.error
-            }
           />
         ))}
       </div>

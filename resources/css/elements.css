@@ -3764,7 +3764,7 @@ textarea.form-control {
   margin-right: 0;
 }
 
-.ps-product--detail .ps-product__size a {
+.ps-product--detail .ps-product__size .rounded-button {
   background-color: white;
   color: #103178;
   font-weight: 600;
@@ -3773,7 +3773,7 @@ textarea.form-control {
   border: 1px solid #f0f2f5;
 }
 
-.ps-product--detail .ps-product__size a.active {
+.ps-product--detail .ps-product__size .rounded-button.active {
   border-color: #103178 !important;
 }
 

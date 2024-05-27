@@ -1,19 +1,19 @@
 import React from "react";
 import { grommetsData, polePocketData } from "./extraDataInputs";
 import { ExtraDataType } from "@/src/types/ProductModel";
-import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import {
-  AddonWithExtraFields,
-  selectExtraDataItems,
-} from "@/src/redux/singleProductSlice";
+  ProductActionKind,
+  SelectedAddon,
+} from "@/src/reducers/ProductReducer";
+import { useProductContext } from "@/src/contexts/MainProductContext";
 
 interface Props {
   type: ExtraDataType;
-  addon: AddonWithExtraFields;
+  addon: SelectedAddon;
 }
 
 const ExtraDataSelect: React.FC<Props> = ({ type, addon }: Props) => {
-  const dispatch = useAppDispatch();
+  const { dispatch } = useProductContext();
 
   const [data, isMultiSelect] = React.useMemo(() => {
     switch (type) {
@@ -29,13 +29,14 @@ const ExtraDataSelect: React.FC<Props> = ({ type, addon }: Props) => {
   if (type === "unset") return null;
 
   const handleChange = (extraData: { id: number; title: string }) => {
-    dispatch(
-      selectExtraDataItems({
-        targetExtraData: extraData,
+    dispatch({
+      type: ProductActionKind.SELECT_EXTRA_ITEM_IN_ADDON,
+      payload: {
         addonID: addon.id,
+        targetExtraData: extraData,
         isMultiSelect,
-      })
-    );
+      },
+    });
   };
 
   return (
