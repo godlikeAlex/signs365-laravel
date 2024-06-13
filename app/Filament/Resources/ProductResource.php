@@ -212,7 +212,7 @@ class ProductResource extends Resource
 
   public static function getRelations(): array
   {
-    return [OptionsRelationManager::class, AddonsRelationManager::class];
+    return [OptionsRelationManager::class];
   }
 
   public static function getPages(): array

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\AddonExtraDataTypeEnum;
 use App\Enums\AddonTypeEnum;
 use App\Enums\OptionTypeEnum;
 use App\Enums\ShippingTypeEnum;
@@ -39,275 +40,548 @@ class ProductOptionResource extends Resource
   static function inputForm(): array
   {
     return [
-      Forms\Components\TextInput::make("title")
-        ->required()
-        ->maxLength(255),
-      Forms\Components\Select::make("type")
-        ->required()
-        ->reactive()
-        ->afterStateUpdated(function ($state, Closure $set) {
-          $set("shipping_id", null);
-        })
-        ->options(OptionTypeEnum::listOptionsWithLabel()),
-
-      Forms\Components\Select::make("addons")
-        ->multiple()
-        ->relationship("addons", "title")
-        ->reactive()
-        ->preload()
-        ->hiddenOn("create")
-        ->options(function (\Closure $get, ?Model $record) {
-          $currentTypeOption = $get("type");
-
-          if (!$currentTypeOption) {
-            return [];
-          }
-
-          $requiredTypes =
-            OptionTypeEnum::from($currentTypeOption) === OptionTypeEnum::SQFT
-              ? [
-                AddonTypeEnum::FEE,
-                AddonTypeEnum::SQFT,
-                AddonTypeEnum::LINEAR_FOOT,
-              ]
-              : [AddonTypeEnum::FEE];
-
-          return $record->product->addons
-            ->whereIn("type", $requiredTypes)
-            ->pluck("title", "id");
-        }),
-
-      Forms\Components\Select::make("shipping_id")
-        ->searchable()
-        ->relationship("shipping", "title")
-        ->reactive()
-        ->preload()
-        ->options(function (\Closure $get, ?Model $record) {
-          $currentTypeOption = $get("type");
-          $customSizeIsSet = $get("show_custom_sizes");
-
-          if (!$currentTypeOption) {
-            return;
-          }
-
-          switch (OptionTypeEnum::from($currentTypeOption)) {
-            case OptionTypeEnum::SQFT:
-              $requiredTypes = [
-                ShippingTypeEnum::SQFT,
-                ShippingTypeEnum::SINGLE,
-                ShippingTypeEnum::WIDTHxHEIGHT,
-              ];
-              break;
-
-            case OptionTypeEnum::SINGLE:
-              $requiredTypes = $customSizeIsSet
-                ? [ShippingTypeEnum::WIDTHxHEIGHT]
-                : [ShippingTypeEnum::SINGLE];
-              break;
-            case OptionTypeEnum::BY_QTY:
-              $requiredTypes = $customSizeIsSet
-                ? [ShippingTypeEnum::WIDTHxHEIGHT]
-                : [ShippingTypeEnum::SINGLE];
-              break;
-
-            default:
-              $requiredTypes = [];
-              break;
-          }
-
-          return Shipping::query()
-            ->whereIn("type", $requiredTypes)
-            ->pluck("title", "id");
-        }),
-      Forms\Components\TextInput::make("price")
-        ->prefix('$')
-        ->numeric()
-        ->hidden(fn(\Closure $get) => $get("type") == "qty")
-        ->dehydrateStateUsing(fn($state) => $state * 100)
-        ->afterStateHydrated(function (TextInput $component, $state) {
-          $component->state($state / 100);
-        })
-        ->required(),
-
-      Forms\Components\TextInput::make("min_price")
-        ->prefix('$')
-        ->numeric()
-        ->default(0)
-        ->dehydrateStateUsing(fn($state) => $state * 100)
-        ->afterStateHydrated(function (TextInput $component, $state) {
-          $component->state($state / 100);
-        })
-        ->required(),
-
-      Toggle::make("need_file")
-        ->label("Need file?")
-        ->default(false)
-        ->columnSpanFull()
-        ->reactive(),
-
-      Toggle::make("size_for_collect")
-        ->default(false)
-        ->reactive()
-        ->columnSpanFull()
-        ->hidden(
-          fn(Closure $get) => $get("type") &&
-            OptionTypeEnum::from($get("type")) === OptionTypeEnum::SQFT
-        ),
-      Toggle::make("show_custom_sizes")
-        ->default(false)
-        ->reactive()
-        ->hidden(fn(Closure $get) => !$get("size_for_collect")),
-
-      Section::make('Sizes')
-        ->hidden(fn(\Closure $get) => $get("show_custom_sizes") == false)
+      Forms\Components\Tabs::make("data")
         ->schema([
-          Section::make("Size Validation")
+          Forms\Components\Tabs\Tab::make("Product Option")
             ->schema([
-              Forms\Components\TextInput::make("max_width")
-                ->reactive()
+              Forms\Components\TextInput::make("title")
                 ->required()
-                ->default(-1)
-                ->numeric(),
-              Forms\Components\TextInput::make("max_height")
-                ->reactive()
-                ->default(-1)
+                ->maxLength(255),
+              Forms\Components\Select::make("type")
                 ->required()
-                ->numeric(),
+                ->reactive()
+                ->afterStateUpdated(function (
+                  $state,
+                  Closure $set,
+                  Closure $get
+                ) {
+                  $set("shipping_id", null);
+
+                  foreach ($get("addons") as $key => $value) {
+                    $set("addons.$key.type", null);
+                  }
+                })
+                ->options(OptionTypeEnum::listOptionsWithLabel()),
+
+              // Forms\Components\Select::make("addons")
+              //   ->multiple()
+              //   ->relationship("addons", "title")
+              //   ->reactive()
+              //   ->preload()
+              //   ->hiddenOn("create")
+              //   ->options(function (\Closure $get, ?Model $record) {
+              // $currentTypeOption = $get("type");
+
+              // if (!$currentTypeOption) {
+              //   return [];
+              // }
+
+              // $requiredTypes =
+              //   OptionTypeEnum::from($currentTypeOption) ===
+              //   OptionTypeEnum::SQFT
+              //     ? [
+              //       AddonTypeEnum::FEE,
+              //       AddonTypeEnum::SQFT,
+              //       AddonTypeEnum::LINEAR_FOOT,
+              //     ]
+              //     : [AddonTypeEnum::FEE];
+
+              // return $record->product->addons
+              //   ->whereIn("type", $requiredTypes)
+              //   ->pluck("title", "id");
+              //   }),
+
+              Forms\Components\Select::make("shipping_id")
+                ->searchable()
+                ->relationship("shipping", "title")
+                ->reactive()
+                ->preload()
+                ->options(function (\Closure $get, ?Model $record) {
+                  $currentTypeOption = $get("type");
+                  $customSizeIsSet = $get("show_custom_sizes");
+
+                  if (!$currentTypeOption) {
+                    return;
+                  }
+
+                  switch (OptionTypeEnum::from($currentTypeOption)) {
+                    case OptionTypeEnum::SQFT:
+                      $requiredTypes = [
+                        ShippingTypeEnum::SQFT,
+                        ShippingTypeEnum::SINGLE,
+                        ShippingTypeEnum::WIDTHxHEIGHT,
+                      ];
+                      break;
+
+                    case OptionTypeEnum::SINGLE:
+                      $requiredTypes = $customSizeIsSet
+                        ? [ShippingTypeEnum::WIDTHxHEIGHT]
+                        : [ShippingTypeEnum::SINGLE];
+                      break;
+                    case OptionTypeEnum::BY_QTY:
+                      $requiredTypes = $customSizeIsSet
+                        ? [ShippingTypeEnum::WIDTHxHEIGHT]
+                        : [ShippingTypeEnum::SINGLE];
+                      break;
+                    case OptionTypeEnum::PER_QTY:
+                      $requiredTypes = $customSizeIsSet
+                        ? [ShippingTypeEnum::WIDTHxHEIGHT]
+                        : [ShippingTypeEnum::SINGLE];
+                      break;
+
+                    default:
+                      $requiredTypes = [];
+                      break;
+                  }
+
+                  return Shipping::query()
+                    ->whereIn("type", $requiredTypes)
+                    ->pluck("title", "id");
+                }),
+              Forms\Components\TextInput::make("price")
+                ->prefix('$')
+                ->numeric()
+                ->hidden(fn(\Closure $get) => $get("type") == "qty")
+                ->dehydrateStateUsing(fn($state) => $state * 100)
+                ->afterStateHydrated(function (TextInput $component, $state) {
+                  $component->state($state / 100);
+                })
+                ->required(),
+
+              Forms\Components\TextInput::make("min_price")
+                ->prefix('$')
+                ->numeric()
+                ->default(0)
+                ->dehydrateStateUsing(fn($state) => $state * 100)
+                ->afterStateHydrated(function (TextInput $component, $state) {
+                  $component->state($state / 100);
+                })
+                ->required(),
+
+              Toggle::make("need_file")
+                ->label("Need file?")
+                ->default(false)
+                ->columnSpanFull()
+                ->reactive(),
+
+              Toggle::make("size_for_collect")
+                ->default(false)
+                ->reactive()
+                ->columnSpanFull()
+                ->hidden(
+                  fn(Closure $get) => $get("type") &&
+                    OptionTypeEnum::from($get("type")) === OptionTypeEnum::SQFT
+                ),
+              Toggle::make("show_custom_sizes")
+                ->default(false)
+                ->reactive()
+                ->hidden(fn(Closure $get) => !$get("size_for_collect")),
+
+              Section::make("Quantity")
+                ->description(
+                  "Here you can specify a given size that will be dropdown"
+                )
+                ->schema([
+                  Forms\Components\Repeater::make("quantity_list")
+                    ->hidden(fn(\Closure $get) => $get("disable_prepared"))
+                    ->reactive()
+                    ->schema([
+                      Forms\Components\TextInput::make("label")->helperText(
+                        "Here you can specify the label of the quantity that will be shown in the menu"
+                      ),
+                      Forms\Components\TextInput::make("quantity")->helperText(
+                        "Here you need to indicate the specific quantity that will be assigned"
+                      ),
+                    ]),
+                ]),
+
+              Section::make("Sizes")
+                ->hidden(
+                  fn(\Closure $get) => $get("show_custom_sizes") == false
+                )
+                ->schema([
+                  Section::make("Size Validation")
+                    ->schema([
+                      Forms\Components\TextInput::make("max_width")
+                        ->reactive()
+                        ->required()
+                        ->default(-1)
+                        ->numeric(),
+                      Forms\Components\TextInput::make("max_height")
+                        ->reactive()
+                        ->default(-1)
+                        ->required()
+                        ->numeric(),
+                    ])
+                    ->hidden(function (\Closure $get) {
+                      $type = $get("type");
+                      $customSizeIsSet = $get("show_custom_sizes");
+
+                      if (!$type) {
+                        return true;
+                      }
+
+                      if ($customSizeIsSet) {
+                        return false;
+                      }
+
+                      return OptionTypeEnum::from($type) !==
+                        OptionTypeEnum::SQFT;
+                    }),
+                  Select::make("size_list_id")
+                    ->label("Size List")
+                    ->columnSpanFull()
+                    ->reactive()
+                    ->options(fn() => SizeList::query()->pluck("title", "id")),
+                  Toggle::make("prevent_user_input_size")
+                    ->hidden(fn(Closure $get) => !$get("size_list_id"))
+                    ->default(false)
+                    ->label("Prevent the user from entering their size?"),
+                ]),
+
+              Section::make("Common Data")
+                ->reactive()
+                ->hidden(
+                  fn(\Closure $get) => !$get("size_for_collect") ||
+                    $get("show_custom_sizes")
+                )
+                ->statePath("common_data")
+                ->schema([
+                  Forms\Components\TextInput::make("static_width")->default(1),
+                  Forms\Components\TextInput::make("static_height")->default(1),
+                ]),
+
+              Forms\Components\Repeater::make("range_prices")
+                ->columns(3)
+                ->reactive()
+                ->hidden(fn(\Closure $get) => $get("type") !== "qty")
+                ->minItems(1)
+                ->schema([
+                  Forms\Components\TextInput::make("from")
+                    ->numeric()
+                    ->required()
+                    ->disabled(function (\Closure $get) {
+                      $currentUUID = $get("uuid");
+                      $repeater = $get("../../range_prices");
+
+                      list(
+                        $prevFrom,
+                        $prevTo,
+                      ) = static::getValueFromPrevRepeater(
+                        $repeater,
+                        $currentUUID
+                      );
+
+                      return !is_null($prevTo) && $prevTo === -1;
+                    })
+                    ->minValue(function (\Closure $get) {
+                      $currentUUID = $get("uuid");
+                      $repeater = $get("../../range_prices");
+
+                      list(
+                        $prevFrom,
+                        $prevTo,
+                      ) = static::getValueFromPrevRepeater(
+                        $repeater,
+                        $currentUUID
+                      );
+
+                      if ($prevFrom === -1) {
+                        return false;
+                      }
+
+                      return $prevTo === -1 ? 99999 : $prevTo + 1;
+                    })
+                    ->reactive(),
+                  Forms\Components\Group::make([
+                    Forms\Components\TextInput::make("to")
+                      ->numeric()
+                      ->required(),
+                    Forms\Components\Toggle::make("infinity")
+                      ->hidden(function (Closure $get) {
+                        $rangePrices = $get("../../range_prices");
+                        $lastRangePrice = end($rangePrices);
+                        $currentRangeUUID = $get("uuid");
+
+                        if ($lastRangePrice["uuid"] === $currentRangeUUID) {
+                          return false;
+                        }
+
+                        return true;
+                      })
+                      ->dehydrated(false)
+                      ->reactive()
+                      ->label("To Infinity")
+                      ->afterStateHydrated(function (
+                        Toggle $component,
+                        Closure $get
+                      ) {
+                        $component->state($get("to") == -1);
+                      })
+                      ->afterStateUpdated(
+                        fn(Closure $set, $state) => $set("to", $state ? -1 : "")
+                      ),
+                  ]),
+                  Forms\Components\TextInput::make("price")
+                    ->numeric()
+                    ->required()
+                    ->dehydrateStateUsing(
+                      fn($state) => intval(round($state * 100))
+                    )
+                    ->afterStateHydrated(function (
+                      TextInput $component,
+                      $state
+                    ) {
+                      $component->state($state / 100);
+                    })
+                    ->postfix('$'),
+                  Forms\Components\TextInput::make("uuid")
+                    ->reactive()
+                    ->disabled()
+                    ->hidden()
+                    ->dehydrated(false)
+                    ->afterStateHydrated(function (
+                      TextInput $component,
+                      $state
+                    ) {
+                      $component->state(Str::uuid());
+                    }),
+                ])
+                ->createItemButtonLabel("Add new range price")
+                ->disableItemCreation(function (\Closure $get) {
+                  $rangePrices = $get("range_prices");
+                  $lastRangePrice = end($rangePrices);
+
+                  if (!$lastRangePrice) {
+                    return false;
+                  }
+
+                  $lastRangePriceTo = $lastRangePrice["to"];
+
+                  return is_null($lastRangePriceTo) || $lastRangePriceTo == -1;
+                })
+                ->disableItemMovement()
+                ->reactive()
+                ->columnSpanFull(),
+
+              Forms\Components\Repeater::make("per_quantity_prices")
+                ->columns(3)
+                ->reactive()
+                ->hidden(fn(\Closure $get) => $get("type") !== "per_qty")
+                ->minItems(1)
+                ->schema([
+                  Forms\Components\TextInput::make("from")
+                    ->numeric()
+                    ->required()
+                    ->disabled(function (\Closure $get) {
+                      $currentUUID = $get("uuid");
+                      $repeater = $get("../../per_quantity_prices");
+
+                      list(
+                        $prevFrom,
+                        $prevTo,
+                      ) = static::getValueFromPrevRepeater(
+                        $repeater,
+                        $currentUUID
+                      );
+
+                      return !is_null($prevTo) && $prevTo === -1;
+                    })
+                    ->minValue(function (\Closure $get) {
+                      $currentUUID = $get("uuid");
+                      $repeater = $get("../../per_quantity_prices");
+
+                      list(
+                        $prevFrom,
+                        $prevTo,
+                      ) = static::getValueFromPrevRepeater(
+                        $repeater,
+                        $currentUUID
+                      );
+
+                      if ($prevFrom === -1) {
+                        return false;
+                      }
+
+                      return $prevTo === -1 ? 99999 : $prevTo + 1;
+                    })
+                    ->reactive(),
+                  Forms\Components\Group::make([
+                    Forms\Components\TextInput::make("to")
+                      ->numeric()
+                      ->required(),
+                    Forms\Components\Toggle::make("infinity")
+                      ->hidden(function (Closure $get) {
+                        $rangePrices = $get("../../per_quantity_prices");
+                        $lastRangePrice = end($rangePrices);
+                        $currentRangeUUID = $get("uuid");
+
+                        if ($lastRangePrice["uuid"] === $currentRangeUUID) {
+                          return false;
+                        }
+
+                        return true;
+                      })
+                      ->dehydrated(false)
+                      ->reactive()
+                      ->label("To Infinity")
+                      ->afterStateHydrated(function (
+                        Toggle $component,
+                        Closure $get
+                      ) {
+                        $component->state($get("to") == -1);
+                      })
+                      ->afterStateUpdated(
+                        fn(Closure $set, $state) => $set("to", $state ? -1 : "")
+                      ),
+                  ]),
+                  Forms\Components\TextInput::make("price")
+                    ->numeric()
+                    ->required()
+                    ->dehydrateStateUsing(fn($state) => round($state * 100))
+                    ->afterStateHydrated(function (
+                      TextInput $component,
+                      $state
+                    ) {
+                      $component->state($state / 100);
+                    })
+                    ->postfix('$'),
+                  Forms\Components\TextInput::make("uuid")
+                    ->reactive()
+                    ->disabled()
+                    ->hidden()
+                    ->dehydrated(false)
+                    ->afterStateHydrated(function (
+                      TextInput $component,
+                      $state
+                    ) {
+                      $component->state(Str::uuid());
+                    }),
+                ])
+                ->createItemButtonLabel("Add new range price")
+                ->disableItemCreation(function (\Closure $get) {
+                  $rangePrices = $get("per_quantity_prices");
+                  $lastRangePrice = end($rangePrices);
+
+                  if (!$lastRangePrice) {
+                    return false;
+                  }
+
+                  $lastRangePriceTo = $lastRangePrice["to"];
+
+                  return is_null($lastRangePriceTo) || $lastRangePriceTo == -1;
+                })
+                ->disableItemMovement()
+                ->reactive()
+                ->columnSpanFull(),
             ])
-            ->hidden(function (\Closure $get) {
-              $type = $get("type");
-              $customSizeIsSet = $get("show_custom_sizes");
+            ->columns(2),
+          Forms\Components\Tabs\Tab::make("Addons")->schema([
+            Forms\Components\Repeater::make("addons")
+              ->relationship()
+              ->disableLabel()
+              ->columns(2)
+              ->orderable("order_column")
+              ->schema([
+                Forms\Components\TextInput::make("title")
+                  ->required()
+                  ->maxLength(255),
+                Forms\Components\Select::make("type")
+                  ->reactive()
+                  ->options(function (\Closure $get) {
+                    $productOptionType = $get("../../type");
 
-              if (!$type) {
-                return true;
-              }
+                    if (!$productOptionType) {
+                      return [];
+                    }
 
-              if ($customSizeIsSet) {
-                return false;
-              }
+                    $requiredTypes =
+                      OptionTypeEnum::from($productOptionType) ===
+                      OptionTypeEnum::SQFT
+                        ? [
+                          AddonTypeEnum::FEE,
+                          AddonTypeEnum::SQFT,
+                          AddonTypeEnum::LINEAR_FOOT,
+                        ]
+                        : [AddonTypeEnum::FEE];
 
-              return OptionTypeEnum::from($type) !== OptionTypeEnum::SQFT;
-            }),
-          Select::make("size_list_id")
-            ->label("Size List")
-            ->columnSpanFull()
-            ->reactive()
-            ->options(fn() => SizeList::query()->pluck("title", "id")),
-          Toggle::make('prevent_user_input_size')
-            ->hidden(fn (Closure $get) => !$get('size_list_id'))
-            ->default(false)
-            ->label("Prevent the user from entering their size?"),
-        ]),
+                    return collect($requiredTypes)
+                      ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
+                      ->all();
+                  })
+                  ->required(),
 
-      Section::make("Common Data")
-        ->reactive()
-        ->hidden(
-          fn(\Closure $get) => !$get("size_for_collect") ||
-            $get("show_custom_sizes")
-        )
-        ->statePath("common_data")
-        ->schema([
-          Forms\Components\TextInput::make("static_width")->default(1),
-          Forms\Components\TextInput::make("static_height")->default(1),
-        ]),
+                Forms\Components\TextInput::make("condition")
+                  ->required()
+                  ->reactive()
+                  ->numeric(
+                    fn(\Closure $get) => in_array($get("type"), [
+                      AddonTypeEnum::SQFT->value,
+                      AddonTypeEnum::LINEAR_FOOT->value,
+                    ])
+                  )
+                  ->regex(function (\Closure $get) {
+                    if (
+                      in_array($get("type"), [
+                        AddonTypeEnum::SQFT->value,
+                        AddonTypeEnum::LINEAR_FOOT->value,
+                      ])
+                    ) {
+                      return "/\d/m";
+                    } else {
+                      // return "/[+-]\d*[%]?$/m";
+                      return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
+                    }
+                  })
+                  // ()
 
-      Forms\Components\Repeater::make("range_prices")
-        ->columns(3)
-        ->reactive()
-        ->hidden(fn(\Closure $get) => $get("type") !== "qty")
-        ->afterStateUpdated(function () {
-          info("updated");
-        })
-        ->minItems(1)
-        ->schema([
-          Forms\Components\TextInput::make("from")
-            ->numeric()
-            ->required()
-            ->disabled(function (\Closure $get) {
-              $currentUUID = $get("uuid");
-              $repeater = $get("../../range_prices");
+                  ->maxLength(255),
+                Forms\Components\Select::make("extra_data_type")
+                  ->reactive()
+                  ->options(function () {
+                    return collect(AddonExtraDataTypeEnum::cases())
+                      ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
+                      ->all();
+                  }),
+                Forms\Components\TextInput::make("group_addon")->helperText(
+                  "Can select one addon from the selected group"
+                ),
+                Forms\Components\TextInput::make("per_item_price")
+                  ->required()
+                  ->numeric()
+                  ->label("Per item price")
+                  ->dehydrateStateUsing(fn($state) => $state * 100)
+                  ->afterStateHydrated(function (TextInput $component, $state) {
+                    $component->state($state / 100);
+                  })
+                  ->required(fn(\Closure $get) => $get("with_qty"))
+                  ->hidden(fn(\Closure $get) => $get("with_qty") == false),
 
-              list($prevFrom, $prevTo) = static::getValueFromPrevRepeater(
-                $repeater,
-                $currentUUID
-              );
+                Forms\Components\Toggle::make("with_qty")
+                  ->required()
+                  ->columnSpanFull()
+                  ->reactive()
+                  ->label("This addon will be with Quantity?"),
 
-              return !is_null($prevTo) && $prevTo === -1;
-            })
-            ->minValue(function (\Closure $get) {
-              $currentUUID = $get("uuid");
-              $repeater = $get("../../range_prices");
+                Forms\Components\TextInput::make("min-qty")
+                  ->required()
+                  ->numeric()
+                  ->label("Minimum Quantity")
+                  ->required(fn(\Closure $get) => $get("with_qty"))
+                  ->hidden(fn(\Closure $get) => $get("with_qty") == false)
+                  ->maxLength(255),
 
-              list($prevFrom, $prevTo) = static::getValueFromPrevRepeater(
-                $repeater,
-                $currentUUID
-              );
-
-              if ($prevFrom === -1) {
-                return false;
-              }
-
-              return $prevTo === -1 ? 99999 : $prevTo + 1;
-            })
-            ->reactive(),
-          Forms\Components\Group::make([
-            Forms\Components\TextInput::make("to")
-              ->numeric()
-              ->required(),
-            Forms\Components\Toggle::make("infinity")
-              ->hidden(function (Closure $get) {
-                $rangePrices = $get("../../range_prices");
-                $lastRangePrice = end($rangePrices);
-                $currentRangeUUID = $get("uuid");
-
-                if ($lastRangePrice["uuid"] === $currentRangeUUID) {
-                  return false;
-                }
-
-                return true;
-              })
-              ->dehydrated(false)
-              ->reactive()
-              ->label("To Infinity")
-              ->afterStateHydrated(function (Toggle $component, Closure $get) {
-                $component->state($get("to") == -1);
-              })
-              ->afterStateUpdated(
-                fn(Closure $set, $state) => $set("to", $state ? -1 : "")
-              ),
+                Forms\Components\TextInput::make("max-qty")
+                  ->required()
+                  ->numeric()
+                  ->label("Maximum Quantity")
+                  ->required(fn(\Closure $get) => $get("with_qty"))
+                  ->hidden(fn(\Closure $get) => $get("with_qty") == false)
+                  ->maxLength(255),
+              ]),
           ]),
-          Forms\Components\TextInput::make("price")
-            ->numeric()
-            ->required()
-            ->dehydrateStateUsing(fn($state) => $state * 100)
-            ->afterStateHydrated(function (TextInput $component, $state) {
-              $component->state($state / 100);
-            })
-            ->postfix('$'),
-          Forms\Components\TextInput::make("uuid")
-            ->reactive()
-            ->disabled()
-            ->hidden()
-            ->dehydrated(false)
-            ->afterStateHydrated(function (TextInput $component, $state) {
-              $component->state(Str::uuid());
-            }),
+          Forms\Components\Tabs\Tab::make("Shipping")->schema([]),
         ])
-        ->createItemButtonLabel("Add new range price")
-        ->disableItemCreation(function (\Closure $get) {
-          $rangePrices = $get("range_prices");
-          $lastRangePrice = end($rangePrices);
-
-          if (!$lastRangePrice) {
-            return false;
-          }
-
-          $lastRangePriceTo = $lastRangePrice["to"];
-
-          return is_null($lastRangePriceTo) || $lastRangePriceTo == -1;
-        })
-        ->disableItemMovement()
-        ->reactive()
         ->columnSpanFull(),
     ];
   }

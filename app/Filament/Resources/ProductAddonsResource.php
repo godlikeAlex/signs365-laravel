@@ -42,24 +42,6 @@ class ProductAddonsResource extends Resource
         })
         ->required(),
 
-      // Forms\Components\Select::make("options")
-      //   ->multiple()
-      //   ->relationship("options", "title")
-      //   ->reactive()
-      //   ->preload()
-      //   ->hiddenOn("create")
-      //   ->options(function (\Closure $get, ?Model $record) {
-      //     $currentTypeAddon = $get("type");
-      //     $requiredTypes =
-      //       AddonTypeEnum::from($currentTypeAddon) === AddonTypeEnum::SQFT
-      //         ? [OptionTypeEnum::SQFT]
-      //         : [OptionTypeEnum::BY_QTY, OptionTypeEnum::SINGLE];
-
-      //     return $record->product->options
-      //       ->whereIn("type", $requiredTypes)
-      //       ->pluck("title", "id");
-      //   }),
-
       Forms\Components\TextInput::make("condition")
         ->required()
         ->reactive()
