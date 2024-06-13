@@ -25,6 +25,12 @@ export enum ProductActionKind {
   SET_ERROR_TO_ADDON = "SET_ERROR_TO_ADDON",
   SELECT_EXTRA_ITEM_IN_ADDON = "SELECT_EXTRA_ITEM_IN_ADDON",
   UPDATE_QUANTITY_OF_PRODUCT = "UPDATE_QUANTITY_OF_PRODUCT",
+  CHANGE_UNIT = "CHANGE_UNIT",
+  UPDATE_INPUT = "UPDATE_INPUT",
+  SET_CUSTOM_SIZE = "SET_CUSTOM_SIZE",
+  STOP_FETCHING = "STOP_FETCHING",
+  SET_CUSTOM_SIZE_ERROR = "SET_CUSTOM_SIZE_ERROR",
+  SET_SIZE_SELECTION_TYPE = "SET_SIZE_SELECTION_TYPE",
 }
 
 type AddProductAction = {
@@ -83,6 +89,49 @@ type UpdateQuantityOfProductAction = {
   };
 };
 
+type ChangeUnitAction = {
+  type: ProductActionKind.CHANGE_UNIT;
+  payload: {
+    unit: "feet" | "inches";
+  };
+};
+
+type UpdateInputAction = {
+  type: ProductActionKind.UPDATE_INPUT;
+  payload: {
+    input: "width" | "height";
+    value: number;
+  };
+};
+
+type UpdateCustomSizeAction = {
+  type: ProductActionKind.SET_CUSTOM_SIZE;
+  payload: {
+    width: number;
+    height: number;
+    customSize: number;
+  };
+};
+
+type StopFetchingAction = {
+  type: ProductActionKind.STOP_FETCHING;
+  payload?: undefined;
+};
+
+type SetErrorToFieldAction = {
+  type: ProductActionKind.SET_CUSTOM_SIZE_ERROR;
+  payload: {
+    field: "width" | "height" | "customSize";
+    showError?: boolean;
+    error?: string | null;
+  };
+};
+
+type SetSizeSelectionType = {
+  type: ProductActionKind.SET_SIZE_SELECTION_TYPE;
+  payload: { type: "default" | "custom" };
+};
+
 export type Action =
   | AddProductAction
   | SelectOptionAction
@@ -93,7 +142,13 @@ export type Action =
   | ChangeAddonQuantityAction
   | SetErrorToAddonAction
   | SelectExtraDataItemsAction
-  | UpdateQuantityOfProductAction;
+  | UpdateQuantityOfProductAction
+  | ChangeUnitAction
+  | UpdateInputAction
+  | UpdateCustomSizeAction
+  | StopFetchingAction
+  | SetErrorToFieldAction
+  | SetSizeSelectionType;
 
 type ProductPayload = {
   [ProductActionKind.INIT_PRODUCT]: {
@@ -122,9 +177,27 @@ export type ProductState = {
   selectedAddons: SelectedAddon[];
   price?: string;
   unit: "inches" | "feet";
-  width?: number;
-  height?: number;
-  quantity?: number;
+  sizeSelectionType: "default" | "custom";
+  width?: {
+    value: number;
+    error?: string | null;
+    showError: boolean;
+  };
+  height?: {
+    value: number;
+    error?: string | null;
+    showError: boolean;
+  };
+  customSize?: {
+    value: number;
+    error?: string | null;
+    showError: boolean;
+  };
+  quantity?: {
+    value: number;
+    error?: string | null;
+    showError: boolean;
+  };
   calculatedPrice?: string;
 } & (IdleProduct | LoadedProduct);
 
@@ -134,11 +207,23 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
   switch (type) {
     case ProductActionKind.INIT_PRODUCT:
       let selectedOption = undefined;
+      let quantity = 1;
 
       if (payload.with_checkout) {
         const [firstOption] = payload.options;
 
-        selectedOption = firstOption;
+        quantity =
+          firstOption.quantity_list && firstOption.quantity_list.length > 0
+            ? firstOption.quantity_list[0].quantity
+            : 1;
+
+        selectedOption = {
+          ...firstOption,
+          quantity_list:
+            firstOption.quantity_list && firstOption.quantity_list.length > 0
+              ? firstOption.quantity_list
+              : undefined,
+        };
       }
 
       return {
@@ -150,9 +235,13 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
         price: undefined,
 
         unit: "inches",
-        width: 1,
-        height: 1,
-        quantity: 1,
+        sizeSelectionType: selectedOption?.prevent_user_input_size
+          ? "default"
+          : "custom",
+        width: { error: undefined, value: 1, showError: false },
+        height: { error: undefined, value: 1, showError: false },
+        customSize: { error: undefined, value: undefined, showError: false },
+        quantity: { error: undefined, value: quantity, showError: false },
         calculatedPrice: undefined,
       };
     case ProductActionKind.SELECT_OPTION:
@@ -163,6 +252,8 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
       };
     case ProductActionKind.START_FETCHING:
       return { ...state, status: "fetching" };
+    case ProductActionKind.STOP_FETCHING:
+      return { ...state, status: "ready" };
     case ProductActionKind.UPDATE_PRICE:
       return {
         ...state,
@@ -178,9 +269,22 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
         extra_data_selected: [],
       };
 
+      const selectedAddons = [...state.selectedAddons].filter(
+        (selectedAddon) => {
+          if (newSelectedAddon.group_addon) {
+            const sameGroup =
+              newSelectedAddon.group_addon === selectedAddon?.group_addon;
+
+            return sameGroup ? false : true;
+          }
+
+          return true;
+        }
+      );
+
       return {
         ...state,
-        selectedAddons: [...state.selectedAddons, newSelectedAddon],
+        selectedAddons: [...selectedAddons, newSelectedAddon],
       };
     case ProductActionKind.REMOVE_ADDON:
       return {
@@ -277,7 +381,52 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
         }),
       };
     case ProductActionKind.UPDATE_QUANTITY_OF_PRODUCT:
-      return { ...state, quantity: payload.quantity };
+      return {
+        ...state,
+        quantity: {
+          value: payload.quantity,
+          error: undefined,
+          showError: false,
+        },
+      };
+    case ProductActionKind.CHANGE_UNIT:
+      return { ...state, unit: payload.unit };
+    case ProductActionKind.UPDATE_INPUT:
+      return {
+        ...state,
+        [payload.input]: {
+          error: undefined,
+          value: payload.value,
+        },
+      };
+    case ProductActionKind.SET_CUSTOM_SIZE:
+      return {
+        ...state,
+        width: { error: undefined, value: payload.width, showError: false },
+        height: { error: undefined, value: payload.height, showError: false },
+        customSize: {
+          error: undefined,
+          value: payload.customSize,
+          showError: false,
+        },
+      };
+    case ProductActionKind.SET_CUSTOM_SIZE_ERROR:
+      return {
+        ...state,
+        [payload.field]: {
+          ...state[payload.field],
+          error: payload.error,
+          showError:
+            payload.showError === undefined
+              ? state[payload.field].showError
+              : payload.showError,
+        },
+      };
+    case ProductActionKind.SET_SIZE_SELECTION_TYPE:
+      return {
+        ...state,
+        sizeSelectionType: payload.type,
+      };
     default:
       throw new Error(`Unhandled actionType: ${type}`);
   }

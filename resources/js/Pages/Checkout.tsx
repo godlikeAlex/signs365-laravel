@@ -13,7 +13,7 @@ interface Props {}
 
 interface State {
   clientSecret?: string;
-  tempOrderID?: number | string;
+  paymentIntentId?: number | string;
 }
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
@@ -27,11 +27,9 @@ const Checkout: React.FC<Props> = (props: Props) => {
     "Pages/Cart"
   );
 
-  console.log(state1, "state1");
-
   const [state, setState] = useState<State>({
     clientSecret: undefined,
-    tempOrderID: undefined,
+    paymentIntentId: undefined,
   });
 
   useEffect(() => {
@@ -44,11 +42,11 @@ const Checkout: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     const fetchPaymentIntent = async () => {
       try {
-        const { data } = await PaymentService.retrivePaymentIntent();
+        const { data } = await PaymentService.createPaymentIntent();
 
         setState({
           clientSecret: data.client_secret,
-          tempOrderID: data.temp_order_id,
+          paymentIntentId: data.payment_intent_id,
         });
       } catch (error) {
         toast("Error initing payment...", { type: "error" });
@@ -103,7 +101,7 @@ const Checkout: React.FC<Props> = (props: Props) => {
                   },
                 }}
               >
-                <PaymentForm tempOrderID={state.tempOrderID} />
+                <PaymentForm paymentIntentId={state.paymentIntentId} />
               </Elements>
             ) : (
               <div className="row">

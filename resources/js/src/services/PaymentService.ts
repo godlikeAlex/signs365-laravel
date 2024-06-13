@@ -1,14 +1,18 @@
 import api from "../api";
 
 export default class PaymentService {
-  static retrivePaymentIntent() {
-    return api.post<{ client_secret: string; temp_order_id: string }>(
+  static createPaymentIntent() {
+    return api.post<{ client_secret: string; payment_intent_id: string }>(
       "/payment-intent"
     );
   }
 
   static updateTempOrder(tempOrderID: number | string, data: any) {
     return api.post(`temp-order/update/${tempOrderID}`, data);
+  }
+
+  static updateOrderInCheckout(paymentIntentID: string, data: any) {
+    return api.post(`checkout/update-order/${paymentIntentID}`, data);
   }
 
   static getPaymentIntent(payment_intent) {

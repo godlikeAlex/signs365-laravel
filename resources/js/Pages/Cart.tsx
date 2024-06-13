@@ -13,8 +13,6 @@ interface Props {
 const Cart: React.FC<Props> = (props: Props) => {
   const { cart } = usePage<SharedInertiaData>().props;
 
-  console.log(props, "kerixar daun");
-
   const renderCart = () => {
     return (
       <>

@@ -19,6 +19,9 @@ const CartItem: React.FC<Props> = ({
 }: Props) => {
   const dispatch = useAppDispatch();
 
+  const priceWithQuantity =
+    price * (attributes.productOptionType === "per_qty" ? 1 : quantity);
+
   const addItem = async () => {
     try {
       router.post(
@@ -132,7 +135,7 @@ const CartItem: React.FC<Props> = ({
         </div>
       </td>
       <td className="ps-product__subtotal">
-        ${(price * quantity).toLocaleString()}
+        ${priceWithQuantity.toLocaleString()}
       </td>
     </tr>
   );

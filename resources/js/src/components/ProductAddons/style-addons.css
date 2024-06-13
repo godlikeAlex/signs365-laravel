@@ -22,6 +22,10 @@
   justify-content: flex-end;
 }
 
+.label-product-show {
+  text-transform: capitalize;
+}
+
 .qty-input-addon {
   background-color: transparent;
   /* border-bottom: 2px solid #fd8d27; */

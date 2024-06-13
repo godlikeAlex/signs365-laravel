@@ -9,25 +9,46 @@ import {
   FAQProduct,
   ProductCheckoutForm,
   ProductSlider,
+  SEOHead,
 } from "@/src/components";
 import SelectProductFile, {
   SelectProductFileRef,
 } from "@/src/components/SelectProductFile/SelectProductFile";
+import { jsonLdScriptProps } from "react-schemaorg";
 
 interface Props {
   product: { data: IProduct };
 }
 
-function Product() {
-  const { state, dispatch } = useContext(MainProductContext);
-  const dragAndDropRef = React.useRef<SelectProductFileRef>(null);
+interface ProductProps {
+  product: IProduct;
+}
 
-  if (state.status === "idle") {
-    return null;
-  }
+function Product({ product }: ProductProps) {
+  const { state } = useContext(MainProductContext);
+  const dragAndDropRef = React.useRef<SelectProductFileRef>(null);
 
   return (
     <>
+      <SEOHead
+        title={product.seo_title}
+        description={product.seo_desc}
+        keywords={product.seo_keywords}
+      >
+        <script
+          {...jsonLdScriptProps<DTS.Product>({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: product.title,
+            brand: "Signs7",
+            image:
+              product.images.length > 0
+                ? `/storage/${product.images[0].path}`
+                : undefined,
+          })}
+        />
+      </SEOHead>
+
       <div className="ps-page--product-variable">
         <div className="container">
           <ul className="ps-breadcrumb">
@@ -37,21 +58,19 @@ function Product() {
             <li className="ps-breadcrumb__item">
               <span>Shop</span>
             </li>
-            {state.product.categories.length > 0 && (
+            {product.categories.length > 0 && (
               <li
                 className="ps-breadcrumb__item"
-                key={`breadcumbs-${state.product.categories[0].slug}`}
+                key={`breadcumbs-${product.categories[0].slug}`}
               >
-                <Link
-                  href={`/shop/category/${state.product.categories[0].slug}`}
-                >
-                  {state.product.categories[0].title}
+                <Link href={`/shop/category/${product.categories[0].slug}`}>
+                  {product.categories[0].title}
                 </Link>
               </li>
             )}
 
             <li className="ps-breadcrumb__item">
-              <span>{state.product.title}</span>
+              <span>{product.title}</span>
             </li>
           </ul>
 
@@ -62,14 +81,14 @@ function Product() {
                   <div className="row">
                     <div className="col-12 col-xl-6">
                       <ProductSlider
-                        images={state.product.images}
-                        productName={state.product.title}
+                        images={product.images}
+                        productName={product.title}
                       />
                     </div>
                     <div className="col-12 col-xl-6">
                       <div className="ps-product__info">
                         <div className="ps-product__branch">
-                          {state.product.categories?.map((category) => (
+                          {product.categories?.map((category) => (
                             <Link
                               href={`/shop/category/${category.slug}`}
                               key={`cat-${category.slug}`}
@@ -79,13 +98,13 @@ function Product() {
                           ))}
                         </div>
                         <div className="ps-product__title">
-                          <a>{state.product.title}</a>
+                          <a>{product.title}</a>
                         </div>
                         <div className="ps-product__desc">
                           <p
                             className={"product_modal_desc"}
                             dangerouslySetInnerHTML={{
-                              __html: state.product.description,
+                              __html: product.description,
                             }}
                           ></p>
                         </div>
@@ -98,13 +117,12 @@ function Product() {
                               <i className="icon-bag2"></i>Non-contact shipping
                             </li>
                             <li>
-                              <i className="icon-truck"></i>Free delivery for
-                              order over $200
+                              <i className="icon-truck"></i>Free delivery
                             </li>
                           </ul>
                         </div>
                         <div>
-                          {state.product.with_checkout ? (
+                          {product.with_checkout ? (
                             <ProductCheckoutForm />
                           ) : null}
                         </div>
@@ -114,11 +132,11 @@ function Product() {
                 </div>
               </div>
 
-              {state.product.faq && (
+              {product.faq && (
                 <div className="ps-product__content mt-50">
                   <h2 className="ps-title">F.A.Q</h2>
 
-                  <FAQProduct questions={state.product.faq} />
+                  <FAQProduct questions={product.faq} />
                 </div>
               )}
             </div>
@@ -145,8 +163,6 @@ export default ({ product }: Props) => {
     unit: "feet",
   });
 
-  console.log(product);
-
   useEffect(() => {
     dispatch({ type: ProductActionKind.INIT_PRODUCT, payload: product.data });
   }, [product]);
@@ -155,7 +171,7 @@ export default ({ product }: Props) => {
 
   return (
     <MainProductContext.Provider value={value}>
-      <Product />
+      <Product product={product.data} />
     </MainProductContext.Provider>
   );
 };

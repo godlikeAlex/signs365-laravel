@@ -17,7 +17,7 @@ import { usePage, useRemember } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {
-  tempOrderID: number | string;
+  paymentIntentId: number | string;
 }
 
 type Inputs = {
@@ -38,7 +38,7 @@ const CheckOutSchema = yup.object({
   user_id: yup.string().nullable(),
 });
 
-const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
+const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
   const { auth } = usePage<SharedInertiaData>().props;
@@ -49,10 +49,9 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
     "Pages/Checkout"
   );
 
-  console.log(state, "op");
-
-  const [submiting, setSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [submitting, setSubmitting] = React.useState(false);
 
   const {
     register,
@@ -72,7 +71,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
       return;
     }
 
-    setSubmiting(true);
+    setSubmitting(true);
 
     Object.keys(data).forEach((key) => {
       if (data[key] === "" || data[key] == null) {
@@ -80,7 +79,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
       }
     });
 
-    await PaymentService.updateTempOrder(tempOrderID, data);
+    await PaymentService.updateOrderInCheckout(paymentIntentId as string, data);
 
     const { error } = await stripe.confirmPayment({
       elements,
@@ -104,9 +103,9 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
     if (error) {
       setErrorMessage(error.message);
 
-      setSubmiting(false);
+      setSubmitting(false);
     } else {
-      setSubmiting(false);
+      setSubmitting(false);
     }
   };
 
@@ -123,7 +122,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
                     {...register("name")}
                     error={errors.name?.message}
                     placeholder={"Your name"}
-                    disabled={submiting}
+                    disabled={submitting}
                     label={"Name"}
                     formType="checkout"
                   />
@@ -135,7 +134,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
                   type="tel"
                   placeholder={"Phone number"}
                   error={errors.phone?.message}
-                  disabled={submiting}
+                  disabled={submitting}
                   formType="checkout"
                   label="Phone"
                 />
@@ -147,7 +146,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
                     type="email"
                     placeholder={"Email"}
                     error={errors.email?.message}
-                    disabled={submiting}
+                    disabled={submitting}
                     formType="checkout"
                     label="Email"
                   />
@@ -160,7 +159,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
                   type="tel"
                   placeholder={"Address"}
                   error={errors.address?.message}
-                  disabled={submiting}
+                  disabled={submitting}
                   formType="checkout"
                   label="Address"
                 />
@@ -191,7 +190,7 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
               </div>
 
               <div className="col-12">
-                {submiting ? (
+                {submitting ? (
                   <div className="overlay-loading">
                     <BeatLoader />
                   </div>
@@ -208,7 +207,10 @@ const PaymentForm: React.FC<Props> = ({ tempOrderID }: Props) => {
         </div>
 
         <div className="col-12 col-lg-4">
-          <CheckoutSidebar submiting={submiting} />
+          <CheckoutSidebar
+            submitting={submitting}
+            setSubmitting={(submitting) => setSubmitting(submitting)}
+          />
         </div>
       </div>
     </form>

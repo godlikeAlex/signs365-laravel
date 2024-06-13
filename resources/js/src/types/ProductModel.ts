@@ -46,6 +46,11 @@ type ProductOptionType =
   | ProductOptionTypeSingle
   | ProductOptionTypeQty;
 
+export interface IQuantityListItem {
+  label: string;
+  quantity: number;
+}
+
 export type ProductOption = ProductOptionType & {
   id: number;
   title: string;
@@ -55,6 +60,7 @@ export type ProductOption = ProductOptionType & {
   need_file: boolean;
   show_custom_sizes: boolean;
   prevent_user_input_size: boolean;
+  quantity_list?: IQuantityListItem[];
   validation: {
     max_width: string;
     max_height: string;
@@ -76,6 +82,7 @@ export type Addon = ProudctAddonHasValidation & {
   condition: string;
   isSelected: boolean;
   extra_data_type: ExtraDataType;
+  group_addon?: string;
 };
 
 type ProductHasCheckout =

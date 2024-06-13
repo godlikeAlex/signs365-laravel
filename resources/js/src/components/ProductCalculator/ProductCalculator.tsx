@@ -1,28 +1,21 @@
-import React, { useContext, useState } from "react";
-import Input from "../Input";
-import {
-  ContextType,
-  ProductFormContext,
-} from "@/src/contexts/ProductFormContext";
+import React from "react";
 import classNames from "classnames";
-import { useAppSelector } from "@/src/hooks";
 import UnitSelection from "./UnitSelection";
 import CalculatorForm from "./CalculatorForm";
 import CustomSizesDropdown from "./CustomSizesDropdown";
-import Skeleton from "react-loading-skeleton";
+import { useProductContext } from "@/src/contexts/MainProductContext";
+import { ProductOption } from "@/src/types/ProductModel";
+import { ProductActionKind } from "@/src/reducers/ProductReducer";
 
-interface Props extends ContextType {}
+interface Props {
+  selectedOption: ProductOption;
+}
 
 const units: Array<"inches" | "feet"> = ["inches", "feet"];
 
-const ProductCalculator: React.FC<Props> = ({
-  state,
-  setState,
-  validationRules,
-}: Props) => {
-  const { selectedOption } = useAppSelector((state) => state.product);
-
-  console.log(selectedOption);
+const ProductCalculator: React.FC<Props> = ({ selectedOption }: Props) => {
+  const { dispatch, state } = useProductContext();
+  const disabled = state.status === "fetching";
 
   const staticData = React.useMemo(() => {
     const hasStaticData = selectedOption.type !== "sqft";
@@ -44,12 +37,15 @@ const ProductCalculator: React.FC<Props> = ({
   }, [selectedOption]);
 
   const handleSizeTypeSelect = (type: "default" | "custom") => {
-    setState((state) => ({
-      ...state,
-      typeSizeSelection: type,
-      customSize: { value: undefined, error: undefined },
-    }));
+    dispatch({
+      type: ProductActionKind.SET_SIZE_SELECTION_TYPE,
+      payload: {
+        type,
+      },
+    });
   };
+
+  console.log("hello world");
 
   return (
     <div className="ps-checkout">
@@ -60,48 +56,55 @@ const ProductCalculator: React.FC<Props> = ({
           </div>
         </div>
 
-        {selectedOption.show_custom_sizes && (
+        {selectedOption.show_custom_sizes &&
+        selectedOption.prevent_user_input_size === false ? (
           <div className="row">
             <div
               className={classNames("product-variant", {
-                "active-variant": state.typeSizeSelection === "default",
-                "disabled-variant": state.disabled,
+                "active-variant": state.sizeSelectionType === "default",
+                "disabled-variant": disabled,
               })}
-              onClick={() => !state.disabled && handleSizeTypeSelect("default")}
+              onClick={() => !disabled && handleSizeTypeSelect("default")}
             >
-              <h6 style={{ textTransform: "capitalize" }}>Default</h6>
+              <h6 style={{ textTransform: "capitalize" }}>Default </h6>
             </div>
 
             <div
               className={classNames("product-variant", {
-                "active-variant": state.typeSizeSelection === "custom",
-                "disabled-variant": state.disabled,
+                "active-variant": state.sizeSelectionType === "custom",
+                "disabled-variant": disabled,
               })}
-              onClick={() => !state.disabled && handleSizeTypeSelect("custom")}
+              onClick={() => !disabled && handleSizeTypeSelect("custom")}
             >
-              <h6 style={{ textTransform: "capitalize" }}>Custom</h6>
+              <h6 style={{ textTransform: "capitalize" }}>Custom's</h6>
             </div>
           </div>
-        )}
+        ) : null}
 
         {!staticData && !hasCustomSize ? (
           <UnitSelection
             currentUnit={state.unit}
             units={units}
-            disabled={state.disabled}
-            setUnit={(unit) => setState((state) => ({ ...state, unit }))}
+            disabled={disabled}
+            setUnit={(unit) =>
+              dispatch({
+                type: ProductActionKind.CHANGE_UNIT,
+                payload: { unit },
+              })
+            }
           />
         ) : undefined}
 
-        {state.typeSizeSelection === "custom" ? (
-          <CalculatorForm staticData={staticData} />
+        {state.sizeSelectionType === "custom" ? (
+          <CalculatorForm staticData={staticData} disabled={disabled} />
         ) : null}
 
-        {state.typeSizeSelection === "default" &&
+        {state.sizeSelectionType === "default" &&
         selectedOption.type !== "sqft" ? (
           <CustomSizesDropdown
             sizes={selectedOption.customSizes}
-            hasError={state.highlightErrors && !validationRules["customSize"]}
+            hasError={false}
+            // hasError={state.highlightErrors && !validationRules["customSize"]}
           />
         ) : null}
       </div>

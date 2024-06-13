@@ -70,10 +70,19 @@ export interface ICartItem {
   associatedModel: IProduct;
 }
 
+export interface IVoucher {
+  discountAmount: number;
+  id: number;
+  name: string;
+  value: string;
+}
+
 export interface ICart {
   items: ICartItem[];
   tax: number;
   total: number;
+  voucher?: IVoucher;
+  discount_voucher?: number;
   total_with_tax: number;
 }
 

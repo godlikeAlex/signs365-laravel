@@ -57,15 +57,9 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
           <div className="container container-initial">
             <div className="ps-banner__block">
               <div className="ps-banner__content">
-                <h2 className="ps-banner__title">
-                  Signs, Decals...
-                  <br /> Only in NY
-                </h2>
+                <h2 className="ps-banner__title">10% OFF FOR FIRST ORDER</h2>
                 <div className="ps-banner__desc">Only this week</div>
 
-                <a className="bg-warning ps-banner__shop" href="#">
-                  Shop now
-                </a>
                 <div className="ps-banner__persen bg-yellow ps-top">
                   <small>only</small>$25
                 </div>
