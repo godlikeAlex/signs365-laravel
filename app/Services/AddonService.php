@@ -6,6 +6,7 @@ use App\DTO\CalculateAddonsDTO;
 use App\Enums\AddonTypeEnum;
 use App\Models\Product;
 use App\Models\ProductAddons;
+use App\Models\ProductOption;
 
 class AddonService
 {
@@ -15,9 +16,8 @@ class AddonService
     $actualAddons = collect([]);
 
     foreach ($calculateAddonsDTO->addons as $addon) {
-      info($addon);
       $actualAddon = $this->getAddonInProduct(
-        $calculateAddonsDTO->product,
+        $calculateAddonsDTO->productOption,
         $addon["id"]
       );
 
@@ -31,6 +31,8 @@ class AddonService
         $calculateAddonsDTO,
         $actualAddon
       );
+
+      info("addon", ["a" => $totalAddonsPrice]);
 
       if ($actualAddon->with_qty) {
         $totalAddonsPrice +=
@@ -91,8 +93,8 @@ class AddonService
     return 0;
   }
 
-  private function getAddonInProduct(Product $product, int $addonID)
+  private function getAddonInProduct(ProductOption $productOption, int $addonID)
   {
-    return $product->addons()->find($addonID);
+    return $productOption->addons()->find($addonID);
   }
 }

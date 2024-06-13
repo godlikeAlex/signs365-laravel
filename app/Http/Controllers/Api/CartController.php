@@ -31,15 +31,21 @@ class CartController extends Controller
 
   public function __construct(Request $request)
   {
+    $city = City::where("id", $request->get("city"))->first();
+
+    if (!$city) {
+      $city = City::first();
+    }
+
     if (Cookie::has("cart")) {
-      $this->cart = new CartService(Cookie::get("cart"));
+      $this->cart = new CartService(Cookie::get("cart"), $city);
     } else {
       $uuid = Str::uuid();
       $cookie = Cookie::forever(name: "cart", value: $uuid, httpOnly: true);
 
       Cookie::queue($cookie);
 
-      $this->cart = new CartService($uuid);
+      $this->cart = new CartService($uuid, $city);
     }
   }
 
@@ -181,38 +187,42 @@ class CartController extends Controller
     }
   }
 
-  public function calculateSingle(CalculateSingleItemCartRequest $request, CalculatorService $calculatorService)
-  {
+  public function calculateSingle(
+    CalculateSingleItemCartRequest $request,
+    CalculatorService $calculatorService
+  ) {
     try {
       $calculatorDto = new CalculatorDTO(
         $request->input("product_id"),
         $request->input("option_id"),
         $request->input("width"),
         $request->input("height"),
-        $request->input('quantity'),
+        $request->input("quantity"),
         $request->addons,
-        $request->input('unit')
+        $request->input("unit")
       );
 
-      list($priceInCents, $priceInDollars) = $calculatorService->calculate($calculatorDto);
+      list($priceInCents, $priceInDollars) = $calculatorService->calculate(
+        $calculatorDto
+      );
 
       return response()->json(["price" => $priceInDollars]);
     } catch (\Exception $exception) {
-      return response(['error' => $exception->getMessage()], 400);
+      return response(["error" => $exception->getMessage()], 400);
     }
-//    $calculator = new CalculatorService(
-//      $request->input("product_id"),
-//      width: $request->input("width"),
-//      height: $request->input("height"),
-//      unit: $request->input("unit"),
-//      addons: $request->addons,
-//      selectedOptionID: $request->input("option_id"),
-//      quantity: $request->input("quantity")
-//    );
-//
-//    list($priceInCents, $priceInDollars) = $calculator->calculate();
-//
-//    return response()->json(["price" => $priceInDollars]);
+    //    $calculator = new CalculatorService(
+    //      $request->input("product_id"),
+    //      width: $request->input("width"),
+    //      height: $request->input("height"),
+    //      unit: $request->input("unit"),
+    //      addons: $request->addons,
+    //      selectedOptionID: $request->input("option_id"),
+    //      quantity: $request->input("quantity")
+    //    );
+    //
+    //    list($priceInCents, $priceInDollars) = $calculator->calculate();
+    //
+    //    return response()->json(["price" => $priceInDollars]);
   }
 
   /**

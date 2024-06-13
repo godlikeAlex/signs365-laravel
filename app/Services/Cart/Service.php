@@ -4,19 +4,24 @@ namespace App\Services\Cart;
 
 use App\DTO\AddToCartDTO;
 use App\DTO\CalculatorDTO;
+use App\Enums\OptionTypeEnum;
 use App\Http\Resources\CartItemsResource;
+use App\Models\City;
 use App\Models\Product;
 use App\Models\SizeItem;
+use App\Models\Voucher;
 use App\Services\CalculatorService;
 use Darryldecode\Cart\CartCondition;
 
 class Service
 {
   public $cart;
+  public $city;
 
-  public function __construct($cart_id)
+  public function __construct($cart_id, City $city)
   {
     $this->cart = \Cart::session($cart_id);
+    $this->city = $city;
   }
 
   public function instance()
@@ -24,9 +29,13 @@ class Service
     return $this->cart;
   }
 
-  public function add(
-    AddToCartDTO $addToCartDTO,
-  ) {
+  public function setCity(City $city)
+  {
+    $this->city = $city;
+  }
+
+  public function add(AddToCartDTO $addToCartDTO)
+  {
     $product_id = $addToCartDTO->productID;
     $option_id = $addToCartDTO->optionID;
     $addons = $addToCartDTO->addons;
@@ -39,15 +48,14 @@ class Service
 
     $sizeItem = SizeItem::find($size_id);
 
-    $calculatorService = new CalculatorService(
-//      $product_id,
-//      $width,
-//      $height,
-//      $addons,
-//      $option_id,
-//      $unit,
-//      $quantity
-    );
+    $calculatorService = new CalculatorService();
+    //      $product_id,
+    //      $width,
+    //      $height,
+    //      $addons,
+    //      $option_id,
+    //      $unit,
+    //      $quantity
 
     $calculatorDTO = new CalculatorDTO(
       $product_id,
@@ -56,7 +64,7 @@ class Service
       $height,
       $quantity,
       $addons,
-      $unit,
+      $unit
     );
 
     list($priceInCents) = $calculatorService->calculate($calculatorDTO, true);
@@ -116,6 +124,8 @@ class Service
     $this->cart->update($item_id, [
       "quantity" => +1,
     ]);
+
+    $this->recalculateItem($item_id);
   }
 
   public function reduceQuantity($item_id)
@@ -134,6 +144,8 @@ class Service
     $this->cart->update($item_id, [
       "quantity" => -1,
     ]);
+
+    $this->recalculateItem($item_id);
   }
 
   public function removeItem($item_id)
@@ -150,6 +162,84 @@ class Service
     }
 
     $this->cart->remove($item_id);
+  }
+
+  /**
+   *
+   * CART VOUCHER
+   *
+   **/
+  public function applyVoucher($voucher)
+  {
+    $this->destroyVoucher();
+
+    $voucherCondition = new \Darryldecode\Cart\CartCondition([
+      "name" => "VOUCHER",
+      "type" => $voucher->is_fixed ? "promo-fixed" : "promo-amount",
+      "target" => "subtotal",
+      "value" => $voucher->is_fixed
+        ? $voucher->discount_amount
+        : $voucher->discount_percent,
+      "order" => 999999,
+      "attributes" => [
+        "id" => $voucher->id,
+        "code" => $voucher->code,
+        "name" => $voucher->name,
+      ],
+    ]);
+
+    $this->cart->condition($voucherCondition);
+  }
+
+  public function destroyVoucher()
+  {
+    if ($this->cart->getCondition("VOUCHER")) {
+      $this->cart->removeCartCondition("VOUCHER");
+    }
+  }
+
+  public function getVoucher()
+  {
+    $voucherCondition = $this->cart->getCondition("VOUCHER");
+
+    if (!$voucherCondition) {
+      return null;
+    }
+
+    $conditionAttributes = $voucherCondition->getAttributes();
+
+    return Voucher::find($conditionAttributes["id"]);
+  }
+
+  private function getVoucherAndDiscount($total)
+  {
+    $voucherCondition = $this->cart->getCondition("VOUCHER");
+    $discountAmount = 0;
+
+    if (!$voucherCondition) {
+      return [null, $discountAmount];
+    }
+
+    $voucherValue = $voucherCondition->getValue();
+    $voucherType = $voucherCondition->getType();
+
+    if ($voucherType === "promo-fixed") {
+      $discountAmount = $voucherValue;
+    } else {
+      $discountAmount = $total * ($voucherValue / 100);
+    }
+
+    $voucher = [
+      "id" => $voucherCondition->getAttributes()["id"],
+      "name" => $voucherCondition->getAttributes()["name"] ?? "VOUCHER",
+      "value" =>
+        $voucherCondition->getType() === "promo-fixed"
+          ? -$voucherValue / 100 . "$"
+          : "$voucherValue%",
+      "discountAmount" => ceil($discountAmount) / 100,
+    ];
+
+    return [$voucher, $discountAmount];
   }
 
   public function format($city)
@@ -184,7 +274,31 @@ class Service
       return $cart_item;
     });
 
-    $humanTax = $city->tax * 100;
+    list($totalCart, $totalItems, $tax) = $this->getPrices();
+
+    list($voucher, $discountVoucher) = $this->getVoucherAndDiscount($totalCart);
+
+    $total = $totalCart - $discountVoucher;
+
+    return [
+      "items" => json_decode(
+        CartItemsResource::collection($cart->sort()->values())->toJson()
+      ),
+      "voucher" => $voucher,
+      "discount_voucher" => $discountVoucher / 100,
+      "tax" => round($tax / 100, 3),
+      "total" => round($totalItems / 100, 3),
+      "total_with_tax" => round($total / 100, 2),
+
+      "amount_in_cents" => $total,
+      "tax_in_cents" => $tax,
+      "discount_voucher_in_cents" => $discountVoucher,
+    ];
+  }
+
+  public function getPrices()
+  {
+    $humanTax = $this->city->tax * 100;
 
     $createdTaxCondition = new CartCondition([
       "name" => "TAX",
@@ -195,26 +309,54 @@ class Service
 
     $this->cart->condition($createdTaxCondition);
 
-    $sub_total = $cart->reduce(function ($carry, $item) {
-      return $carry + $item->getPriceSumWithConditions();
+    $totalItems = $this->cart->getContent()->reduce(function ($carry, $item) {
+      if ($item->attributes["productOptionType"] === OptionTypeEnum::PER_QTY) {
+        return $carry + $item->price;
+      }
 
-      // if ($item["disabled"] === false) {
-      //   return $carry + $item->getPriceSumWithConditions();
-      // } else {
-      //   return $carry;
-      // }
+      return $carry + $item->getPriceSumWithConditions();
     }, 0);
 
     $condition = $this->cart->getCondition("TAX");
-    $tax = $condition->getCalculatedValue($sub_total);
+    $tax = $condition->getCalculatedValue($totalItems);
+    $totalCart = $totalItems + $tax;
+
+    return [$totalCart, $totalItems, $tax];
+  }
+
+  public function calculateForOrder()
+  {
+    list($total, $totalItems, $tax) = $this->getPrices();
+    list($voucher, $discountVoucher) = $this->getVoucherAndDiscount($total);
+
+    $totalAmountWithDiscount = $total - $discountVoucher;
 
     return [
-      "items" => json_decode(
-        CartItemsResource::collection($cart->sort()->values())->toJson()
-      ),
-      "tax" => round($tax / 100, 3),
-      "total" => round($sub_total / 100, 3),
-      "total_with_tax" => round(($sub_total + $tax) / 100, 2),
+      round($totalAmountWithDiscount),
+      round($tax),
+      round($discountVoucher),
     ];
+  }
+
+  private function recalculateItem($itemID)
+  {
+    $calculatorService = new CalculatorService();
+    $item = $this->cart->get($itemID);
+
+    $calculatorDTO = new CalculatorDTO(
+      $item->attributes->product["id"],
+      $item->attributes->productOption["id"],
+      $item->attributes->width,
+      $item->attributes->height,
+      $item->quantity,
+      $item->attributes->addons,
+      $item->attributes->unit
+    );
+
+    list($priceInCents) = $calculatorService->calculate($calculatorDTO, true);
+
+    $this->cart->update($itemID, [
+      "price" => $priceInCents,
+    ]);
   }
 }

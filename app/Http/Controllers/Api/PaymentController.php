@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\CreateOrderFromCartDTO;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Order;
@@ -9,6 +10,7 @@ use App\Models\TemporaryOrder;
 use Cookie;
 use Illuminate\Http\Request;
 use App\Services\Cart\Service as CartService;
+use App\Services\OrderService;
 
 class PaymentController extends Controller
 {
@@ -18,9 +20,14 @@ class PaymentController extends Controller
   public function __construct(Request $request)
   {
     $stripe = new \Stripe\StripeClient(env("STRIPE_SECRET_KEY"));
+    $city = City::where("id", $request->get("city"))->first();
+
+    if (!$city) {
+      $city = City::first();
+    }
 
     if (Cookie::has("cart")) {
-      $this->cart = new CartService(Cookie::get("cart"));
+      $this->cart = new CartService(Cookie::get("cart"), $city);
     } else {
       return response()->json(
         [
@@ -33,32 +40,58 @@ class PaymentController extends Controller
     $this->stripe = $stripe;
   }
 
-  public function createPaymentIntent(Request $request)
-  {
+  public function createPaymentIntent(
+    Request $request,
+    OrderService $orderService
+  ) {
     $city = City::find($request->get("city"));
-    $cart = $this->cart->format($city);
 
-    if ($cart["total"] <= 0) {
-      return response()->json([
-        "error" => "Invalid Cart Data",
-      ]);
-    }
+    $order = $orderService->createOrderFromCart($this->cart, $city);
 
-    $temp_order = TemporaryOrder::create([
-      "cart_data" => $cart,
-    ]);
+    // if ($cart["total"] <= 0) {
+    // return response()->json([
+    // "error" => "Invalid Cart Data",
+    // ]);
+    // }
 
     $intent = $this->stripe->paymentIntents->create([
-      "amount" => round($cart["total_with_tax"] * 100, 2),
+      "amount" => round($order->amount * 100, 2),
       "currency" => "usd",
       "automatic_payment_methods" => ["enabled" => true],
-      "metadata" => ["temp_order_id" => $temp_order->id],
+      // "metadata" => ["temp_order_id" => $temp_order->id],
     ]);
+
+    $order->payment_intent_id = $intent->id;
+
+    $order->save();
 
     return response()->json([
       "client_secret" => $intent->client_secret,
-      "temp_order_id" => $temp_order->id,
+      "payment_intent_id" => $intent->id,
     ]);
+  }
+
+  public function updateCheckoutOrder(Request $request, $paymentIntentID)
+  {
+    $data = $request->validate([
+      "name" => "required",
+      "email" => "required",
+      "phone" => "required",
+      "address" => "nullable",
+      "user_id" => "nullable",
+    ]);
+
+    $order = Order::findByPaymentIntent($paymentIntentID);
+
+    $order->update($data);
+
+    $order->update([
+      "city_id" => $request->get("city"),
+    ]);
+
+    return [
+      "ok" => true,
+    ];
   }
 
   public function updateTempOrder(

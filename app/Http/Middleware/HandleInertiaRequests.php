@@ -45,14 +45,14 @@ class HandleInertiaRequests extends Middleware
     $city = City::where("id", $request->get("city"))->first() ?? City::first();
 
     if (Cookie::has("cart")) {
-      $cart = new CartService(Cookie::get("cart"));
+      $cart = new CartService(Cookie::get("cart"), $city);
     } else {
       $uuid = Str::uuid();
       $cookie = Cookie::forever(name: "cart", value: $uuid, httpOnly: true);
 
       Cookie::queue($cookie);
 
-      $cart = new CartService($uuid);
+      $cart = new CartService($uuid, $city);
     }
 
     return array_merge(parent::share($request), [

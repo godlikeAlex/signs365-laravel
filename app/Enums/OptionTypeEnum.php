@@ -5,7 +5,8 @@ enum OptionTypeEnum: string
 {
   case SQFT = "sqft";
   case SINGLE = "single";
-  case BY_QTY = "qty";
+  case BY_QTY = "qty"; // RANGE
+  case PER_QTY = "per_qty";
 
   public static function values(): array
   {
@@ -24,6 +25,8 @@ enum OptionTypeEnum: string
           return [$enum->value => "Range Prices"];
         case OptionTypeEnum::SINGLE:
           return [$enum->value => "Single Item"];
+        case OptionTypeEnum::PER_QTY:
+          return [$enum->value => "Per Quantity"];
       }
     });
 

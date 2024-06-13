@@ -69,13 +69,19 @@ Route::post("/cart/toggle-with-installation", [
 Route::get("/checkout/success-payment", [
   CartController::class,
   "renderSuccess",
-]);
+])->middleware("auth:sanctum");
 Route::get("/checkout", [CartController::class, "renderCheckout"]);
+Route::post("/apply-voucher", [CartController::class, "applyVoucher"]);
+
+Route::post("/cancel-voucher", [
+  CartController::class,
+  "cancelVoucher",
+])->middleware("auth:sanctum");
 
 Route::get("login", [
   \App\Http\Controllers\Inertia\AuthController::class,
   "indexLogin",
-]);
+])->name("login");
 Route::post("login", [
   \App\Http\Controllers\Inertia\AuthController::class,
   "login",

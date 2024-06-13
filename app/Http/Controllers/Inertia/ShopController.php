@@ -38,7 +38,7 @@ class ShopController extends Controller
   public function product(Request $request, Product $product)
   {
     if ($product->with_checkout) {
-      $product->load("options", "addons");
+      $product->load("options");
     }
 
     return Inertia::render("Product", [

@@ -31,6 +31,7 @@ class OptionResource extends JsonResource
         $this->size_for_collect ||
         $this->sizeList ||
         $this->type === OptionTypeEnum::SQFT,
+      "quantity_list" => $this->quantity_list,
       "show_custom_sizes" => $this->show_custom_sizes,
       "size_for_collect" => $this->size_for_collect,
       "prevent_user_input_size" => $this->prevent_user_input_size,
@@ -41,7 +42,11 @@ class OptionResource extends JsonResource
       "customSizes" => is_null($this->sizeList)
         ? []
         : CustomSizeResource::collection($this->sizeList->sizeItems),
-      "addons" => AddonResource::collection($this->addons),
+      "addons" => AddonResource::collection(
+        $this->addons()
+          ->ordered()
+          ->get()
+      ),
     ];
   }
 }

@@ -6,6 +6,7 @@ use App\DTO\CalculateAddonsDTO;
 use App\DTO\CalculateProductDTO;
 use App\DTO\CalculateShippingDTO;
 use App\DTO\CalculatorDTO;
+use App\Enums\OptionTypeEnum;
 use App\Models\Product;
 use App\Models\ProductOption;
 use App\Models\Shipping;
@@ -27,23 +28,27 @@ class CalculatorService
     $this->addonService = new AddonService();
   }
 
-  public function calculate(CalculatorDTO $calculatorDTO, $priceWithoutQuantity = false): array {
+  public function calculate(
+    CalculatorDTO $calculatorDTO,
+    $priceWithoutQuantity = false
+  ): array {
     $width = $calculatorDTO->width;
     $height = $calculatorDTO->height;
 
-    $product = Product::with('images')->find($calculatorDTO->productID);
+    $product = Product::with("images")->find($calculatorDTO->productID);
     /**
      * @var ProductOption $productOption
      */
-    $productOption = $product?->options()->find($calculatorDTO->productOptionID);
-
+    $productOption = $product
+      ?->options()
+      ->find($calculatorDTO->productOptionID);
 
     if (!$product) {
-      throw new \Exception('Product not found');
+      throw new \Exception("Product not found");
     }
 
     if (!$productOption) {
-      throw new \Exception('ProductOption not found');
+      throw new \Exception("ProductOption not found");
     }
 
     $this->width = $calculatorDTO->width;
@@ -52,47 +57,47 @@ class CalculatorService
     $this->product = $product;
     $this->productOption = $productOption;
 
-    $sqft = $this->getSQFT(
-      $width,
-      $height,
-      $calculatorDTO->unit
+    $sqft = $this->getSQFT($width, $height, $calculatorDTO->unit);
+
+    $productPrice = $this->productService->calculatePrice(
+      new CalculateProductDTO(
+        $product,
+        $productOption,
+        $calculatorDTO->quantity,
+        $sqft
+      )
     );
 
-    $productPrice = $this->productService->calculatePrice(new CalculateProductDTO(
-      $product,
-      $productOption,
-      $calculatorDTO->quantity,
-      $sqft
-    ));
+    $shippingPrice = $this->shippingService->calculate(
+      new CalculateShippingDTO($productOption->shipping, $width, $height, $sqft)
+    );
 
-    $shippingPrice = $this->shippingService->calculate(new CalculateShippingDTO(
-      $productOption->shipping,
-      $width,
-      $height,
-      $sqft
-    ));
+    list($addonsPrice, $calculatedAddons) = $this->addonService->calculate(
+      new CalculateAddonsDTO(
+        $calculatorDTO->addons,
+        $productOption,
+        $productPrice,
+        $width,
+        $height,
+        $sqft,
+        $calculatorDTO->unit
+      )
+    );
 
-    list($addonsPrice, $calculatedAddons) = $this->addonService->calculate(new CalculateAddonsDTO(
-      $calculatorDTO->addons,
-      $product,
-      $productPrice,
-      $width,
-      $height,
-      $sqft,
-      $calculatorDTO->unit
-    ));
+    $calculatePrice = $productPrice + $shippingPrice + $addonsPrice;
 
-    $calculatePrice =  $productPrice + $shippingPrice + $addonsPrice;
-
-    info('price', [
-      'productPrice' => $productPrice,
-      'shippingPrice' => $shippingPrice,
-      'addonsPrice' => $addonsPrice,
-      'totalPrice' => $calculatePrice,
-    ]);
+    // info("price", [
+    // "product_price" => $productPrice,
+    // "shippingPrice" => $shippingPrice,
+    // "addonsPrice" => $addonsPrice,
+    // ]);
 
     if (!$priceWithoutQuantity) {
-      $calculatePrice = $calculatePrice * $calculatorDTO->quantity;
+      if ($this->productOption->type === OptionTypeEnum::PER_QTY) {
+        $calculatePrice = $calculatePrice;
+      } else {
+        $calculatePrice = $calculatePrice * $calculatorDTO->quantity;
+      }
     }
 
     return [
@@ -103,15 +108,18 @@ class CalculatorService
     ];
   }
 
-  public function getProduct(): Product {
+  public function getProduct(): Product
+  {
     return $this->product;
   }
 
-  public function getProductOption(): ProductOption {
+  public function getProductOption(): ProductOption
+  {
     return $this->productOption;
   }
 
-  private  function getSQFT($width, $height, $unit = 'feet') {
+  private function getSQFT($width, $height, $unit = "feet")
+  {
     $square = $width * $height;
 
     if ($unit === "feet") {

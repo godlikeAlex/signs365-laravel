@@ -3,6 +3,7 @@ namespace App\Enums;
 
 enum OrderStatusEnum: string
 {
+  case UNPAID = "unpaid";
   case PENDING = "pending";
   case IN_PRODUCTION = "in_production";
   case SHIPPED = "shipped";
