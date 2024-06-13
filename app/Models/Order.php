@@ -39,6 +39,11 @@ class Order extends Model
     });
   }
 
+  static function findByPaymentIntent($paymentIntentID)
+  {
+    return Order::where("payment_intent_id", $paymentIntentID)->first();
+  }
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
@@ -47,6 +52,11 @@ class Order extends Model
   public function city(): BelongsTo
   {
     return $this->belongsTo(City::class);
+  }
+
+  public function voucher(): BelongsTo
+  {
+    return $this->belongsTo(Voucher::class);
   }
 
   public function orderItems(): HasMany
