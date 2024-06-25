@@ -57,11 +57,12 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
           <div className="container container-initial">
             <div className="ps-banner__block">
               <div className="ps-banner__content">
-                <h2 className="ps-banner__title">10% OFF FOR FIRST ORDER</h2>
-                <div className="ps-banner__desc">Only this week</div>
-
-                <div className="ps-banner__persen bg-yellow ps-top">
-                  <small>only</small>$25
+                <h2 className="ps-banner__title">
+                  Save 10% on Your First Order!
+                </h2>
+                <div className="ps-banner__desc">
+                  Start your shopping journey with an exclusive 10% discount.
+                  Use code FIRST10 at checkout
                 </div>
               </div>
               <div className="ps-banner__thumnail">
@@ -72,7 +73,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 />
                 <img
                   className="ps-banner__image"
-                  src="/img/promotion/slide3.webp"
+                  src="/img/promotion/slide-discount.png"
                   alt="alt"
                 />
               </div>
@@ -80,28 +81,80 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
           </div>
         </div>
       </SwiperSlide>
+
+      <SwiperSlide>
+        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
+          <div className="container container-initial">
+            <div className="ps-banner__block">
+              <div className="ps-banner__content">
+                <h2 className="ps-banner__title">Business Cards</h2>
+                <div className="ps-banner__desc">
+                  High-quality printing, fast turnaround, and affordable prices.
+                </div>
+              </div>
+              <div className="ps-banner__thumnail">
+                <img
+                  className="ps-banner__round"
+                  src="/img/round5.png"
+                  alt="alt"
+                />
+                <img
+                  className="ps-banner__image"
+                  src="/img/promotion/cards.png"
+                  alt="alt"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
+          <div className="container container-initial">
+            <div className="ps-banner__block">
+              <div className="ps-banner__content">
+                <h2 className="ps-banner__title">
+                  Get Noticed! $80 3'x8' Banners.
+                </h2>
+                <div className="ps-banner__desc">
+                  Only $80! Perfect for events, promotions, and more.
+                </div>
+
+                <div className="ps-banner__persen bg-primary">80$</div>
+              </div>
+              <div className="ps-banner__thumnail">
+                <img
+                  className="ps-banner__round"
+                  src="/img/round5.png"
+                  alt="alt"
+                />
+                <img
+                  className="ps-banner__image"
+                  src="/img/promotion/cards.png"
+                  alt="alt"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </SwiperSlide>
+
       <SwiperSlide>
         <div className="ps-banner" style={{ background: "#DAECFA" }}>
           <div className="container container-initial">
             <div className="ps-banner__block">
               <div className="ps-banner__content">
                 <h2 className="ps-banner__title">
-                  Banner <br /> all types
+                  Free Shipping on All Orders!
                 </h2>
                 <div className="ps-banner__desc">
-                  Only in this week. Don’t misss!
+                  No minimum purchase required.
                 </div>
-                <div className="ps-banner__price">
-                  {" "}
-                  <span>$15.99</span>
-                  <del>$29.99</del>
-                </div>
+
                 <a className="bg-warning ps-banner__shop" href="#">
                   Shop now
                 </a>
-                <div className="ps-banner__persen bg-warning ps-center">
-                  -30%
-                </div>
               </div>
               <div className="ps-banner__thumnail">
                 <img
@@ -111,7 +164,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 />
                 <img
                   className="ps-banner__image"
-                  src="/img/promotion/slide1.webp"
+                  src="/img/promotion/free-shipping.png"
                   alt="alt"
                 />
               </div>

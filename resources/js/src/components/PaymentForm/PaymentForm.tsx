@@ -13,7 +13,7 @@ import Input from "../Input";
 import ClipLoader from "react-spinners/ClipLoader";
 import { BeatLoader } from "react-spinners";
 import PaymentService from "@/src/services/PaymentService";
-import { usePage, useRemember } from "@inertiajs/react";
+import { router, usePage, useRemember } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {
@@ -79,34 +79,45 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
       }
     });
 
-    await PaymentService.updateOrderInCheckout(paymentIntentId as string, data);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: window.location.href.split("?")[0] + "/success-payment",
-        payment_method_data: {
-          billing_details: {
-            address: {
-              country: "US",
-              postal_code: "",
-              state: "",
-              city: "",
-              line1: "",
-              line2: "",
+    router.post(`/api/checkout/update-order/${paymentIntentId}`, data, {
+      preserveScroll: true,
+      forceFormData: true,
+      onSuccess: async () => {
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: window.location.href.split("?")[0] + "/success-payment",
+            payment_method_data: {
+              billing_details: {
+                address: {
+                  country: "US",
+                  postal_code: "",
+                  state: "",
+                  city: "",
+                  line1: "",
+                  line2: "",
+                },
+              },
             },
           },
-        },
+        });
+
+        console.log("success");
+
+        if (error) {
+          setErrorMessage(error.message);
+
+          setSubmitting(false);
+        } else {
+          setSubmitting(false);
+        }
+      },
+      onError: () => {
+        setSubmitting(false);
       },
     });
 
-    if (error) {
-      setErrorMessage(error.message);
-
-      setSubmitting(false);
-    } else {
-      setSubmitting(false);
-    }
+    // await PaymentService.updateOrderInCheckout(paymentIntentId as string, data);
   };
 
   return (

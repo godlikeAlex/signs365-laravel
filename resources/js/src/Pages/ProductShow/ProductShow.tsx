@@ -142,8 +142,7 @@ const ProductShow: React.FC<Props> = ({ submitAddToCart, ...props }: Props) => {
                             <i className="icon-bag2"></i>Non-contact shipping
                           </li>
                           <li>
-                            <i className="icon-truck"></i>Free delivery for
-                            order over $200
+                            <i className="icon-truck"></i>Free delivery
                           </li>
                         </ul>
                       </div>

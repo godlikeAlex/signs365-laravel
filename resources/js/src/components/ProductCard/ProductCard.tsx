@@ -26,8 +26,6 @@ const ProductCard: React.FC<Props> = (props: Props) => {
     onClickQuickView,
   } = props;
 
-  console.log(images, title);
-
   const [fetching, setIsFetch] = useState(false);
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
@@ -47,6 +45,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
   };
 
   const handleLinkClick = (e: React.MouseEvent<any>) => {
+    return;
     if (isMobile || allowFullPage === false) {
       return;
     }

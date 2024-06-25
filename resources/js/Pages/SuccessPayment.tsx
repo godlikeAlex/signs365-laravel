@@ -12,7 +12,7 @@ interface Props {
 
 interface State {
   loading: boolean;
-  status: "completed" | "in proccess";
+  status: "completed" | "in proccess" | "canceled";
   uuid?: string;
   email?: string;
 }
@@ -25,11 +25,13 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
     email: undefined,
   });
 
+  console.log(payment_intent, "payment_intent");
+
   React.useEffect(() => {
     const fetchPI = async () => {
       try {
         const { data } = await PaymentService.getPaymentIntent(payment_intent);
-
+        console.log("data", data);
         if (data.status === "completed") {
           setState({
             loading: false,
@@ -43,6 +45,13 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
             uuid: undefined,
             email: data.email,
           });
+        } else if (data.status === "canceled") {
+          setState({
+            loading: false,
+            status: "canceled",
+            uuid: undefined,
+            email: undefined,
+          });
         }
       } catch (error) {
         toast("Something went wrong, contact us to solve the problem", {
@@ -55,7 +64,57 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
       }
     };
     fetchPI();
-  }, []);
+  }, [payment_intent]);
+
+  const renderTitle = () => {
+    switch (state.status) {
+      case "completed":
+        return "Your order proccesed";
+      case "in proccess":
+        return "Your payment in process";
+      case "canceled":
+        return "Your order has been cancelled.";
+    }
+  };
+
+  const renderMessage = () => {
+    if (state.status === "completed") {
+      return (
+        <p>
+          Order ID:{" "}
+          <strong
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              fontFamily: "monospace",
+              fontSize: 16,
+            }}
+          >
+            {state.uuid}
+          </strong>
+          ;
+        </p>
+      );
+    }
+
+    if (state.status === "in proccess") {
+      return (
+        <p>
+          Your payment is being processed, once the payment is processed we will
+          send you an email to <strong>{state.email}</strong>
+        </p>
+      );
+    }
+
+    if (state.status === "canceled") {
+      return (
+        <p>
+          Sorry, your order has been cancelled, a refund will be issued shortly.
+          If you have any questions, write to us by email.
+        </p>
+      );
+    }
+  };
 
   return (
     <>
@@ -71,8 +130,9 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
                 <i
                   // className="fa fa-check-circle"
                   className={classNames({
-                    "fa fa-check-circle": state.status === "completed",
-                    "fa fa-clock-o": state.status === "in proccess",
+                    "fas fa-check-circle": state.status === "completed",
+                    "fas fa-clock": state.status === "in proccess",
+                    "fas fa-times": state.status === "canceled",
                   })}
                   style={{ color: "#5b6c8f", fontSize: 120 }}
                 ></i>
@@ -87,32 +147,10 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
                   className="cart-title"
                   style={{ color: "#103178", marginTop: 20 }}
                 >
-                  {state.status === "completed"
-                    ? "Your order proccesed"
-                    : "Your payment in process"}
+                  {renderTitle()}
                 </h1>
-                {state.status === "completed" ? (
-                  <p>
-                    Order ID:{" "}
-                    <strong
-                      style={{
-                        textTransform: "uppercase",
-                        letterSpacing: "2px",
-                        fontFamily: "monospace",
-                        fontSize: 16,
-                      }}
-                    >
-                      {state.uuid}
-                    </strong>
-                    ;
-                  </p>
-                ) : (
-                  <p>
-                    Your payment is being processed, once the payment is
-                    processed we will send you an email to{" "}
-                    <strong>{state.email}</strong>
-                  </p>
-                )}
+
+                <>{renderMessage()}</>
               </>
             )}
           </div>

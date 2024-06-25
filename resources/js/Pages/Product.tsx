@@ -8,6 +8,7 @@ import { Link } from "@inertiajs/react";
 import {
   FAQProduct,
   ProductCheckoutForm,
+  ProductContactForm,
   ProductSlider,
   SEOHead,
 } from "@/src/components";
@@ -124,7 +125,9 @@ function Product({ product }: ProductProps) {
                         <div>
                           {product.with_checkout ? (
                             <ProductCheckoutForm />
-                          ) : null}
+                          ) : (
+                            <ProductContactForm productSlug={product.slug} />
+                          )}
                         </div>
                       </div>
                     </div>

@@ -15,6 +15,7 @@ import ProductCalculator from "./ProductCalculator";
 import ProductCard from "./ProductCard";
 import ProductCardPlaceholder from "./ProductCardPlaceholder";
 import ProductCheckoutForm from "./ProductCheckoutForm";
+import ProductContactForm from "./ProductContactForm/ProductContactForm";
 import ProductOptions from "./ProductOptions";
 import ProductQuantity from "./ProductQuantity";
 import ProductSlider from "./ProductSlider";
@@ -27,6 +28,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  ProductContactForm,
   ProductCheckoutForm,
   ProductSlider,
   SEOHead,

@@ -32,7 +32,9 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
       height: state.height.value > 0,
     }).every((key) => key);
 
-    if (!isValidSizes || !product) {
+    const quantity = state.quantity.value ? state.quantity.value : 0;
+
+    if (!isValidSizes || !product || quantity <= 0) {
       return;
     }
 
@@ -60,7 +62,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
     state.unit,
   ]);
 
-  useEffect(() => {
+  useDebounceEffect(() => {
     calculatePrice().then(() => {
       setPriceInitialized(true);
     });
@@ -74,6 +76,12 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
 
   const validateAll = () => {
     let isValid = true;
+
+    const quantity = state.quantity.value ? state.quantity.value : 0;
+
+    if (quantity <= 0) {
+      isValid = false;
+    }
 
     if (
       state.selectedOption.show_custom_sizes &&

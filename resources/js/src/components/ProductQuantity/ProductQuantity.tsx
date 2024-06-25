@@ -11,13 +11,13 @@ const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
   const disabled = state.status === "fetching";
 
   const handleChange = (quantity: number) => {
-    console.log(value, "value");
-
     const regex = /^[0-9\b]+$/;
 
     if (!regex.test(value)) {
       return;
     }
+
+    console.log(value, "value");
 
     if (quantity >= 0) {
       onChange(quantity);
@@ -40,7 +40,7 @@ const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
         value={value}
         className="qty-input"
         onChange={(e) => handleChange(+e.target.value)}
-        onBlur={() => value == 0 && handleChange(1)}
+        onBlur={() => value <= 0 && handleChange(1)}
         disabled={disabled}
       />
 

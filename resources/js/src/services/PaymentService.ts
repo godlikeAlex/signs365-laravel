@@ -17,7 +17,7 @@ export default class PaymentService {
 
   static getPaymentIntent(payment_intent) {
     return api.get<{
-      status: "completed" | "in proccess";
+      status: "completed" | "in proccess" | "canceled";
       uuid?: string;
       email?: string;
     }>(`/payment-intent/retrive/${payment_intent}`);
