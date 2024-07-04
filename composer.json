@@ -28,6 +28,7 @@
     "spatie/laravel-medialibrary": "^10.11",
     "spatie/laravel-server-side-rendering": "^1.4",
     "stripe/stripe-php": "^10.3",
+    "tapp/filament-timezone-field": "^2.0",
     "tightenco/ziggy": "^1.0",
     "torann/geoip": "^3.0"
   },
