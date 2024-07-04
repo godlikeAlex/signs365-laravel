@@ -12,7 +12,7 @@ interface Props {
 
 interface State {
   loading: boolean;
-  status: "completed" | "in proccess" | "canceled";
+  status: "completed" | "in proccess" | "canceled" | "pending";
   uuid?: string;
   email?: string;
 }
@@ -25,13 +25,11 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
     email: undefined,
   });
 
-  console.log(payment_intent, "payment_intent");
-
   React.useEffect(() => {
-    const fetchPI = async () => {
+    const fetchAPI = async () => {
       try {
         const { data } = await PaymentService.getPaymentIntent(payment_intent);
-        console.log("data", data);
+
         if (data.status === "completed") {
           setState({
             loading: false,
@@ -52,6 +50,13 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
             uuid: undefined,
             email: undefined,
           });
+        } else if (data.status === "pending") {
+          setState({
+            loading: false,
+            status: "pending",
+            uuid: data.uuid,
+            email: data.email,
+          });
         }
       } catch (error) {
         toast("Something went wrong, contact us to solve the problem", {
@@ -63,7 +68,8 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
         router.visit("/");
       }
     };
-    fetchPI();
+
+    fetchAPI();
   }, [payment_intent]);
 
   const renderTitle = () => {
@@ -74,6 +80,8 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
         return "Your payment in process";
       case "canceled":
         return "Your order has been cancelled.";
+      case "pending":
+        return "We have received your order";
     }
   };
 
@@ -106,6 +114,32 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
       );
     }
 
+    if (state.status === "pending") {
+      return (
+        <>
+          <p>
+            We will notify you when your order is updated.{" "}
+            <strong>{state.email}</strong>
+          </p>
+
+          <p>
+            Order ID:{" "}
+            <strong
+              style={{
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                fontFamily: "monospace",
+                fontSize: 16,
+              }}
+            >
+              {state.uuid}
+            </strong>
+            ;
+          </p>
+        </>
+      );
+    }
+
     if (state.status === "canceled") {
       return (
         <p>
@@ -130,7 +164,9 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
                 <i
                   // className="fa fa-check-circle"
                   className={classNames({
-                    "fas fa-check-circle": state.status === "completed",
+                    "fas fa-check-circle":
+                      state.status === "completed" ||
+                      state.status === "pending",
                     "fas fa-clock": state.status === "in proccess",
                     "fas fa-times": state.status === "canceled",
                   })}

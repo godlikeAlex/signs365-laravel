@@ -10,7 +10,7 @@ export interface ContextType {
   dispatch: React.Dispatch<Action>;
 }
 
-const MainProductContext = createContext<ContextType>(null);
+const MainProductContext = createContext<ContextType>(undefined);
 
 export function useProductContext() {
   const context = React.useContext(MainProductContext);

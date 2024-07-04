@@ -1,5 +1,5 @@
 import { useProductContext } from "@/src/contexts/MainProductContext";
-import React, { useEffect } from "react";
+import React from "react";
 import LoadingProductCheckoutForm from "./LoadingProductCheckoutForm";
 import Skeleton from "react-loading-skeleton";
 import ProductOptions from "../ProductOptions";

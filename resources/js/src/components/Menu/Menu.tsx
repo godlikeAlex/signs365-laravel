@@ -32,12 +32,12 @@ const Menu: React.FC<Props> = ({}: Props) => {
           <div className="container">
             <div className="header-left d-flex">
               <a
-                href="tel:(949)9421363"
+                href="tel:+13072008927"
                 className="ps-header__text d-flex align-items-center"
               >
                 <i className="icon-telephone" />
                 <strong style={{ marginLeft: 5 }}>
-                  +(949) 942-1363 - Call Us
+                  307-200-8927 - Call Us
                 </strong>
               </a>
 

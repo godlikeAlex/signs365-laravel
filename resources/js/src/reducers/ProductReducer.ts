@@ -271,7 +271,10 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
 
       const selectedAddons = [...state.selectedAddons].filter(
         (selectedAddon) => {
-          if (newSelectedAddon.group_addon) {
+          if (
+            newSelectedAddon.group_addon &&
+            newSelectedAddon.group_addon !== "addons"
+          ) {
             const sameGroup =
               newSelectedAddon.group_addon === selectedAddon?.group_addon;
 
