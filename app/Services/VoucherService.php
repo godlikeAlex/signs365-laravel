@@ -9,7 +9,7 @@ use App\Models\Voucher;
 
 class VoucherService
 {
-  public function validateVoucher(Voucher $voucher, User $user, $amount)
+  public function validateVoucher(?Voucher $voucher, User $user, $amount)
   {
     if (!$voucher) {
       return [

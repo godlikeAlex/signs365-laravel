@@ -14,13 +14,13 @@ use App\Models\TemporaryOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Services\Calculator\Service as CalculatorService;
+use App\Services\VoucherService;
 
 class StripeWebHookController extends Controller
 {
-  public function webhook()
+  public function webhook(VoucherService $voucherService)
   {
-    $endpoint_secret =
-      "whsec_6ac403be7a327f85e01d68deacc79eeaf6b26a64d3b45416f5df638e79b5daac";
+    $endpoint_secret = "whsec_N1dld4cDZfTtEiOAEcaP0lXp98JLFojn";
 
     $payload = @file_get_contents("php://input");
     $sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];
@@ -45,12 +45,30 @@ class StripeWebHookController extends Controller
     // Handle the event
     switch ($event->type) {
       case "payment_intent.canceled":
+        return "";
       case "payment_intent.succeeded":
         $paymentIntent = $event->data->object;
         $order = Order::findByPaymentIntent($paymentIntent->id);
 
-        if ($order) {
-          $order->update(["status" => OrderStatusEnum::PENDING]);
+        if (!$order) {
+          return;
+        }
+
+        $order->update(["status" => OrderStatusEnum::PENDING]);
+
+        if ($order->user && $order->voucher) {
+          $resultValidationVoucher = $voucherService->validateVoucher(
+            $order->voucher,
+            $order->user,
+            $order->amount
+          );
+
+          if ($resultValidationVoucher["isValid"] === false) {
+            $order->update([
+              "status" => OrderStatusEnum::CANCELED,
+              "voucher_id" => null,
+            ]);
+          }
         }
 
       case "setup_intent.canceled":

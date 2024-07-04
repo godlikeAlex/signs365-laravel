@@ -198,7 +198,7 @@ class Service
     }
   }
 
-  public function getVoucher()
+  public function getVoucher(): Voucher|null
   {
     $voucherCondition = $this->cart->getCondition("VOUCHER");
 

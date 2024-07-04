@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\DTO\CreateOrderFromCartDTO;
+use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use Cookie;
 use Illuminate\Http\Request;
 use App\Services\Cart\Service as CartService;
 use App\Services\OrderService;
+use App\Services\VoucherService;
 
 class PaymentController extends Controller
 {
@@ -71,8 +73,11 @@ class PaymentController extends Controller
     ]);
   }
 
-  public function updateCheckoutOrder(Request $request, $paymentIntentID)
-  {
+  public function updateCheckoutOrder(
+    VoucherService $voucherService,
+    Request $request,
+    $paymentIntentID
+  ) {
     $data = $request->validate([
       "name" => "required",
       "email" => "required",
@@ -89,9 +94,38 @@ class PaymentController extends Controller
       "city_id" => $request->get("city"),
     ]);
 
-    return [
-      "ok" => true,
-    ];
+    $user = auth()->user();
+    $voucher = $this->cart->getVoucher();
+
+    if ($voucher && !$user) {
+      return back()->withErrors([
+        "voucher" => "Unlock special savings with our exclusive promo code! 
+          To use the promo code, please log in to your account or register for a new account.
+          Enjoy your shopping experience with us!",
+      ]);
+    }
+
+    if ($voucher && $user) {
+      $resultValidationVoucher = $voucherService->validateVoucher(
+        $voucher,
+        $user,
+        $order->amount
+      );
+
+      if ($resultValidationVoucher["isValid"] === false) {
+        return back()->withErrors([
+          "voucher" => $resultValidationVoucher["message"],
+        ]);
+      } else {
+        $order->update(["voucher_id" => $voucher->id]);
+      }
+    }
+
+    if ($user) {
+      $order->update(["email" => $user->email]);
+    }
+
+    return back();
   }
 
   public function updateTempOrder(
@@ -118,26 +152,14 @@ class PaymentController extends Controller
 
   public function retrivePayment(Request $request, $payment_intent_id)
   {
-    $payment_itntent = $this->stripe->paymentIntents->retrieve(
-      $payment_intent_id
-    );
+    $order = Order::findByPaymentIntent($payment_intent_id);
 
-    if ($payment_itntent->metadata->temp_order_id) {
-      $tempOrder = TemporaryOrder::find(
-        $payment_itntent->metadata->temp_order_id
-      );
-
-      if (!$tempOrder) {
-        abort(400);
+    if ($order) {
+      if ($order->status === OrderStatusEnum::UNPAID) {
+        return ["status" => "in proccess", "email" => $order->email];
+      } else {
+        return ["status" => $order->status, "uuid" => $order->uuid];
       }
-
-      if (!$tempOrder->main_order_uuid) {
-        return ["status" => "in proccess", "email" => $tempOrder->email];
-      }
-
-      $order = Order::where("uuid", $tempOrder->main_order_uuid)->first();
-
-      return ["status" => "completed", "uuid" => $order->uuid];
     }
   }
 }

@@ -8,6 +8,7 @@ enum OrderStatusEnum: string
   case IN_PRODUCTION = "in_production";
   case SHIPPED = "shipped";
   case DONE = "done";
+  case CANCELED = "canceled";
 
   public static function values(): array
   {

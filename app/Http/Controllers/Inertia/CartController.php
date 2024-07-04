@@ -71,12 +71,11 @@ class CartController extends Controller
     $voucherCode = $request->input("code");
     $user = $request->user();
 
-    info($user);
-
     if (!$user) {
       return back()->withErrors([
-        "voucher" =>
-          "To use a promo code you need to create or log in to an account.",
+        "voucher" => "Unlock special savings with our exclusive promo code! 
+          To use the promo code, please log in to your account or register for a new account.
+          Enjoy your shopping experience with us!",
       ]);
     }
 
@@ -85,11 +84,6 @@ class CartController extends Controller
     }
 
     $voucher = Voucher::findByCode($voucherCode);
-
-    info("voucher", [
-      "voucher" => $voucher,
-      "code" => $voucherCode,
-    ]);
 
     if (!$voucher) {
       return back()->withErrors(["voucher" => "Voucher not found."]);
