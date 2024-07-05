@@ -31,6 +31,7 @@ export enum ProductActionKind {
   STOP_FETCHING = "STOP_FETCHING",
   SET_CUSTOM_SIZE_ERROR = "SET_CUSTOM_SIZE_ERROR",
   SET_SIZE_SELECTION_TYPE = "SET_SIZE_SELECTION_TYPE",
+  INIT_SIZES = "INIT_SIZES",
 }
 
 type AddProductAction = {
@@ -132,6 +133,11 @@ type SetSizeSelectionType = {
   payload: { type: "default" | "custom" };
 };
 
+type InitSizeType = {
+  type: ProductActionKind.INIT_SIZES;
+  payload: { width: number; height: number };
+};
+
 export type Action =
   | AddProductAction
   | SelectOptionAction
@@ -148,7 +154,8 @@ export type Action =
   | UpdateCustomSizeAction
   | StopFetchingAction
   | SetErrorToFieldAction
-  | SetSizeSelectionType;
+  | SetSizeSelectionType
+  | InitSizeType;
 
 type ProductPayload = {
   [ProductActionKind.INIT_PRODUCT]: {
@@ -182,11 +189,13 @@ export type ProductState = {
     value: number;
     error?: string | null;
     showError: boolean;
+    initiated: boolean;
   };
   height?: {
     value: number;
     error?: string | null;
     showError: boolean;
+    initiated: boolean;
   };
   customSize?: {
     value: number;
@@ -208,6 +217,18 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
     case ProductActionKind.INIT_PRODUCT:
       let selectedOption = undefined;
       let quantity = 1;
+      let width = {
+        error: undefined,
+        value: 1,
+        showError: false,
+        initiated: true,
+      };
+      let height = {
+        error: undefined,
+        value: 1,
+        showError: false,
+        initiated: true,
+      };
 
       if (payload.with_checkout) {
         const [firstOption] = payload.options;
@@ -224,6 +245,22 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
               ? firstOption.quantity_list
               : undefined,
         };
+
+        if (!firstOption.show_custom_sizes && firstOption.size_for_collect) {
+          width = {
+            error: undefined,
+            value: +firstOption.common_data.static_width,
+            showError: false,
+            initiated: true,
+          };
+
+          height = {
+            error: undefined,
+            value: +firstOption.common_data.static_height,
+            showError: false,
+            initiated: true,
+          };
+        }
       }
 
       return {
@@ -238,8 +275,8 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
         sizeSelectionType: selectedOption?.prevent_user_input_size
           ? "default"
           : "custom",
-        width: { error: undefined, value: 1, showError: false },
-        height: { error: undefined, value: 1, showError: false },
+        width,
+        height,
         customSize: { error: undefined, value: undefined, showError: false },
         quantity: { error: undefined, value: quantity, showError: false },
         calculatedPrice: undefined,
@@ -405,8 +442,18 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
     case ProductActionKind.SET_CUSTOM_SIZE:
       return {
         ...state,
-        width: { error: undefined, value: payload.width, showError: false },
-        height: { error: undefined, value: payload.height, showError: false },
+        width: {
+          error: undefined,
+          value: payload.width,
+          showError: false,
+          initiated: false,
+        },
+        height: {
+          error: undefined,
+          value: payload.height,
+          showError: false,
+          initiated: false,
+        },
         customSize: {
           error: undefined,
           value: payload.customSize,
@@ -429,6 +476,20 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
       return {
         ...state,
         sizeSelectionType: payload.type,
+      };
+    case ProductActionKind.INIT_SIZES:
+      return {
+        ...state,
+        width: {
+          ...state.width,
+          initiated: true,
+          value: payload.width,
+        },
+        height: {
+          ...state.height,
+          initiated: true,
+          value: payload.height,
+        },
       };
     default:
       throw new Error(`Unhandled actionType: ${type}`);

@@ -16,19 +16,6 @@ interface Props {
 const CalculatorForm: React.FC<Props> = ({ staticData, disabled }: Props) => {
   const { state, dispatch } = useProductContext();
 
-  React.useEffect(() => {
-    if (staticData) {
-      dispatch({
-        type: ProductActionKind.UPDATE_INPUT,
-        payload: { input: "width", value: +staticData.static_width },
-      });
-      dispatch({
-        type: ProductActionKind.UPDATE_INPUT,
-        payload: { input: "height", value: +staticData.static_height },
-      });
-    }
-  }, [staticData]);
-
   const handleChange = (input: "width" | "height", value: string) => {
     const regex = /^[0-9\b]+$/;
 

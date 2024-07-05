@@ -83,34 +83,37 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
       preserveScroll: true,
       forceFormData: true,
       onSuccess: async () => {
-        const { error } = await stripe.confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: window.location.href.split("?")[0] + "/success-payment",
-            payment_method_data: {
-              billing_details: {
-                address: {
-                  country: "US",
-                  postal_code: "",
-                  state: "",
-                  city: "",
-                  line1: "",
-                  line2: "",
+        setTimeout(async () => {
+          const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+              return_url:
+                window.location.href.split("?")[0] + "/success-payment",
+              payment_method_data: {
+                billing_details: {
+                  address: {
+                    country: "US",
+                    postal_code: "",
+                    state: "",
+                    city: "",
+                    line1: "",
+                    line2: "",
+                  },
                 },
               },
             },
-          },
-        });
+          });
 
-        console.log("success");
+          console.log("success");
 
-        if (error) {
-          setErrorMessage(error.message);
+          if (error) {
+            setErrorMessage(error.message);
 
-          setSubmitting(false);
-        } else {
-          setSubmitting(false);
-        }
+            setSubmitting(false);
+          } else {
+            setSubmitting(false);
+          }
+        }, 5000);
       },
       onError: () => {
         setSubmitting(false);

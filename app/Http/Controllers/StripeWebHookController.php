@@ -20,7 +20,8 @@ class StripeWebHookController extends Controller
 {
   public function webhook(VoucherService $voucherService)
   {
-    $endpoint_secret = "whsec_N1dld4cDZfTtEiOAEcaP0lXp98JLFojn";
+    $endpoint_secret =
+      "whsec_3754cd89f3876b2211eb2eb896799315888a32cc9de27a2527fa5057b77bc97c";
 
     $payload = @file_get_contents("php://input");
     $sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];
@@ -38,6 +39,8 @@ class StripeWebHookController extends Controller
       exit();
     } catch (\Stripe\Exception\SignatureVerificationException $e) {
       // Invalid signature
+      info($e);
+
       abort(400);
       exit();
     }
@@ -64,6 +67,12 @@ class StripeWebHookController extends Controller
           );
 
           if ($resultValidationVoucher["isValid"] === false) {
+            $stripe = new \Stripe\StripeClient(env("STRIPE_SECRET_KEY"));
+
+            $stripe->refunds->create([
+              "payment_intent" => $paymentIntent->id,
+            ]);
+
             $order->update([
               "status" => OrderStatusEnum::CANCELED,
               "voucher_id" => null,

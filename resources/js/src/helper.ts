@@ -24,7 +24,5 @@ export function groupAddons(addons: Addon[]) {
     return groups;
   }, {});
 
-  console.log(groupedAddons);
-
   return groupedAddons;
 }

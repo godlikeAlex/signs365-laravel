@@ -1,5 +1,5 @@
 import { useProductContext } from "@/src/contexts/MainProductContext";
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingProductCheckoutForm from "./LoadingProductCheckoutForm";
 import Skeleton from "react-loading-skeleton";
 import ProductOptions from "../ProductOptions";
@@ -24,7 +24,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
   const { state, dispatch } = useProductContext();
   const product = state.product as IProductCheckout;
 
-  const [priceInitialized, setPriceInitialized] = React.useState(true);
+  const [priceInitialized, setPriceInitialized] = React.useState(false);
 
   const calculatePrice = React.useCallback(async () => {
     const isValidSizes = Object.values({
@@ -35,6 +35,12 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
     const quantity = state.quantity.value ? state.quantity.value : 0;
 
     if (!isValidSizes || !product || quantity <= 0) {
+      return;
+    }
+
+    console.log(state.width.initiated);
+
+    if (!state.width.initiated || !state.height.initiated) {
       return;
     }
 
@@ -53,7 +59,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
 
     dispatch({ type: ProductActionKind.UPDATE_PRICE, payload: data.price });
   }, [
-    state.product,
+    product,
     state.selectedOption,
     state.selectedAddons,
     state.width,
@@ -63,15 +69,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
   ]);
 
   useDebounceEffect(() => {
-    calculatePrice().then(() => {
-      setPriceInitialized(true);
-    });
-  }, [calculatePrice]);
-
-  useDebounceEffect(() => {
-    if (!priceInitialized) {
-      calculatePrice();
-    }
+    calculatePrice().then(() => setPriceInitialized(true));
   }, [calculatePrice]);
 
   const validateAll = () => {
@@ -139,7 +137,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
     );
   };
 
-  if (!state.calculatedPrice) {
+  if (!state.calculatedPrice || !priceInitialized) {
     return <LoadingProductCheckoutForm />;
   }
 

@@ -113,7 +113,7 @@ class OrderResource extends Resource
         ]),
 
       Forms\Components\Section::make("Voucher")
-        ->hidden(fn($get) => !$get("user"))
+        ->hidden(fn($get) => !$get("user_id"))
         ->schema([
           Forms\Components\Select::make("voucher_id")
             ->relationship("voucher", "name")
@@ -311,8 +311,6 @@ class OrderResource extends Resource
                   ->reactive()
                   ->hidden(function (\Closure $get) {
                     $product_addons_id = $get("product_addons_id");
-
-                    info($product_addons_id);
 
                     if (!$product_addons_id) {
                       return true;

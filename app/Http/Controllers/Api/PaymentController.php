@@ -57,7 +57,7 @@ class PaymentController extends Controller
     // }
 
     $intent = $this->stripe->paymentIntents->create([
-      "amount" => round($order->amount * 100, 2),
+      "amount" => round($order->amount, 2),
       "currency" => "usd",
       "automatic_payment_methods" => ["enabled" => true],
       // "metadata" => ["temp_order_id" => $temp_order->id],
@@ -76,8 +76,11 @@ class PaymentController extends Controller
   public function updateCheckoutOrder(
     VoucherService $voucherService,
     Request $request,
+    OrderService $orderService,
     $paymentIntentID
   ) {
+    \Stripe\Stripe::setApiKey(env("STRIPE_SECRET_KEY"));
+
     $data = $request->validate([
       "name" => "required",
       "email" => "required",
@@ -124,6 +127,12 @@ class PaymentController extends Controller
     if ($user) {
       $order->update(["email" => $user->email]);
     }
+
+    $updatedOrder = $orderService->updatePriceByVoucher($order, $this->cart);
+
+    \Stripe\PaymentIntent::update($updatedOrder->payment_intent_id, [
+      "amount" => $updatedOrder->amount,
+    ]);
 
     return back();
   }

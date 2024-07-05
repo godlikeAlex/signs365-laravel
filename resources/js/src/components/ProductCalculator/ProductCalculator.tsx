@@ -45,8 +45,6 @@ const ProductCalculator: React.FC<Props> = ({ selectedOption }: Props) => {
     });
   };
 
-  console.log("hello world");
-
   return (
     <div className="ps-checkout">
       <div className="container">

@@ -110,17 +110,34 @@ function Product({ product }: ProductProps) {
                           ></p>
                         </div>
                         <div>
-                          <ul className="ps-product__bundle">
-                            <li>
-                              <i className="icon-wallet"></i>100% Money back
-                            </li>
-                            <li>
-                              <i className="icon-bag2"></i>Non-contact shipping
-                            </li>
-                            <li>
-                              <i className="icon-truck"></i>Free delivery
-                            </li>
-                          </ul>
+                          {product.with_checkout ? (
+                            <ul className="ps-product__bundle">
+                              <li>
+                                <i className="icon-wallet"></i>100% Money back
+                              </li>
+                              <li>
+                                <i className="icon-bag2"></i>Non-contact
+                                shipping
+                              </li>
+                              <li>
+                                <i className="icon-truck"></i>Free delivery
+                              </li>
+                            </ul>
+                          ) : (
+                            <ul className="ps-product__bundle">
+                              <li>
+                                <i className="icon-wallet"></i>100% Money back
+                              </li>
+                              <li>
+                                <i className="icon-bag2"></i>Fast and
+                                contact-free work
+                              </li>
+                              <li>
+                                <i className="icon-truck"></i>Reliable
+                                performance
+                              </li>
+                            </ul>
+                          )}
                         </div>
                         <div>
                           {product.with_checkout ? (

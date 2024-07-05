@@ -36,6 +36,7 @@ class ProductOptionResource extends Resource
   protected static ?string $navigationIcon = "heroicon-o-color-swatch";
   protected static ?string $navigationGroup = "SHOP";
   protected static ?int $navigationSort = 4;
+  protected static bool $shouldRegisterNavigation = false;
 
   static function inputForm(): array
   {
@@ -178,6 +179,10 @@ class ProductOptionResource extends Resource
                 ->hidden(fn(Closure $get) => !$get("size_for_collect")),
 
               Section::make("Quantity")
+                ->visible(
+                  fn(Closure $get) => OptionTypeEnum::from($get("type")) ===
+                    OptionTypeEnum::PER_QTY
+                )
                 ->description(
                   "Here you can specify a given size that will be dropdown"
                 )
@@ -580,7 +585,7 @@ class ProductOptionResource extends Resource
                   ->maxLength(255),
               ]),
           ]),
-          Forms\Components\Tabs\Tab::make("Shipping")->schema([]),
+          // Forms\Components\Tabs\Tab::make("Shipping")->schema([]),
         ])
         ->columnSpanFull(),
     ];

@@ -113,4 +113,17 @@ class OrderService
 
     return $order;
   }
+
+  public function updatePriceByVoucher(Order $order, CartService $cartService)
+  {
+    list($amount, $tax, $discountVoucher) = $cartService->calculateForOrder();
+
+    $order->tax = $tax;
+    $order->voucher_discount = $discountVoucher;
+    $order->amount = $amount;
+
+    $order->save();
+
+    return $order;
+  }
 }

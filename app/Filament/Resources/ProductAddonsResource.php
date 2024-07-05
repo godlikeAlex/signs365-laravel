@@ -26,6 +26,7 @@ class ProductAddonsResource extends Resource
   protected static ?string $navigationIcon = "heroicon-o-clipboard-list";
   protected static ?string $navigationGroup = "SHOP";
   protected static ?int $navigationSort = 5;
+  protected static bool $shouldRegisterNavigation = false;
 
   static function inputForm(): array
   {

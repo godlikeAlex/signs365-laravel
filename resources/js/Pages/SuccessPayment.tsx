@@ -69,7 +69,7 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
       }
     };
 
-    fetchAPI();
+    setTimeout(() => fetchAPI(), 3000);
   }, [payment_intent]);
 
   const renderTitle = () => {
