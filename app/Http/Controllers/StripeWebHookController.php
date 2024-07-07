@@ -4,24 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\ProductAddons;
-use App\Models\ProductOption;
-use App\Models\ProductPrice;
-use App\Models\ProductVariant;
-use App\Models\SizeItem;
-use App\Models\TemporaryOrder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Services\Calculator\Service as CalculatorService;
 use App\Services\VoucherService;
 
 class StripeWebHookController extends Controller
 {
   public function webhook(VoucherService $voucherService)
   {
-    $endpoint_secret =
-      "whsec_3754cd89f3876b2211eb2eb896799315888a32cc9de27a2527fa5057b77bc97c";
+    $endpoint_secret = env("STRIPE_ENDPOINT_SECREET");
 
     $payload = @file_get_contents("php://input");
     $sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];

@@ -196,6 +196,25 @@ class OrderResource extends Resource
                   ->get()
                   ->pluck("title", "id");
               })
+              ->afterStateUpdated(function (\Closure $set, $state) {
+                if (!$state) {
+                  return;
+                }
+
+                $productOption = ProductOption::find($state);
+
+                if (!$productOption) {
+                  return;
+                }
+
+                if (
+                  $productOption->size_for_collect &&
+                  !$productOption->sizeList
+                ) {
+                  $set("width", $productOption->common_data["static_width"]);
+                  $set("height", $productOption->common_data["static_height"]);
+                }
+              })
               ->reactive()
               ->required(),
             Forms\Components\TextInput::make("quantity")
@@ -501,6 +520,17 @@ class OrderResource extends Resource
                 \Closure $set,
                 string $context
               ) {
+                // return;
+                // dd($context === "edit", $get("../../update_order") === false);
+
+                // $set(
+                //   "shipping_price_view",
+                //   number_format($get("shipping_price") / 100, 2)
+                // );
+
+                // return number_format($get("price") / 100, 2);
+
+                // maybe later
                 if (
                   $context === "edit" &&
                   $get("../../update_order") === false
@@ -516,11 +546,9 @@ class OrderResource extends Resource
                 $product_id = $get("product_id");
                 $option_id = $get("product_option_id");
                 $quantity = $get("quantity");
-                $unit = $get("unit");
+                $unit = $get("unit") ?? "inches";
                 $width = $get("width");
                 $height = $get("height");
-
-                info($get("addons"));
 
                 $addons = collect($get("addons"))
                   ->values()
@@ -817,6 +845,10 @@ class OrderResource extends Resource
     $productOption = $product->options()->find($product_option_id);
 
     if ($productOption->sizeList) {
+      return false;
+    }
+
+    if ($productOption->size_for_collect) {
       return false;
     }
 

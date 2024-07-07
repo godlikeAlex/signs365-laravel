@@ -180,8 +180,10 @@ class ProductOptionResource extends Resource
 
               Section::make("Quantity")
                 ->visible(
-                  fn(Closure $get) => OptionTypeEnum::from($get("type")) ===
-                    OptionTypeEnum::PER_QTY
+                  fn(Closure $get) => $get("type")
+                    ? OptionTypeEnum::from($get("type")) ===
+                      OptionTypeEnum::PER_QTY
+                    : false
                 )
                 ->description(
                   "Here you can specify a given size that will be dropdown"

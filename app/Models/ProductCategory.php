@@ -17,15 +17,19 @@ class ProductCategory extends Model
     $categoriesWithProducts = ProductCategory::query()
       ->orderBy("menu_order", "asc")
       ->where("show_on_home", true)
-      ->with("products")
+      ->with("products", function ($query) {
+        $query->where("published", true);
+      })
       ->get();
 
     $categoriesWithProducts->each(function ($category) {
-      $category->products->each(function ($product) {
-        if ($product->with_checkout) {
-          $product->load("options", "addons");
-        }
-      });
+      $category->products
+        ->each(function ($product) {
+          if ($product->with_checkout) {
+            $product->load("options", "addons");
+          }
+        })
+        ->filter(fn($product) => $product->is_published === true);
     });
 
     return $categoriesWithProducts;

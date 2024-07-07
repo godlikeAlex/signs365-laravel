@@ -19,7 +19,7 @@ class Product extends Model
 
   protected $casts = [
     "sizes" => "array",
-    "is_published" => "boolean",
+    "published" => "boolean",
     "with_checkout" => "boolean",
   ];
 
