@@ -187,14 +187,14 @@ const SwiperNavigation = () => {
         onClick={() => swiper.slidePrev()}
         className="slide-prev-swiper swipper-arrow"
       >
-        <i className="fa fa-chevron-left" />
+        <i className="fa-solid fa-chevron-left"></i>
       </div>
 
       <div
         onClick={() => swiper.slideNext()}
         className="slide-next-swiper swipper-arrow"
       >
-        <i className="fa fa-chevron-right" />
+        <i className="fa-solid fa-chevron-right"></i>
       </div>
     </div>
   );
