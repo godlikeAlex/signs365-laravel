@@ -16,4 +16,11 @@ class HomeController extends Controller
       "title" => "Home Page",
     ]);
   }
+
+  public function about()
+  {
+    return Inertia::render("About", [
+      "title" => "About Us",
+    ]);
+  }
 }

@@ -404,7 +404,11 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
           extraDataSelected = emptySelectedList;
         }
       } else {
-        extraDataSelected = extraDataSelected.splice(indexOfSelected, 1);
+        let copySelectedExtraData = [...extraDataSelected];
+
+        copySelectedExtraData.splice(indexOfSelected, 1);
+
+        extraDataSelected = copySelectedExtraData;
       }
 
       return {
