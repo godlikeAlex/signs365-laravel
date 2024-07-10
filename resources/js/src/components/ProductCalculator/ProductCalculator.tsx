@@ -74,7 +74,7 @@ const ProductCalculator: React.FC<Props> = ({ selectedOption }: Props) => {
               })}
               onClick={() => !disabled && handleSizeTypeSelect("custom")}
             >
-              <h6 style={{ textTransform: "capitalize" }}>Custom's</h6>
+              <h6 style={{ textTransform: "capitalize" }}>Custom</h6>
             </div>
           </div>
         ) : null}

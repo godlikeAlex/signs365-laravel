@@ -39,7 +39,7 @@ const OrdersList: React.FC<Props> = ({
             onClick={() => router.get(`/profile?page=${currentPage - 1}`)}
             disabled={currentPage === 1}
           >
-            <i className="fa fa-chevron-left" />
+            <i className="fa-solid fa-chevron-left" />
           </button>
           <span style={{ marginLeft: 5, marginRight: 5 }}>
             Page
@@ -52,7 +52,7 @@ const OrdersList: React.FC<Props> = ({
             onClick={() => router.get(`/profile?page=${currentPage + 1}`)}
             disabled={currentPage === pageCount}
           >
-            <i className="fa fa-chevron-right" />
+            <i className="fa-solid fa-chevron-right" />
           </button>
         </div>
       ) : null}

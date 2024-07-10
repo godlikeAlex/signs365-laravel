@@ -441,6 +441,7 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
         [payload.input]: {
           error: undefined,
           value: payload.value,
+          initiated: true,
         },
       };
     case ProductActionKind.SET_CUSTOM_SIZE:

@@ -38,8 +38,6 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
       return;
     }
 
-    console.log(state.width.initiated);
-
     if (!state.width.initiated || !state.height.initiated) {
       return;
     }
@@ -197,7 +195,7 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
           />
         )}
 
-        <span className="ps-product__price">{state.calculatedPrice} $</span>
+        <span className="ps-product__price">${state.calculatedPrice}</span>
 
         <button
           type="submit"

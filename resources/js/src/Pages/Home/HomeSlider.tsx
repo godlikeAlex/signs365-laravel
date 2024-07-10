@@ -110,37 +110,6 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
-          <div className="container container-initial">
-            <div className="ps-banner__block">
-              <div className="ps-banner__content">
-                <h2 className="ps-banner__title">
-                  Get Noticed! $80 3'x8' Banners.
-                </h2>
-                <div className="ps-banner__desc">
-                  Only $80! Perfect for events, promotions, and more.
-                </div>
-
-                <div className="ps-banner__persen bg-primary">80$</div>
-              </div>
-              <div className="ps-banner__thumnail">
-                <img
-                  className="ps-banner__round"
-                  src="/img/round5.png"
-                  alt="alt"
-                />
-                <img
-                  className="ps-banner__image"
-                  src="/img/promotion/cards.png"
-                  alt="alt"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </SwiperSlide>
-
-      <SwiperSlide>
         <div className="ps-banner" style={{ background: "#DAECFA" }}>
           <div className="container container-initial">
             <div className="ps-banner__block">
@@ -165,6 +134,37 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <img
                   className="ps-banner__image"
                   src="/img/promotion/free-shipping.png"
+                  alt="alt"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
+          <div className="container container-initial">
+            <div className="ps-banner__block">
+              <div className="ps-banner__content">
+                <h2 className="ps-banner__title">
+                  Get Noticed! $80 3'x8' Banners.
+                </h2>
+                <div className="ps-banner__desc">
+                  Only $80! Perfect for events, promotions, and more.
+                </div>
+
+                <div className="ps-banner__persen bg-primary">80$</div>
+              </div>
+              <div className="ps-banner__thumnail">
+                <img
+                  className="ps-banner__round"
+                  src="/img/round5.png"
+                  alt="alt"
+                />
+                <img
+                  className="ps-banner__image"
+                  src="/img/promotion/cards.png"
                   alt="alt"
                 />
               </div>

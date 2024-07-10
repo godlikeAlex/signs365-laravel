@@ -4,10 +4,7 @@ import { IProductsPagenation } from "@/src/types/axiosResponses";
 import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import CatalogProducts from "@/src/Pages/Catalog/CatalogProducts";
-import { Head } from "@inertiajs/react";
 import { SEOHead } from "@/src/components";
-import { jsonLdScriptProps } from "react-schemaorg";
-import DTS from "schema-dts";
 
 interface Props {
   productsWithPagenation: IProductsPagenation;
@@ -116,7 +113,7 @@ const Catalog: React.FC<Props> = ({
                                   alignItems: "center",
                                 }}
                               >
-                                <i className="fa fa-chevron-right"></i>
+                                <i className="fa-solid fa-chevron-right"></i>
                               </span>
                             </Link>
                           </li>

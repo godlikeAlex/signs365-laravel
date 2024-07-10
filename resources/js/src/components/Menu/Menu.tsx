@@ -36,13 +36,11 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 className="ps-header__text d-flex align-items-center"
               >
                 <i className="icon-telephone" />
-                <strong style={{ marginLeft: 5 }}>
-                  307-200-8927 - Call Us
-                </strong>
+                <strong style={{ marginLeft: 5 }}>+1 (307) 200-8927</strong>
               </a>
 
               <a
-                href="http://google.com"
+                href="mailto:info@signs7.com"
                 className="ps-header__text d-flex align-items-center"
               >
                 <i className="icon-envelope" />
@@ -50,14 +48,11 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 <strong style={{ marginLeft: 5 }}>info@signs7.com</strong>
               </a>
 
-              <a
-                href="http://google.com"
-                className="ps-header__text d-flex align-items-center"
-              >
+              <span className="ps-header__text d-flex align-items-center">
                 <i className="icon-map-marker" />
 
                 <strong style={{ marginLeft: 5 }}>New York</strong>
-              </a>
+              </span>
             </div>
 
             <div className="ps-top__right">
@@ -113,9 +108,9 @@ const Menu: React.FC<Props> = ({}: Props) => {
 
               <ul className="menu-top">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <Link className="nav-link" href="/about">
                     About
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
