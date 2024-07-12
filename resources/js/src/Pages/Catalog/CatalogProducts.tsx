@@ -68,7 +68,7 @@ const CatalogProducts: React.FC<Props> = ({
             ))
           ) : (
             <EmptyPage
-              iconClass="fa fa-shopping-basket"
+              iconClass="fa-solid fa-basket-shopping"
               title="No Products Here"
               size="small"
             />

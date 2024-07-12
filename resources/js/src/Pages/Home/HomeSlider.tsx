@@ -20,38 +20,6 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
       }}
       className="mySwiper"
     >
-      {/* <SwiperSlide>
-        <div className="ps-banner" style={{ background: "#FFCC00" }}>
-          <div className="container container-initial">
-            <div className="ps-banner__block">
-              <div className="ps-banner__content">
-                <h2 className="ps-banner__title">
-                  Buy banner now <br />
-                  free shipping
-                </h2>
-                <div className="ps-banner__desc">55% off only in NY</div>
-
-                <a className="bg-white ps-banner__shop" href="#">
-                  Shop now
-                </a>
-                <div className="ps-banner__persen bg-primary">-25%</div>
-              </div>
-              <div className="ps-banner__thumnail">
-                <img
-                  className="ps-banner__round"
-                  src="/img/round2.png"
-                  alt="alt"
-                />
-                <img
-                  className="ps-banner__image"
-                  src="/img/promotion/slide4.png"
-                  alt="alt"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </SwiperSlide> */}
       <SwiperSlide>
         <div className="ps-banner" style={{ background: "#F0F2F5" }}>
           <div className="container container-initial">
@@ -74,33 +42,6 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <img
                   className="ps-banner__image"
                   src="/img/promotion/slide-discount.png"
-                  alt="alt"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
-          <div className="container container-initial">
-            <div className="ps-banner__block">
-              <div className="ps-banner__content">
-                <h2 className="ps-banner__title">Business Cards</h2>
-                <div className="ps-banner__desc">
-                  High-quality printing, fast turnaround, and affordable prices.
-                </div>
-              </div>
-              <div className="ps-banner__thumnail">
-                <img
-                  className="ps-banner__round"
-                  src="/img/round5.png"
-                  alt="alt"
-                />
-                <img
-                  className="ps-banner__image"
-                  src="/img/promotion/cards.png"
                   alt="alt"
                 />
               </div>
@@ -134,6 +75,33 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <img
                   className="ps-banner__image"
                   src="/img/promotion/free-shipping.png"
+                  alt="alt"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <div className="ps-banner" style={{ background: "#F0F2F5" }}>
+          <div className="container container-initial">
+            <div className="ps-banner__block">
+              <div className="ps-banner__content">
+                <h2 className="ps-banner__title">Business Cards</h2>
+                <div className="ps-banner__desc">
+                  High-quality printing, fast turnaround, and affordable prices.
+                </div>
+              </div>
+              <div className="ps-banner__thumnail">
+                <img
+                  className="ps-banner__round"
+                  src="/img/round5.png"
+                  alt="alt"
+                />
+                <img
+                  className="ps-banner__image"
+                  src="/img/promotion/cards.png"
                   alt="alt"
                 />
               </div>

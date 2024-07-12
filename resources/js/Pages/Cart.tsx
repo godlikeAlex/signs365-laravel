@@ -1,5 +1,5 @@
 import React from "react";
-import { router, usePage, useRemember } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
@@ -72,7 +72,7 @@ const Cart: React.FC<Props> = (props: Props) => {
                     />{" "}
                     <span style={{ marginLeft: 10 }}>Add installation</span>
                   </label>
-                  <div>Aproximat Estimate: $</div>
+                  <div>Approximate Estimate: $</div>
                   <div>(we will contact you with price)</div>
                 </div>
 

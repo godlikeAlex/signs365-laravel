@@ -15,7 +15,8 @@ interface MenuState {
 }
 
 const Menu: React.FC<Props> = ({}: Props) => {
-  const { homeCategories, cart, auth } = usePage<SharedInertiaData>().props;
+  const { homeCategories, cart, auth, currentCity } =
+    usePage<SharedInertiaData>().props;
 
   const [state, setState] = useState<MenuState>({
     showMiniAuth: false,
@@ -51,7 +52,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
               <span className="ps-header__text d-flex align-items-center">
                 <i className="icon-map-marker" />
 
-                <strong style={{ marginLeft: 5 }}>New York</strong>
+                <strong style={{ marginLeft: 5 }}>{currentCity}</strong>
               </span>
             </div>
 
@@ -119,9 +120,6 @@ const Menu: React.FC<Props> = ({}: Props) => {
                   </a>
                 </li>
               </ul>
-              <div className="ps-header__text">
-                Need help? <strong>0020 500 - MYMEDI - 000</strong>
-              </div>
             </div>
           </div>
         </div>

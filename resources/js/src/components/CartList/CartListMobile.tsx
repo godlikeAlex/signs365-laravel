@@ -3,7 +3,6 @@ import { removeItemFromCart } from "@/src/redux/cartSlice";
 import { ICartItem } from "@/src/types/models";
 import React from "react";
 import { toast } from "react-toastify";
-import CartItem from "../CartItem";
 import { generateAttributtesCartItem } from "@/src/utils/helpers";
 
 interface Props {
