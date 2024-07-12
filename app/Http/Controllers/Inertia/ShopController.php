@@ -16,6 +16,7 @@ class ShopController extends Controller
   {
     $products = $product_category
       ->products()
+      ->published()
       ->orderby("order")
       ->paginate(12);
 
@@ -25,7 +26,10 @@ class ShopController extends Controller
 
     return Inertia::render("Catalog", [
       "currentCategory" => $product_category,
-      "countedProducts" => $product_category->products()->count(),
+      "countedProducts" => $product_category
+        ->products()
+        ->published()
+        ->count(),
       "productsWithPagenation" => ProductResource::collection($products),
       "categories" => json_decode(
         CategoryWithOutProducts::collection(

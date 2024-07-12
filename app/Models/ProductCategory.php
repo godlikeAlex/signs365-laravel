@@ -18,9 +18,11 @@ class ProductCategory extends Model
       ->orderBy("menu_order", "asc")
       ->where("show_on_home", true)
       ->with("products", function ($query) {
-        $query->where("published", true);
+        $query->where("published", true)->orderBy("order");
       })
       ->get();
+
+    return $categoriesWithProducts;
 
     $categoriesWithProducts->each(function ($category) {
       $category->products

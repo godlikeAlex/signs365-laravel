@@ -56,7 +56,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                 <div className="ps-section__content">
                   <div className="row m-0">
                     {/* PRODUCT */}
-                    {products.map((product, idx) => (
+                    {products.slice(0, 8).map((product, idx) => (
                       <div className="col-md-3 p-0">
                         <ProductCard
                           {...product}
