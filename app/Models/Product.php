@@ -10,10 +10,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
-class Product extends Model
+class Product extends Model implements Sortable
 {
-  use HasFactory, SoftDeletes;
+  use HasFactory, SoftDeletes, SortableTrait;
+
+  public $targetCategoryForOrder = null;
+
+  public $sortable = [
+    "order_column_name" => "order",
+    "sort_when_creating" => false,
+  ];
 
   protected $guarded = [];
 
@@ -39,6 +48,17 @@ class Product extends Model
       "product_id",
       "product_option_id"
     );
+  }
+
+  public function buildSortQuery()
+  {
+    if (!$this->targetCategoryForOrder) {
+      return static::query();
+    }
+
+    return static::query()->whereHas("categories", function ($q) {
+      $q->where("product_category_id", $this->targetCategoryForOrder);
+    });
   }
 
   public function addons(): BelongsToMany

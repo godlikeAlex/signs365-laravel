@@ -23,7 +23,7 @@
     "laravel/sanctum": "^3.0",
     "laravel/tinker": "^2.5",
     "snowfire/beautymail": "^1.1",
-    "spatie/eloquent-sortable": "^4.3",
+    "spatie/eloquent-sortable": "^4.4",
     "spatie/laravel-image-optimizer": "^1.7",
     "spatie/laravel-medialibrary": "^10.11",
     "spatie/laravel-server-side-rendering": "^1.4",

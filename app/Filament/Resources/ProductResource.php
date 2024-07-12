@@ -32,7 +32,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Awcodes\Curator\GliderFallback;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Layout;
 use Illuminate\Support\HtmlString;
+use Livewire;
 
 class ProductResource extends Resource
 {
@@ -66,10 +69,10 @@ class ProductResource extends Resource
               Forms\Components\RichEditor::make("description")
                 ->columnSpan("full")
                 ->reactive(),
-              Forms\Components\TextInput::make("order")
-                ->label("Order in list")
-                ->minValue(1)
-                ->columnSpan("full"),
+              // Forms\Components\TextInput::make("order")
+              //   ->label("Order in list")
+              //   ->minValue(1)
+              //   ->columnSpan("full"),
 
               Forms\Components\Select::make("faq_id")->relationship(
                 "faq",
@@ -78,6 +81,7 @@ class ProductResource extends Resource
 
               Forms\Components\Select::make("categories")
                 ->multiple()
+                ->maxItems(1)
                 ->required()
                 ->relationship("categories", "title")
                 ->preload(),
@@ -146,16 +150,8 @@ class ProductResource extends Resource
   {
     return $table
       ->columns([
-        Tables\Columns\TextColumn::make("order")
-          ->sortable(
-            query: function (Builder $query, string $direction): Builder {
-              info($direction);
-              return $query->orderBy("order", $direction);
-            }
-          )
-          ->searchable(),
+        Tables\Columns\TextColumn::make("order")->searchable(),
         Tables\Columns\TextColumn::make("title")->searchable(),
-        Tables\Columns\TextColumn::make("slug")->searchable(),
         // Tables\Columns\TextColumn::make("prices_min_price")
         //   ->label("Start Price")
         //   ->min("prices", "price")
@@ -164,33 +160,69 @@ class ProductResource extends Resource
         Tables\Columns\IconColumn::make("published")->boolean(),
         // ->sortable(),
         Tables\Columns\TagsColumn::make("categories.title")->separator(","),
-        Tables\Columns\TextColumn::make("created_at")->date($format = "F j, Y"),
       ])
-      ->filters([
-        Tables\Filters\TrashedFilter::make(),
-        Tables\Filters\Filter::make("product_category")
-          ->form([
-            Forms\Components\Select::make("product_category")
-              ->options(ProductCategory::all()->pluck("title", "id"))
-              ->searchable(),
-          ])
-          ->query(function (Builder $query, array $data) {
-            if (isset($data["product_category"])) {
-              // ->productCategories()
-              // ->find($data["product_category"]);
-              return $query->whereHas("productCategories", function (
-                Builder $qCategories
-              ) use ($data) {
-                $qCategories->where(
-                  "product_categories.id",
-                  $data["product_category"]
-                );
-              });
-            }
-          }),
-      ])
-      ->defaultSort("order", "asc")
+      ->filters(
+        [
+          Tables\Filters\TrashedFilter::make()->columnSpan(10),
+          Tables\Filters\Filter::make("product_category")
+            ->columnSpan(10)
+            ->form([
+              Forms\Components\Radio::make("product_category")
+                ->label("Category")
+                ->inline()
+                ->default(
+                  ProductCategory::query()
+                    ->orderBy("menu_order")
+                    ->first()->id
+                )
+                ->options(
+                  ProductCategory::query()
+                    ->orderBy("menu_order")
+                    ->pluck("title", "id")
+                ),
+              // Forms\Components\Select::make("product_category")
+              //   ->options(ProductCategory::all()->pluck("title", "id"))
+              //   ->searchable(),
+            ])
+            ->query(function (Builder $query, array $data) {
+              if (isset($data["product_category"])) {
+                // ->productCategories()
+                // ->find($data["product_category"]);
+                return $query->whereHas("productCategories", function (
+                  Builder $qCategories
+                ) use ($data) {
+                  $qCategories->where(
+                    "product_categories.id",
+                    $data["product_category"]
+                  );
+                });
+              }
+            }),
+        ],
+        layout: Layout::AboveContent
+      )
+      ->defaultSort("order")
       ->actions([
+        Tables\Actions\Action::make("up")
+          ->icon("heroicon-o-arrow-up")
+          ->action(function (Product $record, HasTable $livewire) {
+            $productCategoryID = $livewire->getTableFilterState(
+              "product_category"
+            )["product_category"];
+            $record->targetCategoryForOrder = $productCategoryID;
+
+            $record->moveOrderUp();
+          }),
+        Tables\Actions\Action::make("down")
+          ->icon("heroicon-o-arrow-down")
+          ->action(function (Product $record, HasTable $livewire) {
+            $productCategoryID = $livewire->getTableFilterState(
+              "product_category"
+            )["product_category"];
+            $record->targetCategoryForOrder = $productCategoryID;
+
+            $record->moveOrderDown();
+          }),
         Tables\Actions\EditAction::make(),
         Tables\Actions\DeleteAction::make(),
         // Tables\Actions\ForceDeleteAction::make(),
