@@ -20,13 +20,25 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         <div className="ps-header__middle">
           <div className="container">
             <div className="ps-logo">
-              <a href="/">
-                {" "}
+              <Link href="/">
                 <img src="/img/logo.png" alt="" style={{ width: 80 }} />
-              </a>
+              </Link>
             </div>
             <div className="ps-header__right">
               <ul className="ps-header__icons">
+                <li>
+                  <Link
+                    className="ps-header__item menu-slide cart-mobile-icon"
+                    href="/cart"
+                  >
+                    <i className="fa-solid fa-cart-shopping"></i>
+
+                    {cart.items.length > 0 ? (
+                      <span className="cart-badge">{cart.items.length}</span>
+                    ) : null}
+                  </Link>
+                </li>
+
                 <li>
                   <a
                     className="ps-header__item menu-slide"
