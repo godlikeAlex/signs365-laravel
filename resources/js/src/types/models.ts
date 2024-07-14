@@ -16,8 +16,8 @@ export interface IOrder {
   id: number;
   uuid: string;
   status: string;
-  total: number;
-  total_without_tax: number;
+  amount: number;
+  tax: number;
   address: string;
   created_at: string;
   order_items: IOrderItem[];

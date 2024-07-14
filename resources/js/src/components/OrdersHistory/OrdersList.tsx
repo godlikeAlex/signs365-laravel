@@ -19,7 +19,7 @@ const OrdersList: React.FC<Props> = ({
   if (data.length === 0) {
     return (
       <EmptyPage
-        iconClass="fa fa-shopping-basket"
+        iconClass="fa-solid fa-basket-shopping"
         title="No Orders"
         size="small"
       />

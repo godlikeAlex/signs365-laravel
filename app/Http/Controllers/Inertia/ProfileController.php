@@ -22,9 +22,11 @@ class ProfileController extends Controller
 
     $orders = $user
       ->orders()
+      ->paid()
       ->orderBy("created_at", "DESC")
       ->latest()
-      ->paginate(2);
+      ->paginate(5);
+
     return Inertia::render("Profile", [
       "orders" => OrderResource::collection($orders),
     ]);

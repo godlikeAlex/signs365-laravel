@@ -36,8 +36,8 @@ export function expandIcon({ isActive }) {
 
 const OrderCard: React.FC<Props> = ({
   status,
-  total_without_tax,
-  total,
+  amount,
+  tax,
   address,
   uuid,
   created_at,
@@ -73,19 +73,15 @@ const OrderCard: React.FC<Props> = ({
         </div>
 
         <div className="row">
-          <div className="col-md-2 col-6 order-item-title">
-            Total Without Tax:
-          </div>
+          <div className="col-md-2 col-6 order-item-title">Taxes:</div>
           <div className="col-md-10 col-6 order-item-value">
-            ${total_without_tax.toLocaleString()}
+            ${tax.toLocaleString()}
           </div>
         </div>
 
         <div className="row">
           <div className="col-md-2 col-6 order-item-title">Total:</div>
-          <div className="col-md-10 col-6 order-item-value">
-            ${total.toLocaleString()}
-          </div>
+          <div className="col-md-10 col-6 order-item-value">${amount}</div>
         </div>
       </div>
 
