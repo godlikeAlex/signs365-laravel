@@ -57,6 +57,9 @@ class ProductOptionResource extends Resource
                   Closure $get
                 ) {
                   $set("shipping_id", null);
+                  $set("size_for_collect", false);
+                  $set("show_custom_sizes", false);
+                  $set("quantity_list", []);
 
                   foreach ($get("addons") as $key => $value) {
                     $set("addons.$key.type", null);
@@ -113,7 +116,6 @@ class ProductOptionResource extends Resource
                         ShippingTypeEnum::WIDTHxHEIGHT,
                       ];
                       break;
-
                     case OptionTypeEnum::SINGLE:
                       $requiredTypes = $customSizeIsSet
                         ? [ShippingTypeEnum::WIDTHxHEIGHT]
@@ -369,6 +371,61 @@ class ProductOptionResource extends Resource
                 })
                 ->disableItemMovement()
                 ->reactive()
+                ->rules([
+                  function () {
+                    return function (string $attribute, $value, Closure $fail) {
+                      $lastElementOfRepeater = end($value);
+                      $ranges = collect($value);
+                      $rangesKeys = $ranges->keys();
+
+                      foreach ($rangesKeys as $index => $key) {
+                        $currentRange = $ranges[$key];
+
+                        if ($index - 1 < 0) {
+                          if (intval($currentRange["from"]) != 1) {
+                            $fail(
+                              "The first element of the range must start at 1"
+                            );
+                          }
+                          continue;
+                        }
+
+                        $prevRange = $ranges[$rangesKeys[$index - 1]];
+
+                        if (
+                          is_null($prevRange["from"]) ||
+                          is_null($prevRange["to"]) ||
+                          is_null($currentRange["from"]) ||
+                          is_null($currentRange["to"])
+                        ) {
+                          return $fail("Invalid range or empty fields.");
+                        }
+
+                        $nextElementShouldBe = intval($prevRange["to"]) + 1;
+                        $nextElement = intval($currentRange["from"]);
+
+                        if ($nextElementShouldBe != $nextElement) {
+                          return $fail(
+                            "The range is not correct, you have a place where the range is missing. [the next element should be $nextElementShouldBe but it is $nextElement]"
+                          );
+                        }
+
+                        info("foreach loop example", [
+                          "prev" => $prevRange,
+                          "current" => $currentRange,
+                        ]);
+                      }
+
+                      if ($lastElementOfRepeater) {
+                        if ($lastElementOfRepeater["to"] != -1) {
+                          return $fail(
+                            "The last element in the chain must be -1 (-1 means infinity) for example from 10 to infinity."
+                          );
+                        }
+                      }
+                    };
+                  },
+                ])
                 ->columnSpanFull(),
 
               Forms\Components\Repeater::make("per_quantity_prices")
@@ -480,6 +537,61 @@ class ProductOptionResource extends Resource
                 })
                 ->disableItemMovement()
                 ->reactive()
+                ->rules([
+                  function () {
+                    return function (string $attribute, $value, Closure $fail) {
+                      $lastElementOfRepeater = end($value);
+                      $ranges = collect($value);
+                      $rangesKeys = $ranges->keys();
+
+                      foreach ($rangesKeys as $index => $key) {
+                        $currentRange = $ranges[$key];
+
+                        if ($index - 1 < 0) {
+                          if (intval($currentRange["from"]) != 1) {
+                            $fail(
+                              "The first element of the range must start at 1"
+                            );
+                          }
+                          continue;
+                        }
+
+                        $prevRange = $ranges[$rangesKeys[$index - 1]];
+
+                        if (
+                          is_null($prevRange["from"]) ||
+                          is_null($prevRange["to"]) ||
+                          is_null($currentRange["from"]) ||
+                          is_null($currentRange["to"])
+                        ) {
+                          return $fail("Invalid range or empty fields.");
+                        }
+
+                        $nextElementShouldBe = intval($prevRange["to"]) + 1;
+                        $nextElement = intval($currentRange["from"]);
+
+                        if ($nextElementShouldBe != $nextElement) {
+                          return $fail(
+                            "The range is not correct, you have a place where the range is missing. [the next element should be $nextElementShouldBe but it is $nextElement]"
+                          );
+                        }
+
+                        info("foreach loop example", [
+                          "prev" => $prevRange,
+                          "current" => $currentRange,
+                        ]);
+                      }
+
+                      if ($lastElementOfRepeater) {
+                        if ($lastElementOfRepeater["to"] != -1) {
+                          return $fail(
+                            "The last element in the chain must be -1 (-1 means infinity) for example from 10 to infinity."
+                          );
+                        }
+                      }
+                    };
+                  },
+                ])
                 ->columnSpanFull(),
             ])
             ->columns(2),
@@ -545,6 +657,7 @@ class ProductOptionResource extends Resource
                   ->maxLength(255),
                 Forms\Components\Select::make("extra_data_type")
                   ->reactive()
+                  ->required()
                   ->options(function () {
                     return collect(AddonExtraDataTypeEnum::cases())
                       ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
