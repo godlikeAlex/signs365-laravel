@@ -102,6 +102,7 @@ type UpdateInputAction = {
   payload: {
     input: "width" | "height";
     value: number;
+    error?: string;
   };
 };
 
@@ -439,7 +440,7 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
       return {
         ...state,
         [payload.input]: {
-          error: undefined,
+          error: payload.error,
           value: payload.value,
           initiated: true,
         },
@@ -451,13 +452,13 @@ function ProductReducer(state: ProductState, action: Action): ProductState {
           error: undefined,
           value: payload.width,
           showError: false,
-          initiated: false,
+          initiated: true,
         },
         height: {
           error: undefined,
           value: payload.height,
           showError: false,
-          initiated: false,
+          initiated: true,
         },
         customSize: {
           error: undefined,

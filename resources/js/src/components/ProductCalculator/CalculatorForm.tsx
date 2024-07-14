@@ -21,10 +21,26 @@ const CalculatorForm: React.FC<Props> = ({ staticData, disabled }: Props) => {
 
     if (regex.test(value) || value === "") {
       const numberValue = Number(value);
+      const maxInput = Number(state.selectedOption.validation[`max_${input}`]);
+
+      if (maxInput > 0 && numberValue > maxInput) {
+        return dispatch({
+          type: ProductActionKind.UPDATE_INPUT,
+          payload: {
+            input,
+            value: isNaN(numberValue) ? 1 : numberValue,
+            error: `The maximum number for ${input} should be ${maxInput}`,
+          },
+        });
+      }
 
       dispatch({
         type: ProductActionKind.UPDATE_INPUT,
-        payload: { input, value: isNaN(numberValue) ? 1 : numberValue },
+        payload: {
+          input,
+          value: isNaN(numberValue) ? 1 : numberValue,
+          error: undefined,
+        },
       });
     }
   };
@@ -58,7 +74,7 @@ const CalculatorForm: React.FC<Props> = ({ staticData, disabled }: Props) => {
                 formType={"checkout"}
                 disabled={disabled || staticData !== undefined}
                 label="Width"
-                onBlur={(e) => handleOnBlur("width", e.target.value)}
+                // onBlur={(e) => handleOnBlur("width", e.target.value)}
               />
             </div>
 
@@ -73,9 +89,21 @@ const CalculatorForm: React.FC<Props> = ({ staticData, disabled }: Props) => {
                 formType={"checkout"}
                 disabled={disabled || staticData !== undefined}
                 label="Height"
-                onBlur={(e) => handleOnBlur("height", e.target.value)}
+                // onBlur={(e) => handleOnBlur("height", e.target.value)}
               />
             </div>
+
+            {state.width.error ? (
+              <div className="col-md-12 mt-20 text-danger">
+                {state.width.error}
+              </div>
+            ) : null}
+
+            {state.height.error ? (
+              <div className="col-md-12 mt-20 text-danger">
+                {state.height.error}
+              </div>
+            ) : null}
           </div>
         </div>
       </form>

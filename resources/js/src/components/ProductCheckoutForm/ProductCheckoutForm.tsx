@@ -42,6 +42,10 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
       return;
     }
 
+    if (state.width.error || state.height.error) {
+      return;
+    }
+
     dispatch({ type: ProductActionKind.START_FETCHING });
 
     const { data } = await CartService.calculatePrice({
@@ -95,6 +99,14 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
       isValid = false;
     }
 
+    if (state.width.error) {
+      isValid = false;
+    }
+
+    if (state.height.error) {
+      isValid = false;
+    }
+
     return isValid;
   };
 
@@ -127,7 +139,10 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
         preserveScroll: true,
         forceFormData: true,
         onSuccess: () => {
-          toast("Successfully added to cart", { type: "success" });
+          toast("Successfully added to cart", {
+            type: "success",
+            onClick: () => router.visit("/cart"),
+          });
 
           dispatch({ type: ProductActionKind.STOP_FETCHING });
         },
