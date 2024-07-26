@@ -97,7 +97,7 @@ const Catalog: React.FC<Props> = ({
                             })}
                           >
                             <Link
-                              href={`/shop/category/${category.slug}`}
+                              href={`/shop/${category.slug}`}
                               style={{
                                 display: "flex",
                                 justifyContent: "space-between",

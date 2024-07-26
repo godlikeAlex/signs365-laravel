@@ -71,7 +71,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                   </div>
                   <div className="ps-shop__more">
                     <a
-                      href={`/shop/category/${slug}`}
+                      href={`/shop/${slug}`}
                       style={{ display: "block" }}
                       className="home_show_more"
                     >

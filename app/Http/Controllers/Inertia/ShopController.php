@@ -21,7 +21,8 @@ class ShopController extends Controller
       ->paginate(12);
 
     $categoriesWithOutProducts = ProductCategory::query()
-      ->orderBy("id", "desc")
+      // ->orderBy("id", "desc")
+      ->orderBy("menu_order", "asc")
       ->get();
 
     return Inertia::render("Catalog", [
@@ -39,8 +40,11 @@ class ShopController extends Controller
     ]);
   }
 
-  public function product(Request $request, Product $product)
-  {
+  public function product(
+    Request $request,
+    ProductCategory $product_category,
+    Product $product
+  ) {
     if ($product->with_checkout) {
       $product->load("options");
     }

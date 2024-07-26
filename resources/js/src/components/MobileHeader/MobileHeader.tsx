@@ -85,10 +85,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
 
             {homeCategories.map((category) => (
               <li key={category.id}>
-                <Link
-                  onClick={closeMenu}
-                  href={`/shop/category/${category.slug}`}
-                >
+                <Link onClick={closeMenu} href={`/shop/${category.slug}`}>
                   {category.title}
                 </Link>
               </li>

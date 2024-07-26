@@ -77,7 +77,7 @@ const ProductShow: React.FC<Props> = ({ submitAddToCart, ...props }: Props) => {
           </li>
           {location.state?.category ? (
             <li className="ps-breadcrumb__item">
-              <Link to={`/shop/category/${location.state.category.slug}`}>
+              <Link to={`/shop/${location.state.category.slug}`}>
                 {location.state.category.title}
               </Link>
             </li>
@@ -87,7 +87,7 @@ const ProductShow: React.FC<Props> = ({ submitAddToCart, ...props }: Props) => {
                 className="ps-breadcrumb__item"
                 key={`breadcumbs-${props.product.categories[0].slug}`}
               >
-                <Link to={`/shop/category/${props.product.categories[0].slug}`}>
+                <Link to={`/shop/${props.product.categories[0].slug}`}>
                   {props.product.categories[0].title}
                 </Link>
               </li>
@@ -115,7 +115,7 @@ const ProductShow: React.FC<Props> = ({ submitAddToCart, ...props }: Props) => {
                       <div className="ps-product__branch">
                         {props.product.categories?.map((category) => (
                           <Link
-                            to={`/shop/category/${category.slug}`}
+                            to={`/shop/${category.slug}`}
                             key={`cat-${category.slug}`}
                           >
                             {category.title}

@@ -56,7 +56,7 @@ export default function Home() {
                   </div>
                   <div className="ps-shop__more">
                     <Link
-                      to={`/shop/category/${slug}`}
+                      to={`/shop/${slug}`}
                       style={{ display: "block" }}
                       className="home_show_more"
                     >

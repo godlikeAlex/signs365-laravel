@@ -166,7 +166,7 @@ const Catalog: React.FC<CatalogProps> = ({}: CatalogProps) => {
                               })}
                             >
                               <Link
-                                to={`/shop/category/${category.slug}`}
+                                to={`/shop/${category.slug}`}
                                 style={{
                                   display: "flex",
                                   justifyContent: "space-between",

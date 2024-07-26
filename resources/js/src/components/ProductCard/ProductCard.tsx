@@ -24,13 +24,19 @@ const ProductCard: React.FC<Props> = (props: Props) => {
     min_price,
     allowFullPage,
     onClickQuickView,
+    categories,
   } = props;
+
+  const [category] = categories;
 
   const [fetching, setIsFetch] = useState(false);
   const isMobile = useMediaQuery({ query: "(max-width: 720px)" });
 
   const productURL = React.useMemo(
-    () => (!props.fullPage ? `/shop/product/${slug}` : `/shop/product/${slug}`),
+    () =>
+      !props.fullPage
+        ? `/shop/${category.slug}/${slug}`
+        : `/shop/${category.slug}/${slug}`,
     [props]
   );
 
@@ -132,7 +138,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <div className="meta-wrapper">
                 {props.categories.map((category, index) => (
                   <Link
-                    href={`/shop/category/${category.slug}`}
+                    href={`/shop/${category.slug}`}
                     className="ps-product__branch"
                     key={`category-card-product-${category.id}`}
                   >

@@ -36,6 +36,10 @@
   transform: translateX(5px);
 }
 
+.ps-category__link--active {
+  color: #fd8d27;
+}
+
 .has-dropdown {
   position: relative;
 }

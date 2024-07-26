@@ -4,7 +4,7 @@ import { ICategory } from "../types/models";
 
 export default class CatalogService {
   static getCategory(slug: string) {
-    return api.get<IGetCategory>(`/shop/category/${slug}`);
+    return api.get<IGetCategory>(`/shop/${slug}`);
   }
 
   static categories() {
@@ -13,7 +13,7 @@ export default class CatalogService {
 
   static products(categorySlug, page: number | string = 1) {
     return api.get<IProductsPagenation>(
-      `/shop/category/${categorySlug}/products?page=${page}`
+      `/shop/${categorySlug}/products?page=${page}`
     );
   }
 }

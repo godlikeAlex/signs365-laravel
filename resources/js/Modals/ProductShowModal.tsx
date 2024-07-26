@@ -69,7 +69,7 @@ const ProductShowModal: React.FC<Props> = ({ product, handleClose }: Props) => {
                           >
                             <div className="ps-product__branch">
                               {product.categories.map((category) => (
-                                <Link href={`/shop/category/${category.slug}`}>
+                                <Link href={`/shop/${category.slug}`}>
                                   {category.title}
                                 </Link>
                               )) || <Skeleton />}

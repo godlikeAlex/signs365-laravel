@@ -57,12 +57,12 @@ Route::get("", [HomeController::class, "index"])->name("home");
 
 Route::get("about", [HomeController::class, "about"])->name("about");
 
-Route::get("/shop/category/{product_category:slug}", [
-  ShopController::class,
-  "index",
-]);
+Route::get("/shop/{product_category:slug}", [ShopController::class, "index"]);
 
-Route::get("/shop/product/{product}", [ShopController::class, "product"]);
+Route::get("/shop/{product_category:slug}/{product:slug}", [
+  ShopController::class,
+  "product",
+]);
 
 Route::get("/cart", [CartController::class, "renderCart"]);
 Route::post("/cart/toggle-with-installation", [

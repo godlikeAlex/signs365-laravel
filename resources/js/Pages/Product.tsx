@@ -64,7 +64,7 @@ function Product({ product }: ProductProps) {
                 className="ps-breadcrumb__item"
                 key={`breadcumbs-${product.categories[0].slug}`}
               >
-                <Link href={`/shop/category/${product.categories[0].slug}`}>
+                <Link href={`/shop/${product.categories[0].slug}`}>
                   {product.categories[0].title}
                 </Link>
               </li>
@@ -91,7 +91,7 @@ function Product({ product }: ProductProps) {
                         <div className="ps-product__branch">
                           {product.categories?.map((category) => (
                             <Link
-                              href={`/shop/category/${category.slug}`}
+                              href={`/shop/${category.slug}`}
                               key={`cat-${category.slug}`}
                             >
                               {category.title}

@@ -34,12 +34,12 @@ Route::middleware("handleCityFromRequest")->group(function () {
     "index",
   ]);
 
-  Route::get("/shop/category/{product_category:slug}", [
+  Route::get("/shop/{product_category:slug}", [
     \App\Http\Controllers\Api\ShopController::class,
     "category",
   ]);
 
-  Route::get("/shop/category/{product_category:slug}  ", [
+  Route::get("/shop/{product_category:slug}  ", [
     \App\Http\Controllers\Api\ShopController::class,
     "products",
   ]);

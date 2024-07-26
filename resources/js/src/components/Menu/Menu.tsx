@@ -6,6 +6,7 @@ import { Link } from "@inertiajs/react";
 
 import "./style.css";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import classNames from "classnames";
 
 interface Props {}
 
@@ -15,15 +16,15 @@ interface MenuState {
 }
 
 const Menu: React.FC<Props> = ({}: Props) => {
-  const { homeCategories, cart, auth, currentCity } =
-    usePage<SharedInertiaData>().props;
+  const pageData = usePage<SharedInertiaData>();
+  const { homeCategories, cart, auth, currentCity } = pageData.props;
 
   const [state, setState] = useState<MenuState>({
     showMiniAuth: false,
     showMiniCart: false,
   });
 
-  console.log(state, "state");
+  console.log(pageData.url.startsWith(`/shop/adhesive-prints`), "props");
 
   return (
     <>
@@ -111,6 +112,12 @@ const Menu: React.FC<Props> = ({}: Props) => {
 
               <ul className="menu-top">
                 <li className="nav-item">
+                  <Link className="nav-link" href="/">
+                    Home
+                  </Link>
+                </li>
+
+                <li className="nav-item">
                   <Link className="nav-link" href="/about">
                     About
                   </Link>
@@ -142,12 +149,15 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 {homeCategories.map(
                   ({ id, title, icon, slug, products }, index) => (
                     <li
-                      className="ps-category__item ps-category__item-custom has-dropdown"
+                      className={classNames(
+                        "ps-category__item ps-category__item-custom has-dropdown",
+                        { active: pageData.url.startsWith(`/shop/${slug}`) }
+                      )}
                       key={id}
                     >
                       <Link
-                        href={`/shop/category/${slug}`}
-                        className="ps-category__link"
+                        href={`/shop/${slug}`}
+                        className={classNames("ps-category__link")}
                       >
                         <img
                           src={`/storage/${icon}`}
@@ -156,13 +166,13 @@ const Menu: React.FC<Props> = ({}: Props) => {
                         />
                       </Link>
                       <div className="ps-category__name">
-                        <Link href={`/shop/category/${slug}`}>{title}</Link>
+                        <Link href={`/shop/${slug}`}>{title}</Link>
                       </div>
 
                       <div className="dropdown-content-menu">
                         {products.map((product) => (
                           <Link
-                            href={`/shop/product/${product.slug}`}
+                            href={`/shop/${product.categories[0].slug}/${product.slug}`}
                             key={`${id}-${product.id}`}
                           >
                             {product.title}
