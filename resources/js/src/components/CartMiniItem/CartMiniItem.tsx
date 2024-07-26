@@ -1,8 +1,9 @@
+import React from "react";
 import { useAppDispatch } from "@/src/hooks";
 import { removeItemFromCart } from "@/src/redux/cartSlice";
 import { ICartItem } from "@/src/types/models";
-import React from "react";
 import { toast } from "react-toastify";
+import { Link, router } from "@inertiajs/react";
 
 interface CartMiniItemProps
   extends Pick<
@@ -17,15 +18,21 @@ const CartMiniItem: React.FC<CartMiniItemProps> = ({
   id,
   associatedModel,
 }: CartMiniItemProps) => {
-  const dispatch = useAppDispatch();
-
   const removeItem = async () => {
     try {
-      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
-
-      toast(`Successfully removed ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/remove-item",
+        {
+          item_id: id,
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully removed ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while removing item", { type: "error" });
     }
@@ -46,9 +53,12 @@ const CartMiniItem: React.FC<CartMiniItemProps> = ({
         ) : null}
       </a>
       <div className="ps-product__content">
-        <a className="ps-product__name" href="">
+        <Link
+          className="ps-product__name"
+          href={`/shop/product/${associatedModel.slug}`}
+        >
           {name} x{quantity}
-        </a>
+        </Link>
         <p className="ps-product__meta">
           <span className="ps-product__price">${price.toLocaleString()}</span>
         </p>

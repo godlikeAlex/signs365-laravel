@@ -77,3 +77,13 @@
 .mini-order-item .row {
   padding-bottom: 10px;
 }
+
+.upload-link-underline {
+  text-decoration: underline;
+  color: #f19100;
+  cursor: pointer;
+}
+
+.upload-link-underline:hover {
+  color: #103178;
+}

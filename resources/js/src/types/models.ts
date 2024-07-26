@@ -29,6 +29,7 @@ export interface IOrderItem {
   price: number;
   product_variant_title: string;
   product: IProduct;
+  images: string[];
 }
 
 export interface ICategory {
@@ -61,6 +62,7 @@ export interface ICartItem {
     product: {
       id: number;
       title: string;
+      slug: string;
     };
     customSize?: {
       id: number;

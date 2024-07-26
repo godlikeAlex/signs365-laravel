@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "php artisan ziggy:generate && tsc && vite build",
+    "build": "php artisan ziggy:generate && vite build",
     "ssr": "vite build && vite build --ssr"
   },
   "reactSnap": {

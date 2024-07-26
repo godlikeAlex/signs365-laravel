@@ -7,6 +7,7 @@ use App\Http\Controllers\Inertia\ShopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeWebHookController;
 use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;

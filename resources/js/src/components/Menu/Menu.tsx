@@ -23,6 +23,8 @@ const Menu: React.FC<Props> = ({}: Props) => {
     showMiniCart: false,
   });
 
+  console.log(state, "state");
+
   return (
     <>
       <header

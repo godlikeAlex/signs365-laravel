@@ -5,6 +5,7 @@ import Collapse, { Panel } from "rc-collapse";
 import motion from "./motionUtil";
 import { IOrder } from "@/src/types/models";
 import dayjs from "dayjs";
+import OrderItem from "./OrderItem";
 
 interface Props extends IOrder {}
 
@@ -43,8 +44,6 @@ const OrderCard: React.FC<Props> = ({
   created_at,
   order_items,
 }: Props) => {
-  console.log(order_items);
-
   return (
     <div className={"order-item"} style={{ marginBottom: 25 }}>
       <div className="order-item-panel-title">
@@ -91,48 +90,7 @@ const OrderCard: React.FC<Props> = ({
           expandIcon={expandIcon}
         >
           {order_items.map((item) => (
-            <div className="mini-order-item" key={item.id}>
-              {item.product?.images.length >= 1 ? (
-                <img
-                  src={`/storage/${item.product.images[0].path}`}
-                  alt={item.product.images[0].alt}
-                  style={{ width: 100, height: 100, objectFit: "cover" }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: 100,
-                    height: 100,
-                    background: "rgb(227, 227, 227)",
-                  }}
-                />
-              )}
-
-              <div style={{ width: "100%", marginLeft: 25 }}>
-                <div className="row">
-                  <div className="col-md-2 col-6 order-item-title">Name:</div>
-                  <div className="col-md-10 col-6 order-item-value">
-                    {item.product?.title || "Deleted Product"}
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-2 col-6 order-item-title">
-                    Quantity:
-                  </div>
-                  <div className="col-md-10 col-6 order-item-value">
-                    {item.quantity}
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-2 col-6 order-item-title">Price:</div>
-                  <div className="col-md-10 col-6 order-item-value">
-                    ${item.price.toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <OrderItem {...item} key={item.id} />
           ))}
         </Panel>
       </Collapse>

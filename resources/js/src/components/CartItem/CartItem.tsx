@@ -3,7 +3,7 @@ import { removeItemFromCart, updateQuantity } from "@/src/redux/cartSlice";
 import { CartService } from "@/src/services";
 import { ICartItem } from "@/src/types/models";
 import { generateAttributtesCartItem } from "@/src/utils/helpers";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -108,10 +108,10 @@ const CartItem: React.FC<Props> = ({
         </a>
       </td>
       <td className="ps-product__name">
-        <a href="">
+        <Link href={`/shop/product/${associatedModel.slug}`}>
           {name}
           <p>{generateAttributtesCartItem(attributes)}</p>
-        </a>
+        </Link>
       </td>
       <td className="ps-product__meta">
         <span className="ps-product__price">${price.toLocaleString()}</span>

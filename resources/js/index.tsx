@@ -27,5 +27,5 @@ createInertiaApp({
       </Provider>
     );
   },
-  title: (title) => `Signs365 - ${title}`,
+  title: (title) => `Signs7 - ${title}`,
 });

@@ -112,6 +112,21 @@ Route::middleware("auth:sanctum")->group(function () {
     "changePassword",
   ]);
   Route::get("/orders", [OrdersController::class, "list"]);
+
+  Route::get("/order-item/{orderItemID}/images", [
+    OrdersController::class,
+    "getImagesOrderItem",
+  ]);
+
+  Route::post("/order-item/{orderItemID}/images/delete", [
+    OrdersController::class,
+    "orderItemImageDelete",
+  ]);
+
+  Route::post("/order-item/{orderItemID}/images/upload", [
+    OrdersController::class,
+    "orderItemImageUpload",
+  ]);
 });
 
 Route::middleware("auth:sanctum")->get("/user", function (Request $request) {

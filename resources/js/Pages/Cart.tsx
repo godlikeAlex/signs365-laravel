@@ -100,7 +100,7 @@ const Cart: React.FC<Props> = (props: Props) => {
       <div className="cart-empty text-center title-with-icon-section">
         <div className="ps-cart__icon">
           <i
-            className="fa fa-shopping-basket"
+            className="fa-solid fa-basket-shopping"
             style={{ color: "#5b6c8f", fontSize: 120 }}
           ></i>
         </div>
