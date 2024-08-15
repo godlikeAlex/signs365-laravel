@@ -6404,3 +6404,7 @@
 .ps-coming--v1 .ps-countdown__ref {
   display: none;
 }
+
+.footer-bottom-links a {
+  padding: 10px 10px;
+}

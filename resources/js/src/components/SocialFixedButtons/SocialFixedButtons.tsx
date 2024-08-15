@@ -8,15 +8,20 @@ import { Ziggy } from "@/ziggy";
 
 interface Props {}
 
+const excludePages = ["/cart", "/checkout"];
+
 const SocialFixedButtons: React.FC<Props> = ({}: Props) => {
   const socialFixedRef = React.useRef<HTMLUListElement>();
-  const sharedData = usePage<SharedInertiaData>().props;
+  // const sharedData = usePage<SharedInertiaData>().props;
+  const pageData = usePage<SharedInertiaData>();
+
+  const isHomePage = pageData.url === "/";
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
       const screen = e.currentTarget as Window;
 
-      if (route(undefined, undefined, undefined, Ziggy).current() !== "home") {
+      if (isHomePage) {
         socialFixedRef.current.classList.remove("active-right");
         return;
       }
@@ -33,13 +38,15 @@ const SocialFixedButtons: React.FC<Props> = ({}: Props) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isHomePage]);
 
+  if (pageData.url === "/cart" || pageData.url === "/checkout") {
+    return;
+  }
   return (
     <ul
       className={classNames("social-fixed-btns", {
-        "active-right":
-          route(undefined, undefined, undefined, Ziggy).current() === "home",
+        "active-right": !isHomePage,
       })}
       ref={socialFixedRef}
     >
@@ -52,7 +59,10 @@ const SocialFixedButtons: React.FC<Props> = ({}: Props) => {
         </a>
       </li>
       <li>
-        <a href="https://api.whatsapp.com/send?phone=123123">
+        <a
+          href="https://api.whatsapp.com/send?phone=13473302455"
+          target="_blank"
+        >
           <div className="icon-box-social">
             <i className="fab fa-whatsapp"></i>
           </div>
@@ -60,7 +70,7 @@ const SocialFixedButtons: React.FC<Props> = ({}: Props) => {
         </a>
       </li>
       <li>
-        <a href="tel:+1">
+        <a href="tel:+13072008927">
           <div className="icon-box-social">
             <i aria-hidden="true" className="fas fa-phone"></i>
           </div>
@@ -68,14 +78,14 @@ const SocialFixedButtons: React.FC<Props> = ({}: Props) => {
         </a>
       </li>
 
-      <li>
-        <a href="tel:+1">
+      {/* <li>
+        <a href="https://www.instagram.com/easywayinstall/" target="_blank">
           <div className="icon-box-social">
             <i aria-hidden="true" className="fab fa-instagram"></i>
           </div>
           <span>Instagram</span>
         </a>
-      </li>
+      </li> */}
     </ul>
   );
 };

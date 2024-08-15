@@ -7,7 +7,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import Input from "../Input";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -15,6 +15,7 @@ import { BeatLoader } from "react-spinners";
 import PaymentService from "@/src/services/PaymentService";
 import { router, usePage, useRemember } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import GooglePlacesInput from "../GooglePlacesInput";
 
 interface Props {
   paymentIntentId: number | string;
@@ -24,7 +25,7 @@ type Inputs = {
   name: string;
   email: string;
   phone: string;
-  address: string;
+  address: { label: string; value: Record<string, any> };
   notes: string;
   user_id?: any;
 };
@@ -33,7 +34,7 @@ const CheckOutSchema = yup.object({
   name: yup.string().required(),
   email: yup.string().required().email(),
   phone: yup.string().required("Phone is required!"),
-  address: yup.string().required("Address is required!"),
+  address: yup.object().required("Address is required!"),
   notes: yup.string().nullable(),
   user_id: yup.string().nullable(),
 });
@@ -57,6 +58,7 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<Inputs>({
     resolver: yupResolver(CheckOutSchema),
     defaultValues: {
@@ -66,7 +68,7 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: Inputs) => {
     if (!stripe || !elements) {
       return;
     }
@@ -79,41 +81,46 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
       }
     });
 
-    router.post(`/api/checkout/update-order/${paymentIntentId}`, data, {
-      preserveScroll: true,
-      forceFormData: true,
-      onSuccess: async () => {
-        const { error } = await stripe.confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: window.location.href.split("?")[0] + "/success-payment",
-            payment_method_data: {
-              billing_details: {
-                address: {
-                  country: "US",
-                  postal_code: "",
-                  state: "",
-                  city: "",
-                  line1: "",
-                  line2: "",
+    router.post(
+      `/api/checkout/update-order/${paymentIntentId}`,
+      { ...data, address: data.address.label },
+      {
+        preserveScroll: true,
+        forceFormData: true,
+        onSuccess: async () => {
+          const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+              return_url:
+                window.location.href.split("?")[0] + "/success-payment",
+              payment_method_data: {
+                billing_details: {
+                  address: {
+                    country: "US",
+                    postal_code: "",
+                    state: "",
+                    city: "",
+                    line1: "",
+                    line2: "",
+                  },
                 },
               },
             },
-          },
-        });
+          });
 
-        if (error) {
-          setErrorMessage(error.message);
+          if (error) {
+            setErrorMessage(error.message);
 
+            setSubmitting(false);
+          } else {
+            setSubmitting(false);
+          }
+        },
+        onError: () => {
           setSubmitting(false);
-        } else {
-          setSubmitting(false);
-        }
-      },
-      onError: () => {
-        setSubmitting(false);
-      },
-    });
+        },
+      }
+    );
 
     // await PaymentService.updateOrderInCheckout(paymentIntentId as string, data);
   };
@@ -163,15 +170,30 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
               </div>
 
               <div className="col-12 col-md-12">
-                <Input
-                  {...register("address")}
-                  type="tel"
-                  placeholder={"Address"}
-                  error={errors.address?.message}
-                  disabled={submitting}
-                  formType="checkout"
-                  label="Address"
-                />
+                <div className="ps-checkout__group">
+                  <label className="ps-checkout__label">Address</label>
+
+                  <Controller
+                    control={control}
+                    name="address"
+                    render={({ field: { onChange, value } }) => (
+                      <GooglePlacesInput onChange={onChange} value={value} />
+                    )}
+                  />
+
+                  {errors.address?.message ? (
+                    <p
+                      style={{
+                        textTransform: "capitalize",
+                        color: "#ff5252",
+                        fontSize: 12,
+                        marginTop: 8,
+                      }}
+                    >
+                      {errors.address?.message}
+                    </p>
+                  ) : null}
+                </div>
               </div>
 
               <div className="col-12">
@@ -210,6 +232,17 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
                     fields: { billingDetails: { address: "never" } },
                   }}
                 />
+
+                {errorMessage ? (
+                  <p
+                    style={{
+                      textTransform: "capitalize",
+                      color: "#ff5252",
+                    }}
+                  >
+                    {errorMessage}
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>

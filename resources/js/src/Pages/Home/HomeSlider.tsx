@@ -61,10 +61,6 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <div className="ps-banner__desc">
                   No minimum purchase required.
                 </div>
-
-                <a className="bg-warning ps-banner__shop" href="#">
-                  Shop now
-                </a>
               </div>
               <div className="ps-banner__thumnail">
                 <img
@@ -74,7 +70,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 />
                 <img
                   className="ps-banner__image"
-                  src="/img/promotion/free-shipping.png"
+                  src="/img/promotion/freeshipping.png"
                   alt="alt"
                 />
               </div>
@@ -91,6 +87,10 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <h2 className="ps-banner__title">Business Cards</h2>
                 <div className="ps-banner__desc">
                   High-quality printing, fast turnaround, and affordable prices.
+                </div>
+
+                <div className="ps-banner__persen bg-warning ps-center">
+                  19$
                 </div>
               </div>
               <div className="ps-banner__thumnail">

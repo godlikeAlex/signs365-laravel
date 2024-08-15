@@ -24,8 +24,6 @@ const Menu: React.FC<Props> = ({}: Props) => {
     showMiniCart: false,
   });
 
-  console.log(pageData.url.startsWith(`/shop/adhesive-prints`), "props");
-
   return (
     <>
       <header
@@ -124,9 +122,9 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <Link className="nav-link" href="/contacts">
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

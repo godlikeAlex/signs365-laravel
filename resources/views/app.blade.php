@@ -1,6 +1,9 @@
 <!doctype html> <!-- HTML5 -->
 <html lang="en" dir="ltr">
   <head>
+        <title inertia>Signs7</title>
+        <meta inertia name="description" content="At Signs7, we are dedicated to delivering superior outdoor advertising solutions that leave a lasting impression. Our commitment to quality, speed, and innovation sets us apart from the rest.">
+
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <link rel="icon" type="image/png" href="{{asset('/favicon.png')}}">
@@ -33,14 +36,40 @@
         @vite('resources/js/index.tsx')
         <link rel="stylesheet" href="/css/home-4.css">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16652867388">
+        </script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'AW-16652867388');
+        </script>
+
+
+
         @inertiaHead
+
+    @php
+      $remoteIpAddr = $_SERVER['REMOTE_ADDR'];
+    @endphp
+    
+    <script type="text/javascript">
+      var yaParams = { ipaddress: "{{$remoteIpAddr}}" };
+    </script>
+
+ <!-- Yandex.Metrika counter --> 
+    {{-- <script type="text/javascript" > 
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date(); for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }} k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.webvisor.org/metrika/tag_ww.js", "ym"); ym(97932247, "init", { params:window.yaParams, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true, ecommerce:"dataLayer" }); </script> <!-- /Yandex.Metrika counter --> --}}
+
   </head>
   <body>
     @inertia
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/fontawesome.min.js" integrity="sha512-1M9vud0lqoXACA9QaA8IY8k1VR2dMJ2Qmqzt9pN2AH7eQHWpNsxBpaayV0kKkUsF7FLVQ2sA2SSc8w5VOm7/mg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="/plugins/jquery.min.js"></script>
     <script src="/plugins/popper.min.js"></script>

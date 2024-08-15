@@ -79,6 +79,7 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               <figure>
                 {images.slice(0, 2).map((image) => (
                   <img
+                    key={image.thumbnail ? image.thumbnail : image.path}
                     src={`/storage/${
                       image.thumbnail ? image.thumbnail : image.path
                     }`}
@@ -164,29 +165,6 @@ const ProductCard: React.FC<Props> = (props: Props) => {
               </Link>
             </h5>
             <div className="ps-product__actions ps-product__group-mobile">
-              <div className="ps-product__quantity">
-                <div className="def-number-input number-input safari_only">
-                  <button
-                    className="minus"
-                    // onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                  >
-                    <i className="icon-minus"></i>
-                  </button>
-                  <input
-                    className="quantity"
-                    min="0"
-                    name="quantity"
-                    value="1"
-                    type="number"
-                  />
-                  <button
-                    className="plus"
-                    // onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                  >
-                    <i className="icon-plus"></i>
-                  </button>
-                </div>
-              </div>
               <div className="ps-product__cart">
                 <Link
                   className="ps-btn ps-btn--warning"

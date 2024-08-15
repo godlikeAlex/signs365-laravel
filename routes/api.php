@@ -28,6 +28,8 @@ Route::post("/product-request/{product}", [
   "sendProductRequest",
 ]);
 
+Route::post("/request/contacts", [ContactController::class, "requestContacts"]);
+
 Route::middleware("handleCityFromRequest")->group(function () {
   Route::get("/categories", [
     \App\Http\Controllers\Api\CategoryController::class,
@@ -39,7 +41,7 @@ Route::middleware("handleCityFromRequest")->group(function () {
     "category",
   ]);
 
-  Route::get("/shop/{product_category:slug}  ", [
+  Route::get("/shop/{product_category:slug}", [
     \App\Http\Controllers\Api\ShopController::class,
     "products",
   ]);

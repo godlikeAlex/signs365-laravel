@@ -90,7 +90,9 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       <ul className="ps-block__list">
                         {category.products.map((product) => (
                           <li key={`footer-product-${product.id}`}>
-                            <Link href={`/shop/product/${product.slug}`}>
+                            <Link
+                              href={`/shop/${category.slug}/${product.slug}`}
+                            >
                               {product.title}
                             </Link>
                           </li>
@@ -106,15 +108,23 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
         <div className="ps-footer--bottom">
           <div className="row">
             <div className="col-12 col-md-6">
-              <p>Copyright © 2023 Signs7. All Rights Reserved</p>
+              <p>Copyright © 2024 Signs7. All Rights Reserved. </p>
             </div>
             <div className="col-12 col-md-6 text-right">
-              <img src="img/payment.png" alt="" />
+              <img src="/img/payment.png" alt="" />
               <img
                 className="payment-light"
-                src="img/payment-light.png"
+                src="/img/payment-light.png"
                 alt=""
               />
+            </div>
+
+            <div
+              className="col-md-12 text-center footer-bottom-links"
+              style={{ color: "white" }}
+            >
+              <Link href="/terms">Terms and Conditions</Link>
+              <Link href="/privacy">Privacy Policy</Link>
             </div>
           </div>
         </div>

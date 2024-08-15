@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Inertia\CartController;
 use App\Http\Controllers\Inertia\HomeController;
 use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
@@ -69,10 +70,12 @@ Route::post("/cart/toggle-with-installation", [
   CartController::class,
   "toggleExtraInstallation",
 ]);
+
 Route::get("/checkout/success-payment", [
   CartController::class,
   "renderSuccess",
-])->middleware("auth:sanctum");
+]);
+
 Route::get("/checkout", [CartController::class, "renderCheckout"]);
 Route::post("/apply-voucher", [CartController::class, "applyVoucher"]);
 
@@ -103,6 +106,10 @@ Route::get("profile", [
   InertiaProfileController::class,
   "indexProfile",
 ])->middleware("auth:sanctum");
+
+Route::get("/privacy", [HomeController::class, "privacy"]);
+Route::get("/terms", [HomeController::class, "terms"]);
+Route::get("/contacts", [HomeController::class, "contacts"]);
 
 Route::middleware("auth:sanctum")->group(function () {
   Route::get("profile", [InertiaProfileController::class, "indexProfile"]);

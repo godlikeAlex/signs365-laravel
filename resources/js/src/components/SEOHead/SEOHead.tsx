@@ -18,8 +18,8 @@ const SEOHead: React.FC<Props> = ({
   children,
 }: Props) => {
   return (
-    <Head>
-      <title>{title}</title>
+    <Head title={title}>
+      {/* <title>{title}</title> */}
       <meta property="og:title" content={title} />
 
       {description ? <meta name="description" content={description} /> : null}

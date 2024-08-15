@@ -45,6 +45,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
 
           return (
             <section
+              key={`home-section-category-${slug}`}
               className={classNames({
                 "ps-section--featured": true,
                 "main-section": true,
@@ -57,7 +58,10 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                   <div className="row m-0">
                     {/* PRODUCT */}
                     {products.slice(0, 8).map((product, idx) => (
-                      <div className="col-md-3 p-0">
+                      <div
+                        className="col-md-3 p-0"
+                        key={`home-product-${product.slug}`}
+                      >
                         <ProductCard
                           {...product}
                           key={`${product.id}-${idx}`}

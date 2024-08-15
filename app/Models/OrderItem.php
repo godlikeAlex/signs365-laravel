@@ -40,7 +40,7 @@ class OrderItem extends Model
 
   public function sizeItem(): BelongsTo
   {
-    return $this->belongsTo(sizeItem::class);
+    return $this->belongsTo(SizeItem::class);
   }
 
   public function addons(): BelongsToMany

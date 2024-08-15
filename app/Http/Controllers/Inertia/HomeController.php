@@ -23,4 +23,25 @@ class HomeController extends Controller
       "title" => "About Us",
     ]);
   }
+
+  public function privacy()
+  {
+    return Inertia::render("Privacy", [
+      "title" => "Privacy Policy",
+    ]);
+  }
+
+  public function terms()
+  {
+    return Inertia::render("Terms", [
+      "title" => "Terms and Conditions",
+    ]);
+  }
+
+  public function contacts()
+  {
+    return Inertia::render("Contacts", [
+      "title" => "Contacts",
+    ]);
+  }
 }

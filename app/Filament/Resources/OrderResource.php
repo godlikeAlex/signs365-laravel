@@ -712,105 +712,103 @@ class OrderResource extends Resource
           ]),
         ]),
         Tables\Columns\TextColumn::make("city.title"),
-        Tables\Columns\TextColumn::make("total_without_tax")
+        Tables\Columns\TextColumn::make("amount")
           ->sortable()
-          ->money("usd"),
-        Tables\Columns\TextColumn::make("total")
-          ->sortable()
-          ->color("red")
           ->money("usd"),
         Tables\Columns\TextColumn::make("created_at")
           ->sortable()
           ->date($format = "d/m/Y H:i"),
       ])
-      // ->defaultSort("created_at", "desc")
-      // ->filters([
-      //   Tables\Filters\Filter::make("created_at")
-      //     ->form([
-      //       Forms\Components\DatePicker::make("created_from")->placeholder(
-      //         fn($state): string => "Dec 18, " .
-      //           now()
-      //             ->subYear()
-      //             ->format("Y")
-      //       ),
-      //       Forms\Components\DatePicker::make("created_until")->placeholder(
-      //         fn($state): string => now()->format("M d, Y")
-      //       ),
-      //     ])
-      //     ->query(function (Builder $query, array $data): Builder {
-      //       return $query
-      //         ->when(
-      //           $data["created_from"],
-      //           fn(Builder $query, $date): Builder => $query->whereDate(
-      //             "created_at",
-      //             ">=",
-      //             $date
-      //           )
-      //         )
-      //         ->when(
-      //           $data["created_until"],
-      //           fn(Builder $query, $date): Builder => $query->whereDate(
-      //             "created_at",
-      //             "<=",
-      //             $date
-      //           )
-      //         );
-      //     })
-      //     ->indicateUsing(function (array $data): array {
-      //       $indicators = [];
-      //       if ($data["created_from"] ?? null) {
-      //         $indicators["created_from"] =
-      //           "Order from " .
-      //           Carbon::parse($data["created_from"])->toFormattedDateString();
-      //       }
-      //       if ($data["created_until"] ?? null) {
-      //         $indicators["created_until"] =
-      //           "Order until " .
-      //           Carbon::parse($data["created_until"])->toFormattedDateString();
-      //       }
+      ->defaultSort("created_at", "desc")
+      ->filters([
+        Tables\Filters\Filter::make("created_at")
+          ->form([
+            Forms\Components\DatePicker::make("created_from")->placeholder(
+              fn($state): string => "Dec 18, " .
+                now()
+                  ->subYear()
+                  ->format("Y")
+            ),
+            Forms\Components\DatePicker::make("created_until")->placeholder(
+              fn($state): string => now()->format("M d, Y")
+            ),
+          ])
+          ->query(function (Builder $query, array $data): Builder {
+            return $query
+              ->when(
+                $data["created_from"],
+                fn(Builder $query, $date): Builder => $query->whereDate(
+                  "created_at",
+                  ">=",
+                  $date
+                )
+              )
+              ->when(
+                $data["created_until"],
+                fn(Builder $query, $date): Builder => $query->whereDate(
+                  "created_at",
+                  "<=",
+                  $date
+                )
+              );
+          })
+          ->indicateUsing(function (array $data): array {
+            $indicators = [];
+            if ($data["created_from"] ?? null) {
+              $indicators["created_from"] =
+                "Order from " .
+                Carbon::parse($data["created_from"])->toFormattedDateString();
+            }
+            if ($data["created_until"] ?? null) {
+              $indicators["created_until"] =
+                "Order until " .
+                Carbon::parse($data["created_until"])->toFormattedDateString();
+            }
 
-      //       return $indicators;
-      //     }),
-      //   Tables\Filters\Filter::make("status")
-      //     ->form([
-      //       Forms\Components\Select::make("status")
-      //         ->options(function () {
-      //           return collect(OrderStatusEnum::cases())
-      //             ->mapWithKeys(fn($enum) => [$enum->value => $enum->name])
-      //             ->all();
-      //         })
-      //         ->searchable(),
-      //     ])
-      //     ->query(function (Builder $query, array $data) {
-      //       if (isset($data["status"])) {
-      //         $query->where("status", $data["status"]);
-      //       }
-      //     }),
-      //   Tables\Filters\Filter::make("city_id")
-      //     ->form([
-      //       Forms\Components\Select::make("city_id")
-      //         ->label("City")
-      //         ->searchable()
-      //         ->options(City::query()->pluck("title", "id")),
-      //     ])
-      //     ->query(function (Builder $query, array $data) {
-      //       if (isset($data["city_id"])) {
-      //         $query->where("city_id", $data["city_id"]);
-      //       }
-      //     }),
-      //   Tables\Filters\Filter::make("user_id")
-      //     ->form([
-      //       Forms\Components\Select::make("user_id")
-      //         ->label("User")
-      //         ->searchable()
-      //         ->options(User::query()->pluck("name", "id")),
-      //     ])
-      //     ->query(function (Builder $query, array $data) {
-      //       if (isset($data["user_id"])) {
-      //         $query->where("user_id", $data["user_id"]);
-      //       }
-      //     }),
-      // ])
+            return $indicators;
+          }),
+        Tables\Filters\Filter::make("status")
+          ->form([
+            Forms\Components\Select::make("status")
+              ->options(function () {
+                return collect(OrderStatusEnum::cases())
+                  ->mapWithKeys(fn($enum) => [$enum->value => $enum->name])
+                  ->all();
+              })
+              ->searchable(),
+          ])
+          ->query(function (Builder $query, array $data) {
+            if (isset($data["status"])) {
+              return $query->where("status", $data["status"]);
+            }
+
+            $query->where("status", "!=", OrderStatusEnum::UNPAID);
+          }),
+        Tables\Filters\Filter::make("city_id")
+          ->form([
+            Forms\Components\Select::make("city_id")
+              ->label("City")
+              ->searchable()
+              ->options(City::query()->pluck("title", "id")),
+          ])
+          ->query(function (Builder $query, array $data) {
+            if (isset($data["city_id"])) {
+              $query->where("city_id", $data["city_id"]);
+            }
+          }),
+        Tables\Filters\Filter::make("user_id")
+          ->form([
+            Forms\Components\Select::make("user_id")
+              ->label("User")
+              ->searchable()
+              ->options(User::query()->pluck("name", "id")),
+          ])
+          ->query(function (Builder $query, array $data) {
+            if (isset($data["user_id"])) {
+              $query->where("user_id", $data["user_id"]);
+            }
+          }),
+      ])
       ->actions([Tables\Actions\EditAction::make()])
       ->bulkActions([
         Tables\Actions\DeleteBulkAction::make(),

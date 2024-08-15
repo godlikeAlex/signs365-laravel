@@ -55,7 +55,7 @@ const CatalogProducts: React.FC<Props> = ({
           {products.length > 0 ? (
             products.map((product, idx) => (
               <div
-                className="col-6 col-lg-4 col-xl-3 p-0"
+                className="col-12 col-lg-4 col-xl-3 p-0"
                 key={`${product.id}-${idx}`}
               >
                 <ProductCard
