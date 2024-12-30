@@ -27,6 +27,7 @@ const CartMiniItem: React.FC<CartMiniItemProps> = ({
         },
         {
           onSuccess: () => {
+            console.log("HELLO WORLD");
             toast(`Successfully removed ${name}`, {
               type: "success",
             });

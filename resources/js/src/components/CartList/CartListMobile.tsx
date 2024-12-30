@@ -4,6 +4,7 @@ import { ICartItem } from "@/src/types/models";
 import React from "react";
 import { toast } from "react-toastify";
 import { generateAttributtesCartItem } from "@/src/utils/helpers";
+import { router } from "@inertiajs/react";
 
 interface Props {
   items: ICartItem[];
@@ -12,13 +13,21 @@ interface Props {
 const CartListMobile: React.FC<Props> = ({ items }: Props) => {
   const dispatch = useAppDispatch();
 
-  const removeItem = async (id: string) => {
+  const removeItem = async (id) => {
     try {
-      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
-
-      toast(`Successfully removed ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/remove-item",
+        {
+          item_id: id,
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully removed ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while removing item", { type: "error" });
     }

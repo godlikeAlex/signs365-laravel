@@ -11,7 +11,12 @@ use Mail;
 
 class ContactController extends Controller
 {
-  private $recipient = "info@signs7.com";
+  private $recipient;
+
+  public function __construct()
+  {
+    $this->recipient = env("NOTIFICATION_EMAIL");
+  }
 
   public function sendProductRequest(Request $request, Product $product)
   {
@@ -20,20 +25,31 @@ class ContactController extends Controller
       "email" => "required",
     ]);
 
-    Mail::to($this->recipient)->send(
-      new ProductRequest(
-        $request->input("name"),
-        $request->input("email"),
-        $product->title
-      )
-    );
+    foreach (
+      [
+        env("NOTIFICATION_EMAIL"),
+        "viktor@easywayinstall.com",
+        "david@easywayinstall.com",
+      ]
+      as $email
+    ) {
+      Mail::to($email)->later(
+        now()->addMinute(),
+        new ProductRequest(
+          $request->input("name"),
+          $request->input("email"),
+          $product->title
+        )
+      );
+    }
 
     return ["ok" => true];
   }
 
   public function requestContacts(Request $request)
   {
-    Mail::to($this->recipient)->send(
+    Mail::to($this->recipient)->later(
+      now()->addMinute(),
       new RequestContact(
         $request->input("name"),
         $request->input("phone"),

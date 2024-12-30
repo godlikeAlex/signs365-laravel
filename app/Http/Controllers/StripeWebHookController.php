@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
+use App\Notifications\OrderPaid;
 use App\Services\VoucherService;
+use Notification;
 
 class StripeWebHookController extends Controller
 {
@@ -67,6 +69,17 @@ class StripeWebHookController extends Controller
               "voucher_id" => null,
             ]);
           }
+        }
+
+        foreach (
+          [
+            env("NOTIFICATION_EMAIL"),
+            "viktor@easywayinstall.com",
+            "david@easywayinstall.com",
+          ]
+          as $email
+        ) {
+          Notification::route("mail", $email)->notify(new OrderPaid($order));
         }
 
       case "setup_intent.canceled":
