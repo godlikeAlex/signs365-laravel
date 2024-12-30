@@ -55,6 +55,11 @@ const ProductQuantityList: React.FC<Props> = ({
             ...base,
             background: "#f0f2f5",
             color: "5b6c8f",
+            // zIndex: 99,
+            // position: 'relative'
+          }),
+          menu: (base) => ({
+            ...base,
             zIndex: 9
           }),
           option: (baseStyles, state) => ({
