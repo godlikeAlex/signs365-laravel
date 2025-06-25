@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,11 +20,12 @@ class CreateOrdersTable extends Migration
       $table->uuid("uuid")->unique();
       $table->foreignId("user_id")->nullable();
       $table->foreignId("city_id")->nullable();
+      $table->string("payment_intent_id")->nullable();
 
-      $table->string("status")->default("pending");
+      $table->string("status")->default(OrderStatusEnum::UNPAID);
 
-      $table->integer("total")->nullable();
-      $table->integer("total_without_tax")->nullable();
+      $table->integer("amount")->nullable();
+      $table->integer("tax")->nullable();
 
       $table
         ->foreign("user_id")

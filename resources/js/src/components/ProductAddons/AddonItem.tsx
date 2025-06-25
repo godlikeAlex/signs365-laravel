@@ -10,24 +10,38 @@ import {
 } from "@/src/redux/singleProductSlice";
 import { Addon } from "@/src/types/ProductModel";
 import ExtraDataSelect from "./ExtraDataSelect";
+import { useProductContext } from "@/src/contexts/MainProductContext";
+import {
+  ProductActionKind,
+  SelectedAddon,
+} from "@/src/reducers/ProductReducer";
 
 interface Props {
-  addon: AddonWithExtraFields;
-  error?: string;
+  addon: Addon;
   disabled: boolean;
 }
 
-const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
-  const { withQuantity, title, id, condition, isSelected } = addon;
-  const dispatch = useAppDispatch();
+const AddonItem: React.FC<Props> = ({ addon, disabled }: Props) => {
+  const { state, dispatch } = useProductContext();
+  const { selectedAddons } = state;
+  const selectedAddon = selectedAddons.find((a) => addon.id === a.id);
 
-  const handleOnClick = (e: React.MouseEvent<HTMLElement>) => {
+  const { withQuantity, title } = addon;
+
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     let target = e.target as HTMLElement;
 
     if (disabled) return;
 
     if (target.classList.contains("can-toggle")) {
-      dispatch(handleAddonChange(addon));
+      if (selectedAddon) {
+        return dispatch({
+          type: ProductActionKind.REMOVE_ADDON,
+          payload: { id: addon.id },
+        });
+      }
+
+      dispatch({ type: ProductActionKind.SELECT_ADDON, payload: { addon } });
     }
   };
 
@@ -35,53 +49,78 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
     const { value } = e.target;
     let currentValue = +value;
 
-    if (!currentValue) return;
-
     if (disabled) return;
 
-    if (addon.withQuantity) {
-      if (currentValue >= addon.validation["max-qty"]) {
-        currentValue = addon.validation["max-qty"];
-      }
-
-      if (currentValue <= addon.validation["min-qty"]) {
-        currentValue = addon.validation["min-qty"];
-      }
+    if (!addon.withQuantity) {
+      return;
     }
 
-    dispatch(
-      updateAddonQuantity({ addonID: addon.id, quantity: currentValue })
-    );
+    const maxQty = addon.validation["max-qty"];
+    const minQty = addon.validation["min-qty"];
+
+    if (currentValue < minQty || !value) {
+      dispatch({
+        type: ProductActionKind.SET_ERROR_TO_ADDON,
+        payload: {
+          selectedAddonID: addon.id,
+          error: `The minimum quantity must be ${minQty}.`,
+        },
+      });
+    } else if (currentValue > maxQty) {
+      dispatch({
+        type: ProductActionKind.SET_ERROR_TO_ADDON,
+        payload: {
+          selectedAddonID: addon.id,
+          error: `The maximum quantity must be ${maxQty}.`,
+        },
+      });
+    } else {
+      dispatch({
+        type: ProductActionKind.SET_ERROR_TO_ADDON,
+        payload: {
+          selectedAddonID: addon.id,
+          error: undefined,
+        },
+      });
+    }
+
+    dispatch({
+      type: ProductActionKind.CHANGE_ADDON_QUANTITY,
+      payload: {
+        selectedAddonID: selectedAddon.id,
+        quantity: Number.isNaN(currentValue)
+          ? selectedAddon.quantity
+          : currentValue,
+      },
+    });
   };
 
   const handlePressButtonQuantity = (type: "+" | "-") => {
-    if (!addon.withQuantity) return;
+    if (!selectedAddon.withQuantity) return;
 
-    const increasedQuantity =
-      addon.quantity + 1 >= addon.validation["max-qty"]
-        ? addon.validation["max-qty"]
-        : addon.quantity + 1;
+    const maxQty = selectedAddon.validation["max-qty"];
+    const minQty = selectedAddon.validation["min-qty"];
 
-    const decreasedQuantity =
-      addon.quantity - 1 <= addon.validation["min-qty"]
-        ? addon.validation["min-qty"]
-        : addon.quantity - 1;
+    const increasedQuantity = Math.min(selectedAddon.quantity + 1, maxQty);
 
-    dispatch(
-      updateAddonQuantity({
-        addonID: addon.id,
+    const decreasedQuantity = Math.max(selectedAddon.quantity - 1, minQty);
+
+    dispatch({
+      type: ProductActionKind.CHANGE_ADDON_QUANTITY,
+      payload: {
+        selectedAddonID: selectedAddon.id,
         quantity: type === "+" ? increasedQuantity : decreasedQuantity,
-      })
-    );
+      },
+    });
   };
 
   return (
     <div
       className={classNames("product-variant product-addon can-toggle", {
-        "active-variant": isSelected,
+        "active-variant": selectedAddon,
         "disabled-variant": disabled,
       })}
-      onClick={handleOnClick}
+      onClick={handleClick}
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -91,7 +130,7 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
     >
       <h6 className="can-toggle">{title}</h6>
 
-      {withQuantity && isSelected ? (
+      {withQuantity && selectedAddon ? (
         <div className="can-toggle">
           <div className="quantity-container-addon">
             <div
@@ -102,7 +141,7 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
             </div>
             <input
               className="qty-input-addon"
-              value={addon.quantity}
+              value={selectedAddon.quantity}
               min={addon.validation["min-qty"]}
               max={addon.validation["max-qty"]}
               onChange={handleChangeQuantity}
@@ -114,16 +153,15 @@ const AddonItem: React.FC<Props> = ({ addon, error, disabled }: Props) => {
               <i className="icon-plus" />
             </div>
           </div>
-          {error && (
+          {selectedAddon.error && (
             <div style={{ color: "red", fontSize: 12, marginTop: 5 }}>
-              {error}
+              {selectedAddon.error}
             </div>
           )}
         </div>
       ) : null}
-
-      {isSelected ? (
-        <ExtraDataSelect addon={addon} type={addon.extra_data_type} />
+      {selectedAddon ? (
+        <ExtraDataSelect addon={selectedAddon} type={addon.extra_data_type} />
       ) : null}
     </div>
   );

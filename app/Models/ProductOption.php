@@ -26,10 +26,13 @@ class ProductOption extends Model
   protected $casts = [
     "range_prices" => "array",
     "common_data" => "json",
+    "per_quantity_prices" => "json",
+    "quantity_list" => "json",
     "type" => OptionTypeEnum::class,
     "show_custom_sizes" => "boolean",
     "size_for_collect" => "boolean",
     "need_file" => "boolean",
+    "prevent_user_input_size" => "boolean",
   ];
 
   public function products(): BelongsToMany
@@ -42,14 +45,9 @@ class ProductOption extends Model
     );
   }
 
-  public function addons(): BelongsToMany
+  public function addons(): HasMany
   {
-    return $this->belongsToMany(
-      ProductAddons::class,
-      "product_option_product_addon",
-      "product_option_id",
-      "product_addon_id"
-    );
+    return $this->hasMany(ProductAddons::class);
   }
 
   public function product(): BelongsTo

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use App\DTO\CalculatorDTO;
 use App\Enums\OptionTypeEnum;
 use App\Enums\OrderStatusEnum;
 use App\Filament\Resources\OrderResource\Pages;
@@ -18,7 +19,8 @@ use App\Models\ProductSize;
 use App\Models\ProductVariant;
 use App\Models\SizeItem;
 use App\Models\User;
-use App\Services\Calculator\Service as Calculator;
+use App\Models\Voucher;
+use App\Services\CalculatorService;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
@@ -110,6 +112,34 @@ class OrderResource extends Resource
             ->relationship("city", "title"),
         ]),
 
+      Forms\Components\Section::make("Voucher")
+        ->hidden(fn($get) => !$get("user_id"))
+        ->schema([
+          Forms\Components\Select::make("voucher_id")
+            ->relationship("voucher", "name")
+            ->disabled(
+              fn(string $context) => $context === "view" || $context === "edit"
+            )
+            ->options(function (Closure $get, string $context) {
+              $user = User::find($get("user"));
+
+              if ($context === "view" || $context === "edit") {
+                return Voucher::all()->pluck("name", "id");
+              }
+
+              $vouchers = Voucher::usesNotReached()
+                ->filter(fn($voucher) => $voucher->isAvailableNow())
+                ->filter(
+                  fn($voucher) => $user
+                    ? !$voucher->userReachedMaximumUses($user)
+                    : true
+                );
+
+              return $vouchers->pluck("name", "id");
+            })
+            ->reactive(),
+        ]),
+
       Forms\Components\Section::make("Order Items")->schema([
         // Forms\Components\Toggle::make("update_order")
         //   ->dehydrated(false)
@@ -165,6 +195,25 @@ class OrderResource extends Resource
                   ->options()
                   ->get()
                   ->pluck("title", "id");
+              })
+              ->afterStateUpdated(function (\Closure $set, $state) {
+                if (!$state) {
+                  return;
+                }
+
+                $productOption = ProductOption::find($state);
+
+                if (!$productOption) {
+                  return;
+                }
+
+                if (
+                  $productOption->size_for_collect &&
+                  !$productOption->sizeList
+                ) {
+                  $set("width", $productOption->common_data["static_width"]);
+                  $set("height", $productOption->common_data["static_height"]);
+                }
               })
               ->reactive()
               ->required(),
@@ -232,8 +281,6 @@ class OrderResource extends Resource
                 foreach ($childComponentContainers as $itemKey => $item) {
                   $itemData = $item->getState(shouldCallHooksBefore: true);
 
-                  info($itemData, ["itemdata" => 1]);
-
                   $dataForSyncRelation[$itemData["product_addons_id"]] = [
                     "quantity" => $itemData["quantity"] ?? 0,
                   ];
@@ -284,8 +331,6 @@ class OrderResource extends Resource
                   ->hidden(function (\Closure $get) {
                     $product_addons_id = $get("product_addons_id");
 
-                    info($product_addons_id);
-
                     if (!$product_addons_id) {
                       return true;
                     }
@@ -306,11 +351,15 @@ class OrderResource extends Resource
                       return;
                     }
 
-                    if (!$record->extra_data || is_null($record->extra_data)) {
+                    if (
+                      !$record->extra_data ||
+                      is_null($record->extra_data) ||
+                      count($record->extra_data) == 0
+                    ) {
                       return;
                     }
 
-                    list($extra_data) = json_decode($record->extra_data, true);
+                    list($extra_data) = $record->extra_data;
 
                     $mappedData = array_map(
                       fn($item) => $item["title"],
@@ -471,6 +520,17 @@ class OrderResource extends Resource
                 \Closure $set,
                 string $context
               ) {
+                // return;
+                // dd($context === "edit", $get("../../update_order") === false);
+
+                // $set(
+                //   "shipping_price_view",
+                //   number_format($get("shipping_price") / 100, 2)
+                // );
+
+                // return number_format($get("price") / 100, 2);
+
+                // maybe later
                 if (
                   $context === "edit" &&
                   $get("../../update_order") === false
@@ -486,11 +546,9 @@ class OrderResource extends Resource
                 $product_id = $get("product_id");
                 $option_id = $get("product_option_id");
                 $quantity = $get("quantity");
-                $unit = $get("unit");
+                $unit = $get("unit") ?? "inches";
                 $width = $get("width");
                 $height = $get("height");
-
-                info($get("addons"));
 
                 $addons = collect($get("addons"))
                   ->values()
@@ -506,21 +564,23 @@ class OrderResource extends Resource
                   return;
                 }
 
-                $calculator = new Calculator(
+                $calculatorServiceDTO = new CalculatorDTO(
                   $product_id,
+                  $option_id,
                   $width,
                   $height,
-                  $addons,
-                  $option_id,
-                  unit: $unit,
-                  quantity: $quantity
+                  $quantity,
+                  $addons->toArray(),
+                  $unit
                 );
+
+                $calculator = new CalculatorService();
 
                 list(
                   $priceInCents,
                   $priceInDollars,
                   $shippingPrice,
-                ) = $calculator->calculate();
+                ) = $calculator->calculate($calculatorServiceDTO);
 
                 $set("price", $priceInCents);
                 $set("shipping_price", $shippingPrice);
@@ -571,30 +631,13 @@ class OrderResource extends Resource
         ->disabled()
         ->columns(3)
         ->schema([
-          Forms\Components\Placeholder::make("total_items_view")
-            ->label("Total Witout Tax")
-            ->content(function (Closure $get, Closure $set) {
-              $total = 0;
-
-              foreach ($get("orderItems") as $orderItem) {
-                if ($orderItem["price"]) {
-                  $total += $orderItem["price"];
-                }
-              }
-
-              $set("total_without_tax", $total);
-
-              return number_format($total / 100, 2) . ' $';
-            }),
-
           Forms\Components\Placeholder::make("total_view")
             ->label("Total")
             ->content(function (Closure $get, Closure $set) {
-              $total = 0;
+              $totalItems = 0;
               $city_id = $get("city_id");
               $city = City::find($city_id);
-
-              info("blad");
+              $voucher = Voucher::find($get("voucher_id"));
 
               if (!$city) {
                 return;
@@ -602,18 +645,40 @@ class OrderResource extends Resource
 
               foreach ($get("orderItems") as $orderItem) {
                 if ($orderItem["price"]) {
-                  $total += $orderItem["price"];
+                  $totalItems += $orderItem["price"];
                 }
               }
 
-              $tax = $city->tax * $total;
+              $tax = $city->tax * $totalItems;
+              $total = $tax + $totalItems;
+              $discount = 0;
 
-              $set("total", $total + $tax);
+              if ($voucher) {
+                $discount = $voucher->getDiscount($total);
 
-              return number_format(($total + $tax) / 100, 2) . ' $';
+                $total -= $discount;
+              }
+
+              $taxFormat = number_format($tax / 100, 2) . "$";
+              $discountFormat = number_format($discount / 100, 2) . "$";
+              $totalFormat = number_format($total / 100, 2) . "$";
+
+              $set("amount", $total);
+              $set("tax", $tax);
+              $set("voucher_discount", $discount);
+
+              return new HtmlString(
+                "
+                  <b>Tax</b>: $taxFormat; <br />
+                  <b>Discount</b>: $discountFormat; <br/>
+                  <b>Amount</b>: $totalFormat;
+                "
+              );
             }),
-          Forms\Components\Hidden::make("total"),
-          Forms\Components\Hidden::make("total_without_tax"),
+
+          Forms\Components\Hidden::make("amount"),
+          Forms\Components\Hidden::make("tax"),
+          Forms\Components\Hidden::make("voucher_discount"),
         ]),
     ]);
   }
@@ -647,12 +712,8 @@ class OrderResource extends Resource
           ]),
         ]),
         Tables\Columns\TextColumn::make("city.title"),
-        Tables\Columns\TextColumn::make("total_without_tax")
+        Tables\Columns\TextColumn::make("amount")
           ->sortable()
-          ->money("usd"),
-        Tables\Columns\TextColumn::make("total")
-          ->sortable()
-          ->color("red")
           ->money("usd"),
         Tables\Columns\TextColumn::make("created_at")
           ->sortable()
@@ -718,8 +779,10 @@ class OrderResource extends Resource
           ])
           ->query(function (Builder $query, array $data) {
             if (isset($data["status"])) {
-              $query->where("status", $data["status"]);
+              return $query->where("status", $data["status"]);
             }
+
+            $query->where("status", "!=", OrderStatusEnum::UNPAID);
           }),
         Tables\Filters\Filter::make("city_id")
           ->form([
@@ -780,6 +843,10 @@ class OrderResource extends Resource
     $productOption = $product->options()->find($product_option_id);
 
     if ($productOption->sizeList) {
+      return false;
+    }
+
+    if ($productOption->size_for_collect) {
       return false;
     }
 

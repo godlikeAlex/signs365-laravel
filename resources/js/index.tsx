@@ -1,14 +1,31 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import App from "./App";
+// import App from "./App";
 import { store } from "./src/store";
+import { createInertiaApp } from "@inertiajs/react";
+import { DefaultLayout } from "./Layouts";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const container = document.getElementById("root");
-const root = createRoot(container as HTMLElement);
+createInertiaApp({
+  resolve: (name) => {
+    const pages = import.meta.glob("./Pages/**/*.tsx", { eager: true });
+    let page: any = pages[`./Pages/${name}.tsx`];
 
-root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+    if (name !== "Error") {
+      page.default.layout =
+        page.default.layout ||
+        ((page) => <DefaultLayout>{page}</DefaultLayout>);
+    }
+
+    return page;
+  },
+  setup({ el, App, props }) {
+    createRoot(el).render(
+      <Provider store={store}>
+        <App {...props} />
+      </Provider>
+    );
+  },
+  title: (title) => `Signs7 - ${title}`,
+});

@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ProductRequest extends Mailable
+class ProductRequest extends Mailable implements ShouldQueue
 {
   use Queueable, SerializesModels;
   public $name;

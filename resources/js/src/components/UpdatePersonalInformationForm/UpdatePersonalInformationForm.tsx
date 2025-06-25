@@ -1,97 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
-import * as yup from "yup";
-import { useAppDispatch, useAppSelector } from "@/src/hooks";
 import Input from "../Input";
 import { toast } from "react-toastify";
 import axiosErrorGrab, {
   isCustomAxisError,
 } from "@/src/helpers/axiosErrorGrabber";
-import { login, updateUser } from "@/src/redux/authSlice";
-import { EditProfileParams } from "@/src/types/servicesParams";
-import UserService from "@/src/services/UserService";
+import { useForm, usePage } from "@inertiajs/react";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import { UserService } from "@/src/services";
 
 interface Props {}
 
-const EditSchema = yup.object({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  avatar: yup.mixed().nullable(),
-  preview: yup.string().nullable(),
-});
-
 const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
-  const [isSubmiting, setIsSubmiting] = useState(false);
-  const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    getValues,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<EditProfileParams>({
-    resolver: yupResolver(EditSchema),
-    defaultValues: {
-      name: user?.name,
-      email: user?.email,
-      avatar: undefined,
-      preview:
-        user && user.avatar
-          ? `/storage/${user.avatar}`
-          : "/default-profile.png",
-    },
+  const { auth } = usePage<SharedInertiaData>().props;
+  const [preview, setPreview] = useState<string>(
+    auth.user && auth.user.avatar
+      ? `/storage/${auth.user.avatar}`
+      : "/default-profile.png"
+  );
+  const { data, setData, errors, processing, post } = useForm({
+    name: auth.user.name,
+    email: auth.user.email,
+    avatar: undefined,
+    preview:
+      auth.user && auth.user.avatar
+        ? `/storage/${auth.user.avatar}`
+        : "/default-profile.png",
   });
 
-  const onSubmit: SubmitHandler<EditProfileParams> = async (data) => {
-    setIsSubmiting(true);
+  const onSubmit = async (e) => {
+    e.preventDefault();
 
-    try {
-      const { data: editedUser } = await UserService.editProfile(data);
-
-      dispatch(updateUser(editedUser));
-      setIsSubmiting(false);
-      toast("Profile updated!", { type: "success" });
-
-      reset({
-        name: editedUser.name,
-        email: editedUser.email,
-        avatar: null,
-        preview: editedUser.avatar
-          ? `/storage/${editedUser.avatar}`
-          : "/default-profile.png",
-      });
-    } catch (error) {
-      setIsSubmiting(false);
-
-      const err = axiosErrorGrab(error);
-
-      if (!isCustomAxisError(err)) {
-        return;
-      }
-
-      console.log(err);
-
-      if (err.type === "message") {
-        toast(err.error, { type: "error" });
-      }
-
-      if (err.type === "validation") {
-        let errors = err.errors;
-        Object.keys(errors).forEach((errInput) => {
-          errors[errInput].forEach((errMessage) => {
-            toast(errMessage, { type: "error" });
-          });
-        });
-      }
-    }
+    post("/api/profile/edit", {
+      forceFormData: true,
+      preserveScroll: true,
+      onSuccess: () => toast("User information updated", { type: "success" }),
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <div className="ps-form--review">
         <h2 className="ps-form__title">Personal Information</h2>
 
@@ -105,16 +52,18 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
           }}
         >
           <img
-            src={watch("preview")}
+            src={data.preview}
             style={{ width: 120, height: 120, borderRadius: 120 }}
           />
 
           <input
             onChange={(e) => {
               if (e.target.files) {
-                console.log(URL.createObjectURL(e.target.files[0]));
-                setValue("preview", URL.createObjectURL(e.target.files[0]));
-                setValue("avatar", e.target.files[0]);
+                setData({
+                  ...data,
+                  preview: URL.createObjectURL(e.target.files[0]),
+                  avatar: e.target.files[0],
+                });
               }
             }}
             type="file"
@@ -128,18 +77,20 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
         </div>
 
         <Input
-          {...register("name")}
+          value={data.name}
+          onChange={(e) => setData("name", e.target.value)}
           type="text"
-          error={errors.name?.message}
-          disabled={isSubmiting}
+          error={errors.name}
+          disabled={processing}
           formType="profile"
         />
 
         <Input
-          {...register("email")}
+          value={data.email}
+          onChange={(e) => setData("email", e.target.value)}
           type="email"
-          error={errors.email?.message}
-          disabled={isSubmiting}
+          error={errors.email}
+          disabled={processing}
           formType="profile"
         />
 

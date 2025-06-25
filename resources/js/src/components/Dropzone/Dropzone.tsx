@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 
 interface Props {
   onDrop: (files: FileState[]) => void;
+  files: FileState[];
+  withThumbs?: boolean;
 }
 
 export interface FileState extends File {
@@ -68,31 +70,25 @@ const img = {
   height: "100%",
 };
 
-const Dropzone: React.FC<Props> = ({ onDrop }: Props) => {
-  const [files, setFiles] = useState<FileState[]>([]);
-
+const Dropzone: React.FC<Props> = ({
+  onDrop,
+  files,
+  withThumbs = true,
+}: Props) => {
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
       accept: { "image/*": [] },
       onDrop(acceptedFiles, fileRejections, event) {
-        setFiles(
-          acceptedFiles.map((file) =>
-            Object.assign(file, { preview: URL.createObjectURL(file) })
-          )
+        const files = acceptedFiles.map((file) =>
+          Object.assign(file, { preview: URL.createObjectURL(file) })
         );
-        console.log(acceptedFiles);
+        onDrop(files);
       },
     });
 
   useEffect(() => {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
-
-  useEffect(() => {
-    if (onDrop) {
-      onDrop(files);
-    }
-  }, [files]);
 
   const style = useMemo(
     () => ({
@@ -111,9 +107,9 @@ const Dropzone: React.FC<Props> = ({ onDrop }: Props) => {
           src={file.preview}
           style={img}
           // Revoke data uri after image is loaded
-          onLoad={() => {
-            URL.revokeObjectURL(file.preview);
-          }}
+          // onLoad={() => {
+          //   URL.revokeObjectURL(file.preview);
+          // }}
         />
       </div>
     </div>
@@ -126,16 +122,18 @@ const Dropzone: React.FC<Props> = ({ onDrop }: Props) => {
         <div>Drag 'n' drop some files here, or click to select files</div>
       </div>
 
-      <aside
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 15,
-          flexWrap: "wrap",
-        }}
-      >
-        {thumbs}
-      </aside>
+      {withThumbs ? (
+        <aside
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginTop: 15,
+            flexWrap: "wrap",
+          }}
+        >
+          {thumbs}
+        </aside>
+      ) : null}
     </div>
   );
 };

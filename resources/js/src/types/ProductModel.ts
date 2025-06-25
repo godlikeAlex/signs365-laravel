@@ -46,6 +46,11 @@ type ProductOptionType =
   | ProductOptionTypeSingle
   | ProductOptionTypeQty;
 
+export interface IQuantityListItem {
+  label: string;
+  quantity: number;
+}
+
 export type ProductOption = ProductOptionType & {
   id: number;
   title: string;
@@ -53,6 +58,9 @@ export type ProductOption = ProductOptionType & {
   addons: Addon[];
   showCalculator: boolean;
   need_file: boolean;
+  show_custom_sizes: boolean;
+  prevent_user_input_size: boolean;
+  quantity_list?: IQuantityListItem[];
   validation: {
     max_width: string;
     max_height: string;
@@ -64,7 +72,6 @@ type ProudctAddonHasValidation =
   | {
       withQuantity: true;
       validation: { ["min-qty"]: number; ["max-qty"]: number };
-      quantity: number;
     };
 
 export type ExtraDataType = "unset" | "grommets" | "pole_pocket";
@@ -75,6 +82,7 @@ export type Addon = ProudctAddonHasValidation & {
   condition: string;
   isSelected: boolean;
   extra_data_type: ExtraDataType;
+  group_addon?: string;
 };
 
 type ProductHasCheckout =
@@ -89,9 +97,10 @@ export type ProductImage = {
   id: number;
   path: string;
   alt?: null | string;
+  thumbnail: string;
 };
 
-export type IProduct = ProductHasCheckout & {
+type IProductBase = {
   id: number;
   title: string;
   slug: string;
@@ -108,3 +117,15 @@ export type IProduct = ProductHasCheckout & {
   images?: null | ProductImage[];
   categories?: Pick<ICategory, "title" | "slug" | "id">[];
 };
+
+export interface IProductCheckout extends IProductBase {
+  with_checkout: true;
+  options: ProductOption[];
+  start_at: number;
+}
+
+export interface IProductDefault extends IProductBase {
+  with_checkout: false;
+}
+
+export type IProduct = IProductDefault | IProductCheckout;

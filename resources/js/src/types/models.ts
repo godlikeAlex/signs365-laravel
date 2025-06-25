@@ -16,8 +16,8 @@ export interface IOrder {
   id: number;
   uuid: string;
   status: string;
-  total: number;
-  total_without_tax: number;
+  amount: number;
+  tax: number;
   address: string;
   created_at: string;
   order_items: IOrderItem[];
@@ -29,6 +29,7 @@ export interface IOrderItem {
   price: number;
   product_variant_title: string;
   product: IProduct;
+  images: string[];
 }
 
 export interface ICategory {
@@ -61,6 +62,7 @@ export interface ICartItem {
     product: {
       id: number;
       title: string;
+      slug: string;
     };
     customSize?: {
       id: number;
@@ -70,10 +72,19 @@ export interface ICartItem {
   associatedModel: IProduct;
 }
 
+export interface IVoucher {
+  discountAmount: number;
+  id: number;
+  name: string;
+  value: string;
+}
+
 export interface ICart {
   items: ICartItem[];
   tax: number;
   total: number;
+  voucher?: IVoucher;
+  discount_voucher?: number;
   total_with_tax: number;
 }
 

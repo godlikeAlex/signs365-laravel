@@ -64,6 +64,7 @@ export function withProductControl<
       typeSizeSelection: "custom",
       highlightErrors: false,
       disabled: false,
+      firstPriceLoaded: true,
       width: {
         error: undefined,
         value: 1,
@@ -130,6 +131,7 @@ export function withProductControl<
         setState({
           selectedAddons: [],
           selectedOption: undefined,
+          firstPriceLoaded: true,
           typeSizeSelection: "custom",
           highlightErrors: false,
           disabled: false,

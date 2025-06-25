@@ -28,18 +28,20 @@ Route::post("/product-request/{product}", [
   "sendProductRequest",
 ]);
 
+Route::post("/request/contacts", [ContactController::class, "requestContacts"]);
+
 Route::middleware("handleCityFromRequest")->group(function () {
   Route::get("/categories", [
     \App\Http\Controllers\Api\CategoryController::class,
     "index",
   ]);
 
-  Route::get("/shop/category/{product_category:slug}", [
+  Route::get("/shop/{product_category:slug}", [
     \App\Http\Controllers\Api\ShopController::class,
     "category",
   ]);
 
-  Route::get("/shop/category/{product_category:slug}/products", [
+  Route::get("/shop/{product_category:slug}", [
     \App\Http\Controllers\Api\ShopController::class,
     "products",
   ]);
@@ -85,6 +87,11 @@ Route::middleware("handleCityFromRequest")->group(function () {
     "updateTempOrder",
   ]);
 
+  Route::post("/checkout/update-order/{paymentIntentID}", [
+    PaymentController::class,
+    "updateCheckoutOrder",
+  ]);
+
   Route::get("/payment-intent/retrive/{payment_intent_id}", [
     PaymentController::class,
     "retrivePayment",
@@ -107,6 +114,21 @@ Route::middleware("auth:sanctum")->group(function () {
     "changePassword",
   ]);
   Route::get("/orders", [OrdersController::class, "list"]);
+
+  Route::get("/order-item/{orderItemID}/images", [
+    OrdersController::class,
+    "getImagesOrderItem",
+  ]);
+
+  Route::post("/order-item/{orderItemID}/images/delete", [
+    OrdersController::class,
+    "orderItemImageDelete",
+  ]);
+
+  Route::post("/order-item/{orderItemID}/images/upload", [
+    OrdersController::class,
+    "orderItemImageUpload",
+  ]);
 });
 
 Route::middleware("auth:sanctum")->get("/user", function (Request $request) {

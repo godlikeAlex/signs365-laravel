@@ -1,0 +1,39 @@
+.price-package {
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 8px 8px 30px 0px rgba(42, 67, 113, 0.1);
+}
+
+.price-package__title {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.price-package__price sup {
+  font-size: 20px;
+  top: -50px;
+  left: 22.5px;
+}
+
+.price-package__price {
+  font-size: 85px;
+}
+
+.price-details {
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 30px;
+  padding-top: 30px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.price-details ul {
+  padding-left: 0;
+  list-style: none !important;
+}
+
+.price-details ul li {
+  line-height: 42px;
+}

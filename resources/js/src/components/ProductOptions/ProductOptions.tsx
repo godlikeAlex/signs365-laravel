@@ -1,80 +1,56 @@
-import { ProductContext } from "@/src/contexts/ProductContext";
-import { useAppDispatch, useAppSelector } from "@/src/hooks";
+import React from "react";
 import classNames from "classnames";
-import React, { useContext } from "react";
-import Skeleton from "react-loading-skeleton";
-import Input from "../Input";
-import { selectProductOption } from "@/src/redux/singleProductSlice";
-import { ProductFormContext } from "@/src/contexts/ProductFormContext";
+import { useProductContext } from "@/src/contexts/MainProductContext";
+import { IProductCheckout } from "@/src/types/ProductModel";
+import { ProductActionKind } from "@/src/reducers/ProductReducer";
 
-interface Props {}
+interface Props {
+  product: IProductCheckout;
+}
 
-const ProductOptions: React.FC<Props> = ({}: Props) => {
-  const { state } = useContext(ProductFormContext);
-  const { product, selectedOption } = useAppSelector((state) => state.product);
-  const dispatch = useAppDispatch();
+const ProductOptions = ({ product }: Props) => {
+  const { state, dispatch } = useProductContext();
 
-  if (product.with_checkout === false) return;
+  const { selectedOption, status } = state;
+  const disabled = state.status === "fetching";
+
+  if (product.options.length === 1) {
+    return <h6>Option: {product.options[0].title}</h6>;
+  }
 
   return (
     <div>
-      {product ? (
-        <div>
-          {product.options.length === 1 ? (
-            <h6>Option: {product.options[0].title}</h6>
-          ) : (
-            <>
-              <h6>Options:</h6>
+      <h6>Options:</h6>
 
-              <div
-                className="ps-product__size ps-select--feature"
-                style={{ display: "flex", flexWrap: "wrap" }}
-              >
-                {product.options.map((option) => (
-                  <a
-                    className={classNames({
-                      active: option.id === selectedOption?.id,
-                      "disabled-variant": state.disabled,
-                    })}
-                    style={{ marginRight: 10, marginTop: 10 }}
-                    key={`${product.id}-${option.id}-o`}
-                    onClick={(e) => {
-                      e.preventDefault();
+      <div
+        className="ps-product__size ps-select--feature"
+        style={{ display: "flex", flexWrap: "wrap" }}
+      >
+        {product.options.map((option) => (
+          <button
+            className={classNames(
+              {
+                active: option.id === selectedOption?.id,
+                "disabled-variant": disabled,
+              },
+              "rounded-button"
+            )}
+            disabled={disabled}
+            style={{ marginRight: 10, marginTop: 10 }}
+            key={`${product.id}-${option.id}-o`}
+            onClick={(e) => {
+              e.preventDefault();
 
-                      if (state.disabled) {
-                        return;
-                      }
-
-                      dispatch(selectProductOption(option));
-                    }}
-                    href="#"
-                  >
-                    {option.title}
-                  </a>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <div style={{ width: "33%" }}>
-            <Skeleton height={35} width={"100%"} />
-          </div>
-          <div style={{ width: "33%" }}>
-            <Skeleton height={35} width={"100%"} />
-          </div>
-          <div style={{ width: "33%" }}>
-            <Skeleton height={35} width={"100%"} />
-          </div>
-        </div>
-      )}
+              dispatch({
+                type: ProductActionKind.SELECT_OPTION,
+                payload: option,
+              });
+            }}
+          >
+            {option.title}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

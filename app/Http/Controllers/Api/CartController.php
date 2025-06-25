@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\AddToCartDTO;
+use App\DTO\CalculatorDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddToCartRequest;
 use App\Http\Requests\Cart\CalculateSingleItemCartRequest;
@@ -11,6 +13,7 @@ use App\Http\Requests\UpdateQuantityRequest;
 use App\Http\Resources\CartResource;
 use App\Models\City;
 use App\Models\Product;
+use App\Services\CalculatorService;
 use Darryldecode\Cart\Cart;
 use Darryldecode\Cart\CartCondition;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -20,7 +23,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 use App\Services\Cart\Service as CartService;
-use App\Services\Calculator\Service as CalculatorService;
+use App\Services\Calculator\Service as CalculatorServiceDeprecated;
 
 class CartController extends Controller
 {
@@ -28,15 +31,21 @@ class CartController extends Controller
 
   public function __construct(Request $request)
   {
+    $city = City::where("id", $request->get("city"))->first();
+
+    if (!$city) {
+      $city = City::first();
+    }
+
     if (Cookie::has("cart")) {
-      $this->cart = new CartService(Cookie::get("cart"));
+      $this->cart = new CartService(Cookie::get("cart"), $city);
     } else {
       $uuid = Str::uuid();
       $cookie = Cookie::forever(name: "cart", value: $uuid, httpOnly: true);
 
       Cookie::queue($cookie);
 
-      $this->cart = new CartService($uuid);
+      $this->cart = new CartService($uuid, $city);
     }
   }
 
@@ -95,19 +104,23 @@ class CartController extends Controller
         }
       }
 
-      $this->cart->add(
-        $request->product_id,
-        $request->option_id,
+      $addToCartDTO = new AddToCartDTO(
+        $request->input("product_id"),
+        $request->input("option_id"),
         $request->addons ?? [],
-        $request->quantity,
-        $request->unit,
+        $request->input("quantity"),
+        $request->input("unit"),
         $request->input("width"),
         $request->input("height"),
         $request->input("size_id"),
         $images
       );
 
-      return \response()->json($this->cart->format($city));
+      $this->cart->add($addToCartDTO);
+
+      // return \response()->json($this->cart->format($city));
+
+      return back();
     } catch (ModelNotFoundException $e) {
       return response()->json(
         [
@@ -135,7 +148,9 @@ class CartController extends Controller
         $this->cart->reduceQuantity($request->input("item_id"));
       }
 
-      return \response()->json($this->cart->format($city));
+      return back();
+
+      // return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
       return response()->json(
         [
@@ -158,32 +173,56 @@ class CartController extends Controller
 
       $this->cart->removeItem($request->input("item_id"));
 
-      return \response()->json($this->cart->format($city));
+      return back();
+      // return \response()->json($this->cart->format($city));
     } catch (ModelNotFoundException $e) {
-      return response()->json(
-        [
-          "error" => "This product does'nt exists",
-        ],
-        404
-      );
+      return back();
+
+      // return response()->json(
+      //   [
+      //     "error" => "This product does'nt exists",
+      //   ],
+      //   404
+      // );
     }
   }
 
-  public function calculateSingle(CalculateSingleItemCartRequest $request)
-  {
-    $calculator = new CalculatorService(
-      $request->input("product_id"),
-      width: $request->input("width"),
-      height: $request->input("height"),
-      unit: $request->input("unit"),
-      addons: $request->addons,
-      selectedOptionID: $request->input("option_id"),
-      quantity: $request->input("quantity")
-    );
+  public function calculateSingle(
+    CalculateSingleItemCartRequest $request,
+    CalculatorService $calculatorService
+  ) {
+    try {
+      $calculatorDto = new CalculatorDTO(
+        $request->input("product_id"),
+        $request->input("option_id"),
+        $request->input("width"),
+        $request->input("height"),
+        $request->input("quantity"),
+        $request->addons,
+        $request->input("unit")
+      );
 
-    list($priceInCents, $priceInDollars) = $calculator->calculate();
+      list($priceInCents, $priceInDollars) = $calculatorService->calculate(
+        $calculatorDto
+      );
 
-    return response()->json(["price" => $priceInDollars]);
+      return response()->json(["price" => $priceInDollars]);
+    } catch (\Exception $exception) {
+      return response(["error" => $exception->getMessage()], 400);
+    }
+    //    $calculator = new CalculatorService(
+    //      $request->input("product_id"),
+    //      width: $request->input("width"),
+    //      height: $request->input("height"),
+    //      unit: $request->input("unit"),
+    //      addons: $request->addons,
+    //      selectedOptionID: $request->input("option_id"),
+    //      quantity: $request->input("quantity")
+    //    );
+    //
+    //    list($priceInCents, $priceInDollars) = $calculator->calculate();
+    //
+    //    return response()->json(["price" => $priceInDollars]);
   }
 
   /**

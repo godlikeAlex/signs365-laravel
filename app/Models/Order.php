@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OrderStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,6 +40,16 @@ class Order extends Model
     });
   }
 
+  static function findByPaymentIntent($paymentIntentID)
+  {
+    return Order::where("payment_intent_id", $paymentIntentID)->first();
+  }
+
+  public function scopePaid(Builder $query)
+  {
+    $query->where("status", "!=", OrderStatusEnum::UNPAID);
+  }
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
@@ -47,6 +58,11 @@ class Order extends Model
   public function city(): BelongsTo
   {
     return $this->belongsTo(City::class);
+  }
+
+  public function voucher(): BelongsTo
+  {
+    return $this->belongsTo(Voucher::class);
   }
 
   public function orderItems(): HasMany

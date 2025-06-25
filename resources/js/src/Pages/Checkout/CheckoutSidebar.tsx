@@ -1,15 +1,20 @@
-import { useAppSelector } from "@/src/hooks";
+import VoucherInput from "@/src/components/VoucherInput";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import { usePage } from "@inertiajs/react";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-interface CheckoutSidebarProps {
-  submiting: boolean;
+interface Props {
+  submitting: boolean;
+  setSubmitting: (submitting: boolean) => void;
 }
 
-const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
-  submiting,
-}: CheckoutSidebarProps) => {
-  const { cart } = useAppSelector((state) => state.cart);
+const CheckoutSidebar: React.FC<Props> = ({
+  submitting,
+  setSubmitting,
+}: Props) => {
+  const { cart } = usePage<SharedInertiaData>().props;
+
   return (
     <div
       className="ps-checkout__order"
@@ -27,7 +32,12 @@ const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
               {cartItem.name} x <span>{cartItem.quantity}</span>
             </div>
             <div className="ps-product__price">
-              ${(cartItem.quantity * cartItem.price).toLocaleString()}
+              $
+              {(
+                (cartItem.attributes.productOptionType === "per_qty"
+                  ? 1
+                  : cartItem.quantity) * cartItem.price
+              ).toLocaleString()}
             </div>
           </div>
         ))
@@ -56,11 +66,16 @@ const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
           )}
         </div>
       </div>
+
+      <div className="ps-checkout__row">
+        <VoucherInput submitting={submitting} setSubmitting={setSubmitting} />
+      </div>
+
       <div className="ps-checkout__payment">
         <button
           className="ps-btn ps-btn--warning custom-button"
           type="submit"
-          disabled={submiting}
+          disabled={submitting}
         >
           Place order
         </button>

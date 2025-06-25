@@ -57,7 +57,7 @@ class Kernel extends HttpKernel
    * @var array<string, array<int, class-string|string>>
    */
   protected $middlewareGroups = [
-    'web' => [
+    "web" => [
       EncryptCookies::class,
       AddQueuedCookiesToResponse::class,
       StartSession::class,
@@ -69,23 +69,23 @@ class Kernel extends HttpKernel
       AddLinkHeadersForPreloadedAssets::class,
     ],
 
-    'api' => [
+    "api" => [
       // \App\Http\Middleware\EncryptCookies::class,
       \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
       // StartSession::class,
 
       // GetSanctumTokenFromCookies::class,
       EnsureFrontendRequestsAreStateful::class,
-      'throttle:api',
+      "throttle:api",
       SubstituteBindings::class,
     ],
-    'redirectUserToCity' => [
+    "redirectUserToCity" => [
       EncryptCookies::class,
       AddQueuedCookiesToResponse::class,
       StartSession::class,
 
-      UserCityRedirect::class
-    ]
+      UserCityRedirect::class,
+    ],
   ];
 
   /**
@@ -96,16 +96,16 @@ class Kernel extends HttpKernel
    * @var array<string, class-string|string>
    */
   protected $routeMiddleware = [
-    'auth' => Authenticate::class,
-    'auth.basic' => AuthenticateWithBasicAuth::class,
-    'cache.headers' => SetCacheHeaders::class,
-    'can' => Authorize::class,
-    'guest' => RedirectIfAuthenticated::class,
-    'password.confirm' => RequirePassword::class,
-    'signed' => ValidateSignature::class,
-    'throttle' => ThrottleRequests::class,
-    'verified' => EnsureEmailIsVerified::class,
-    'optimizeImages' => OptimizeImages::class,
-    'handleCityFromRequest' => HandleCityFromRequest::class,
+    "auth" => Authenticate::class,
+    "auth.basic" => AuthenticateWithBasicAuth::class,
+    "cache.headers" => SetCacheHeaders::class,
+    "can" => Authorize::class,
+    "guest" => RedirectIfAuthenticated::class,
+    "password.confirm" => RequirePassword::class,
+    "signed" => ValidateSignature::class,
+    "throttle" => ThrottleRequests::class,
+    "verified" => EnsureEmailIsVerified::class,
+    "optimizeImages" => OptimizeImages::class,
+    "handleCityFromRequest" => HandleCityFromRequest::class,
   ];
 }

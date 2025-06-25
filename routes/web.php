@@ -1,9 +1,20 @@
 <?php
 
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Inertia\CartController;
+use App\Http\Controllers\Inertia\HomeController;
+use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
+use App\Http\Controllers\Inertia\ShopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeWebHookController;
+use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
+use App\Services\Thumbnail\Service as Thumbnail;
+use Inertia\Inertia;
 
 $DOMAIN = env("APP_DOMAIN");
 
@@ -43,11 +54,107 @@ Route::prefix("api/auth")->group(function () {
   ]);
 });
 
-Route::get("/{reactRoutes?}", function ($city = null) {
-  return view("app"); // your start view
-})
-  ->withoutMiddleware(["web"])
-  ->name("react-app")
-  ->where("reactRoutes", '^((?!admin).)*$')
-  ->where("reactRoutes", '^((?!api).)*$')
-  ->middleware(["redirectUserToCity"]); // except 'api' word
+Route::get("", [HomeController::class, "index"])->name("home");
+
+Route::get("about", [HomeController::class, "about"])->name("about");
+
+Route::get("/shop/{product_category:slug}", [ShopController::class, "index"]);
+
+Route::get("/shop/{product_category:slug}/{product:slug}", [
+  ShopController::class,
+  "product",
+]);
+
+Route::get("/cart", [CartController::class, "renderCart"]);
+Route::post("/cart/toggle-with-installation", [
+  CartController::class,
+  "toggleExtraInstallation",
+]);
+
+Route::get("/checkout/success-payment", [
+  CartController::class,
+  "renderSuccess",
+]);
+
+Route::get("/checkout", [CartController::class, "renderCheckout"]);
+Route::post("/apply-voucher", [CartController::class, "applyVoucher"]);
+
+Route::post("/cancel-voucher", [
+  CartController::class,
+  "cancelVoucher",
+])->middleware("auth:sanctum");
+
+Route::get("login", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "indexLogin",
+])->name("login");
+Route::post("login", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "login",
+]);
+
+Route::get("register", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "indexRegister",
+]);
+Route::post("register", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "register",
+]);
+
+Route::get("profile", [
+  InertiaProfileController::class,
+  "indexProfile",
+])->middleware("auth:sanctum");
+
+Route::get("/privacy", [HomeController::class, "privacy"]);
+Route::get("/terms", [HomeController::class, "terms"]);
+Route::get("/contacts", [HomeController::class, "contacts"]);
+
+Route::middleware("auth:sanctum")->group(function () {
+  Route::get("profile", [InertiaProfileController::class, "indexProfile"]);
+  Route::get("profile/edit", [InertiaProfileController::class, "edit"]);
+
+  // Route::post("/profile/edit", [
+  //   \App\Http\Controllers\Api\UserController::class,
+  //   "edit",
+  // ])->middleware("optimizeImages");
+});
+
+Route::post("logout", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "logout",
+]);
+
+Route::get("/test/images", function () {
+  $product = Product::first();
+
+  foreach (Product::all() as $product) {
+    foreach ($product->images as $image) {
+      $thumbnail = new Thumbnail($image->path);
+
+      $path = $thumbnail->generate(348, 348, 55);
+
+      // $image->path_thumb = $path;
+      // $image->save();
+    }
+  }
+});
+
+// Route::post("forgot", [
+//   \App\Http\Controllers\Api\ForgotPassword::class,
+//   "forgot",
+// ]);
+// Route::post("reset-password", [
+//   \App\Http\Controllers\Api\ForgotPassword::class,
+//   "reset",
+// ]);
+
+// Route::get("/{reactRoutes?}", function ($city = null) {
+//   return view("app"); // your start view
+// })
+//   ->withoutMiddleware(["web"])
+//   ->name("react-app")
+//   ->where("reactRoutes", '^((?!admin).)*$')
+//   ->where("reactRoutes", '^((?!api).)*$')
+//   ->middleware(["redirectUserToCity"]); // except 'api' word

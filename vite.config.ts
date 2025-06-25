@@ -46,12 +46,17 @@ export default defineConfig({
       include: [/.js$/],
     },
   },
-  optimizeDeps: {
-    include: ["react-spinners"],
-  },
   resolve: {
     alias: {
       "@": path.join(__dirname, "./resources/js"),
     },
+  },
+  ssr: {
+    noExternal: [
+      "@inertiajs/server",
+      "@reduxjs/toolkit",
+      "react-dropzone",
+      "react-spinners",
+    ],
   },
 });

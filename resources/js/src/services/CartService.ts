@@ -53,6 +53,22 @@ export default class CartService {
     });
   }
 
+  static calculatePrice(body: {
+    productID: number;
+    option_id: number;
+    addons: Addon[];
+    unit: "feet" | "inches";
+    width: number | string;
+    height: number | string;
+    quantity: number;
+    size_id?: number;
+  }) {
+    return api.post<{ price: string }>("/cart/calculate-single", {
+      ...body,
+      product_id: body.productID,
+    });
+  }
+
   static addToCart(body: UpdateCartParams) {
     const formData = new FormData();
 

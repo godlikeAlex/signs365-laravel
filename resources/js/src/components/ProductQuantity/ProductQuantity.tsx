@@ -1,3 +1,4 @@
+import { useProductContext } from "@/src/contexts/MainProductContext";
 import React from "react";
 
 interface Props {
@@ -6,14 +7,17 @@ interface Props {
 }
 
 const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
-  const handleChange = (quantity: number) => {
-    console.log(value, "value");
+  const { state } = useProductContext();
+  const disabled = state.status === "fetching";
 
+  const handleChange = (quantity: number) => {
     const regex = /^[0-9\b]+$/;
 
     if (!regex.test(value)) {
       return;
     }
+
+    console.log(value, "value");
 
     if (quantity >= 0) {
       onChange(quantity);
@@ -24,7 +28,10 @@ const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
 
   return (
     <div className="qty-input-with-btns">
-      <button onClick={() => handleChange(value === 1 ? 1 : value - 1)}>
+      <button
+        onClick={() => handleChange(value === 1 ? 1 : value - 1)}
+        disabled={disabled}
+      >
         <i className="icon-minus" />
       </button>
 
@@ -33,10 +40,11 @@ const ProductQuantity: React.FC<Props> = ({ value, onChange }: Props) => {
         value={value}
         className="qty-input"
         onChange={(e) => handleChange(+e.target.value)}
-        onBlur={() => value == 0 && handleChange(1)}
+        onBlur={() => value <= 0 && handleChange(1)}
+        disabled={disabled}
       />
 
-      <button onClick={() => handleChange(value + 1)}>
+      <button onClick={() => handleChange(value + 1)} disabled={disabled}>
         <i className="icon-plus" />
       </button>
     </div>

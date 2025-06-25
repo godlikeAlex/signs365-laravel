@@ -20,6 +20,10 @@ class Option
     $calculatedPrice = 0;
     $minPrice = $this->model->min_price;
 
+    info("price information", [
+      "model" => $this->model->type,
+    ]);
+
     switch ($this->model->type) {
       case OptionTypeEnum::SQFT:
         $calculatedPrice = $this->calculateSQFT($sqft);

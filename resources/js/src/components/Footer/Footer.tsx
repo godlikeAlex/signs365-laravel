@@ -1,11 +1,12 @@
-import { useAppSelector } from "@/src/hooks";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
 interface FooterProps {}
 
 const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
-  const { homeCategories } = useAppSelector((state) => state.app);
+  const { homeCategories, cart } = usePage<SharedInertiaData>().props;
 
   return (
     <footer className="ps-footer ps-footer--5 pt-50">
@@ -48,7 +49,11 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       style={{ textAlign: "center" }}
                     >
                       <a href="/">
-                        <img src="/img/logo-white.png" style={{ width: 250 }} />
+                        <img
+                          src="/img/logo-white.png"
+                          style={{ width: 250 }}
+                          alt="Signs7"
+                        />
 
                         <h3
                           style={{
@@ -85,7 +90,9 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       <ul className="ps-block__list">
                         {category.products.map((product) => (
                           <li key={`footer-product-${product.id}`}>
-                            <Link to={`/catalog/${product.slug}`}>
+                            <Link
+                              href={`/shop/${category.slug}/${product.slug}`}
+                            >
                               {product.title}
                             </Link>
                           </li>
@@ -101,15 +108,23 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
         <div className="ps-footer--bottom">
           <div className="row">
             <div className="col-12 col-md-6">
-              <p>Copyright © 2023 Signs7. All Rights Reserved</p>
+              <p>Copyright © 2024 Signs7. All Rights Reserved. </p>
             </div>
             <div className="col-12 col-md-6 text-right">
-              <img src="img/payment.png" alt="" />
+              <img src="/img/payment.png" alt="" />
               <img
                 className="payment-light"
-                src="img/payment-light.png"
+                src="/img/payment-light.png"
                 alt=""
               />
+            </div>
+
+            <div
+              className="col-md-12 text-center footer-bottom-links"
+              style={{ color: "white" }}
+            >
+              <Link href="/terms">Terms and Conditions</Link>
+              <Link href="/privacy">Privacy Policy</Link>
             </div>
           </div>
         </div>

@@ -23,6 +23,7 @@ class OrderItemResource extends JsonResource
         ->withTrashed()
         ->first(),
       "product_id" => $this->product_id,
+      "images" => $this->images,
     ];
   }
 }

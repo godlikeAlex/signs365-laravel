@@ -5,6 +5,8 @@
     @php
         function generateHeading($status) {
             switch ($status) {
+                case App\Enums\OrderStatusEnum::PENDING:
+                    return 'We have received your order';
                 case App\Enums\OrderStatusEnum::SHIPPED:
                     return 'Our order on it is way!';
                 case App\Enums\OrderStatusEnum::DONE:
@@ -23,7 +25,13 @@
 
 	@include('beautymail::templates.sunny.contentStart')
 
+    <div style="text-align: center">
     @switch($order->status)
+        @case(App\Enums\OrderStatusEnum::PENDING)
+            <p>
+                Thank you, we have received your order, we will process it soon!
+            </p>
+            @break
         @case(App\Enums\OrderStatusEnum::SHIPPED)
             <p>Order UUID: {{$order->uuid}}</p>
             @if ($order->tracking_id)
@@ -44,6 +52,6 @@
             @break
         @default
     @endswitch
+    </div>
 	@include('beautymail::templates.sunny.contentEnd')
-
 @stop

@@ -15,32 +15,46 @@ class UserController extends Controller
   {
     $user = $request->user();
 
-    $user->update($request->only(['name', 'email']));
+    $user->update($request->only(["name", "email"]));
 
-    if ($request->has('avatar')) {
-      $path = $request->file('avatar')->store('users', 'public');
+    if ($request->has("avatar")) {
+      $path = $request->file("avatar")->store("users", "public");
 
-      $user->update(['avatar' => $path]);
+      $user->update(["avatar" => $path]);
     }
 
-
-    return $user;
+    if (!$request->inertia() && $request->expectsJson()) {
+      return $user;
+    } else {
+      return back();
+    }
   }
 
   public function changePassword(ChangePasswordRequest $request)
   {
     $user = $request->user();
 
-    if (Hash::check($request->input('oldPassword'), $user->password)) {
+    if (Hash::check($request->input("oldPassword"), $user->password)) {
       $user->update([
-        'password' => Hash::make($request->input('newPassword'))
+        "password" => Hash::make($request->input("newPassword")),
       ]);
-      return response(['ok' => true]);
-    } else {
 
-      return response([
-        'error' => 'The current password is incorrect.'
-      ], 400);
+      if (!$request->inertia() && $request->expectsJson()) {
+        return response(["ok" => true]);
+      } else {
+        return back();
+      }
+    } else {
+      if (!$request->inertia() && $request->expectsJson()) {
+        return response(
+          [
+            "error" => "The current password is incorrect.",
+          ],
+          400
+        );
+      }
+
+      return back()->withErrors(["error" => "Something Went Wrong"]);
     }
   }
 }

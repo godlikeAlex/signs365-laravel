@@ -46,6 +46,7 @@ export default function Home() {
                     {products.map((product, idx) => (
                       <div className="col-md-3 p-0">
                         <ProductCard
+                          allowFullPage
                           {...product}
                           key={`${product.id}-${idx}`}
                           fullPage={product.with_checkout}
@@ -55,7 +56,7 @@ export default function Home() {
                   </div>
                   <div className="ps-shop__more">
                     <Link
-                      to={`/catalog/${slug}`}
+                      to={`/shop/${slug}`}
                       style={{ display: "block" }}
                       className="home_show_more"
                     >

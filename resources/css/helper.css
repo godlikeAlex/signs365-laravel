@@ -1157,7 +1157,8 @@ html .bg--parallax {
   min-width: 145px;
 }
 
-.ps-category__item-custom:hover .ps-category__name a {
+.ps-category__item-custom:hover .ps-category__name a,
+.ps-category__item-custom.active .ps-category__name a {
   /* display: none; */
 
   color: #fd8d27 !important;

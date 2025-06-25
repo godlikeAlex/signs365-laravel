@@ -11,20 +11,25 @@
     "php": "^8.0",
     "alperenersoy/filament-export": "^0.3.7",
     "awcodes/filament-curator": "^2.9",
+    "cweagans/composer-patches": "~2.0",
     "darryldecode/cart": "^4.2",
     "filament/filament": "^2.0",
     "filament/forms": "^2.0",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
-    "inertiajs/inertia-laravel": "^0.6.3",
+    "inertiajs/inertia-laravel": "^0.6.10",
+    "intervention/image": "^2.7",
     "laravel/framework": "^9.0",
     "laravel/sanctum": "^3.0",
     "laravel/tinker": "^2.5",
     "snowfire/beautymail": "^1.1",
+    "spatie/eloquent-sortable": "^4.4",
     "spatie/laravel-image-optimizer": "^1.7",
     "spatie/laravel-medialibrary": "^10.11",
     "spatie/laravel-server-side-rendering": "^1.4",
+    "stevebauman/location": "^7.3",
     "stripe/stripe-php": "^10.3",
+    "tapp/filament-timezone-field": "^2.0",
     "tightenco/ziggy": "^1.0",
     "torann/geoip": "^3.0"
   },
@@ -72,12 +77,20 @@
       "dont-discover": [
         "barryvdh/laravel-ide-helper"
       ]
+    },
+    "patches": {
+      "filament/support": {
+        "Fix auto focus filament": "patches/fixed-auto-focus-in-modals.patch"
+      }
     }
   },
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

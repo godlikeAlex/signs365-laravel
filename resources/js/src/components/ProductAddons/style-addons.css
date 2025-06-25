@@ -19,6 +19,11 @@
 .quantity-container-addon {
   /* margin-top: 6px; */
   display: flex;
+  justify-content: flex-end;
+}
+
+.label-product-show {
+  text-transform: capitalize;
 }
 
 .qty-input-addon {

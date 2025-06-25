@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import { Addon, ProductOption } from "../types/ProductModel";
 
-type ErrorProductContext = {
+export type ErrorProductContext = {
   error: string;
   showError: boolean;
 };
@@ -16,6 +16,7 @@ export type ProductFormContextType = {
   quantity: number;
   typeSizeSelection: "default" | "custom";
   highlightErrors: boolean;
+  firstPriceLoaded: boolean;
   width: {
     error: string;
     showError: boolean;

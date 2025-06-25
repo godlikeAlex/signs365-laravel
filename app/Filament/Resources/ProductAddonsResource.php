@@ -26,6 +26,7 @@ class ProductAddonsResource extends Resource
   protected static ?string $navigationIcon = "heroicon-o-clipboard-list";
   protected static ?string $navigationGroup = "SHOP";
   protected static ?int $navigationSort = 5;
+  protected static bool $shouldRegisterNavigation = false;
 
   static function inputForm(): array
   {
@@ -41,24 +42,6 @@ class ProductAddonsResource extends Resource
             ->all();
         })
         ->required(),
-
-      // Forms\Components\Select::make("options")
-      //   ->multiple()
-      //   ->relationship("options", "title")
-      //   ->reactive()
-      //   ->preload()
-      //   ->hiddenOn("create")
-      //   ->options(function (\Closure $get, ?Model $record) {
-      //     $currentTypeAddon = $get("type");
-      //     $requiredTypes =
-      //       AddonTypeEnum::from($currentTypeAddon) === AddonTypeEnum::SQFT
-      //         ? [OptionTypeEnum::SQFT]
-      //         : [OptionTypeEnum::BY_QTY, OptionTypeEnum::SINGLE];
-
-      //     return $record->product->options
-      //       ->whereIn("type", $requiredTypes)
-      //       ->pluck("title", "id");
-      //   }),
 
       Forms\Components\TextInput::make("condition")
         ->required()

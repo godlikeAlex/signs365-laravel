@@ -1,15 +1,15 @@
-import { ProductFormContext } from "@/src/contexts/ProductFormContext";
+import { useProductContext } from "@/src/contexts/MainProductContext";
+import { ProductActionKind } from "@/src/reducers/ProductReducer";
 import { CustomSize } from "@/src/types/ProductModel";
-import React, { useContext } from "react";
+import React from "react";
 import Select from "react-select";
 
 interface Props {
   sizes: CustomSize[];
-  hasError: boolean;
 }
 
-const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
-  const { state, setState } = useContext(ProductFormContext);
+const CustomSizesDropdown: React.FC<Props> = ({ sizes }: Props) => {
+  const { state, dispatch } = useProductContext();
 
   const options = React.useMemo(() => {
     return sizes.map((size) => ({
@@ -19,6 +19,20 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
       height: size.height,
     }));
   }, [sizes]);
+
+  const handleChange = (width: string, height: string, customSize: number) => {
+    const convertedWidth = Number(width);
+    const convertedHeight = Number(height);
+
+    dispatch({
+      type: ProductActionKind.SET_CUSTOM_SIZE,
+      payload: {
+        width: isNaN(convertedWidth) ? 1 : convertedWidth,
+        height: isNaN(convertedHeight) ? 1 : convertedHeight,
+        customSize,
+      },
+    });
+  };
 
   return (
     <div className="row">
@@ -36,25 +50,19 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes, hasError }: Props) => {
                   isSearchable
                   menuPlacement="auto"
                   options={options}
-                  onChange={(e) =>
-                    setState((state) => ({
-                      ...state,
-                      customSize: { ...state.customSize, value: e.value },
-                      width: { ...state.width, value: e.width },
-                      height: { ...state.width, value: e.height },
-                    }))
-                  }
+                  onChange={(e) => handleChange(e.width, e.height, e.value)}
                   value={options.find(
                     (option) => option.value === state.customSize.value
                   )}
                   styles={{
-                    control: (baseStyles, state) => ({
+                    control: (baseStyles, dropDownState) => ({
                       ...baseStyles,
-                      borderColor: hasError
-                        ? "red"
-                        : state.isFocused
-                        ? "#fd8d27"
-                        : "#f0f2f5",
+                      borderColor:
+                        state.customSize.showError && state.customSize.error
+                          ? "red"
+                          : dropDownState.isFocused
+                          ? "#fd8d27"
+                          : "#f0f2f5",
                       boxShadow: "unset",
                       height: "46px",
                       borderRadius: "40px",

@@ -18,9 +18,9 @@ class OrderResource extends JsonResource
       "id" => $this->id,
       "uuid" => $this->uuid,
       "status" => $this->status,
-      "total" => $this->total / 100,
-      "total_without_tax" => $this->total_without_tax / 100,
       "address" => $this->address,
+      "amount" => $this->amount / 100,
+      "tax" => $this->tax / 100,
       "created_at" => $this->created_at,
       "order_items" => OrderItemResource::collection($this->orderItems),
     ];

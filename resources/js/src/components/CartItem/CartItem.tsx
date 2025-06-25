@@ -3,6 +3,7 @@ import { removeItemFromCart, updateQuantity } from "@/src/redux/cartSlice";
 import { CartService } from "@/src/services";
 import { ICartItem } from "@/src/types/models";
 import { generateAttributtesCartItem } from "@/src/utils/helpers";
+import { Link, router } from "@inertiajs/react";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -18,13 +19,25 @@ const CartItem: React.FC<Props> = ({
 }: Props) => {
   const dispatch = useAppDispatch();
 
+  const priceWithQuantity =
+    price * (attributes.productOptionType === "per_qty" ? 1 : quantity);
+
   const addItem = async () => {
     try {
-      await dispatch(updateQuantity({ type: "add", item_id: id })).unwrap();
-
-      toast(`Successfully increased the quantity of ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/update-quantity",
+        {
+          item_id: id,
+          type: "add",
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully increased the quantity of ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while adding to cart", { type: "error" });
     }
@@ -32,11 +45,20 @@ const CartItem: React.FC<Props> = ({
 
   const reduceItem = async () => {
     try {
-      await dispatch(updateQuantity({ type: "reduce", item_id: id })).unwrap();
-
-      toast(`Successfully reduced the quantity of ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/update-quantity",
+        {
+          item_id: id,
+          type: "reduce",
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully reduced the quantity of ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while reducing item", { type: "error" });
     }
@@ -44,11 +66,19 @@ const CartItem: React.FC<Props> = ({
 
   const removeItem = async () => {
     try {
-      await dispatch(removeItemFromCart({ item_id: id })).unwrap();
-
-      toast(`Successfully removed ${name}`, {
-        type: "success",
-      });
+      router.post(
+        "/api/cart/remove-item",
+        {
+          item_id: id,
+        },
+        {
+          onSuccess: () => {
+            toast(`Successfully removed ${name}`, {
+              type: "success",
+            });
+          },
+        }
+      );
     } catch (error) {
       toast("An error occurred while removing item", { type: "error" });
     }
@@ -78,10 +108,10 @@ const CartItem: React.FC<Props> = ({
         </a>
       </td>
       <td className="ps-product__name">
-        <a href="">
+        <Link href={`/shop/product/${associatedModel.slug}`}>
           {name}
           <p>{generateAttributtesCartItem(attributes)}</p>
-        </a>
+        </Link>
       </td>
       <td className="ps-product__meta">
         <span className="ps-product__price">${price.toLocaleString()}</span>
@@ -105,7 +135,7 @@ const CartItem: React.FC<Props> = ({
         </div>
       </td>
       <td className="ps-product__subtotal">
-        ${(price * quantity).toLocaleString()}
+        ${priceWithQuantity.toLocaleString()}
       </td>
     </tr>
   );

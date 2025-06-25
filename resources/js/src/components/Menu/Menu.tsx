@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { useAppSelector } from "@/src/hooks";
-import { Link } from "react-router-dom";
 import MiniAuthModal from "./MiniAuthModal";
 import MiniCartModal from "./MiniCartModal";
+import { usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+
 import "./style.css";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import classNames from "classnames";
 
 interface Props {}
 
@@ -13,9 +16,8 @@ interface MenuState {
 }
 
 const Menu: React.FC<Props> = ({}: Props) => {
-  const { isAuthed, user } = useAppSelector((state) => state.auth);
-  const { cart, loaded } = useAppSelector((state) => state.cart);
-  const { homeCategories } = useAppSelector((state) => state.app);
+  const pageData = usePage<SharedInertiaData>();
+  const { homeCategories, cart, auth, currentCity } = pageData.props;
 
   const [state, setState] = useState<MenuState>({
     showMiniAuth: false,
@@ -32,17 +34,15 @@ const Menu: React.FC<Props> = ({}: Props) => {
           <div className="container">
             <div className="header-left d-flex">
               <a
-                href="tel:(949)9421363"
+                href="tel:+13072008927"
                 className="ps-header__text d-flex align-items-center"
               >
                 <i className="icon-telephone" />
-                <strong style={{ marginLeft: 5 }}>
-                  +(949) 942-1363 - Call Us
-                </strong>
+                <strong style={{ marginLeft: 5 }}>+1 (307) 200-8927</strong>
               </a>
 
               <a
-                href="http://google.com"
+                href="mailto:info@signs7.com"
                 className="ps-header__text d-flex align-items-center"
               >
                 <i className="icon-envelope" />
@@ -50,14 +50,11 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 <strong style={{ marginLeft: 5 }}>info@signs7.com</strong>
               </a>
 
-              <a
-                href="http://google.com"
-                className="ps-header__text d-flex align-items-center"
-              >
+              <span className="ps-header__text d-flex align-items-center">
                 <i className="icon-map-marker" />
 
-                <strong style={{ marginLeft: 5 }}>New York</strong>
-              </a>
+                <strong style={{ marginLeft: 5 }}>{currentCity}</strong>
+              </span>
             </div>
 
             <div className="ps-top__right">
@@ -79,11 +76,10 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 >
                   <Link
                     className="ps-header__item"
-                    to={user ? "/profile" : "/login"}
+                    href={auth.user ? "/profile" : "/login"}
                   >
                     <i className="icon-user"></i>
                   </Link>
-                  {/*  */}
                 </div>
 
                 <div
@@ -101,9 +97,9 @@ const Menu: React.FC<Props> = ({}: Props) => {
                   }
                   className="ps-dropdown-value with-dp-modal"
                 >
-                  <Link className="ps-header__item" to="/cart" id="cart-mini">
+                  <Link className="ps-header__item" href="/cart" id="cart-mini">
                     <i className="icon-cart-empty"></i>
-                    {loaded && cart.items.length > 0 ? (
+                    {cart.items.length > 0 ? (
                       <span className="badge-mini">{cart.items.length}</span>
                     ) : null}
                   </Link>
@@ -114,20 +110,23 @@ const Menu: React.FC<Props> = ({}: Props) => {
 
               <ul className="menu-top">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    About
-                  </a>
+                  <Link className="nav-link" href="/">
+                    Home
+                  </Link>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <Link className="nav-link" href="/about">
+                    About
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link" href="/contacts">
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
-              <div className="ps-header__text">
-                Need help? <strong>0020 500 - MYMEDI - 000</strong>
-              </div>
             </div>
           </div>
         </div>
@@ -140,7 +139,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
             <div className="ps-header__menu" style={{ width: "100%" }}>
               <ul className="menu-custom">
                 <li className="ps-logo custom-logo">
-                  <Link to="/">
+                  <Link href="/">
                     <img src="/img/logo.png" alt="" />
                     <img className="sticky-logo" src="/img/logo.png" alt="" />
                   </Link>
@@ -148,12 +147,15 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 {homeCategories.map(
                   ({ id, title, icon, slug, products }, index) => (
                     <li
-                      className="ps-category__item ps-category__item-custom has-dropdown"
+                      className={classNames(
+                        "ps-category__item ps-category__item-custom has-dropdown",
+                        { active: pageData.url.startsWith(`/shop/${slug}`) }
+                      )}
                       key={id}
                     >
                       <Link
-                        to={`/catalog/${slug}`}
-                        className="ps-category__link"
+                        href={`/shop/${slug}`}
+                        className={classNames("ps-category__link")}
                       >
                         <img
                           src={`/storage/${icon}`}
@@ -162,13 +164,13 @@ const Menu: React.FC<Props> = ({}: Props) => {
                         />
                       </Link>
                       <div className="ps-category__name">
-                        <Link to={`/catalog/${slug}`}>{title}</Link>
+                        <Link href={`/shop/${slug}`}>{title}</Link>
                       </div>
 
                       <div className="dropdown-content-menu">
                         {products.map((product) => (
                           <Link
-                            to={`/catalog/product/${product.slug}`}
+                            href={`/shop/${product.categories[0].slug}/${product.slug}`}
                             key={`${id}-${product.id}`}
                           >
                             {product.title}
@@ -183,27 +185,6 @@ const Menu: React.FC<Props> = ({}: Props) => {
           </div>
         </div>
       </header>
-    </>
-  );
-
-  return (
-    <>
-      <Link to={"/"}>Home</Link>
-
-      {isAuthed && user ? (
-        <Link to={"/profile"} style={{ marginLeft: 20 }}>
-          Profile
-        </Link>
-      ) : (
-        <>
-          <Link to={"/login"} style={{ marginLeft: 20 }}>
-            Login
-          </Link>
-          <Link to={"/register"} style={{ marginLeft: 20 }}>
-            Register
-          </Link>
-        </>
-      )}
     </>
   );
 };

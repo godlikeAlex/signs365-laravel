@@ -20,33 +20,33 @@ class HandleCityFromRequest
    */
   public function handle(Request $request, Closure $next)
   {
-    $referer = $request->headers->get('Referer');
+    $referer = $request->headers->get("Referer");
 
-    $referer = Str::replaceFirst('https://', '', $referer);
-    $referer = Str::replaceFirst('http://', '', $referer);
+    $referer = Str::replaceFirst("https://", "", $referer);
+    $referer = Str::replaceFirst("http://", "", $referer);
 
-    if ($request->has('city')) {
+    if ($request->has("city")) {
       $request->attributes->add([
-        'city' => $request->input('city')
+        "city" => $request->input("city"),
       ]);
       return $next($request);
     } elseif ($referer) {
-      $server = explode('.', $referer);
+      $server = explode(".", $referer);
       $subdomain = $server[0];
 
-      $city = City::where('domain', $subdomain)->first();
+      $city = City::where("domain", $subdomain)->first();
 
       if ($city) {
         $request->attributes->add([
-          'city' => $city->id
+          "city" => $city->id,
         ]);
       } else {
         $request->attributes->add([
-          'city' => City::first()->id
+          "city" => City::first()->id,
         ]);
       }
     } else {
-      abort(422, 'City is required!');
+      abort(422, "City is required!");
     }
 
     return $next($request);
