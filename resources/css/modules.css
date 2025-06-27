@@ -14,16 +14,6 @@
   border-bottom: 1px solid rgb(217, 222, 232);
 }
 
-.main {
-  padding-top: 100px;
-}
-
-@media (max-width: 750px) {
-  .main {
-    padding-top: 75px;
-  }
-}
-
 .ps-header .ps-header__middle .container {
   display: flex;
   justify-content: space-between;

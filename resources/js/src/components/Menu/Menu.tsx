@@ -145,11 +145,16 @@ const Menu: React.FC<Props> = ({}: Props) => {
                 </Link>
               </li>
               {homeCategories.map(
-                ({ id, title, icon, slug, products }, index) => (
+                ({ id, title, icon, slug, products, colors }, index) => (
                   <li
                     className={classNames("category-menu-item has-dropdown", {
                       active: pageData.url.startsWith(`/shop/${slug}`),
                     })}
+                    style={{
+                      ["--primaryCategoryColor" as string]: colors.primary,
+                      ["--alternativeCategoryColor" as string]:
+                        colors.alternative,
+                    }}
                     key={id}
                   >
                     <Link

@@ -141,6 +141,12 @@ const ProductCard: React.FC<Props> = (props: Props) => {
                   <Link
                     href={`/shop/${category.slug}`}
                     className="ps-product__branch"
+                    style={{
+                      ["--primaryCategoryColor" as string]:
+                        category.colors.primary,
+                      ["--alternativeCategoryColor" as string]:
+                        category.colors.alternative,
+                    }}
                     key={`category-card-product-${category.id}`}
                   >
                     {category.title}{" "}

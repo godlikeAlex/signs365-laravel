@@ -115,7 +115,7 @@ type IProductBase = {
   faq?: { question: string; answer: string }[];
 
   images?: null | ProductImage[];
-  categories?: Pick<ICategory, "title" | "slug" | "id">[];
+  categories?: Pick<ICategory, "title" | "slug" | "id" | "colors">[];
 };
 
 export interface IProductCheckout extends IProductBase {

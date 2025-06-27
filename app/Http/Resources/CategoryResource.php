@@ -22,6 +22,10 @@ class CategoryResource extends JsonResource
       "title" => $this->title,
       "slug" => $this->slug,
       "icon" => $this->icon,
+      "colors" => [
+        "primary" => $this->primary_color,
+        "alternative" => $this->alternative_color,
+      ],
       "show_on_home" => $this->show_on_home,
       "products" => ProductResource::collection($this->products),
     ];

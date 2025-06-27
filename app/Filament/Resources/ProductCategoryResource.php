@@ -55,6 +55,12 @@ class ProductCategoryResource extends Resource
       Forms\Components\Toggle::make("show_on_home")
         ->label("Show on home page in menu?")
         ->columnSpanFull(),
+      Forms\Components\Section::make("Colors")
+        ->columns(2)
+        ->schema([
+          Forms\Components\ColorPicker::make("primary_color"),
+          Forms\Components\ColorPicker::make("alternative_color"),
+        ]),
     ]);
   }
 

@@ -139,76 +139,12 @@
   background-color: var(--primary-color);
 }
 
-/* ADHISIVE */
-
-.category-menu-item:nth-child(2)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #ffedb5;
+.category-menu-item .category-menu-item__link .category-menu-item__name {
+  background-color: var(--alternativeCategoryColor);
 }
 
-.category-menu-item:nth-child(2):hover .category-menu-item__name {
-  background-color: #ffcc26;
-}
-
-/* BANNERS */
-
-.category-menu-item:nth-child(3)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #e9cfff;
-}
-
-.category-menu-item:nth-child(3):hover .category-menu-item__name {
-  background-color: #cd9fff;
-}
-
-/* SIGNS */
-
-.category-menu-item:nth-child(4)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #ccecff;
-}
-
-.category-menu-item:nth-child(4):hover .category-menu-item__name {
-  background-color: #80d0ff;
-}
-
-/* Handled */
-
-.category-menu-item:nth-child(5)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #ffd6e4;
-}
-
-.category-menu-item:nth-child(5):hover .category-menu-item__name {
-  background-color: #ffa4c2;
-}
-
-/* MARKETING */
-
-.category-menu-item:nth-child(6)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #def0b6;
-}
-
-.category-menu-item:nth-child(6):hover .category-menu-item__name {
-  background-color: #bce051;
-}
-
-/* DEVELOPMENT */
-
-.category-menu-item:nth-child(7)
-  .category-menu-item__link
-  .category-menu-item__name {
-  background-color: #ffdfcf;
-}
-
-.category-menu-item:nth-child(7):hover .category-menu-item__name {
-  background-color: #ffab81;
+.category-menu-item:hover .category-menu-item__name {
+  background-color: var(--primaryCategoryColor);
 }
 
 /*  */

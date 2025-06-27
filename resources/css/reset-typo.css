@@ -96,7 +96,7 @@ a {
 }
 
 a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 a,

@@ -18,6 +18,10 @@ class ProductSimpleCategoryResource extends JsonResource
       "id" => $this->id,
       "title" => $this->title,
       "slug" => $this->slug,
+      "colors" => [
+        "primary" => $this->primary_color,
+        "alternative" => $this->alternative_color,
+      ],
     ];
   }
 }
