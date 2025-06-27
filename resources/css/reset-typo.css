@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+
 :root {
   --space-unit: 1em;
   --space-xxxxs: calc(0.09 * var(--space-unit));
@@ -16,12 +18,10 @@
 
 /*1. RESET AND TYPHOGRAPHY */
 * {
-  font-family: "Jost", sans-serif;
-  font-weight: 400;
+  font-family: "Lexend", sans-serif;
 }
 
 html {
-  font-size: 62.5%;
   padding-right: unset !important;
 }
 
@@ -40,7 +40,7 @@ h6 {
   margin-top: 0;
   margin-bottom: 10px;
   font-weight: 600;
-  font-family: "Jost", sans-serif;
+  font-family: "Lexend", sans-serif;
 }
 
 h1 a,

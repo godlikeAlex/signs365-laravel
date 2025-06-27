@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 const path = require("path");
 import commonjs from "vite-plugin-commonjs";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   server: {
@@ -27,6 +28,7 @@ export default defineConfig({
       refresh: true,
     }),
     react(),
+    svgr(),
     mkcert(),
     {
       name: "singleHMR",

@@ -1,10 +1,15 @@
 import { useAppSelector } from "@/src/hooks";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./style.css";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { Link, usePage } from "@inertiajs/react";
+
+import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
+
+import SVGLogo from "@/assets/images/logo.svg";
+import { useSticky } from "@/src/hooks/useSticky";
 
 interface MobileHeaderProps {}
 
@@ -12,67 +17,68 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const { homeCategories, cart, auth } = usePage<SharedInertiaData>().props;
 
+  useEffect(() => {
+    document.body.style.overflow = showMenu ? "hidden" : "auto";
+  }, [showMenu]);
+
+  const headerRef = useRef<HTMLElement>();
+
+  const { isSticky } = useSticky(headerRef);
+
   const closeMenu = () => setShowMenu(false);
 
   return (
     <>
-      <header className="ps-header ps-header--6 ps-header--mobile">
-        <div className="ps-header__middle">
-          <div className="container">
-            <div className="ps-logo">
-              <Link href="/">
-                <img src="/img/logo.png" alt="" style={{ width: 80 }} />
-              </Link>
-            </div>
-            <div className="ps-header__right">
-              <ul className="ps-header__icons">
-                <li>
-                  <Link
-                    className="ps-header__item menu-slide cart-mobile-icon"
-                    href="/cart"
-                  >
-                    <i className="fa-solid fa-cart-shopping"></i>
-
-                    {cart.items.length > 0 ? (
-                      <span className="cart-badge">{cart.items.length}</span>
-                    ) : null}
-                  </Link>
-                </li>
-
-                <li>
-                  <a
-                    className="ps-header__item menu-slide"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowMenu(true);
-                    }}
-                  >
-                    <i className="fa-solid fa-bars"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
+      <header
+        ref={headerRef}
+        className={classNames("ps-header  header--mobile", {
+          "header--sticky": isSticky,
+        })}
+      >
+        <div className="container">
+          <div className="ps-logo">
+            <Link href="/">
+              <img src={SVGLogo} alt="" style={{ width: 60 }} />
+            </Link>
           </div>
+          <ul className="mobile-header__actions">
+            <li>
+              <Link className="cart-mobile-icon" href="/cart">
+                <CartIcon className="mobile-header-icon" />
+
+                {cart.items.length > 0 ? (
+                  <span className="cart-badge">{cart.items.length}</span>
+                ) : null}
+              </Link>
+            </li>
+
+            <li>
+              <button
+                className="hamburger-button"
+                onClick={(e) => {
+                  setShowMenu((isShown) => !isShown);
+                }}
+              >
+                <div
+                  className={classNames("hamburger-icon", {
+                    "hamburger-icon--active": showMenu,
+                  })}
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </button>
+            </li>
+          </ul>
         </div>
       </header>
 
       <div
-        className={classNames("ps-menu--slidebar has-close-icon", {
+        className={classNames("ps-menu--slidebar", {
           active: showMenu,
         })}
       >
-        <a
-          href="#"
-          id="close-menu"
-          className="ic-mobile-menu-close-button close-menu"
-          onClick={(e) => {
-            e.preventDefault();
-            setShowMenu(false);
-          }}
-        >
-          <i className="icon-cross"></i>
-        </a>
         <div className="ps-menu__content">
           <ul className="menu--mobile">
             <li>
@@ -127,7 +133,6 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         <div className="ps-menu__footer">
           <div className="ps-menu__item">
             <div className="ps-menu__contact">
-              <br />
               <a href="tel:+13072008927" style={{ color: "#103178" }}>
                 <strong>+1 (307) 200-8927</strong>
               </a>

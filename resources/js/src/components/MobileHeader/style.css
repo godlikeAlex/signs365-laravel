@@ -3,23 +3,3 @@
   height: 1px;
   background-color: #f0f2f5;
 }
-
-.cart-mobile-icon {
-  position: relative;
-}
-
-.cart-mobile-icon .cart-badge {
-  font-size: 9px;
-  background: #103178;
-  color: white;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
