@@ -2,6 +2,8 @@ import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import React from "react";
 import { Link } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
+import SVGLogo from "@/assets/images/logo.svg";
+import SVGPayments from "@/assets/images/payments.svg";
 
 interface FooterProps {}
 
@@ -10,33 +12,6 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
 
   return (
     <footer className="ps-footer ps-footer--5 pt-50">
-      {/* <div className="ps-footer--top">
-        <div className="container">
-          <div className="row m-0">
-            <div className="col-12 col-sm-4 p-0">
-              <p className="text-center">
-                <div className="ps-footer__link" style={{ color: "#103178" }}>
-                  <i className="icon-wallet"></i>100% Money back
-                </div>
-              </p>
-            </div>
-            <div className="col-12 col-sm-4 p-0">
-              <p className="text-center">
-                <div className="ps-footer__link" style={{ color: "#103178" }}>
-                  <i className="icon-bag2"></i>Non-contact shipping
-                </div>
-              </p>
-            </div>
-            <div className="col-12 col-sm-4 p-0">
-              <p className="text-center">
-                <div className="ps-footer__link" style={{ color: "#103178" }}>
-                  <i className="icon-truck"></i>Free delivery for order over
-                </div>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <div className="container">
         <div className="ps-footer__middle">
           <div className="row">
@@ -50,20 +25,12 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                     >
                       <a href="/">
                         <img
-                          src="/img/logo-white.png"
-                          style={{ width: 250 }}
+                          src={SVGLogo}
+                          style={{ width: 200 }}
                           alt="Signs7"
                         />
 
-                        <h3
-                          style={{
-                            color: "white",
-                            textTransform: "uppercase",
-                            fontWeight: "bold",
-                            marginTop: 10,
-                            marginBottom: 50,
-                          }}
-                        >
+                        <h3 className="footer-message">
                           Everything for your business
                         </h3>
                       </a>
@@ -111,18 +78,10 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
               <p>Copyright © 2024 Signs7. All Rights Reserved. </p>
             </div>
             <div className="col-12 col-md-6 text-right">
-              <img src="/img/payment.png" alt="" />
-              <img
-                className="payment-light"
-                src="/img/payment-light.png"
-                alt=""
-              />
+              <img className="payment-light" src={SVGPayments} alt="" />
             </div>
 
-            <div
-              className="col-md-12 text-center footer-bottom-links"
-              style={{ color: "white" }}
-            >
+            <div className="col-md-12 text-center footer-bottom-links">
               <Link href="/terms">Terms and Conditions</Link>
               <Link href="/privacy">Privacy Policy</Link>
             </div>

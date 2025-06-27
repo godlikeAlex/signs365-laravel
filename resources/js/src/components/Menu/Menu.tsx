@@ -97,7 +97,12 @@ const Menu: React.FC<Props> = ({}: Props) => {
               </ul>
               <ul className="top-header-right__actions">
                 <li>
-                  <UserIcon className="top-header-icon" />
+                  <Link
+                    className="top-header__link"
+                    href={auth.user ? "/profile" : "/login"}
+                  >
+                    <UserIcon className="top-header-icon" />
+                  </Link>
                 </li>
                 <li
                   style={{ position: "relative" }}

@@ -166,7 +166,7 @@
 }
 
 .ps-header .ps-language-currency .ps-dropdown-value:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header .ps-language-currency .ps-dropdown-value::after {
@@ -196,7 +196,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header .ps-header__icons .ps-header__item .badge {
@@ -887,11 +887,11 @@
 }
 
 .ps-header--3.header--mobile .ps-header__right .ps-header__item {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--4 .ps-header__right .ps-header__item {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--4 .ps-header__left .ps-header__item {
@@ -967,7 +967,7 @@
 
 .ps-header--5 .ps-noti p {
   text-align: left;
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--5 .ps-navigation,
@@ -1010,7 +1010,7 @@
 }
 
 .ps-header--5 .ps-header__icons .ps-header__item .badge {
-  background-color: #fd8d27;
+  background-color: var(--primary-color);
   color: white;
 }
 
@@ -1318,7 +1318,7 @@
 }
 
 .ps-header--7 .ps-menu--sticky {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 /* .ps-header--7 .ps-header__middle {
@@ -1433,7 +1433,7 @@
 }
 
 .ps-header--8.header--mobile .ps-header__item {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--8.header--mobile.ps-header--sticky .ps-header__right {
@@ -1610,7 +1610,7 @@
 }
 
 .ps-header--9.ps-header--sticky .ps-header__menu .menu > li > a {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--9.ps-header--sticky.header--mobile .ps-header__middle .container {
@@ -1623,7 +1623,7 @@
 
 @media (min-width: 768px) {
   .ps-header--9.ps-header--sticky .ps-header__icons .ps-header__item {
-    color: #fd8d27;
+    color: var(--primary-color);
   }
   .ps-header--9.ps-header--sticky .ps-header__icons .ps-header__item .badge {
     background-color: #222;
@@ -1983,7 +1983,7 @@
 }
 
 .ps-header--13 .ps-navigation .ps-product--standard .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-header--13 .ps-search-table .input-group-append i {
@@ -2114,7 +2114,7 @@
 }
 
 .ps-navigation--footer .ps-nav__item a {
-  color: #fd8d27;
+  color: var(--primary-color);
   display: inline-flex;
   width: 44px;
   height: 44px;
@@ -2198,7 +2198,7 @@
 }
 
 .ps-footer--block .ps-block__list li a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-footer--bottom {
@@ -2254,7 +2254,7 @@
 }
 
 .ps-footer--top .ps-footer__link:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 @media (min-width: 768px) {
@@ -2326,7 +2326,7 @@
 }
 
 .ps-footer--contact .ps-footer__fax i {
-  color: #fd8d27;
+  color: var(--primary-color);
   margin-right: 15px;
   font-size: 20px;
   font-weight: bold;
@@ -2584,7 +2584,7 @@
 }
 
 .ps-footer--listpage .ps-footer__list li a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-footer--4 {
@@ -2600,26 +2600,36 @@
 }
 
 .ps-footer--5 {
-  background-color: var(--primary-color);
+  background: url(/resources/js/assets/images/footer-bg.webp);
+  background-size: cover;
+  background-position: center;
 }
 
 .ps-footer--5 .ps-footer--top {
   background-color: white;
 }
 
+.footer-message {
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
 .ps-footer--5 .ps-footer--block .ps-block__title,
 .ps-footer--5 .ps-footer--block .ps-block__list a {
-  color: white;
+  color: var(--dark-color);
 }
 
 .ps-footer--5 .ps-footer--listpage .ps-footer__list a {
-  color: white;
+  color: var(--dark-color);
 }
 
 .ps-footer--5 .ps-footer--bottom p,
 .ps-footer--5 .ps-footer__title,
 .ps-footer--5 .ps-footer__email {
-  color: white;
+  color: var(--dark-color);
 }
 
 .ps-footer--5 .ps-footer__box {
@@ -2709,7 +2719,11 @@
 }
 
 .ps-footer--8 .ps-footer--top .ps-footer__link {
-  color: #fd8d27;
+  color: var(--primary-color);
+}
+
+.footer-bottom-links {
+  color: var(--dark-color);
 }
 
 .ps-footer--8 .ps-footer--bottom {
