@@ -6479,3 +6479,13 @@
     display: flex;
   }
 }
+
+.ps-section__title--category {
+  background-color: var(--categoryColor);
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+  padding: 10px;
+  padding-inline: 25px;
+  border-radius: 50px;
+}

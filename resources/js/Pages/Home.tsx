@@ -41,7 +41,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
         </section>
 
         {homeCategories.map((category, idx) => {
-          const { products, id, title, slug } = category;
+          const { products, id, title, slug, colors } = category;
 
           return (
             <section
@@ -53,7 +53,18 @@ const Home: React.FC<Props> = ({ title }: Props) => {
               })}
             >
               <div className="container-fluid">
-                <h3 className="ps-section__title">{title}</h3>
+                <div className="text-center">
+                  <h3
+                    className="ps-section__title ps-section__title--category"
+                    style={
+                      {
+                        // ["--categoryColor" as string]: colors.alternative,
+                      }
+                    }
+                  >
+                    {title}
+                  </h3>
+                </div>
                 <div className="ps-section__content">
                   <div className="row m-0">
                     {/* PRODUCT */}
