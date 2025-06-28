@@ -872,10 +872,10 @@
   margin: auto;
 }
 
-.ps-home .ps-home__banner .ps-banner {
+/* .ps-home .ps-home__banner .ps-banner {
   height: 460px;
   min-height: 460px !important;
-}
+} */
 
 .ps-home .ps-home__banner .ps-banner__content {
   height: auto;
@@ -1031,10 +1031,10 @@
   height: 100%;
 }
 
-.ps-banner {
+/* .ps-banner {
   min-height: 690px;
   position: relative;
-}
+} */
 
 .ps-home--block .ps-block__image .ps-banner {
   height: 350px;

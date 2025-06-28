@@ -5166,10 +5166,10 @@ textarea.form-control {
   }
 }
 
-.ps-section--banner {
+/* .ps-section--banner {
   min-height: 500px;
   position: relative;
-}
+} */
 
 .ps-section--banner .ps-section__overlay {
   position: absolute;

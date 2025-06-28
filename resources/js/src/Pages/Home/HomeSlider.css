@@ -99,7 +99,7 @@
   right: 0;
 }
 
-.ps-banner {
+.banner-row {
   padding-left: 30px;
 }
 
@@ -155,16 +155,30 @@
   }
 }
 
-@media (max-width: 820px) {
-  .ps-banner {
-    padding-top: 80px;
-  }
+.home-swiper .swiper-slide {
+  height: auto;
+}
 
+@media (max-width: 820px) {
   .slide-image {
+    position: relative;
     width: 100%;
     right: 0;
     height: auto;
     bottom: 0;
+  }
+
+  .home-swiper .swiper-slide .ps-banner {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .home-swiper .swiper-slide .ps-banner--bottom {
+    justify-content: space-between;
+    padding-top: 80px;
   }
 
   .swipper-nav .slide-prev-swiper {

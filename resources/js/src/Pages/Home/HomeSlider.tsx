@@ -3,12 +3,12 @@ import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import footerBg from "@/assets/images/footer-bg.webp";
 import slide3Bg from "@/assets/images/slides/slide3-bg.webp";
-import slide4Bg from "@/assets/images/slides/slide4-bg.png";
+import slide4Bg from "@/assets/images/slides/slide4-bg.webp";
 import slide1 from "@/assets/images/slides/slide1.webp";
-import slide2 from "@/assets/images/slides/slide2.png";
-import slide3 from "@/assets/images/slides/slide3.png";
-import slide4 from "@/assets/images/slides/slide4.png";
-import slide5 from "@/assets/images/slides/slide5.png";
+import slide2 from "@/assets/images/slides/slide2.webp";
+import slide3 from "@/assets/images/slides/slide3.webp";
+import slide4 from "@/assets/images/slides/slide4.webp";
+import slide5 from "@/assets/images/slides/slide5.webp";
 import slide2PriceStar from "@/assets/images/slides/price.webp";
 import SVGLogo from "@/assets/images/logo.svg?react";
 
@@ -33,7 +33,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
       autoplay={{
         delay: 5000,
       }}
-      className="mySwiper"
+      className="home-swiper"
     >
       <SwiperSlide>
         <div className="ps-banner" style={{ background: `url(${slide4Bg})` }}>
@@ -64,9 +64,8 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 </h3>
               </div>
             </div>
-
-            <img className="slide-image" src={slide4} alt="BUSINESS CARDS" />
           </div>
+          <img className="slide-image" src={slide4} alt="BUSINESS CARDS" />
         </div>
       </SwiperSlide>
 
@@ -91,9 +90,8 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <h5>Use code FIRST10 at checkout.</h5>
               </div>
             </div>
-
-            <img className="slide-image" src={slide5} alt="BUSINESS CARDS" />
           </div>
+          <img className="slide-image" src={slide5} alt="BUSINESS CARDS" />
         </div>
       </SwiperSlide>
 
@@ -116,9 +114,8 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <h5>No minimum purchase required</h5>
               </div>
             </div>
-
-            <img className="slide-image" src={slide3} alt="BUSINESS CARDS" />
           </div>
+          <img className="slide-image" src={slide3} alt="BUSINESS CARDS" />
         </div>
       </SwiperSlide>
 
@@ -146,14 +143,16 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <h5>promotions and more.</h5>
               </div>
             </div>
-
-            <img className="slide-image" src={slide2} alt="BUSINESS CARDS" />
           </div>
+          <img className="slide-image" src={slide2} alt="BUSINESS CARDS" />
         </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="ps-banner" style={{ background: `url(${footerBg})` }}>
+        <div
+          className="ps-banner ps-banner--bottom"
+          style={{ background: `url(${footerBg})` }}
+        >
           <div className="container">
             <div className="banner-row">
               <h3 className="banner-highlight banner-highlight--big">
@@ -166,9 +165,8 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
                 <h5>AND AFFORDABLE PRICES.</h5>
               </div>
             </div>
-
-            <img className="slide-image" src={slide1} alt="BUSINESS CARDS" />
           </div>
+          <img className="slide-image" src={slide1} alt="BUSINESS CARDS" />
         </div>
       </SwiperSlide>
 
