@@ -19,7 +19,7 @@ const EmptyPage: React.FC<Props> = ({
       <div className="ps-cart__icon">
         <i
           className={iconClass}
-          style={{ color: "#5b6c8f", fontSize: 120 }}
+          style={{ color: "#595855", fontSize: 120 }}
         ></i>
       </div>
       <h1 className="cart-title" style={{ color: "#103178", marginTop: 20 }}>

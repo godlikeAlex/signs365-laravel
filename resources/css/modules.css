@@ -66,7 +66,7 @@
 .ps-header .ps-header__text {
   line-height: 30px;
   font-size: 16px;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-header .ps-header__text strong {
@@ -138,7 +138,7 @@
 
 .ps-header .ps-language-currency .ps-dropdown-value {
   font-size: 14px;
-  color: #5b6c8f;
+  color: #595855;
   margin-right: 20px;
   padding: 12px 0;
 }
@@ -340,7 +340,7 @@
   line-height: 30px;
   text-align: right;
   font-size: 16px;
-  color: #5b6c8f;
+  color: #595855;
   display: none;
   padding: 10px 0;
 }
@@ -2184,7 +2184,7 @@
 
 .ps-footer--block .ps-block__list li a {
   display: block;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-footer--block .ps-block__list li a:hover {
@@ -2257,7 +2257,7 @@
 .ps-footer--address p {
   font-size: 16px;
   line-height: 26px;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-footer--address p a {
@@ -2326,7 +2326,7 @@
   margin-bottom: 18px;
   padding-left: 40px;
   font-size: 14px;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-footer--contact hr {
@@ -2475,7 +2475,7 @@
 .ps-footer--newsletter p {
   font-size: 16px;
   line-height: 26px;
-  color: #5b6c8f;
+  color: #595855;
   margin-bottom: 20px;
 }
 
@@ -2570,7 +2570,7 @@
 
 .ps-footer--listpage .ps-footer__list li a {
   display: block;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-footer--listpage .ps-footer__list li a:hover {
@@ -2647,7 +2647,7 @@
 }
 
 .ps-footer--5 .ps-footer--contact .ps-footer__email {
-  border: 1px solid #5b6c8f;
+  border: 1px solid #595855;
   padding: 4px 20px;
   border-radius: 40px;
 }
@@ -2671,7 +2671,7 @@
 }
 
 .ps-footer--5 .ps-footer--bottom {
-  border-color: #5b6c8f;
+  border-color: #595855;
 }
 
 .ps-footer--5 .ps-footer--bottom img {

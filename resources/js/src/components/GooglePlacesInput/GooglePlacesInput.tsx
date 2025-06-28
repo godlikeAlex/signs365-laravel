@@ -24,7 +24,7 @@ const GooglePlacesInput: React.FC<Props> = ({ onChange, value }: Props) => {
         onChange,
         value,
         placeholder: (
-          <div style={{ color: "#5b6c8f", fontSize: 14 }}>Address</div>
+          <div style={{ color: "#595855", fontSize: 14 }}>Address</div>
         ),
         styles: customStyles,
       }}
@@ -93,12 +93,12 @@ export const customStyles = {
   singleValue: (provided) => ({
     ...provided,
     margin: 0,
-    color: "#5b6c8f",
+    color: "#595855",
     padding: 0,
   }),
   input: (base) => ({
     ...base,
-    color: "#5b6c8f",
+    color: "#595855",
     fontSize: "16px",
     margin: 0,
     padding: 0,

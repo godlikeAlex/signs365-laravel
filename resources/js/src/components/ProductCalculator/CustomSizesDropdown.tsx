@@ -67,7 +67,7 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes }: Props) => {
                       height: "46px",
                       borderRadius: "40px",
                       backgroundColor: "#f0f2f5",
-                      color: "#5b6c8f",
+                      color: "#595855",
                       paddingLeft: 12,
                       paddingRight: 12,
 
@@ -85,7 +85,7 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes }: Props) => {
                       color:
                         state.isSelected || state.isFocused
                           ? "white"
-                          : "#5b6c8f",
+                          : "#595855",
                       background:
                         state.isSelected || state.isFocused
                           ? "#fd8d27"
@@ -93,11 +93,11 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes }: Props) => {
                     }),
                     singleValue: (baseStyles) => ({
                       ...baseStyles,
-                      color: "#5b6c8f",
+                      color: "#595855",
                     }),
                     placeholder: (baseStyle) => ({
                       ...baseStyle,
-                      color: "#5b6c8f",
+                      color: "#595855",
                     }),
                   }}
                 />

@@ -80,7 +80,11 @@ const Cart: React.FC<Props> = (props: Props) => {
                   className="ps-shopping__checkout"
                   style={{ paddingTop: 0 }}
                 >
-                  <Link className="ps-btn ps-btn--warning" href="checkout">
+                  <Link
+                    className="button"
+                    href="checkout"
+                    style={{ width: "100%", display: "block" }}
+                  >
                     Proceed to checkout
                   </Link>
                   <Link className="ps-shopping__link" href="/">
@@ -101,7 +105,7 @@ const Cart: React.FC<Props> = (props: Props) => {
         <div className="ps-cart__icon">
           <i
             className="fa-solid fa-basket-shopping"
-            style={{ color: "#5b6c8f", fontSize: 120 }}
+            style={{ color: "#595855", fontSize: 120 }}
           ></i>
         </div>
         <h1 className="cart-title" style={{ color: "#103178", marginTop: 20 }}>

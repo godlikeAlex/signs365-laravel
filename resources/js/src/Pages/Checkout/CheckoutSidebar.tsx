@@ -73,7 +73,8 @@ const CheckoutSidebar: React.FC<Props> = ({
 
       <div className="ps-checkout__payment">
         <button
-          className="ps-btn ps-btn--warning custom-button"
+          className="button"
+          style={{ width: "100%" }}
           type="submit"
           disabled={submitting}
         >

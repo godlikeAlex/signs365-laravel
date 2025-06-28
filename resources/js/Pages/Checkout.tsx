@@ -90,10 +90,10 @@ const Checkout: React.FC<Props> = (props: Props) => {
                     theme: "flat",
 
                     variables: {
-                      colorPrimary: "#103178",
+                      colorPrimary: "#ffca1a",
                       colorBackground: "#f0f2f5",
-                      colorText: "#103178",
-                      fontFamily: '"Jost", sans-serif',
+                      colorText: "#171109",
+                      fontFamily: '"Lexend", sans-serif',
                       spacingUnit: "4px",
                       borderRadius: "40px",
                       // See all possible variables below

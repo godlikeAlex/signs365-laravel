@@ -56,11 +56,9 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                 <div className="text-center">
                   <h3
                     className="ps-section__title ps-section__title--category"
-                    style={
-                      {
-                        // ["--categoryColor" as string]: colors.alternative,
-                      }
-                    }
+                    style={{
+                      ["--categoryColor" as string]: colors.primary,
+                    }}
                   >
                     {title}
                   </h3>

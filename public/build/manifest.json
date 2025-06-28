@@ -5,7 +5,7 @@
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-1ad679f9.css",
+    "file": "assets/style-018bc1f6.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -34,32 +34,32 @@
     "src": "resources/js/assets/images/slides/price.webp"
   },
   "resources/js/assets/images/slides/slide1.webp": {
-    "file": "assets/slide1-f6015edf.webp",
+    "file": "assets/slide1-b7ba8a88.webp",
     "src": "resources/js/assets/images/slides/slide1.webp"
   },
-  "resources/js/assets/images/slides/slide2.png": {
-    "file": "assets/slide2-e9c11c27.png",
-    "src": "resources/js/assets/images/slides/slide2.png"
+  "resources/js/assets/images/slides/slide2.webp": {
+    "file": "assets/slide2-40ffe724.webp",
+    "src": "resources/js/assets/images/slides/slide2.webp"
   },
   "resources/js/assets/images/slides/slide3-bg.webp": {
     "file": "assets/slide3-bg-94884eec.webp",
     "src": "resources/js/assets/images/slides/slide3-bg.webp"
   },
-  "resources/js/assets/images/slides/slide3.png": {
-    "file": "assets/slide3-8ee75922.png",
-    "src": "resources/js/assets/images/slides/slide3.png"
+  "resources/js/assets/images/slides/slide3.webp": {
+    "file": "assets/slide3-698ba2f9.webp",
+    "src": "resources/js/assets/images/slides/slide3.webp"
   },
-  "resources/js/assets/images/slides/slide4-bg.png": {
-    "file": "assets/slide4-bg-61e477f0.png",
-    "src": "resources/js/assets/images/slides/slide4-bg.png"
+  "resources/js/assets/images/slides/slide4-bg.webp": {
+    "file": "assets/slide4-bg-dfd7666c.webp",
+    "src": "resources/js/assets/images/slides/slide4-bg.webp"
   },
-  "resources/js/assets/images/slides/slide4.png": {
-    "file": "assets/slide4-6711c7e0.png",
-    "src": "resources/js/assets/images/slides/slide4.png"
+  "resources/js/assets/images/slides/slide4.webp": {
+    "file": "assets/slide4-1728951b.webp",
+    "src": "resources/js/assets/images/slides/slide4.webp"
   },
-  "resources/js/assets/images/slides/slide5.png": {
-    "file": "assets/slide5-53585e55.png",
-    "src": "resources/js/assets/images/slides/slide5.png"
+  "resources/js/assets/images/slides/slide5.webp": {
+    "file": "assets/slide5-fb5d11f9.webp",
+    "src": "resources/js/assets/images/slides/slide5.webp"
   },
   "resources/js/fillament-app.js": {
     "file": "assets/fillament-app-c216566f.js",
@@ -67,7 +67,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-11fe2a8b.css",
+    "file": "assets/index-e5639fe7.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -76,20 +76,20 @@
       "assets/payments-6fb8da66.svg",
       "assets/footer-bg-cb47aba9.webp",
       "assets/slide3-bg-94884eec.webp",
-      "assets/slide4-bg-61e477f0.png",
-      "assets/slide1-f6015edf.webp",
-      "assets/slide2-e9c11c27.png",
-      "assets/slide3-8ee75922.png",
-      "assets/slide4-6711c7e0.png",
-      "assets/slide5-53585e55.png",
+      "assets/slide4-bg-dfd7666c.webp",
+      "assets/slide1-b7ba8a88.webp",
+      "assets/slide2-40ffe724.webp",
+      "assets/slide3-698ba2f9.webp",
+      "assets/slide4-1728951b.webp",
+      "assets/slide5-fb5d11f9.webp",
       "assets/price-eabc5650.webp",
       "assets/truck-bfea8d73.svg",
       "assets/reward-b481f4ec.svg"
     ],
     "css": [
-      "assets/index-11fe2a8b.css"
+      "assets/index-e5639fe7.css"
     ],
-    "file": "assets/index-65bd70c8.js",
+    "file": "assets/index-5b6b566e.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   }

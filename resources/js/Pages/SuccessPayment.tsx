@@ -170,7 +170,7 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
                     "fas fa-clock": state.status === "in proccess",
                     "fas fa-times": state.status === "canceled",
                   })}
-                  style={{ color: "#5b6c8f", fontSize: 120 }}
+                  style={{ color: "#595855", fontSize: 120 }}
                 ></i>
               )}
             </div>

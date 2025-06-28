@@ -76,7 +76,7 @@ const SuccessPayment: React.FC<Props> = ({}: Props) => {
                     "fa fa-check-circle": state.status === "completed",
                     "fa fa-clock-o": state.status === "in proccess",
                   })}
-                  style={{ color: "#5b6c8f", fontSize: 120 }}
+                  style={{ color: "#595855", fontSize: 120 }}
                 ></i>
               )}
             </div>

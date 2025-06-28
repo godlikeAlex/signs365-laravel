@@ -49,6 +49,7 @@
 @import "helper.css";
 @import "menu.css";
 @import "button.css";
+@import "home-slider.css";
 
 :root {
   --primary-color: #ffca1a;

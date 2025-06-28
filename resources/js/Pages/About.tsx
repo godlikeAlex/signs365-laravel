@@ -2,6 +2,18 @@ import { SEOHead } from "@/src/components";
 import { Link } from "@inertiajs/react";
 import React from "react";
 
+import slide4Bg from "@/assets/images/slides/slide4-bg.webp";
+import slide4 from "@/assets/images/slides/slide4.webp";
+import SVGLogo from "@/assets/images/logo.svg?react";
+import SVGStar from "@/assets/icons/LARGE/star-check-large.svg?react";
+import SVGCheck from "@/assets/icons/LARGE/check-large.svg?react";
+import SVGLamp from "@/assets/icons/LARGE/lamp-large.svg?react";
+import slide5 from "@/assets/images/slides/slide5.webp";
+import footerBg from "@/assets/images/footer-bg.webp";
+
+import truckIcon from "@/assets/icons/slider/truck.svg";
+import rewardIcon from "@/assets/icons/slider/reward.svg";
+
 interface Props {
   title: string;
 }
@@ -21,52 +33,42 @@ const About: React.FC<Props> = ({ title }: Props) => {
             </li>
           </ul>
           <section className="ps-banner--round">
-            <div className="ps-banner">
-              <div className="ps-banner__block">
-                <div
-                  className="ps-banner__content"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <div>
-                    <div className="ps-logo">
-                      <Link href="/">
-                        <img src="/img/logo.png" alt="" />
-                      </Link>
-                    </div>
-                    <h2 className="ps-banner__title">
-                      Your Outdoor Advertising Experts
-                    </h2>
-                    <div className="ps-banner__btn-group">
-                      <div className="ps-banner__btn">
-                        <i
-                          className="fa-solid fa-truck"
-                          style={{ marginRight: 5 }}
-                        ></i>
-                        Free shipping
-                      </div>
-                      <div className="ps-banner__btn">
-                        <i
-                          className="fa-solid fa-certificate"
-                          style={{ marginRight: 5 }}
-                        ></i>
-                        Certified products
-                      </div>
-                    </div>
+            <div
+              className="ps-banner"
+              style={{ background: `url(${slide4Bg})` }}
+            >
+              <div className="container">
+                <div className="banner-row">
+                  <SVGLogo style={{ width: 90, height: "auto" }} />
+
+                  <h3
+                    className="banner-highlight banner-highlight--medium"
+                    style={{ marginTop: 50 }}
+                  >
+                    YOUR OUTDOOR
+                  </h3>
+
+                  <h3 className="banner-highlight banner-highlight--medium">
+                    ADVERTISING EXPERTS
+                  </h3>
+
+                  <div style={{ marginTop: 50 }} className="banner-group">
+                    <h3 className="banner-highlight banner-highlight--medium banner-highlight--medium-compact banner-highlight--pink">
+                      <img className="banner-highlight__icon" src={truckIcon} />{" "}
+                      Free shipping
+                    </h3>
+
+                    <h3 className="banner-highlight banner-highlight--medium banner-highlight--medium-compact banner-highlight--pink">
+                      <img
+                        className="banner-highlight__icon"
+                        src={rewardIcon}
+                      />
+                      Certified products
+                    </h3>
                   </div>
                 </div>
-                <div className="ps-banner__thumnail">
-                  <img
-                    className="ps-banner__round"
-                    src="img/round5.png"
-                    alt=""
-                  />
-                  <img
-                    className="ps-banner__image"
-                    src="img/banner-about.png"
-                    alt=""
-                  />
-                </div>
               </div>
+              <img className="slide-image" src={slide4} alt="BUSINESS CARDS" />
             </div>
           </section>
           <section className="ps-about--info">
@@ -84,7 +86,7 @@ const About: React.FC<Props> = ({ title }: Props) => {
                 <div className="col-12 col-md-4 p-0">
                   <div className="ps-block--about">
                     <div className="ps-block__icon">
-                      <i className="fa-solid fa-star icon-why-we"></i>
+                      <SVGStar />
                     </div>
                     <h4 className="ps-block__title">Quality Assurance</h4>
                     <div className="ps-block__subtitle">
@@ -96,7 +98,7 @@ const About: React.FC<Props> = ({ title }: Props) => {
                 <div className="col-12 col-md-4 p-0">
                   <div className="ps-block--about">
                     <div className="ps-block__icon">
-                      <i className="fa-solid fa-clock icon-why-we"></i>
+                      <SVGCheck />
                     </div>
                     <h4 className="ps-block__title">Quick Turnaround</h4>
                     <div className="ps-block__subtitle">
@@ -107,7 +109,7 @@ const About: React.FC<Props> = ({ title }: Props) => {
                 <div className="col-12 col-md-4 p-0">
                   <div className="ps-block--about">
                     <div className="ps-block__icon">
-                      <i className="fa-solid fa-palette icon-why-we"></i>
+                      <SVGLamp />
                     </div>
                     <h4 className="ps-block__title">Creative Solutions</h4>
                     <div className="ps-block__subtitle">
@@ -120,26 +122,30 @@ const About: React.FC<Props> = ({ title }: Props) => {
           </section>
         </div>
 
-        <div className="ps-about__content">
-          <section
-            className="ps-about__banner"
-            data-background="/img/Mask-Group.png"
-            style={{ backgroundImage: 'url("/img/Mask-Group.png")' }}
-          >
+        <div className="ps-banner--round">
+          <div className="ps-banner" style={{ background: `url(${footerBg})` }}>
             <div className="container">
-              <div className="ps-banner">
-                <h2 className="ps-banner__title">EXCLUSIVE SAVINGS INSIDE</h2>
-                <div className="ps-banner__desc">
-                  Unlock exclusive savings with our promo code! Enjoy a 10%
-                  discount on first order. Enter promo code [HELLO24] at
-                  checkout and save big. Don't miss out!
+              <div className="banner-row">
+                <h3 className="banner-highlight banner-highlight--big">
+                  SAVE 10%
+                </h3>
+
+                <h3
+                  className="banner-highlight banner-highlight--big"
+                  style={{ marginTop: 20 }}
+                >
+                  on Your First Order!
+                </h3>
+
+                <div style={{ marginTop: 25 }} className="banner-description">
+                  <h5>Start your shopping journey with</h5>
+                  <h5>an exclusive 10% discount.</h5>
+                  <h5>Use code FIRST10 at checkout.</h5>
                 </div>
-                <Link className="ps-banner__shop" href="/">
-                  Shop now
-                </Link>
               </div>
             </div>
-          </section>
+            <img className="slide-image" src={slide5} alt="Save 10%" />
+          </div>
         </div>
 
         <section className="ps-about__project">

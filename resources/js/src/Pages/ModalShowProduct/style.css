@@ -140,7 +140,7 @@ h6 {
 .custom-button:disabled,
 .custom-button[disabled] {
   background-color: #f0f2f5 !important;
-  color: #5b6c8f !important;
+  color: #595855 !important;
   border-color: #f0f2f5 !important;
 }
 
@@ -257,7 +257,7 @@ h6 {
   border: none;
   width: 100%;
   background-color: #f0f2f5;
-  color: #5b6c8f;
+  color: #595855;
   padding: 10px 20px;
   font-size: 16px;
   text-align: center;

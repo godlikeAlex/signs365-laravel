@@ -1641,7 +1641,7 @@ textarea.form-control {
 
 .ps-post .ps-blog__meta {
   margin-bottom: 45px;
-  color: #5b6c8f;
+  color: #595855;
   font-size: 14px;
   line-height: 20px;
 }
@@ -1668,7 +1668,7 @@ textarea.form-control {
 
 .ps-post .ps-blog__text {
   margin-bottom: 40px;
-  color: #5b6c8f;
+  color: #595855;
   font-size: 16px;
 }
 
@@ -1880,7 +1880,7 @@ textarea.form-control {
 }
 
 .ps-section--block-grid .ps-section__desc {
-  color: #5b6c8f;
+  color: #595855;
   margin-bottom: 24px;
   font-size: 16px;
   line-height: 26px;
@@ -2863,7 +2863,7 @@ textarea.form-control {
   line-height: 24px;
   padding: 6px 15px;
   font-size: 16px;
-  color: #5b6c8f;
+  color: #595855;
   background-color: #f0f2f5;
   border-radius: 40px;
 }
@@ -3318,7 +3318,7 @@ textarea.form-control {
 }
 
 .ps-product .ps-product__quantity .number-input button i {
-  color: #5b6c8f;
+  color: #595855;
   font-weight: 600;
 }
 
@@ -3460,7 +3460,7 @@ textarea.form-control {
   margin-bottom: 20px;
   padding-right: 50px;
   border-top: 1px solid #f0f2f5;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-product--standard .ps-product__footer span {
@@ -3628,7 +3628,7 @@ textarea.form-control {
 }
 
 .ps-product--detail .ps-product__link {
-  color: #5b6c8f;
+  color: #595855;
   line-height: 20px;
   font-size: 14px;
   margin-right: 25px;
@@ -3852,7 +3852,7 @@ textarea.form-control {
 }
 
 .ps-product--detail .ps-product__quantity .number-input button i {
-  color: #5b6c8f;
+  color: #595855;
   font-weight: 600;
 }
 
@@ -3920,14 +3920,14 @@ textarea.form-control {
 }
 
 .ps-product--detail .ps-product__content .ps-subtitle {
-  color: #5b6c8f;
+  color: #595855;
   font-size: 22px;
   margin-bottom: 20px;
 }
 
 .ps-product--detail .ps-product__content .ps-desc {
   font-size: 16px;
-  color: #5b6c8f;
+  color: #595855;
   margin-bottom: 20px;
 }
 
@@ -4609,7 +4609,7 @@ textarea.form-control {
 }
 
 .ps-product--list .ps-product__quantity .number-input button i {
-  color: #5b6c8f;
+  color: #595855;
   font-weight: 600;
 }
 
@@ -4636,7 +4636,7 @@ textarea.form-control {
 }
 
 .ps-product--list .ps-product__link {
-  color: #5b6c8f;
+  color: #595855;
   line-height: 20px;
   font-size: 14px;
   margin-right: 25px;
@@ -4806,7 +4806,7 @@ textarea.form-control {
 }
 
 .ps-product--wishlist .ps-product__out-stock {
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-product--wishlist .ps-btn {
@@ -4891,7 +4891,7 @@ textarea.form-control {
 
 .ps-banner .ps-banner__price del {
   font-size: 20px;
-  color: #5b6c8f;
+  color: #595855;
   display: inline-block;
   position: relative;
   top: -12px;
@@ -5273,7 +5273,7 @@ textarea.form-control {
 .ps-banner--round .ps-banner__btn {
   display: block;
   margin-bottom: 15px;
-  color: #5b6c8f;
+  color: #595855;
   font-weight: 600;
   font-size: 16px;
 }
@@ -6040,6 +6040,11 @@ textarea.form-control {
 .ps-table--product .ps-product__name {
   font-size: 16px;
   color: var(--dark-color);
+  font-weight: bold;
+}
+
+.ps-table--product .ps-product__name p {
+  font-weight: 400;
 }
 
 .ps-table--product .ps-product__remove {
@@ -6126,7 +6131,7 @@ textarea.form-control {
 }
 
 .ps-table--product .number-input button i {
-  color: #5b6c8f;
+  color: #595855;
   font-weight: 600;
 }
 
@@ -6358,7 +6363,7 @@ textarea.form-control {
 
 .ps-dropdown-single .select2-results__option {
   font-size: 14px !important;
-  color: #5b6c8f !important;
+  color: #595855 !important;
 }
 
 .ps-dropdown-single .select2-results__option[aria-selected="true"] {
@@ -6390,7 +6395,7 @@ textarea.form-control {
   height: 34px;
   border-radius: 40px;
   background-color: #f0f2f5;
-  color: #5b6c8f;
+  color: #595855;
   margin-bottom: 10px;
   padding: 4px 10px !important;
   font-size: 14px;
@@ -7198,7 +7203,7 @@ textarea.form-control {
   font-size: 16px;
   line-height: 26px;
   margin-bottom: 60px;
-  color: #5b6c8f;
+  color: #595855;
   text-align: center;
   font-weight: 500;
 }
@@ -7279,7 +7284,7 @@ textarea.form-control {
 
 .ps-blog--latset .ps-blog__content {
   padding: 20px 0;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-blog--latset .ps-blog__meta {
@@ -7295,7 +7300,7 @@ textarea.form-control {
 }
 
 .ps-blog--latset .ps-blog__author {
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .ps-blog--latset .ps-blog__author:hover {
@@ -7318,7 +7323,7 @@ textarea.form-control {
   display: none;
   margin-bottom: 0;
   font-size: 16px;
-  color: #5b6c8f;
+  color: #595855;
 }
 
 .icon-why-we {

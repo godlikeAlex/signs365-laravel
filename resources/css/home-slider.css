@@ -1,5 +1,6 @@
 .ps-banner {
   background-size: cover;
+  position: relative;
 }
 .banner-highlight {
   position: relative;
