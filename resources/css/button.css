@@ -1,0 +1,42 @@
+.button {
+  border: none;
+  border-radius: 25px;
+  color: white;
+
+  padding: 10px 25px;
+  cursor: pointer;
+  font-size: 18px;
+
+  background-color: var(--primary-color);
+
+  transition: 0.3s;
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: var(--dark-color);
+  color: white;
+}
+
+.button--show-more {
+  text-align: center;
+  margin: auto;
+
+  margin-top: 20px;
+
+  max-width: 300px;
+}
+
+.button--alt {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.button--alt:hover {
+  border: 2px solid var(--dark-color);
+  background: transparent;
+  color: var(--dark-color);
+}

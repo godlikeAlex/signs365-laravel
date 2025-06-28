@@ -15,7 +15,12 @@ const ProductOptions = ({ product }: Props) => {
   const disabled = state.status === "fetching";
 
   if (product.options.length === 1) {
-    return <h6>Option: {product.options[0].title}</h6>;
+    return (
+      <h6>
+        Option:{" "}
+        <span className="primary-color">{product.options[0].title}</span>
+      </h6>
+    );
   }
 
   return (

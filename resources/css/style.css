@@ -48,8 +48,13 @@
 @import "modules.css";
 @import "helper.css";
 @import "menu.css";
+@import "button.css";
 
 :root {
   --primary-color: #ffca1a;
   --dark-color: #171109;
+}
+
+.primary-color {
+  color: var(--primary-color);
 }

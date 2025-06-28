@@ -12,6 +12,8 @@ const ProductBreadcrumb: React.FC<Props> = ({
   categories,
   productTitle,
 }: Props) => {
+  const [category] = categories || [];
+
   return (
     <ul className="ps-breadcrumb">
       <li className="ps-breadcrumb__item">
@@ -20,19 +22,14 @@ const ProductBreadcrumb: React.FC<Props> = ({
       <li className="ps-breadcrumb__item">
         <span>Shop</span>
       </li>
-      {categories.length > 0 && (
-        <li
-          className="ps-breadcrumb__item"
-          key={`breadcumbs-${categories[0].slug}`}
-        >
-          <Link href={`/shop/${categories[0].slug}`}>
-            {categories[0].title}
-          </Link>
+      {category && (
+        <li className="ps-breadcrumb__item" key={`breadcumbs-${category.slug}`}>
+          <Link href={`/shop/${category.slug}`}>{category.title}</Link>
         </li>
       )}
 
       <li className="ps-breadcrumb__item">
-        <span>{productTitle}</span>
+        <span className="primary-color">{productTitle}</span>
       </li>
     </ul>
   );

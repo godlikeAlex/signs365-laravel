@@ -46,7 +46,7 @@
   font-weight: bold;
 }
 
-.ps-cart--mini .ps-cart__footer .ps-btn {
+.ps-cart--mini .ps-cart__footer .button {
   display: block;
   width: 100%;
   height: auto;
@@ -1029,6 +1029,11 @@
 .ps-home--block .ps-block__image {
   margin-bottom: 10px;
   height: 100%;
+}
+
+.ps-banner {
+  min-height: 690px;
+  position: relative;
 }
 
 .ps-home--block .ps-block__image .ps-banner {
@@ -2093,6 +2098,10 @@
   background-size: cover;
   margin-bottom: 30px;
   padding: 70px 0 120px;
+}
+
+.ps-banner {
+  background-size: cover !important;
 }
 
 .ps-section--also .ps-section__title {
@@ -6481,7 +6490,7 @@
 }
 
 .ps-section__title--category {
-  background-color: var(--categoryColor);
+  color: var(--categoryColor) !important;
   display: inline-block;
   margin: auto;
   text-align: center;

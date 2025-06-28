@@ -37,10 +37,10 @@ const MiniCartModal: React.FC<Props> = ({ active }: Props) => {
             <span>${cart.total_with_tax.toLocaleString()}</span>
           </div>
           <div className="ps-cart__footer">
-            <Link className="ps-btn ps-btn--outline" href="/cart">
+            <Link className="button button--alt" href="/cart">
               View Cart
             </Link>
-            <Link className="ps-btn ps-btn--warning" href="/checkout">
+            <Link className="button " href="/checkout">
               Checkout
             </Link>
           </div>

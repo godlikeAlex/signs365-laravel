@@ -1,6 +1,7 @@
 .faq-product .rc-collapse-header {
   background-color: #f0f2f5;
   border: unset !important;
+  color: var(--primary-color) !important;
 }
 
 .faq-product .rc-collapse-content {

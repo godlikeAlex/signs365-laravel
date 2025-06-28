@@ -214,13 +214,13 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
 
         <button
           type="submit"
-          className="ps-btn ps-btn--warning"
+          className="button"
           onClick={() =>
             state.selectedOption.need_file
               ? dragAndDropRef.current.showModal()
               : submitAddToCart()
           }
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, width: "100%" }}
           disabled={state.status === "fetching"}
         >
           Add to cart

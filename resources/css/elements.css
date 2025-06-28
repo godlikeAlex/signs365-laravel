@@ -3011,50 +3011,6 @@ textarea.form-control {
   width: auto;
 }
 
-.swipper-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  width: 100%;
-  height: 0;
-  left: 0;
-}
-
-.swipper-nav > * {
-  display: inline-block;
-  position: relative;
-  vertical-align: top;
-  width: 56px;
-  height: 56px;
-  background-color: rgba(16, 49, 120, 0.1) !important;
-  transition: all 0.4s ease;
-  border-radius: 50%;
-  transform: translateY(-50%);
-}
-
-.swipper-nav > * i {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 23px;
-  color: white;
-}
-
-.swipper-nav > *:hover {
-  background-color: var(--dark-color) !important;
-}
-
-.swipper-nav .slide-prev-swiper {
-  margin-left: 40px;
-}
-
-.swipper-nav .slide-next-swiper {
-  float: right;
-  margin-right: 40px;
-}
-
 .owl-carousel .owl-dots {
   position: absolute;
   bottom: 10px;
@@ -4889,10 +4845,10 @@ textarea.form-control {
   font-weight: 600;
 }
 
-.ps-banner {
+/* .ps-banner {
   min-height: 536px;
   position: relative;
-}
+} */
 
 .ps-banner .ps-banner__content {
   padding: 40px 15px;
@@ -5103,8 +5059,8 @@ textarea.form-control {
 
 @media (min-width: 768px) {
   .ps-banner {
-    height: 320px;
-    min-height: 320px !important;
+    height: 450px;
+    min-height: 450px !important;
   }
   .ps-banner .container,
   .ps-banner .container-no-round {

@@ -113,7 +113,7 @@ function ModalShowProduct({
                             </li>
                             <li>
                               <i className="icon-truck"></i>Free delivery for
-                              order over $200
+                              order over $200xs
                             </li>
                           </ul>
                           <div className="no-gutters row">

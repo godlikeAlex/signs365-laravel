@@ -84,15 +84,13 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                       </div>
                     ))}
                   </div>
-                  <div className="ps-shop__more">
-                    <a
-                      href={`/shop/${slug}`}
-                      style={{ display: "block" }}
-                      className="home_show_more"
-                    >
-                      Show all
-                    </a>
-                  </div>
+                  <a
+                    href={`/shop/${slug}`}
+                    style={{ display: "block" }}
+                    className="button button--show-more"
+                  >
+                    Show all
+                  </a>
                 </div>
               </div>
             </section>

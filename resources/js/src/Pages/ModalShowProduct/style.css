@@ -95,7 +95,7 @@ body {
 }
 
 .active-variant {
-  border-color: #103178 !important;
+  border-color: var(--primary-color) !important;
 }
 
 .headless-content .add-to-cart {

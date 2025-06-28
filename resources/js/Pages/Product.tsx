@@ -30,6 +30,7 @@ interface ProductProps {
 function Product({ product }: ProductProps) {
   const { state } = useContext(MainProductContext);
   const dragAndDropRef = React.useRef<SelectProductFileRef>(null);
+  console.log("HELL OWORD");
 
   return (
     <>
