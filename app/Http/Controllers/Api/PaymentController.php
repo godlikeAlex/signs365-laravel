@@ -17,7 +17,8 @@ use App\Services\VoucherService;
 class PaymentController extends Controller
 {
   protected $stripe;
-  protected $cart;
+  protected CartService $cart;
+  private $cart_id;
 
   public function __construct(Request $request)
   {
@@ -29,7 +30,9 @@ class PaymentController extends Controller
     }
 
     if (Cookie::has("cart")) {
-      $this->cart = new CartService(Cookie::get("cart"), $city);
+      $this->cart_id = Cookie::get("cart");
+
+      $this->cart = new CartService($this->cart_id, $city);
     } else {
       return response()->json(
         [
@@ -60,7 +63,7 @@ class PaymentController extends Controller
       "amount" => round($order->amount, 2),
       "currency" => "usd",
       "automatic_payment_methods" => ["enabled" => true],
-      // "metadata" => ["temp_order_id" => $temp_order->id],
+      "metadata" => ["cart_id" => $this->cart_id],
     ]);
 
     $order->payment_intent_id = $intent->id;

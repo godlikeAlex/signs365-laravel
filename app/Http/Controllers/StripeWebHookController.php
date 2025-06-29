@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Notifications\OrderPaid;
 use App\Services\VoucherService;
 use Notification;
+use App\Services\Cart\Service as CartService;
+use Darryldecode\Cart\Cart;
 
 class StripeWebHookController extends Controller
 {
@@ -74,7 +76,6 @@ class StripeWebHookController extends Controller
         $order->update(["status" => OrderStatusEnum::PENDING]);
 
         $this->notifyAdmins($order);
-
       case "setup_intent.canceled":
         $setupIntent = $event->data->object;
       // ... handle other event types

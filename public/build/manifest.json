@@ -5,7 +5,7 @@
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-018bc1f6.css",
+    "file": "assets/style-bbbf9c58.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -67,7 +67,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-e5639fe7.css",
+    "file": "assets/index-bea4b8f6.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -76,20 +76,20 @@
       "assets/payments-6fb8da66.svg",
       "assets/footer-bg-cb47aba9.webp",
       "assets/slide3-bg-94884eec.webp",
-      "assets/slide4-bg-dfd7666c.webp",
       "assets/slide1-b7ba8a88.webp",
       "assets/slide2-40ffe724.webp",
       "assets/slide3-698ba2f9.webp",
+      "assets/price-eabc5650.webp",
+      "assets/slide4-bg-dfd7666c.webp",
       "assets/slide4-1728951b.webp",
       "assets/slide5-fb5d11f9.webp",
-      "assets/price-eabc5650.webp",
       "assets/truck-bfea8d73.svg",
       "assets/reward-b481f4ec.svg"
     ],
     "css": [
-      "assets/index-e5639fe7.css"
+      "assets/index-bea4b8f6.css"
     ],
-    "file": "assets/index-5b6b566e.js",
+    "file": "assets/index-2b1a1e29.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   }

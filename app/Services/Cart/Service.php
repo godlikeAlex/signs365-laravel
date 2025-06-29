@@ -324,6 +324,11 @@ class Service
     return [$totalCart, $totalItems, $tax];
   }
 
+  public function clear()
+  {
+    $this->cart->clear();
+  }
+
   public function calculateForOrder()
   {
     list($total, $totalItems, $tax) = $this->getPrices();

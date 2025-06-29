@@ -76,6 +76,8 @@ Route::get("/checkout/success-payment", [
   "renderSuccess",
 ]);
 
+Route::post("/cart/clear", [CartController::class, "cartClear"]);
+
 Route::get("/checkout", [CartController::class, "renderCheckout"]);
 Route::post("/apply-voucher", [CartController::class, "applyVoucher"]);
 

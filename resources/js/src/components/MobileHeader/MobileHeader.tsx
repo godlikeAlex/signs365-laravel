@@ -133,11 +133,11 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         <div className="ps-menu__footer">
           <div className="ps-menu__item">
             <div className="ps-menu__contact">
-              <a href="tel:+13072008927" style={{ color: "#103178" }}>
+              <a href="tel:+13072008927" style={{ color: "#ffca1a" }}>
                 <strong>+1 (307) 200-8927</strong>
               </a>
               <br />
-              <a href="mailto:info@sign7.com" style={{ color: "#103178" }}>
+              <a href="mailto:info@sign7.com" style={{ color: "#ffca1a" }}>
                 <strong>info@sign7.com</strong>
               </a>
             </div>

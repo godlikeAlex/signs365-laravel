@@ -5,6 +5,7 @@ import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 import { CartList, SEOHead } from "@/src/components";
 import CartListMobile from "@/src/components/CartList/CartListMobile";
+import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
 
 interface Props {
   with_installation: boolean;
@@ -103,12 +104,9 @@ const Cart: React.FC<Props> = (props: Props) => {
     return (
       <div className="cart-empty text-center title-with-icon-section">
         <div className="ps-cart__icon">
-          <i
-            className="fa-solid fa-basket-shopping"
-            style={{ color: "#595855", fontSize: 120 }}
-          ></i>
+          <CartIcon />
         </div>
-        <h1 className="cart-title" style={{ color: "#103178", marginTop: 20 }}>
+        <h1 className="cart-title" style={{ marginTop: 20 }}>
           Your cart is empty
         </h1>
       </div>

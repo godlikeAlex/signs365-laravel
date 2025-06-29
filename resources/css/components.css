@@ -702,8 +702,8 @@
   min-width: 208px;
   font-size: 16px;
   color: white;
-  background-color: #fd8d27;
-  border: 1px solid #fd8d27;
+  background-color: var(--primary-color);
+  border: 1px solid var(--primary-color);
   padding: 8px 15px;
   font-weight: 500;
   display: inline-block;
@@ -1170,7 +1170,7 @@
 }
 
 .ps-section--category .ps-category__list li a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
   text-decoration: underline;
 }
 
@@ -1899,7 +1899,7 @@
 }
 
 .ps-categogy--dark .ps-product--standard .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-categogy--dark .ps-widget--product .ps-widget__title {
@@ -2174,7 +2174,7 @@
 }
 
 .ps-section--deals .ps-section__carousel {
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
   border-radius: 5px;
 }
 
@@ -2241,7 +2241,7 @@
 
 .ps-section--weekdeal .ps-weekdeal__product {
   border-radius: 4px;
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
 }
 
 .ps-section--weekdeal .ps-countdown {
@@ -2362,7 +2362,7 @@
 }
 
 .ps-section--seller-diagnosis .ps-section__carousel {
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
   border-radius: 4px;
 }
 
@@ -2404,7 +2404,7 @@
 }
 
 .ps-section--face-mask .ps-section__carousel {
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
   border-radius: 4px;
 }
 
@@ -2644,7 +2644,7 @@
 }
 
 .ps-section--black-style .ps-product--standard .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-section--black-style .ps-product--standard .ps-product__del {
@@ -2904,7 +2904,7 @@
 }
 
 .ps-review--product .ps-review__rating .br-widget .br-selected::after {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-review--product .ps-review__desc {
@@ -3378,7 +3378,7 @@
 }
 
 .ps-section--categories .ps-categories__name:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-section--categories .ps-categories__show {
@@ -3394,9 +3394,9 @@
 }
 
 .ps-section--categories .ps-categories__show:hover {
-  background-color: #fd8d27;
+  background-color: var(--primary-color);
   color: white;
-  border-color: #fd8d27;
+  border-color: var(--primary-color);
 }
 
 @media (min-width: 768px) {
@@ -3744,7 +3744,7 @@
 }
 
 .ps-page--product1 .ps-document .ps-list li {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-page--product1 .ps-document .ps-list img {
@@ -3881,7 +3881,7 @@
 }
 
 .ps-page--product6 .ps-product--standard .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-page--product6 .ps-product--detail .ps-product__branch,
@@ -3898,7 +3898,7 @@
 }
 
 .ps-page--product6 .ps-product--detail .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-page--product6
@@ -4028,7 +4028,7 @@
 
 .ps-categogy--promo .ps-promo .ps-promo__price {
   font-weight: 700;
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-categogy--promo .ps-promo .ps-promo__name {
@@ -4045,8 +4045,8 @@
 }
 
 .ps-categogy--promo .ps-promo .ps-promo__btn {
-  background-color: #fd8d27;
-  border-color: #fd8d27;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   font-size: 16px;
   padding: 7px 40px;
 }
@@ -4570,8 +4570,8 @@
 
 .ps-contact .ps-contact__email a:hover {
   color: white;
-  background-color: #fd8d27;
-  border-color: #fd8d27;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .ps-contact .ps-social {
@@ -4859,7 +4859,7 @@
 }
 
 .ps-checkout .ps-checkout__order {
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
   border-radius: 4px;
   padding: 25px 20px 30px;
   margin-bottom: 50px;
@@ -5144,7 +5144,7 @@
 }
 
 .ps-compare--product .ps-table .ps-product__price.sale {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .ps-compare--product .ps-table .ps-product__del {
@@ -5251,7 +5251,7 @@
   min-width: 30px;
   height: 40px;
   line-height: 40px;
-  background-color: #fd8d27;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 4px;
   display: inline-block;
@@ -5573,7 +5573,7 @@
 }
 
 .mega-menu .sub-menu--mega li a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .mega-menu .sub-menu--bold li a {
@@ -5605,7 +5605,7 @@
 
 .mega-menu__product {
   border-radius: 4px;
-  border: 3px solid #fd8d27;
+  border: 3px solid var(--primary-color);
   padding-top: 20px;
 }
 
@@ -5791,7 +5791,7 @@
 }
 
 .menu > li > a:hover {
-  color: #fd8d27;
+  color: var(--primary-color);
 }
 
 .menu > li > a > i {

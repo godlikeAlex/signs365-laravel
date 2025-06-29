@@ -7,6 +7,7 @@ import { Lines } from "react-preloaders";
 import { BeatLoader } from "react-spinners";
 import { Link, usePage } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
+import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
 
 interface Props {
   active: boolean;
@@ -48,7 +49,7 @@ const MiniCartModal: React.FC<Props> = ({ active }: Props) => {
       ) : (
         <div className="ps-cart__empty">
           <div className="ps-cart__icon">
-            <i className="fa-solid fa-cart-shopping"></i>
+            <CartIcon style={{ width: 80, height: 80 }} />
           </div>
           <p className="ps-cart__text">Your cart is currently empty</p>
         </div>

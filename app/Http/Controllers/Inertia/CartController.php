@@ -52,6 +52,8 @@ class CartController extends Controller
 
   public function renderSuccess(Request $request)
   {
+    $this->cart->clear();
+
     return Inertia::render("SuccessPayment", [
       "payment_intent" => $request->query("payment_intent"),
     ]);
@@ -106,6 +108,13 @@ class CartController extends Controller
     }
 
     $this->cart->applyVoucher($voucher);
+
+    return back();
+  }
+
+  public function cartClear()
+  {
+    $this->cart->clear();
 
     return back();
   }
