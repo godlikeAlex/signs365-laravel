@@ -62,7 +62,6 @@ class VoucherResource extends Resource
           ->columnSpanFull()
           ->reactive(),
         Forms\Components\TextInput::make("discount_amount")
-          ->numeric()
           ->hidden(function (\Closure $get) {
             return !$get("is_fixed");
           })
@@ -70,12 +69,15 @@ class VoucherResource extends Resource
           ->afterStateHydrated(function (TextInput $component, $state) {
             $component->state($state / 100);
           })
+          ->numeric()
+          ->minValue(0)
           ->postfix("$")
           ->required(),
         Forms\Components\TextInput::make("discount_percent")
           ->hidden(fn(\Closure $get) => $get("is_fixed"))
           ->postfix("%")
           ->numeric()
+          ->minValue(0)
           ->required(),
       ]),
 
