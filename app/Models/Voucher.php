@@ -57,6 +57,7 @@ class Voucher extends Model
     }
 
     $voucherUsedByUser = $this->orders()
+      ->where("status", "!=", "unpaid")
       ->where("user_id", $user->id)
       ->count();
 

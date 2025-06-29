@@ -48,8 +48,6 @@ class StripeWebHookController extends Controller
           return;
         }
 
-        $order->update(["status" => OrderStatusEnum::PENDING]);
-
         if ($order->user && $order->voucher) {
           $resultValidationVoucher = $voucherService->validateVoucher(
             $order->voucher,
@@ -68,19 +66,14 @@ class StripeWebHookController extends Controller
               "status" => OrderStatusEnum::CANCELED,
               "voucher_id" => null,
             ]);
+
+            return response("ok", 200);
           }
         }
 
-        foreach (
-          [
-            env("NOTIFICATION_EMAIL"),
-            "viktor@easywayinstall.com",
-            "david@easywayinstall.com",
-          ]
-          as $email
-        ) {
-          Notification::route("mail", $email)->notify(new OrderPaid($order));
-        }
+        $order->update(["status" => OrderStatusEnum::PENDING]);
+
+        $this->notifyAdmins($order);
 
       case "setup_intent.canceled":
         $setupIntent = $event->data->object;
@@ -90,5 +83,19 @@ class StripeWebHookController extends Controller
     }
 
     return response("ok", 200);
+  }
+
+  private function notifyAdmins($order)
+  {
+    foreach (
+      [
+        env("NOTIFICATION_EMAIL"),
+        "viktor@easywayinstall.com",
+        "david@easywayinstall.com",
+      ]
+      as $email
+    ) {
+      Notification::route("mail", $email)->notify(new OrderPaid($order));
+    }
   }
 }
