@@ -54,7 +54,7 @@ class StripeWebHookController extends Controller
           $resultValidationVoucher = $voucherService->validateVoucher(
             $order->voucher,
             $order->user,
-            $order->amount
+            $order->amount + $order->voucher_discount
           );
 
           if ($resultValidationVoucher["isValid"] === false) {

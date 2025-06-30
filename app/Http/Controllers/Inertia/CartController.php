@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Inertia;
 
+use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\Order;
 use App\Models\Voucher;
 use App\Services\VoucherService;
 use Cookie;
@@ -52,11 +54,16 @@ class CartController extends Controller
 
   public function renderSuccess(Request $request)
   {
-    $this->cart->clear();
-
     return Inertia::render("SuccessPayment", [
       "payment_intent" => $request->query("payment_intent"),
     ]);
+  }
+
+  public function checkPayment(Request $request)
+  {
+    $this->cart->clear();
+
+    return redirect()->route("successPayment", $request->query());
   }
 
   public function toggleExtraInstallation(Request $request)

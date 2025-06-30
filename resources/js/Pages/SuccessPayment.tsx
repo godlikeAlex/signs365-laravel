@@ -170,7 +170,7 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
                     "fas fa-clock": state.status === "in proccess",
                     "fas fa-times": state.status === "canceled",
                   })}
-                  style={{ color: "#595855", fontSize: 120 }}
+                  style={{ color: "#ffca1a", fontSize: 120 }}
                 ></i>
               )}
             </div>
@@ -181,7 +181,7 @@ const SuccessPayment: React.FC<Props> = ({ payment_intent }: Props) => {
               <>
                 <h1
                   className="cart-title"
-                  style={{ color: "#103178", marginTop: 20 }}
+                  style={{ color: "#171109", marginTop: 20 }}
                 >
                   {renderTitle()}
                 </h1>

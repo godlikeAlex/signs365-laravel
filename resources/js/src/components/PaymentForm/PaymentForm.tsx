@@ -91,8 +91,7 @@ const PaymentForm: React.FC<Props> = ({ paymentIntentId }: Props) => {
           const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-              return_url:
-                window.location.href.split("?")[0] + "/success-payment",
+              return_url: window.location.href.split("?")[0] + "/check-payment",
               payment_method_data: {
                 billing_details: {
                   address: {

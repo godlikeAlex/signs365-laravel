@@ -278,7 +278,7 @@ class Service
 
     list($voucher, $discountVoucher) = $this->getVoucherAndDiscount($totalCart);
 
-    $total = $totalCart - $discountVoucher;
+    $total = max(50, $totalCart - $discountVoucher);
 
     return [
       "items" => json_decode(

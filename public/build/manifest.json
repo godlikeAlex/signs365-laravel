@@ -5,7 +5,7 @@
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-bbbf9c58.css",
+    "file": "assets/style-35eb0b96.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -89,7 +89,7 @@
     "css": [
       "assets/index-bea4b8f6.css"
     ],
-    "file": "assets/index-2b1a1e29.js",
+    "file": "assets/index-370ace22.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   }

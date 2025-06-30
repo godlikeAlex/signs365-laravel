@@ -71,10 +71,12 @@ Route::post("/cart/toggle-with-installation", [
   "toggleExtraInstallation",
 ]);
 
+Route::get("/checkout/check-payment", [CartController::class, "checkPayment"]);
+
 Route::get("/checkout/success-payment", [
   CartController::class,
   "renderSuccess",
-]);
+])->name("successPayment");
 
 Route::post("/cart/clear", [CartController::class, "cartClear"]);
 

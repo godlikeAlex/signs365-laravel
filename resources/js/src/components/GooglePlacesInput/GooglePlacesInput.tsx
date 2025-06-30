@@ -36,11 +36,11 @@ export const customStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
     return {
       ...styles,
-      backgroundColor: isSelected && "#FD8D27",
+      backgroundColor: isSelected && "#ffca1a",
       ":active": {
         ...styles[":active"],
         color: "white",
-        backgroundColor: "#FD8D27",
+        backgroundColor: "#ffca1a",
       },
     };
   },
@@ -72,7 +72,7 @@ export const customStyles = {
   }),
   dropdownIndicator: (base) => ({
     ...base,
-    color: "#FD8D27",
+    color: "#ffca1a",
   }),
   control: (provided) => ({
     ...provided,

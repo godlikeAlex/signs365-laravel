@@ -9,8 +9,6 @@ export function useSticky(refElement: RefObject<HTMLElement>) {
     const handleScroll = () => {
       if (!header) return;
 
-      console.log(window.pageYOffset, header.height);
-
       setIsSticky(window.pageYOffset > header.height * 0.8);
     };
 
