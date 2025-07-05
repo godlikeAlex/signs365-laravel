@@ -15,7 +15,7 @@ return [
   ],
 
   "view" => [
-    "senderName" => "Signs 365",
+    "senderName" => "Signs7",
     "reminder" => null,
     "unsubscribe" => null,
     "address" => "New York",

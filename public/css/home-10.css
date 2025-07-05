@@ -19,11 +19,11 @@
 }
 
 .ps-home--10 .ps-banner--full .ps-banner__item p {
-  color: #103178;
+  color: #ffca1a;
 }
 
 .ps-home--10 .ps-banner--full .ps-banner__item::after {
-  background-color: #103178;
+  background-color: #ffca1a;
   opacity: 0.3;
 }
 
@@ -84,7 +84,7 @@
 .ps-home--10 .ps-promo--mask .ps-banner .ps-banner__title,
 .ps-home--10 .ps-promo--mask .ps-banner .ps-banner__btn,
 .ps-home--10 .ps-promo--mask .ps-banner .ps-banner__desc {
-  color: #103178;
+  color: #ffca1a;
 }
 
 .ps-home--10 .ps-section--black-style {
@@ -94,7 +94,7 @@
 
 .ps-home--10 .ps-section--black-style .ps-product--standard .ps-product__price,
 .ps-home--10 .ps-section--black-style .ps-product--standard .ps-product__title {
-  color: #103178;
+  color: #ffca1a;
 }
 
 .ps-home--10 .ps-section--black-style .ps-product--standard .ps-product__del {
@@ -108,7 +108,7 @@
 
 .ps-home--10 .ps-section--reviews .ps-review .ps-review__name,
 .ps-home--10 .ps-section--reviews .ps-review .ps-review__date {
-  color: #103178;
+  color: #ffca1a;
 }
 
 .ps-home--10 .ps-section--newsletter {
@@ -134,7 +134,7 @@
   }
   .ps-home--10 .ps-banner--full .ps-banner .ps-banner__title,
   .ps-home--10 .ps-banner--full .ps-banner .ps-banner__desc {
-    color: #103178;
+    color: #ffca1a;
   }
   .ps-home--10 .ps-banner--full::after {
     height: auto;

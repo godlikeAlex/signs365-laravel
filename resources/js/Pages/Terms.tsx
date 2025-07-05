@@ -32,11 +32,11 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               className="col-md-12 text-center"
               style={{ marginBottom: "55px" }}
             >
-              <h1 style={{ color: "#103178" }}>Terms and Conditions</h1>
+              <h1 style={{ color: "#ffca1a" }}>Terms and Conditions</h1>
             </div>
             <div className="col-md-12">
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Terms of Usage
               </p>
@@ -70,7 +70,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 General
               </p>
@@ -91,7 +91,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Reservations
               </p>
@@ -109,7 +109,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Returns
               </p>
@@ -128,7 +128,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Credit Card
               </p>
@@ -147,7 +147,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Payment
               </p>
@@ -179,7 +179,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Warranty
               </p>
@@ -194,7 +194,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Shipping
               </p>
@@ -207,7 +207,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
                 the shipping carrier.
               </p>
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Limitation of Liability
               </p>
@@ -230,7 +230,7 @@ const Terms: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Cancellations and Refunds
               </p>

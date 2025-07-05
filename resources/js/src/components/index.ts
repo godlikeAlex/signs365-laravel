@@ -2,6 +2,7 @@ import CartItem from "./CartItem";
 import CartList from "./CartList";
 import Dropzone from "./Dropzone";
 import EmptyPage from "./EmptyPage";
+import FacebookComments from "./FacebookComments";
 import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
 import Input from "./Input";
@@ -29,6 +30,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ProductContactForm,
+  FacebookComments,
   ProductCheckoutForm,
   ProductSlider,
   SEOHead,

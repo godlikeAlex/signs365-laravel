@@ -85,9 +85,9 @@ const Checkout: React.FC<CheckoutProps> = ({}: CheckoutProps) => {
                     theme: "flat",
 
                     variables: {
-                      colorPrimary: "#103178",
+                      colorPrimary: "#ffca1a",
                       colorBackground: "#f0f2f5",
-                      colorText: "#103178",
+                      colorText: "#ffca1a",
                       fontFamily: '"Jost", sans-serif',
                       spacingUnit: "4px",
                       borderRadius: "40px",

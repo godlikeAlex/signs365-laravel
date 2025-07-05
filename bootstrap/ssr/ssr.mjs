@@ -3361,7 +3361,7 @@ const EmptyPage = ({ size = "default", iconClass, title }) => {
       }),
       /* @__PURE__ */ jsx("h1", {
         className: "cart-title",
-        style: { color: "#103178", marginTop: 20 },
+        style: { color: "#ffca1a", marginTop: 20 },
         children: title,
       }),
     ],
@@ -4418,7 +4418,7 @@ const MobileHeader = ({}) => {
                   /* @__PURE__ */ jsx("br", {}),
                   /* @__PURE__ */ jsx("a", {
                     href: "tel:+998999010033",
-                    style: { color: "#103178" },
+                    style: { color: "#ffca1a" },
                     children: /* @__PURE__ */ jsx("strong", {
                       children: "+998 99 901 00 33",
                     }),
@@ -4426,7 +4426,7 @@ const MobileHeader = ({}) => {
                   /* @__PURE__ */ jsx("br", {}),
                   /* @__PURE__ */ jsx("a", {
                     href: "tel:+998974243004",
-                    style: { color: "#103178" },
+                    style: { color: "#ffca1a" },
                     children: /* @__PURE__ */ jsx("strong", {
                       children: "info@sign7.com",
                     }),
@@ -6085,7 +6085,7 @@ const SelectProductFile = forwardRef(function SelectProductFile2(props, ref) {
           style: { textAlign: "center" },
           children: [
             /* @__PURE__ */ jsx("h3", {
-              style: { color: "#103178", marginBottom: 25 },
+              style: { color: "#ffca1a", marginBottom: 25 },
               children: "Please Specify An Image",
             }),
             /* @__PURE__ */ jsx(Dropzone, {
@@ -6428,7 +6428,7 @@ const Cart = (props) => {
         }),
         /* @__PURE__ */ jsx("h1", {
           className: "cart-title",
-          style: { color: "#103178", marginTop: 20 },
+          style: { color: "#ffca1a", marginTop: 20 },
           children: "Your cart is empty",
         }),
       ],
@@ -6720,9 +6720,9 @@ const Checkout = ({}) => {
                         appearance: {
                           theme: "flat",
                           variables: {
-                            colorPrimary: "#103178",
+                            colorPrimary: "#ffca1a",
                             colorBackground: "#f0f2f5",
-                            colorText: "#103178",
+                            colorText: "#ffca1a",
                             fontFamily: '"Jost", sans-serif',
                             spacingUnit: "4px",
                             borderRadius: "40px",
@@ -7776,7 +7776,7 @@ const SuccessPayment = ({ payment_intent }) => {
                     children: [
                       /* @__PURE__ */ jsx("h1", {
                         className: "cart-title",
-                        style: { color: "#103178", marginTop: 20 },
+                        style: { color: "#ffca1a", marginTop: 20 },
                         children:
                           state.status === "completed"
                             ? "Your order proccesed"

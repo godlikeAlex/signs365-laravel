@@ -78,7 +78,7 @@ const SelectProductFile = forwardRef<SelectProductFileRef, Props>(
     const SelectionScreen = () => (
       <>
         <div className="container">
-          <h3 style={{ color: "#103178", marginBottom: 25 }}>
+          <h3 style={{ color: "#ffca1a", marginBottom: 25 }}>
             Provide your design
           </h3>
 
@@ -114,7 +114,7 @@ const SelectProductFile = forwardRef<SelectProductFileRef, Props>(
 
     const UploadScreen = () => (
       <>
-        <h3 style={{ color: "#103178", marginBottom: 25 }}>
+        <h3 style={{ color: "#ffca1a", marginBottom: 25 }}>
           Please Specify An Image
         </h3>
         <Dropzone

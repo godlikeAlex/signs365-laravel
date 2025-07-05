@@ -6,6 +6,7 @@ import ProductReducer, {
 import { IProduct, IProductDefault } from "@/src/types/ProductModel";
 import { Link } from "@inertiajs/react";
 import {
+  FacebookComments,
   FAQProduct,
   ProductCheckoutForm,
   ProductContactForm,

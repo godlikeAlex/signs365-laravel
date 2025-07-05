@@ -109,7 +109,7 @@ const ModalReupload: React.FC<Props> = ({
             className="modal-body headless-content"
             style={{ textAlign: "center" }}
           >
-            <h3 style={{ color: "#103178", marginBottom: 25 }}>
+            <h3 style={{ color: "#ffca1a", marginBottom: 25 }}>
               Please Specify An Image
             </h3>
 

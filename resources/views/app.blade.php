@@ -17,7 +17,7 @@
 
         <!-- Status Bar Style (see Supported Meta Tags below for available values) -->
         <!-- Has no effect unless you have the previous meta tag -->
-        <meta name="apple-mobile-web-app-status-bar-style" content="#103178">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#ffca1a">
 
         <link rel="stylesheet" href="/fonts/Linearicons/Font/demo-files/demo.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700&amp;display=swap&amp;ver=1607580870">
@@ -66,13 +66,11 @@
     <script type="text/javascript" > 
       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date(); for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }} k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.webvisor.org/metrika/tag_ww.js", "ym"); ym(97932247, "init", { params:window.yaParams, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true, ecommerce:"dataLayer" }); 
     </script> 
-    
   <!-- /Yandex.Metrika counter -->
 
   </head>
   <body>
     @inertia
-
 
     <script src="/plugins/jquery.min.js"></script>
     <script src="/plugins/popper.min.js"></script>

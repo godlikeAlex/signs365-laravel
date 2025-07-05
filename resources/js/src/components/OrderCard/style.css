@@ -10,7 +10,7 @@
 .order-item-panel-title h2 {
   font-size: 20px;
   margin-bottom: 0px;
-  color: #103178;
+  color: #ffca1a;
   font-weight: 600;
 }
 
@@ -21,7 +21,7 @@
 .rc-collapse-header {
   padding: 10px 10px 10px 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
-  color: #103178;
+  color: #ffca1a;
 
   display: flex;
   justify-content: space-between;
@@ -50,7 +50,7 @@
 }
 
 .order-item-value {
-  color: #103178;
+  color: #ffca1a;
   font-size: 16px;
 }
 
@@ -85,5 +85,5 @@
 }
 
 .upload-link-underline:hover {
-  color: #103178;
+  color: #ffca1a;
 }

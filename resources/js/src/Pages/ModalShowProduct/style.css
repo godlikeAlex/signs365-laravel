@@ -176,14 +176,14 @@ h6 {
 
 .table-custom {
   font-family: Jost;
-  color: #103178;
+  color: #ffca1a;
   width: 100%;
 }
 
 .table-custom thead {
   background-color: rgba(240, 242, 245, 1);
   font-size: 16px;
-  color: #103178;
+  color: #ffca1a;
 }
 
 .table-custom th {
@@ -202,7 +202,7 @@ h6 {
 }
 
 .pagenation-custom {
-  background-color: #103178;
+  background-color: #ffca1a;
   border: unset;
   color: white;
   border-radius: 50%;
@@ -246,7 +246,7 @@ h6 {
 
 .price-product {
   font-size: 25px;
-  color: #103178;
+  color: #ffca1a;
   font-weight: 600;
   margin-bottom: 20px;
 }

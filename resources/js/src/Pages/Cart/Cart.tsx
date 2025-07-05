@@ -101,7 +101,7 @@ const Cart: React.FC<CartProps> = ({}: CartProps) => {
             style={{ color: "#595855", fontSize: 120 }}
           ></i>
         </div>
-        <h1 className="cart-title" style={{ color: "#103178", marginTop: 20 }}>
+        <h1 className="cart-title" style={{ color: "#ffca1a", marginTop: 20 }}>
           Your cart is empty
         </h1>
       </div>

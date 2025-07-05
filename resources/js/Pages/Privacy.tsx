@@ -32,11 +32,11 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               className="col-md-12 text-center"
               style={{ marginBottom: "55px" }}
             >
-              <h1 style={{ color: "#103178" }}>Privacy Policy</h1>
+              <h1 style={{ color: "#ffca1a" }}>Privacy Policy</h1>
             </div>
             <div className="col-md-12">
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Signs7 Software Privacy Policy 2023
               </p>
@@ -55,7 +55,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 How & when do we collect your information?
               </p>
@@ -67,7 +67,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 What information do we collect?
               </p>
@@ -85,7 +85,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 What does Signs7 do with the information we collect?
               </p>
@@ -110,7 +110,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 What choices do you have about your information?
               </p>
@@ -130,7 +130,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 How and when do we share information?
               </p>
@@ -176,7 +176,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 How long do we keep your information?
               </p>
@@ -190,7 +190,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 What are your options?
               </p>
@@ -209,7 +209,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 Can we make changes to this privacy policy?
               </p>
@@ -223,7 +223,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 What else do you need to know?
               </p>
@@ -245,7 +245,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
               </p>
 
               <p
-                style={{ fontWeight: 700, color: "#103178", fontSize: "20px" }}
+                style={{ fontWeight: 700, color: "#ffca1a", fontSize: "20px" }}
               >
                 How can we be contacted?
               </p>

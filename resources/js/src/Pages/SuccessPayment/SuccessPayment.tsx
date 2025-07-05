@@ -87,7 +87,7 @@ const SuccessPayment: React.FC<Props> = ({}: Props) => {
               <>
                 <h1
                   className="cart-title"
-                  style={{ color: "#103178", marginTop: 20 }}
+                  style={{ color: "#ffca1a", marginTop: 20 }}
                 >
                   {state.status === "completed"
                     ? "Your order proccesed"
