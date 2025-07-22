@@ -1,3 +1,4 @@
+import { Footer, Menu, MobileHeader } from "@/src/components";
 import { Head, Link } from "@inertiajs/react";
 import React from "react";
 
@@ -18,6 +19,8 @@ const Error: React.FC<ErrorProps> = ({ status }: ErrorProps) => {
       <Head>
         <title>Page not found.</title>
       </Head>
+      <Menu />
+      <MobileHeader />
 
       <div className="ps-page--notfound pt-100 pb-100">
         <div className="container">
@@ -26,7 +29,10 @@ const Error: React.FC<ErrorProps> = ({ status }: ErrorProps) => {
               <div className="col-12 text-center">
                 <h1 className="ps-page__name">{status}</h1>
                 <h5>{title}</h5>
-                <p>Please back to homepage or check our offer</p>
+                <p>
+                  Something went wrong. Check out the main page - everything is
+                  fine there.
+                </p>
                 <div>
                   <Link className="ps-btn ps-btn--primary" href="/">
                     Back to homepage
@@ -37,6 +43,8 @@ const Error: React.FC<ErrorProps> = ({ status }: ErrorProps) => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };

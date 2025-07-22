@@ -60,8 +60,6 @@ class HandleInertiaRequests extends Middleware
     if ($request->session()->missing("currentCity")) {
       if ($geoInfo->country === "United States") {
         $request->session()->put("currentCity", $geoInfo->state_name);
-        // dd($geoInfo->state_name);
-        // dd($geoInfo->city);
       } else {
         $request->session()->put("currentCity", "New York");
       }
