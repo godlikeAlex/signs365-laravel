@@ -67,7 +67,7 @@ export default function Login() {
     <div className="ps-account">
       <div className="container">
         <div className="row" style={{ justifyContent: "center" }}>
-          <div className="col-12 col-md-8">
+          <div className="col-12 col-md-6">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="ps-form--review">
                 <h2 className="ps-form__title">Login</h2>

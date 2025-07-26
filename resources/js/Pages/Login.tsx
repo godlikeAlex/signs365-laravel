@@ -1,14 +1,24 @@
 import { isCustomAxisError } from "@/src/helpers/axiosErrorGrabber";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
-import { Input, SEOHead } from "@/src/components";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
+import { Input, SEOHead, SocialiteButton } from "@/src/components";
 import { toast } from "react-toastify";
+import { SharedInertiaData } from "@/src/types/inertiaTypes";
 
 interface Props {}
 
 const Login: React.FC<Props> = ({}: Props) => {
-  const { data, setData, errors, processing, post, reset } = useForm({
+  const { errors } = usePage<SharedInertiaData>().props;
+
+  const {
+    data,
+    setData,
+    errors: formErrors,
+    processing,
+    post,
+    reset,
+  } = useForm({
     email: "",
     password: "",
   });
@@ -28,18 +38,32 @@ const Login: React.FC<Props> = ({}: Props) => {
     <>
       <SEOHead title="Login" />
 
-      <div className="ps-account">
+      <div className="ps-account" style={{ marginTop: 80 }}>
         <div className="container">
           <div className="row" style={{ justifyContent: "center" }}>
             <div className="col-12 col-md-8">
+              <div>
+                <h2 className="ps-form__title">Welcome to Signs7</h2>
+                {errors.authRoot && (
+                  <p style={{ color: "red" }}>{errors.authRoot}</p>
+                )}
+                <SocialiteButton
+                  provider="google"
+                  onClick={() =>
+                    (window.location.href = "/auth/google/redirect")
+                  }
+                />
+              </div>
+
               <form onSubmit={onSubmit}>
-                <div className="ps-form--review">
-                  <h2 className="ps-form__title">Login</h2>
+                <div className="ps-form--review" style={{ marginTop: 30 }}>
+                  <h4 style={{ marginBottom: 30 }}>Or, sign in with email.</h4>
+
                   <Input
                     value={data.email}
                     onChange={(e) => setData("email", e.target.value)}
                     type="email"
-                    error={errors.email}
+                    error={formErrors.email}
                     disabled={processing}
                     formType={"profile"}
                     label="Email"
@@ -49,7 +73,7 @@ const Login: React.FC<Props> = ({}: Props) => {
                     value={data.password}
                     onChange={(e) => setData("password", e.target.value)}
                     type="password"
-                    error={errors.password}
+                    error={formErrors.password}
                     disabled={processing}
                     formType={"profile"}
                     label={"Password"}

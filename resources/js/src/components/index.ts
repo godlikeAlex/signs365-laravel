@@ -5,6 +5,7 @@ import EmptyPage from "./EmptyPage";
 import FacebookComments from "./FacebookComments";
 import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
+import { GoogleOneTap } from "./GoogleOneTap";
 import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
@@ -24,6 +25,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Routing from "./Routing";
 import SEOHead from "./SEOHead";
 import SocialFixedButtons from "./SocialFixedButtons";
+import SocialiteButton from "./SocialiteButton";
 import UpdatePasswordForm from "./UpdatePasswordForm";
 import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
@@ -31,12 +33,14 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 export {
   ProductContactForm,
   FacebookComments,
+  GoogleOneTap,
   ProductCheckoutForm,
   ProductSlider,
   SEOHead,
   Dropzone,
   EmptyPage,
   FAQProduct,
+  SocialiteButton,
   SocialFixedButtons,
   ProductQuantity,
   ProductOptions,

@@ -1,0 +1,18 @@
+.socialite-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  background-color: white;
+  border: 1px solid rgb(242, 242, 242);
+  border-radius: 18px;
+  cursor: pointer;
+
+  padding: 10px 40px;
+  width: 100%;
+
+  &:hover {
+    background-color: rgb(251, 251, 251);
+  }
+}

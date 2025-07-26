@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-cb1db3a6.css",
+    "file": "assets/app-6c0153f5.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -67,7 +67,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-8e542949.css",
+    "file": "assets/index-cc328cf3.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -87,9 +87,9 @@
       "assets/reward-b481f4ec.svg"
     ],
     "css": [
-      "assets/index-8e542949.css"
+      "assets/index-cc328cf3.css"
     ],
-    "file": "assets/index-0c360df3.js",
+    "file": "assets/index-a643364a.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   }

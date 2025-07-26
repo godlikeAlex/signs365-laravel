@@ -27,6 +27,8 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
         : "/default-profile.png",
   });
 
+  console.log(auth);
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -85,12 +87,20 @@ const UpdatePersonalInformationForm: React.FC<Props> = ({}: Props) => {
           formType="profile"
         />
 
+        {auth.user.provider_name && (
+          <p style={{ marginTop: 8, fontSize: 12 }}>
+            Email Managed by{" "}
+            <span style={{ textTransform: "capitalize" }}>
+              {auth.user.provider_name}
+            </span>
+          </p>
+        )}
         <Input
           value={data.email}
           onChange={(e) => setData("email", e.target.value)}
           type="email"
           error={errors.email}
-          disabled={processing}
+          disabled={processing || Boolean(auth.user.provider_name)}
           formType="profile"
         />
 

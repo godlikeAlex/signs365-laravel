@@ -15,6 +15,9 @@ export default defineConfig({
   },
   css: {
     devSourcemap: true,
+    modules: {
+      localsConvention: "camelCaseOnly",
+    },
   },
   plugins: [
     laravel({

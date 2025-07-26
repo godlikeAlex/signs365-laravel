@@ -1,5 +1,6 @@
 import {
   Footer,
+  GoogleOneTap,
   Menu,
   MobileHeader,
   SocialFixedButtons,
@@ -15,6 +16,8 @@ interface Props {
 const DefaultLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <>
+      <GoogleOneTap />
+
       <div className="ps-page">
         <Menu />
         <MobileHeader />

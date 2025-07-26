@@ -9,7 +9,7 @@
         <link rel="icon" type="image/png" href="{{asset('/favicon.png')}}">
 
         <meta name="apple-mobile-web-app-capable" content="yes">
-    
+
         <meta property="og:image" content="{{asset('/cover.png')}}">
         <meta property="og:site_name" content="Signs7">
         <meta property="og:image:width" content="1200">
@@ -50,6 +50,7 @@
           gtag('config', 'AW-16652867388');
         </script>
 
+        <script src="https://accounts.google.com/gsi/client"></script>
 
 
         @inertiaHead
@@ -57,16 +58,17 @@
     @php
       $remoteIpAddr = $_SERVER['REMOTE_ADDR'];
     @endphp
-    
+
     <script type="text/javascript">
       var yaParams = { ipaddress: "{{$remoteIpAddr}}" };
     </script>
 
- <!-- Yandex.Metrika counter --> 
-    <script type="text/javascript" > 
-      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date(); for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }} k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.webvisor.org/metrika/tag_ww.js", "ym"); ym(97932247, "init", { params:window.yaParams, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true, ecommerce:"dataLayer" }); 
-    </script> 
+ <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date(); for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }} k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.webvisor.org/metrika/tag_ww.js", "ym"); ym(97932247, "init", { params:window.yaParams, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true, ecommerce:"dataLayer" });
+    </script>
   <!-- /Yandex.Metrika counter -->
+
 
   </head>
   <body>

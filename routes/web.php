@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\AuthSocialiteController;
 use App\Http\Controllers\Inertia\CartController;
 use App\Http\Controllers\Inertia\HomeController;
 use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
@@ -104,6 +105,21 @@ Route::get("register", [
 Route::post("register", [
   \App\Http\Controllers\Inertia\AuthController::class,
   "register",
+]);
+
+Route::get("/auth/{provider}/redirect", [
+  AuthSocialiteController::class,
+  "redirect",
+]);
+
+Route::get("/auth/{provider}/callback", [
+  AuthSocialiteController::class,
+  "callback",
+]);
+
+Route::post("/auth/google/one-tap", [
+  AuthSocialiteController::class,
+  "oneTapLogin",
 ]);
 
 Route::get("profile", [

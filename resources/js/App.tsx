@@ -16,7 +16,6 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log("HELLO WORLD!");
     const initApp = async () => {
       try {
         await dispatch(getUserByToken()).unwrap();

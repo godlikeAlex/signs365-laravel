@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AuthProviderEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,11 +21,15 @@ class User extends Authenticatable implements FilamentUser
    * @var array<int, string>
    */
   protected $fillable = [
-    'name',
-    'email',
-    'is_admin',
-    'password',
-    'avatar'
+    "name",
+    "email",
+    "is_admin",
+    "password",
+    "avatar",
+    "provider_id",
+    "provider_name",
+    "provider_token",
+    "provider_refresh_token",
   ];
 
   /**
@@ -33,8 +38,11 @@ class User extends Authenticatable implements FilamentUser
    * @var array<int, string>
    */
   protected $hidden = [
-    'password',
-    'remember_token',
+    "password",
+    "remember_token",
+    "provider_id",
+    "provider_token",
+    "provider_refresh_token",
   ];
 
   /**
@@ -43,7 +51,8 @@ class User extends Authenticatable implements FilamentUser
    * @var array<string, string>
    */
   protected $casts = [
-    'email_verified_at' => 'datetime',
+    "email_verified_at" => "datetime",
+    "provider_name" => AuthProviderEnum::class,
   ];
 
   public function orders(): HasMany
@@ -53,6 +62,6 @@ class User extends Authenticatable implements FilamentUser
 
   public function canAccessFilament(): bool
   {
-    return $this->is_admin;    
+    return $this->is_admin;
   }
 }
