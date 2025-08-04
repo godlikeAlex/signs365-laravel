@@ -1,0 +1,128 @@
+@import "@styles/mixins/media";
+
+$topHeaderColor: #595855;
+
+.header {
+  display: none;
+
+  @include for-desktop {
+    display: block;
+  }
+
+  &--sticky {
+    position: fixed;
+    width: 100%;
+    animation: smoothScroll 0.5s forwards;
+    z-index: 9;
+    background-color: white;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+      rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+
+    .nav {
+      padding-bottom: 10px;
+    }
+
+    .top-header {
+      padding-block: 15px;
+    }
+
+    .nav__logo {
+      height: 70px;
+    }
+  }
+}
+
+.top-header {
+  padding-block: 32px;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__left {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__right {
+    display: flex;
+    gap: 38px;
+  }
+
+  &__link {
+    font-size: 16px;
+    color: $topHeaderColor;
+
+    &--with-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+.top-header-icon {
+  width: 16px;
+  height: 16px;
+
+  &--action {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.nav {
+  padding-bottom: 32px;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    width: 95px;
+    height: 95px;
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 48px;
+  }
+}
+
+.nav-category-item {
+  text-align: center;
+
+  &__title {
+    margin-top: 10px;
+    background-color: var(--alternativeCategoryColor);
+    border-radius: 20px;
+    padding-block: 5px;
+    padding-inline: 16px;
+    font-size: 12px;
+  }
+
+  &:hover &__title,
+  &--active &__title {
+    background-color: var(--primaryCategoryColor);
+  }
+}
+
+@keyframes smoothScroll {
+  0% {
+    transform: translateY(-120px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}

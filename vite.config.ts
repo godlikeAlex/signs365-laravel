@@ -54,6 +54,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.join(__dirname, "./resources/js"),
+      "@styles": path.join(__dirname, "./resources/js/src/styles"),
     },
   },
   ssr: {

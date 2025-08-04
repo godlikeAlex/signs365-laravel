@@ -6,6 +6,7 @@ import FacebookComments from "./FacebookComments";
 import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
 import { GoogleOneTap } from "./GoogleOneTap";
+import Header from "./Header";
 import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
@@ -31,6 +32,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  Header,
   ProductContactForm,
   FacebookComments,
   GoogleOneTap,
