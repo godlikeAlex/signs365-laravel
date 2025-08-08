@@ -2630,7 +2630,7 @@
 
 .ps-section--black-style .ps-product--standard .ps-product__title {
   min-height: auto;
-  color: #222;
+  color: #171109;
   margin-bottom: 8px;
 }
 
@@ -2639,7 +2639,7 @@
 }
 
 .ps-section--black-style .ps-product--standard .ps-product__price {
-  color: #222;
+  color: #171109;
   font-size: 20px;
 }
 
@@ -2648,7 +2648,7 @@
 }
 
 .ps-section--black-style .ps-product--standard .ps-product__del {
-  color: #222;
+  color: #171109;
   font-size: 16px;
 }
 
@@ -3070,7 +3070,7 @@
 
 .ps-reviews--3 .ps-review .ps-review__name {
   font-size: 90%;
-  color: #222;
+  color: #171109;
   margin-right: 10px;
 }
 
@@ -3227,21 +3227,21 @@
 }
 
 .ps-section--newsletter-full .ps-form--subscribe .ps-input {
-  color: #222;
+  color: #171109;
 }
 
 .ps-section--newsletter-full .ps-form--subscribe .ps-input::-moz-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .ps-section--newsletter-full
   .ps-form--subscribe
   .ps-input:-ms-input-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .ps-section--newsletter-full .ps-form--subscribe .ps-input::placeholder {
-  color: #222;
+  color: #171109;
 }
 
 @media (min-width: 768px) {

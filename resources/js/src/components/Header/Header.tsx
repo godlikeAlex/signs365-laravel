@@ -13,6 +13,8 @@ import UserIcon from "@/assets/icons/SMALL/user.svg?react";
 import SVGLogo from "@/assets/images/logo.svg";
 
 import classes from "./Header.module.scss";
+import BadgeCategory from "../BadgeCategory";
+import HeaderCategoryItem from "./HeaderCategoryItem";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
@@ -131,32 +133,8 @@ export default function Header() {
           </Link>
 
           <ul className={classes.navItems}>
-            {homeCategories.map(({ id, title, icon, slug, colors }, index) => (
-              <li
-                className={classNames(classes.navCategoryItem, {
-                  [classes.navCategoryItemActive]: pageData.url.startsWith(
-                    `/shop/${slug}`
-                  ),
-                })}
-                style={{
-                  ["--primaryCategoryColor" as string]: colors.primary,
-                  ["--alternativeCategoryColor" as string]: colors.alternative,
-                }}
-                key={id}
-              >
-                <Link
-                  href={`/shop/${slug}`}
-                  className={classNames("category-menu-item__link")}
-                >
-                  <img
-                    src={`/storage/${icon}`}
-                    alt={title}
-                    style={{ width: "25px", height: "25px" }}
-                  />
-
-                  <div className={classes.navCategoryItemTitle}>{title}</div>
-                </Link>
-              </li>
+            {homeCategories.map((category) => (
+              <HeaderCategoryItem key={category.id} {...category} />
             ))}
           </ul>
         </div>

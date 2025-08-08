@@ -1,4 +1,4 @@
-import { IProduct } from "./ProductModel";
+import { IProduct, ProductImage } from "./ProductModel";
 
 export interface User {
   id: number;
@@ -45,8 +45,21 @@ export interface ICategory {
   show_on_home?: null | boolean;
 }
 
+export interface IProductCard {
+  id: number;
+  title: string;
+  slug: string;
+  min_price: number;
+  categories?: Pick<ICategory, "title" | "slug" | "id" | "colors">[];
+  images?: null | ProductImage[];
+}
+
 export interface ICategoryWithProducts extends ICategory {
   products: IProduct[];
+}
+
+export interface CategoryWithProductCards extends ICategory {
+  products: IProductCard[];
 }
 
 export interface ICartItem {

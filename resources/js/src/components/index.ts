@@ -1,3 +1,4 @@
+import BadgeCategory from "./BadgeCategory";
 import CartItem from "./CartItem";
 import CartList from "./CartList";
 import Dropzone from "./Dropzone";
@@ -32,6 +33,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  BadgeCategory,
   Header,
   ProductContactForm,
   FacebookComments,

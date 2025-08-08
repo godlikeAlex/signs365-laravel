@@ -36,7 +36,7 @@ h4,
 h5,
 h6 {
   position: relative;
-  color: #222;
+  color: #171109;
   margin-top: 0;
   margin-bottom: 10px;
   font-weight: 600;
@@ -160,7 +160,7 @@ iframe {
 }
 
 .ps-document p strong {
-  color: #222;
+  color: #171109;
 }
 
 figure {

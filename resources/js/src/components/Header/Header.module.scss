@@ -104,16 +104,6 @@ $topHeaderColor: #595855;
 
   &__title {
     margin-top: 10px;
-    background-color: var(--alternativeCategoryColor);
-    border-radius: 20px;
-    padding-block: 5px;
-    padding-inline: 16px;
-    font-size: 12px;
-  }
-
-  &:hover &__title,
-  &--active &__title {
-    background-color: var(--primaryCategoryColor);
   }
 }
 

@@ -55,6 +55,7 @@ export type ProductOption = ProductOptionType & {
   id: number;
   title: string;
   price: string;
+  min_price: number;
   addons: Addon[];
   showCalculator: boolean;
   need_file: boolean;
@@ -106,7 +107,6 @@ type IProductBase = {
   slug: string;
   description: string;
   published: boolean;
-  min_price: number;
 
   seo_title?: string;
   seo_desc?: string;

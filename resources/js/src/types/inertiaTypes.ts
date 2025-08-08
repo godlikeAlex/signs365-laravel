@@ -1,7 +1,7 @@
-import { ICart, ICategoryWithProducts, User } from "./models";
+import { CategoryWithProductCards, ICart, User } from "./models";
 
 export type SharedInertiaData = {
-  homeCategories: ICategoryWithProducts[];
+  homeCategories: CategoryWithProductCards[];
   currentCity: string;
   cart: ICart;
   auth: {

@@ -1465,12 +1465,12 @@
 
 .ps-header--9 .ps-noti p,
 .ps-header--9 .ps-noti .ps-noti__close i {
-  color: #222;
+  color: #171109;
 }
 
 .ps-header--9 .ps-header__top {
-  background-color: #222;
-  border-color: #222;
+  background-color: #171109;
+  border-color: #171109;
 }
 
 .ps-header--9 .ps-header__top .ps-header__text,
@@ -1517,7 +1517,7 @@
 
 .ps-header--9 .ps-header__icons .ps-header__item .badge {
   background-color: white;
-  color: #222;
+  color: #171109;
 }
 
 .ps-header--9 .ps-header__middle {
@@ -1572,11 +1572,11 @@
 }
 
 .ps-header--9 .mega-menu h4 {
-  color: #222;
+  color: #171109;
 }
 
 .ps-header--9 .mega-menu .sub-menu--mega li a {
-  color: #222;
+  color: #171109;
 }
 
 .ps-header--9.ps-header--sticky .ps-header__right {
@@ -1592,7 +1592,7 @@
 }
 
 .ps-header--9.ps-header--sticky .ps-header__icons .ps-header__item {
-  color: #222;
+  color: #171109;
 }
 
 .ps-header--9.ps-header--sticky .ps-logo .logo-white {
@@ -1616,7 +1616,7 @@
     color: var(--primary-color);
   }
   .ps-header--9.ps-header--sticky .ps-header__icons .ps-header__item .badge {
-    background-color: #222;
+    background-color: #171109;
     color: white;
   }
 }
@@ -1651,7 +1651,7 @@
   }
   .ps-header--9.ps-header--sticky .ps-header__menu .menu > li::before,
   .ps-header--9.ps-header--sticky .ps-header__menu .menu > li > a {
-    color: #222;
+    color: #171109;
   }
 }
 
@@ -2781,21 +2781,21 @@
 }
 
 .ps-footer--9 .ps-footer--address .ps-social__link {
-  color: #222;
+  color: #171109;
 }
 
 .ps-footer--9 .ps-footer--contact .ps-footer__title,
 .ps-footer--9 .ps-footer--contact .ps-footer__fax,
 .ps-footer--9 .ps-footer--contact .ps-footer__email {
-  color: #222;
+  color: #171109;
 }
 
 .ps-footer--9 .ps-footer--block .ps-block__title {
-  color: #222;
+  color: #171109;
 }
 
 .ps-footer--9 .ps-footer--bottom p {
-  color: #222;
+  color: #171109;
 }
 
 .ps-footer--9 .ps-footer--top .row {
@@ -2803,7 +2803,7 @@
 }
 
 .ps-footer--9 .ps-footer--top .ps-footer__link {
-  color: #222;
+  color: #171109;
 }
 
 .ps-footer--9 .ps-footer--top .col-12 {

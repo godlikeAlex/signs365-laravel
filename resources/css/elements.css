@@ -378,7 +378,7 @@ body {
 }
 
 .ps-list--line li a:hover {
-  color: #222;
+  color: #171109;
 }
 
 .ps-list--line li a:hover:before {
@@ -604,19 +604,19 @@ button.ps-btn--gray {
 
 .ps-btn--black,
 button.ps-btn--black {
-  background-color: #222;
+  background-color: #171109;
 }
 
 .ps-btn--black.ps-btn--outline,
 button.ps-btn--black.ps-btn--outline {
   background-color: transparent;
-  border: 2px solid #222;
-  color: #222;
+  border: 2px solid #171109;
+  color: #171109;
 }
 
 .ps-btn--black.ps-btn--outline:hover,
 button.ps-btn--black.ps-btn--outline:hover {
-  background-color: #222;
+  background-color: #171109;
   color: #ffffff;
 }
 
@@ -750,7 +750,7 @@ textarea.form-control {
   height: 20px;
   width: 20px;
   z-index: 10;
-  border: 1px solid #222;
+  border: 1px solid #171109;
   transition: all 0.4s ease;
 }
 
@@ -857,7 +857,7 @@ textarea.form-control {
   margin-bottom: 0;
   padding: 8px 20px;
   border: none;
-  color: #222222;
+  color: #171109222;
   background-color: #f6f6f6;
   border-radius: 0;
   transition: all 0.4s ease;
@@ -1027,7 +1027,7 @@ textarea.form-control {
   width: 20px;
   height: 20px;
   max-width: 20px;
-  color: #222;
+  color: #171109;
   font-size: 30px;
   border: none;
   background: none;
@@ -1080,24 +1080,24 @@ textarea.form-control {
   font-size: 18px;
   font-weight: 600;
   text-align: center;
-  color: #222;
+  color: #171109;
   background-color: transparent;
 }
 
 .form-group--number .form-control::-webkit-input-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .form-group--number .form-control::-moz-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .form-group--number .form-control:-moz-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .form-group--number .form-control:-ms-input-placeholder {
-  color: #222;
+  color: #171109;
 }
 
 .form-group--number-2 {
@@ -1240,7 +1240,7 @@ textarea.form-control {
 .ps-dropdown ul li a {
   display: block;
   font-size: 1.3rem;
-  color: #222;
+  color: #171109;
   padding: 6px 10px;
 }
 
@@ -1324,7 +1324,7 @@ textarea.form-control {
 }
 
 .select2-container .select2-results li {
-  color: #222;
+  color: #171109;
   font-size: 16px;
   padding: 6px 16px;
   background-color: transparent;
@@ -1403,7 +1403,7 @@ textarea.form-control {
 }
 
 .ps-color.active .ps-color__right i {
-  color: #222;
+  color: #171109;
 }
 
 .ps-color.active .ps-color__right i:before {
@@ -1472,7 +1472,7 @@ textarea.form-control {
 }
 
 .ps-variant.ps-variant--size.active .ps-variant__size {
-  color: #222;
+  color: #171109;
 }
 
 .ps-variant.ps-variant--size:hover {
@@ -3508,7 +3508,7 @@ textarea.form-control {
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  color: #222;
+  color: #171109;
   font-size: 15px;
 }
 
@@ -7017,14 +7017,14 @@ textarea.form-control {
 }
 
 .ps-promo--mask .ps-banner .ps-banner__title {
-  color: #222;
+  color: #171109;
 }
 
 .ps-promo--mask .ps-banner .ps-banner__btn {
   display: block;
   padding: 0 0 10px 0;
   font-size: 16px;
-  color: #222;
+  color: #171109;
 }
 
 .ps-promo--mask .ps-banner .ps-banner__thumnail .ps-banner__image {
@@ -7037,7 +7037,7 @@ textarea.form-control {
 }
 
 .ps-promo--mask .ps-banner .ps-banner__desc {
-  color: #222;
+  color: #171109;
   font-size: 19px;
 }
 
