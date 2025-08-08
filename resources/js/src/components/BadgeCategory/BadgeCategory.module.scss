@@ -1,0 +1,14 @@
+.badge-category {
+  display: inline-block;
+  background-color: var(--alternativeCategoryColor);
+  border-radius: 20px;
+  padding-block: 5px;
+  padding-inline: 16px;
+  font-size: 12px;
+
+  &:hover,
+  &--active {
+    background-color: var(--primaryCategoryColor);
+    color: black !important;
+  }
+}

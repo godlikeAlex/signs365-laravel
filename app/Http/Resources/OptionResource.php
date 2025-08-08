@@ -20,6 +20,7 @@ class OptionResource extends JsonResource
     return [
       "id" => $this->id,
       "title" => $this->title,
+      "min_price" => $this->min_price,
       "price" => $this->price,
       "type" => $this->type,
       "need_file" => $this->need_file,

@@ -27,7 +27,7 @@ class CategoryResource extends JsonResource
         "alternative" => $this->alternative_color,
       ],
       "show_on_home" => $this->show_on_home,
-      "products" => ProductResource::collection($this->products),
+      "products" => ProductCardResource::collection($this->products),
     ];
   }
 }

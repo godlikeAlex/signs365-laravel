@@ -52,7 +52,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                 "alt-section": idx % 2 === 0,
               })}
             >
-              <div className="container-fluid">
+              <div className="container">
                 <div className="text-center">
                   <h3
                     className="ps-section__title ps-section__title--category"
@@ -66,9 +66,9 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                 <div className="ps-section__content">
                   <div className="row m-0">
                     {/* PRODUCT */}
-                    {products.slice(0, 8).map((product, idx) => (
+                    {products.slice(0, 4).map((product, idx) => (
                       <div
-                        className="col-md-3 p-0"
+                        className="col-md-3"
                         key={`home-product-${product.slug}`}
                       >
                         <ProductCard
