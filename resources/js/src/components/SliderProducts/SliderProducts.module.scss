@@ -1,0 +1,42 @@
+.slider-products {
+  position: relative;
+  width: calc(100% - 75px);
+
+  &__container {
+    position: relative;
+  }
+
+  &__nav {
+    width: 100%;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__arrow-btn {
+    background-color: transparent;
+    border: unset;
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  &__arrow {
+    height: 50px;
+  }
+
+  &__arrow-prev {
+    transform: rotate(180deg);
+  }
+
+  &__next {
+    margin-left: 0;
+  }
+
+  &__prev {
+    margin-right: 0;
+  }
+}

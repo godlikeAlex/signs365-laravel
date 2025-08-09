@@ -4,7 +4,7 @@ import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
 import classNames from "classnames";
-import { ProductCard, SEOHead } from "@/src/components";
+import { HomeSection, ProductCard, SEOHead } from "@/src/components";
 import { IProduct } from "@/src/types/ProductModel";
 import ProductShowModal from "@/Modals/ProductShowModal";
 
@@ -41,6 +41,16 @@ const Home: React.FC<Props> = ({ title }: Props) => {
         </section>
 
         {homeCategories.map((category, idx) => {
+          return (
+            <HomeSection
+              key={category.id}
+              title={category.title}
+              titleUrl={`/shop/${category.slug}`}
+              products={category.products}
+              primaryColor={category.colors.primary}
+              altColor={category.colors.alternative}
+            />
+          );
           const { products, id, title, slug, colors } = category;
 
           return (
@@ -74,21 +84,10 @@ const Home: React.FC<Props> = ({ title }: Props) => {
                         <ProductCard
                           {...product}
                           key={`${product.id}-${idx}`}
-                          allowFullPage={product.with_checkout === false}
-                          onClickQuickView={(quickViewProduct) =>
-                            setProduct(quickViewProduct)
-                          }
                         />
                       </div>
                     ))}
                   </div>
-                  <a
-                    href={`/shop/${slug}`}
-                    style={{ display: "block" }}
-                    className="button button--show-more"
-                  >
-                    Show all
-                  </a>
                 </div>
               </div>
             </section>

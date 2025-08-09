@@ -8,6 +8,7 @@ import FAQProduct from "./FAQProduct";
 import Footer from "./Footer";
 import { GoogleOneTap } from "./GoogleOneTap";
 import Header from "./Header";
+import HomeSection from "./HomeSection";
 import Input from "./Input";
 import Layout from "./Layout";
 import Menu from "./Menu";
@@ -26,6 +27,7 @@ import ProductSlider from "./ProductSlider";
 import ProtectedRoute from "./ProtectedRoute";
 import Routing from "./Routing";
 import SEOHead from "./SEOHead";
+import SliderProducts from "./SliderProducts";
 import SocialFixedButtons from "./SocialFixedButtons";
 import SocialiteButton from "./SocialiteButton";
 import UpdatePasswordForm from "./UpdatePasswordForm";
@@ -33,7 +35,9 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  HomeSection,
   BadgeCategory,
+  SliderProducts,
   Header,
   ProductContactForm,
   FacebookComments,
