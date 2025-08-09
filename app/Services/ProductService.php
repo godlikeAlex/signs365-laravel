@@ -29,12 +29,6 @@ class ProductService
       default => 0,
     };
 
-    info("test service", [
-      "type" => $this->productOption->type,
-      "calculated_price" => $calculatedPrice,
-      "product_option" => $this->productOption,
-    ]);
-
     return max($calculatedPrice, $minPrice);
   }
 

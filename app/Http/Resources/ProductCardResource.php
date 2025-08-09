@@ -34,6 +34,6 @@ class ProductCardResource extends JsonResource
 
     $minPrice = $this->options->min("min_price");
 
-    return $minPrice ? $minPrice / 1000 : null;
+    return $minPrice ? $minPrice / 100 : null;
   }
 }
