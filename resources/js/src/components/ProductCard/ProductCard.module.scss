@@ -73,7 +73,14 @@
   }
 }
 
-.rating-container {
+.card-rating {
   display: flex;
-  margin-top: 4px;
+  align-items: center;
+  margin-top: 5px;
+
+  &__value {
+    font-size: 10px;
+    margin-left: 5px;
+    color: colors.$light-gray;
+  }
 }

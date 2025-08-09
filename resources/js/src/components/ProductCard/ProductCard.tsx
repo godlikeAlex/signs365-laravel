@@ -53,10 +53,12 @@ export default function ProductCard({
         </BadgeCategory>
       ) : null}
 
-      <div className={classes.ratingContainer}>
+      <div className={classes.cardRating}>
         {new Array(5).fill("").map(() => (
           <StarSVG width={15} height={15} />
         ))}
+
+        <span className={classes.cardRatingValue}>5</span>
       </div>
 
       {min_price && (
