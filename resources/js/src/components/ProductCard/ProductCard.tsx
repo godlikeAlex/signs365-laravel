@@ -61,8 +61,8 @@ export default function ProductCard({
       ) : null}
 
       <div className={classes.cardRating}>
-        {new Array(5).fill("").map(() => (
-          <StarSVG width={15} height={15} />
+        {new Array(5).fill("").map((_, idx) => (
+          <StarSVG width={15} height={15} key={idx} />
         ))}
 
         <span className={classes.cardRatingValue}>5</span>

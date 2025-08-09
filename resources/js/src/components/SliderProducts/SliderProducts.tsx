@@ -1,12 +1,13 @@
-import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react";
+import { useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { IProductCard } from "@/src/types/models";
+import classNames from "classnames";
+import SwiperOriginal from "swiper";
+
 import ProductCard from "../ProductCard";
 import classes from "./SliderProducts.module.scss";
 
 import SliderArrow from "@/assets/icons/slider-arrow.svg?react";
-import classNames from "classnames";
-import { useRef } from "react";
-import SwiperOriginal from "swiper";
 
 type Props = {
   products: IProductCard[];
@@ -36,8 +37,8 @@ export default function SliderProducts({ products }: Props) {
         }}
       >
         {products.slice(0, 8).map((product, idx) => (
-          <SwiperSlide>
-            <ProductCard {...product} key={`${product.id}-${idx}`} />
+          <SwiperSlide key={`${product.id}-${idx}`}>
+            <ProductCard {...product} />
           </SwiperSlide>
         ))}
       </Swiper>
