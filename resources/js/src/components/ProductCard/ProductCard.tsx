@@ -4,6 +4,8 @@ import BadgeCategory from "../BadgeCategory";
 import StarSVG from "@/assets/icons/star.svg?react";
 import { IProductCard } from "@/src/types/models";
 
+import placeholderImagePath from "@/assets/images/placeholder.webp";
+
 import classes from "./ProductCard.module.scss";
 
 type Props = IProductCard & {};
@@ -20,6 +22,11 @@ export default function ProductCard({
 
   const pathToProduct = `/shop/${category.slug}/${slug}`;
 
+  const imageAlt = image ? image.alt ?? title : "";
+  const imagePath = image
+    ? `/storage/${image?.thumbnail ?? image.path}`
+    : placeholderImagePath;
+
   return (
     <article className={classes.productCard}>
       <Link href={pathToProduct} className={classes.productCardImageContainer}>
@@ -33,8 +40,8 @@ export default function ProductCard({
         </div>
         <img
           className={classes.productCardImage}
-          src={`/storage/${image.thumbnail ? image.thumbnail : image.path}`}
-          alt={image.alt ? image.alt : title}
+          src={imagePath}
+          alt={imageAlt}
         />
       </Link>
 
