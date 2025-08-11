@@ -4,7 +4,7 @@ import { IProductsPagination } from "@/src/types/axiosResponses";
 import { ICategory } from "@/src/types/models";
 import classNames from "classnames";
 import CatalogProducts from "@/src/Pages/Catalog/CatalogProducts";
-import { CatalogSection, SEOHead } from "@/src/components";
+import { Breadcrumbs, CatalogSection, SEOHead } from "@/src/components";
 
 interface Props {
   productsWithPagination: IProductsPagination;
@@ -24,7 +24,14 @@ const Catalog: React.FC<Props> = ({
       <CatalogSection backgroundColor={currentCategory.colors.alternative}>
         <div className="container">
           <div className="row">
-            <div className="col-md-12 text-center">
+            <div className="col-md-12">
+              <Breadcrumbs>
+                <Breadcrumbs.Item href="/">Home</Breadcrumbs.Item>
+                <Breadcrumbs.Item>{currentCategory.title}</Breadcrumbs.Item>
+              </Breadcrumbs>
+            </div>
+
+            <div className="col-md-12 mt-40 text-center">
               <CatalogSection.Title
                 icon={`/storage/${currentCategory.active_icon}`}
               >

@@ -1,6 +1,6 @@
 .catalog-section {
   position: relative;
-  padding: 40px 100px;
+  padding-block: 40px 100px;
 
   &:before {
     content: "";
@@ -16,6 +16,10 @@
   &__title {
     font-size: 35px;
     font-weight: 400;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__icon {

@@ -1,0 +1,26 @@
+@use "@styles/variables/colors";
+
+.breadcrumbs {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  &__arrow {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &__item {
+    font-size: 15px;
+    color: colors.$black;
+  }
+
+  a#{&}__item {
+    color: colors.$light-gray;
+
+    &:hover {
+      color: colors.$primary;
+    }
+  }
+}

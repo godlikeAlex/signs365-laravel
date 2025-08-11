@@ -1,4 +1,5 @@
 import BadgeCategory from "./BadgeCategory";
+import Breadcrumbs from "./Breadcrumbs";
 import CartItem from "./CartItem";
 import CartList from "./CartList";
 import CatalogSection from "./CatalogSection";
@@ -37,6 +38,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   HomeSection,
+  Breadcrumbs,
   CatalogSection,
   BadgeCategory,
   SliderProducts,
