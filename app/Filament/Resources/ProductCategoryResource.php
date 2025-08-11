@@ -44,17 +44,23 @@ class ProductCategoryResource extends Resource
         ->multiple()
         ->relationship("cities", "title")
         ->preload(),
-      Forms\Components\FileUpload::make("icon")
-        ->label("Icon for menu")
-        ->helperText(
-          "It is best to upload svg, if it is not available, load png 256x256. The most important thing is that the icon fit the entire size"
-        ),
       Forms\Components\TextInput::make("menu_order")
         ->numeric()
         ->label("Ordering on menu (Home Page)"),
       Forms\Components\Toggle::make("show_on_home")
         ->label("Show on home page in menu?")
         ->columnSpanFull(),
+      Forms\Components\Section::make("Icons")
+        ->description(
+          "It is best to upload svg, if it is not available, load png 256x256. The most important thing is that the icon fit the entire size"
+        )
+        ->columns(2)
+        ->schema([
+          Forms\Components\FileUpload::make("icon")->label("Icon for menu"),
+          Forms\Components\FileUpload::make("icon_active")->label(
+            "Icon for category page"
+          ),
+        ]),
       Forms\Components\Section::make("Colors")
         ->columns(2)
         ->schema([

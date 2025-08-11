@@ -25,7 +25,9 @@ const Catalog: React.FC<Props> = ({
         <div className="container">
           <div className="row">
             <div className="col-md-12 text-center">
-              <CatalogSection.Title>
+              <CatalogSection.Title
+                icon={`/storage/${currentCategory.active_icon}`}
+              >
                 {currentCategory.title}
               </CatalogSection.Title>
             </div>

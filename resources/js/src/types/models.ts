@@ -38,6 +38,7 @@ export interface ICategory {
   title: string;
   slug: string;
   icon?: string;
+  active_icon?: string;
   colors: {
     primary: string;
     alternative: string;

@@ -20,8 +20,18 @@ function CatalogSection({
   );
 }
 
-CatalogSection.Title = function ({ children }: PropsWithChildren) {
-  return <h2 className={classes.catalogSectionTitle}>{children}</h2>;
+CatalogSection.Title = function ({
+  children,
+  icon,
+}: PropsWithChildren<{ icon?: string }>) {
+  return (
+    <h2 className={classes.catalogSectionTitle}>
+      {children}
+      {icon && (
+        <img className={classes.catalogSectionIcon} src={icon} alt={""} />
+      )}
+    </h2>
+  );
 };
 
 export default CatalogSection;

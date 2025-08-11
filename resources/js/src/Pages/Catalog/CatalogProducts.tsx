@@ -34,14 +34,6 @@ const CatalogProducts: React.FC<Props> = ({
       headers: {},
       errorBag: null,
       forceFormData: false,
-      onCancelToken: (cancelToken) => {},
-      onCancel: () => {},
-      onBefore: (visit) => {},
-      onStart: (visit) => {},
-      onProgress: (progress) => {},
-      onSuccess: (page) => {},
-      onError: (errors) => {},
-      onFinish: (visit) => {},
     });
   };
 
@@ -68,26 +60,28 @@ const CatalogProducts: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="ps-pagination">
-        <ul className="pagination custom-pagenation-products">
-          <ReactPaginate
-            activeClassName="active"
-            breakLabel="..."
-            className={classNames({
-              pagination: true,
-              hide_on_mob_items: pageCount >= 7,
-            })}
-            nextLabel={<i className="fa fa-angle-double-right"></i>}
-            initialPage={currentPage > 0 ? currentPage - 1 : 0}
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={pageCount}
-            pageCount={pageCount}
-            previousLabel={<i className="fa fa-angle-double-left"></i>}
-            pageClassName="page-paginate"
-            renderOnZeroPageCount={null}
-          />
-        </ul>
-      </div>
+      {pageCount > 1 && (
+        <div className="ps-pagination">
+          <ul className="pagination custom-pagenation-products">
+            <ReactPaginate
+              activeClassName="active"
+              breakLabel="..."
+              className={classNames({
+                pagination: true,
+                hide_on_mob_items: pageCount >= 7,
+              })}
+              nextLabel={<i className="fa fa-angle-double-right"></i>}
+              initialPage={currentPage > 0 ? currentPage - 1 : 0}
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={pageCount}
+              pageCount={pageCount}
+              previousLabel={<i className="fa fa-angle-double-left"></i>}
+              pageClassName="page-paginate"
+              renderOnZeroPageCount={null}
+            />
+          </ul>
+        </div>
+      )}
     </>
   );
 };
