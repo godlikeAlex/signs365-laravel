@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Inertia;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoryWithOutProducts;
+use App\Http\Resources\ProductCardResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -18,6 +20,7 @@ class ShopController extends Controller
       ->products()
       ->published()
       ->orderby("order")
+      ->with("options")
       ->paginate(12);
 
     $categoriesWithOutProducts = ProductCategory::query()
@@ -25,18 +28,17 @@ class ShopController extends Controller
       ->orderBy("menu_order", "asc")
       ->get();
 
+    $currentCategory = new CategoryResource($product_category);
+
+    $currentCategory->wrap(null);
+
     return Inertia::render("Catalog", [
-      "currentCategory" => $product_category,
+      "currentCategory" => $currentCategory,
       "countedProducts" => $product_category
         ->products()
         ->published()
         ->count(),
-      "productsWithPagenation" => ProductResource::collection($products),
-      "categories" => json_decode(
-        CategoryWithOutProducts::collection(
-          $categoriesWithOutProducts
-        )->toJson()
-      ),
+      "productsWithPagination" => ProductCardResource::collection($products),
     ]);
   }
 

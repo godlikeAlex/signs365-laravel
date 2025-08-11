@@ -1,16 +1,14 @@
-import { EmptyPage, ProductCard } from "@/src/components";
-import { ICategory } from "@/src/types/models";
-import classNames from "classnames";
-import React, { useEffect } from "react";
-import Skeleton from "react-loading-skeleton";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import "./style.css";
-import ReactPaginate from "react-paginate";
-import { IProduct } from "@/src/types/ProductModel";
+import React from "react";
 import { router } from "@inertiajs/react";
+import classNames from "classnames";
+import ReactPaginate from "react-paginate";
+import { EmptyPage, ProductCard } from "@/src/components";
+import { ICategory, IProductCard } from "@/src/types/models";
+
+import "./style.css";
 
 interface Props {
-  products: IProduct[];
+  products: IProductCard[];
   currentCategory: ICategory;
   pageCount: number;
   currentPage: number;
@@ -18,7 +16,6 @@ interface Props {
 
 const CatalogProducts: React.FC<Props> = ({
   products,
-  currentCategory,
   pageCount,
   currentPage,
 }: Props) => {
@@ -50,20 +47,15 @@ const CatalogProducts: React.FC<Props> = ({
 
   return (
     <>
-      <div className="ps-categogy--grid">
-        <div className="row m-0">
+      <div>
+        <div className="row">
           {products.length > 0 ? (
             products.map((product, idx) => (
               <div
-                className="col-12 col-lg-4 col-xl-3 p-0"
+                className="col-12 col-lg-4 col-xl-3 mb-25"
                 key={`${product.id}-${idx}`}
               >
-                <ProductCard
-                  {...product}
-                  fullPage
-                  category={currentCategory}
-                  allowFullPage={false}
-                />
+                <ProductCard {...product} variant="catalog" />
               </div>
             ))
           ) : (

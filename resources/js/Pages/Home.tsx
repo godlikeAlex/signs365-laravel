@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Head } from "@inertiajs/react";
 import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
-import classNames from "classnames";
-import { HomeSection, ProductCard, SEOHead } from "@/src/components";
+import { HomeSection, SEOHead } from "@/src/components";
 import { IProduct } from "@/src/types/ProductModel";
 import ProductShowModal from "@/Modals/ProductShowModal";
 
@@ -13,7 +11,7 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ title }: Props) => {
-  const { homeCategories, cart } = usePage<SharedInertiaData>().props;
+  const { homeCategories } = usePage<SharedInertiaData>().props;
   const [product, setProduct] = useState<IProduct>();
 
   return (
@@ -50,47 +48,6 @@ const Home: React.FC<Props> = ({ title }: Props) => {
               primaryColor={category.colors.primary}
               altColor={category.colors.alternative}
             />
-          );
-          const { products, id, title, slug, colors } = category;
-
-          return (
-            <section
-              key={`home-section-category-${slug}`}
-              className={classNames({
-                "ps-section--featured": true,
-                "main-section": true,
-                "alt-section": idx % 2 === 0,
-              })}
-            >
-              <div className="container">
-                <div className="text-center">
-                  <h3
-                    className="ps-section__title ps-section__title--category"
-                    style={{
-                      ["--categoryColor" as string]: colors.primary,
-                    }}
-                  >
-                    {title}
-                  </h3>
-                </div>
-                <div className="ps-section__content">
-                  <div className="row m-0">
-                    {/* PRODUCT */}
-                    {products.slice(0, 4).map((product, idx) => (
-                      <div
-                        className="col-md-3"
-                        key={`home-product-${product.slug}`}
-                      >
-                        <ProductCard
-                          {...product}
-                          key={`${product.id}-${idx}`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
           );
         })}
       </div>

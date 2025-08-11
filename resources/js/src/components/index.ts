@@ -1,6 +1,7 @@
 import BadgeCategory from "./BadgeCategory";
 import CartItem from "./CartItem";
 import CartList from "./CartList";
+import CatalogSection from "./CatalogSection";
 import Dropzone from "./Dropzone";
 import EmptyPage from "./EmptyPage";
 import FacebookComments from "./FacebookComments";
@@ -36,6 +37,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   HomeSection,
+  CatalogSection,
   BadgeCategory,
   SliderProducts,
   Header,

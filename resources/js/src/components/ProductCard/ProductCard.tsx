@@ -7,8 +7,11 @@ import { IProductCard } from "@/src/types/models";
 import placeholderImagePath from "@/assets/images/placeholder.webp";
 
 import classes from "./ProductCard.module.scss";
+import classNames from "classnames";
 
-type Props = IProductCard & {};
+type Props = IProductCard & {
+  variant?: "home" | "catalog";
+};
 
 export default function ProductCard({
   title,
@@ -16,6 +19,7 @@ export default function ProductCard({
   images,
   categories,
   min_price,
+  variant = "home",
 }: Props) {
   const [image] = images;
   const [category] = categories;
@@ -28,7 +32,11 @@ export default function ProductCard({
     : placeholderImagePath;
 
   return (
-    <article className={classes.productCard}>
+    <article
+      className={classNames(classes.productCard, {
+        [classes.productCardCatalog]: variant === "catalog",
+      })}
+    >
       <Link href={pathToProduct} className={classes.productCardImageContainer}>
         <div
           className={classes.productCardImageLink}
@@ -45,34 +53,46 @@ export default function ProductCard({
         />
       </Link>
 
-      <Link href={pathToProduct}>
-        <h3 className={classes.productCardTitle}>{title}</h3>
-      </Link>
+      <div className={classes.productCardContent}>
+        <Link href={pathToProduct}>
+          <h3 className={classes.productCardTitle}>{title}</h3>
+        </Link>
 
-      {category ? (
-        <BadgeCategory
-          component={Link}
-          href={`/shop/${category.slug}`}
-          primaryColor={category.colors.primary}
-          alternativeColor={category.colors.alternative}
-        >
-          {category.title}
-        </BadgeCategory>
-      ) : null}
+        {category && variant === "home" ? (
+          <BadgeCategory
+            component={Link}
+            href={`/shop/${category.slug}`}
+            primaryColor={category.colors.primary}
+            alternativeColor={category.colors.alternative}
+          >
+            {category.title}
+          </BadgeCategory>
+        ) : null}
 
-      <div className={classes.cardRating}>
-        {new Array(5).fill("").map((_, idx) => (
-          <StarSVG width={15} height={15} key={idx} />
-        ))}
+        {variant === "catalog" && (
+          <p className={classes.productCardDescription}>
+            {title.length > 20 ? (
+              <div>Modern, Sleek, and Subtle Brandingl</div>
+            ) : (
+              <div>Built to Last. Designed to Guide.</div>
+            )}
+          </p>
+        )}
 
-        <span className={classes.cardRatingValue}>5</span>
-      </div>
+        <div className={classes.cardRating}>
+          {new Array(5).fill("").map((_, idx) => (
+            <StarSVG width={15} height={15} key={idx} />
+          ))}
 
-      {min_price && (
-        <div className={classes.productCardPrice}>
-          From <span>{min_price.toLocaleString()}$</span>
+          <span className={classes.cardRatingValue}>5</span>
         </div>
-      )}
+
+        {min_price && (
+          <div className={classes.productCardPrice}>
+            From <span>{min_price.toLocaleString()}$</span>
+          </div>
+        )}
+      </div>
     </article>
   );
 }

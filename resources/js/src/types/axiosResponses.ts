@@ -5,6 +5,7 @@ import {
   User,
   IOrder,
   ICategory,
+  IProductCard,
 } from "./models";
 
 export interface LoginResponse {
@@ -47,7 +48,7 @@ export interface IOrdersPagenation {
   meta: IPagenation;
 }
 
-export interface IProductsPagenation {
-  data: IProduct[];
+export interface IProductsPagination {
+  data: IProductCard[];
   meta: IPagenation;
 }

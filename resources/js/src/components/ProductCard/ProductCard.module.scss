@@ -1,14 +1,40 @@
 @use "@styles/variables/colors";
 
 .product-card {
+  &--catalog {
+    background-color: #fff;
+    height: 100%;
+
+    transition: 0.3s;
+
+    &:hover {
+      box-shadow: 10px 10px 17px -5px rgba(0, 0, 0, 0.51);
+      -webkit-box-shadow: 10px 10px 17px -5px rgba(0, 0, 0, 0.51);
+      -moz-box-shadow: 10px 10px 17px -5px rgba(0, 0, 0, 0.51);
+    }
+  }
+
+  &__content {
+    padding-top: 8px;
+  }
+
+  &--catalog &__content {
+    padding: 18px 20px 15px 20px;
+  }
+
   &__title {
-    margin-block: 8px;
+    margin-bottom: 8px;
+
     font-size: 15px;
     transition: 0.3s;
 
     &:hover {
       color: colors.$primary;
     }
+  }
+
+  &--catalog &__title {
+    height: 36px;
   }
 
   &__image {
@@ -61,6 +87,15 @@
 
   &__category {
     display: none;
+  }
+
+  &__description {
+    width: 80%;
+    font-size: 12px;
+    color: colors.$light-gray;
+    margin-top: 12px;
+    margin-bottom: 25px;
+    height: 38px;
   }
 
   &__price {
