@@ -7,12 +7,23 @@ import ProductCheckoutForm from "../ProductCheckoutForm";
 import ProductContactForm from "../ProductContactForm/ProductContactForm";
 import ProductBreadcrumb from "./shared/ProductBreadcrumb";
 import ProductInfo from "./shared/ProductInfo";
+import Breadcrumbs from "../Breadcrumbs";
 
 interface Props {
   product: IProduct;
 }
 
 const ProductCheckoutType: React.FC<Props> = ({ product }: Props) => {
+  return (
+    <>
+      <section>
+        <div className="container">
+          <div className="row"></div>
+        </div>
+      </section>
+    </>
+  );
+
   return (
     <div className="ps-page--product-variable">
       <div className="container">

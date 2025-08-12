@@ -1,0 +1,24 @@
+@use "@styles/variables/colors";
+
+.features-badge {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+
+  padding-inline: 20px;
+
+  list-style: none;
+  margin: 0;
+
+  background: colors.$ultra-light-gray;
+  border-radius: 25px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,14 @@
+@use "@styles/variables/colors";
+
+.product-name {
+  font-size: 38px;
+  font-weight: 400;
+}
+
+.product-description-preview {
+  font-size: 18px;
+  font-weight: 400;
+  color: colors.$black;
+
+  margin-bottom: 0;
+}

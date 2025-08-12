@@ -10,7 +10,10 @@ import "react-loading-skeleton/dist/skeleton.css";
 createInertiaApp({
   resolve: (name) => {
     const pages = import.meta.glob("./Pages/**/*.tsx", { eager: true });
-    let page: any = pages[`./Pages/${name}.tsx`];
+    let page: any =
+      pages[`./Pages/${name}.tsx`] || pages[`./Pages/${name}/${name}.tsx`];
+
+    console.log(name, pages);
 
     if (name !== "Error") {
       page.default.layout =
