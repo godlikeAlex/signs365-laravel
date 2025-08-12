@@ -1,0 +1,35 @@
+@use "@styles/variables/colors";
+
+.product-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 5px 27px;
+}
+
+.product-group-button {
+  font-size: 18px;
+
+  padding: 0;
+  height: 31px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: 12px;
+
+  background-color: white;
+  border: 1px solid colors.$border-product;
+  border-radius: 15px;
+
+  transition: 0.3s;
+
+  cursor: pointer;
+
+  &:hover,
+  &--active {
+    background-color: colors.$primary300;
+    border-color: colors.$primary300;
+  }
+}

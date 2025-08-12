@@ -14,16 +14,7 @@ interface Props {
 }
 
 const ProductCheckoutType: React.FC<Props> = ({ product }: Props) => {
-  return (
-    <>
-      <section>
-        <div className="container">
-          <div className="row"></div>
-        </div>
-      </section>
-    </>
-  );
-
+  return;
   return (
     <div className="ps-page--product-variable">
       <div className="container">

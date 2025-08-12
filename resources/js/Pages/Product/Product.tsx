@@ -16,6 +16,7 @@ import ProductCheckoutType from "@/src/components/Products/ProductCheckoutType";
 import ProductFormType from "@/src/components/Products/ProductFormType";
 import { ICategory } from "@/src/types/models";
 import FeaturesBadge from "./components/FeaturesBadge";
+import ProductCheckoutForm from "./components/ProductCheckoutForm";
 
 import classes from "./Product.module.scss";
 import { Link } from "@inertiajs/react";
@@ -116,6 +117,8 @@ export default function Product({ product, category }: Props) {
               </div>
 
               <FeaturesBadge />
+
+              <ProductCheckoutForm />
             </div>
           </div>
         </div>
