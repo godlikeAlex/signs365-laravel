@@ -78,7 +78,7 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           ref={(slider) => setThumbNailSlickRef(slider)}
           asNavFor={mainSlickRef}
           {...ThumbnailSlick}
-          slidesToShow={5}
+          slidesToShow={4}
           className="ps-gallery--image"
           style={{ display: "block" }}
         >

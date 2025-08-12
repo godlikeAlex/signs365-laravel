@@ -3083,7 +3083,7 @@ textarea.form-control {
 
 .ps-product__thumbnail {
   position: relative;
-  margin-bottom: 15px;
+  /* margin-bottom: 12px; */
   /* padding: 20px 20px 0; */
 }
 
@@ -3096,7 +3096,6 @@ textarea.form-control {
 .ps-product__thumbnail img {
   width: 100%;
   margin: auto;
-  border-radius: 4px;
 }
 
 .ps-product__actions {
@@ -4178,11 +4177,10 @@ textarea.form-control {
 }
 
 .ps-product--gallery .ps-gallery--image .ps-gallery__item {
-  border-radius: 4px;
   border: 1px solid #f0f2f5;
   padding: 4px;
-  margin-top: 12px;
-  margin-right: 12px;
+  margin-top: 24px;
+  margin-right: 24px;
 }
 
 .ps-product--gallery .ps-gallery--image .ps-gallery__item:hover {
@@ -4367,7 +4365,7 @@ textarea.form-control {
   .ps-product--detail-sidebar
     .ps-product__thumbnail.ps-product__thumbnail[data-vertical="false"]
     .ps-product__gallery {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
   }
   .ps-product--detail-sidebar .ps-product__info {
     padding-left: 40px;
