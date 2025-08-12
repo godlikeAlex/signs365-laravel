@@ -27,6 +27,7 @@ import ProductOptions from "./ProductOptions";
 import ProductQuantity from "./ProductQuantity";
 import ProductSlider from "./ProductSlider";
 import ProtectedRoute from "./ProtectedRoute";
+import Rating from "./Rating";
 import Routing from "./Routing";
 import SEOHead from "./SEOHead";
 import SliderProducts from "./SliderProducts";
@@ -37,6 +38,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  Rating,
   HomeSection,
   Breadcrumbs,
   CatalogSection,

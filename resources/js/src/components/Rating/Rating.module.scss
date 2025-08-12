@@ -1,0 +1,13 @@
+@use "@styles/variables/colors";
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 1.5px;
+
+  &__value {
+    font-size: 10px;
+    margin-left: 5px;
+    color: colors.$light-gray;
+  }
+}

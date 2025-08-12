@@ -4,7 +4,7 @@ import ProductReducer, {
   ProductActionKind,
 } from "@/src/reducers/ProductReducer";
 import { IProduct, IProductDefault } from "@/src/types/ProductModel";
-import { Breadcrumbs, ProductSlider, SEOHead } from "@/src/components";
+import { Breadcrumbs, ProductSlider, Rating, SEOHead } from "@/src/components";
 import { SelectProductFileRef } from "@/src/components/SelectProductFile/SelectProductFile";
 import ProductCheckoutType from "@/src/components/Products/ProductCheckoutType";
 import ProductFormType from "@/src/components/Products/ProductFormType";
@@ -89,9 +89,14 @@ export default function Product({ product, category }: Props) {
 
             <div className="col-md-6">
               <h1 className={classes.productName}>{product.title}</h1>
+
               <p className={classes.productDescriptionPreview}>
                 Durable. Bold. Made to Get Noticed.
               </p>
+
+              <div className={classes.productRatingContainer}>
+                <Rating rating={5} size="lg" />
+              </div>
 
               <FeaturesBadge />
             </div>

@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import BadgeCategory from "../BadgeCategory";
+import Rating from "../Rating";
 
-import StarSVG from "@/assets/icons/star.svg?react";
 import { IProductCard } from "@/src/types/models";
 
 import placeholderImagePath from "@/assets/images/placeholder.webp";
@@ -80,11 +80,7 @@ export default function ProductCard({
         )}
 
         <div className={classes.cardRating}>
-          {new Array(5).fill("").map((_, idx) => (
-            <StarSVG width={15} height={15} key={idx} />
-          ))}
-
-          <span className={classes.cardRatingValue}>5</span>
+          <Rating rating={5} size={variant === "home" ? "sm" : "md"} />
         </div>
 
         {min_price && (
