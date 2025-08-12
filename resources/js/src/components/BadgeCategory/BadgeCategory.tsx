@@ -10,9 +10,9 @@ type Props<T extends React.ElementType> = {
   component?: T;
 } & React.ComponentPropsWithoutRef<T>;
 
-const sizes = {
-  sm: "12px",
-  lg: "22px",
+const sizeClasses = {
+  sm: classes.badgeCategorySm,
+  lg: classes.badgeCategoryLg,
 };
 
 export default function BadgeCategory<T extends React.ElementType = "div">({
@@ -29,13 +29,12 @@ export default function BadgeCategory<T extends React.ElementType = "div">({
   return (
     <Component
       {...props}
-      className={classNames(classes.badgeCategory, {
+      className={classNames(classes.badgeCategory, sizeClasses[format], {
         [classes.badgeCategoryActive]: active,
       })}
       style={{
         ["--primaryCategoryColor" as string]: primaryColor,
         ["--alternativeCategoryColor" as string]: alternativeColor,
-        ["--fzBadge" as string]: sizes[format],
       }}
     >
       {children}

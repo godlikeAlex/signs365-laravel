@@ -4,7 +4,16 @@
   border-radius: 20px;
   padding-block: 5px;
   padding-inline: 16px;
-  font-size: var(--fzBadge);
+
+  &--sm {
+    font-family: "Lexend", sans-serif;
+    font-size: 12px;
+  }
+
+  &--lg {
+    font-family: "Myriad Pro";
+    font-size: 22px;
+  }
 
   &:hover,
   &--active {

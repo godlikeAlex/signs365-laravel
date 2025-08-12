@@ -6,6 +6,7 @@ import { store } from "./src/store";
 import { createInertiaApp } from "@inertiajs/react";
 import { DefaultLayout } from "./Layouts";
 import "react-loading-skeleton/dist/skeleton.css";
+import "@/src/styles/fonts.scss";
 
 createInertiaApp({
   resolve: (name) => {
