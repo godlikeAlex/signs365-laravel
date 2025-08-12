@@ -5,9 +5,15 @@ import classes from "./BadgeCategory.module.scss";
 type Props<T extends React.ElementType> = {
   primaryColor: string;
   alternativeColor: string;
+  format?: "sm" | "lg";
   active?: boolean;
   component?: T;
 } & React.ComponentPropsWithoutRef<T>;
+
+const sizes = {
+  sm: "12px",
+  lg: "22px",
+};
 
 export default function BadgeCategory<T extends React.ElementType = "div">({
   primaryColor,
@@ -15,6 +21,7 @@ export default function BadgeCategory<T extends React.ElementType = "div">({
   active = false,
   component,
   children,
+  format = "sm",
   ...props
 }: PropsWithChildren<Props<T>>) {
   const Component = component ?? "div";
@@ -28,6 +35,7 @@ export default function BadgeCategory<T extends React.ElementType = "div">({
       style={{
         ["--primaryCategoryColor" as string]: primaryColor,
         ["--alternativeCategoryColor" as string]: alternativeColor,
+        ["--fzBadge" as string]: sizes[format],
       }}
     >
       {children}

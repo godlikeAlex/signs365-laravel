@@ -4,7 +4,7 @@
   border-radius: 20px;
   padding-block: 5px;
   padding-inline: 16px;
-  font-size: 12px;
+  font-size: var(--fzBadge);
 
   &:hover,
   &--active {

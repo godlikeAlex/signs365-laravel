@@ -4,7 +4,13 @@ import ProductReducer, {
   ProductActionKind,
 } from "@/src/reducers/ProductReducer";
 import { IProduct, IProductDefault } from "@/src/types/ProductModel";
-import { Breadcrumbs, ProductSlider, Rating, SEOHead } from "@/src/components";
+import {
+  BadgeCategory,
+  Breadcrumbs,
+  ProductSlider,
+  Rating,
+  SEOHead,
+} from "@/src/components";
 import { SelectProductFileRef } from "@/src/components/SelectProductFile/SelectProductFile";
 import ProductCheckoutType from "@/src/components/Products/ProductCheckoutType";
 import ProductFormType from "@/src/components/Products/ProductFormType";
@@ -12,6 +18,7 @@ import { ICategory } from "@/src/types/models";
 import FeaturesBadge from "./components/FeaturesBadge";
 
 import classes from "./Product.module.scss";
+import { Link } from "@inertiajs/react";
 
 interface Props {
   product: IProduct;
@@ -88,6 +95,16 @@ export default function Product({ product, category }: Props) {
             </div>
 
             <div className="col-md-6">
+              <BadgeCategory
+                primaryColor={category.colors.primary}
+                alternativeColor={category.colors.alternative}
+                format="lg"
+                component={Link}
+                href={`/shop/${category.slug}`}
+              >
+                {category.title}
+              </BadgeCategory>
+
               <h1 className={classes.productName}>{product.title}</h1>
 
               <p className={classes.productDescriptionPreview}>
