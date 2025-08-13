@@ -17,6 +17,7 @@ import ProductFormType from "@/src/components/Products/ProductFormType";
 import { ICategory } from "@/src/types/models";
 import FeaturesBadge from "./components/FeaturesBadge";
 import ProductCheckoutForm from "./components/ProductCheckoutForm";
+import ProductContactForm from "./components/ProductContactForm";
 
 import classes from "./Product.module.scss";
 import { Link } from "@inertiajs/react";
@@ -73,7 +74,7 @@ export default function Product({ product, category }: Props) {
         /> */}
       </SEOHead>
 
-      <section>
+      <section style={{ marginBottom: 108 }}>
         <div className="container">
           <div className="row">
             <div className="col-md-12 mb-90 mt-70">
@@ -109,7 +110,7 @@ export default function Product({ product, category }: Props) {
               <h1 className={classes.productName}>{product.title}</h1>
 
               <p className={classes.productDescriptionPreview}>
-                Durable. Bold. Made to Get Noticed.
+                {product.short_description}
               </p>
 
               <div className={classes.productRatingContainer}>
@@ -118,13 +119,33 @@ export default function Product({ product, category }: Props) {
 
               <FeaturesBadge />
 
-              <ProductCheckoutForm />
+              {product.with_checkout ? (
+                <ProductCheckoutForm />
+              ) : (
+                <ProductContactForm productSlug={product.slug} />
+              )}
             </div>
           </div>
         </div>
       </section>
+      <div className="container">
+        <section className={classes.productInfoSection}>
+          <div className="row">
+            <div className="col-md-12">
+              <h3 className={classes.productInfoSectionTitle}>Overview</h3>
+            </div>
 
-      <section></section>
+            <div className="col-md-8">
+              <p
+                className={classes.productInfoSectionContent}
+                dangerouslySetInnerHTML={{
+                  __html: product.description,
+                }}
+              ></p>
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* {product.with_checkout ? (
         <ProductCheckoutType product={product} />

@@ -50,6 +50,7 @@ export interface IProductCard {
   id: number;
   title: string;
   slug: string;
+  short_description: string;
   min_price: number;
   categories?: Pick<ICategory, "title" | "slug" | "id" | "colors">[];
   images?: null | ProductImage[];

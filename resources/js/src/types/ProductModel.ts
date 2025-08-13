@@ -105,6 +105,7 @@ type IProductBase = {
   id: number;
   title: string;
   slug: string;
+  short_description: string;
   description: string;
   published: boolean;
 

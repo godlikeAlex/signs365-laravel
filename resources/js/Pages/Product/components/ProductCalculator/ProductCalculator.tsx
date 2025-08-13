@@ -7,6 +7,9 @@ import { useProductContext } from "@/src/contexts/MainProductContext";
 import { ProductOption } from "@/src/types/ProductModel";
 import { ProductActionKind } from "@/src/reducers/ProductReducer";
 import ProductFormSection from "../ProductFormSection";
+import { Button } from "@/src/components";
+
+import classes from "./ProductCalculator.module.scss";
 
 interface Props {
   selectedOption: ProductOption;
@@ -52,26 +55,26 @@ const ProductCalculator: React.FC<Props> = ({ selectedOption }: Props) => {
 
       {selectedOption.show_custom_sizes &&
       selectedOption.prevent_user_input_size === false ? (
-        <div>
-          <div
-            // className={classNames("product-variant", {
-            //   "active-variant": state.sizeSelectionType === "default",
-            //   "disabled-variant": disabled,
-            // })}
-            onClick={() => !disabled && handleSizeTypeSelect("default")}
+        <div className={classes.unitRow}>
+          <Button
+            variant="ghost"
+            color="primary-300"
+            active={state.sizeSelectionType === "default"}
+            disabled={disabled}
+            onClick={() => handleSizeTypeSelect("default")}
           >
             Default
-          </div>
+          </Button>
 
-          <div
-            // className={classNames("product-variant", {
-            //   "active-variant": state.sizeSelectionType === "custom",
-            //   "disabled-variant": disabled,
-            // })}
-            onClick={() => !disabled && handleSizeTypeSelect("custom")}
+          <Button
+            variant="ghost"
+            color="primary-300"
+            active={state.sizeSelectionType === "custom"}
+            disabled={disabled}
+            onClick={() => handleSizeTypeSelect("custom")}
           >
             Custom
-          </div>
+          </Button>
         </div>
       ) : null}
 

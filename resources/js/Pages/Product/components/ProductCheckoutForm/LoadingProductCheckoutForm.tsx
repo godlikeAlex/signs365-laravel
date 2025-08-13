@@ -8,7 +8,7 @@ function LoadingProductCheckoutForm({}: LoadingProductCheckoutFormProps) {
     <div
       className="ps-product__meta"
       style={{
-        marginTop: 0,
+        marginTop: 25,
         borderBottom: "1px solid #f0f2f5",
       }}
     >

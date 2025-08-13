@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "./style.css";
 import { ProductImage } from "@/src/types/ProductModel";
 import { NextArrow, PrevArrow } from "./Arrows";
+import placeholderImagePath from "@/assets/images/placeholder.webp";
 
 interface Props {
   images: ProductImage[];
@@ -50,8 +51,32 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           prevArrow={<PrevArrow />}
           className="ps-product__thumbnail"
         >
-          {images.map((img) => (
-            <div className="slide" key={`main-${img.id}`}>
+          {images.length > 0 ? (
+            images.map((img) => (
+              <div className="slide" key={`main-${img.id}`}>
+                <div
+                  style={{
+                    paddingBottom: "100%",
+                    background: "#EEE",
+                    height: 0,
+                    position: "relative",
+                  }}
+                >
+                  <img
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "block",
+                      position: "absolute",
+                    }}
+                    src={`/storage/${img.path}`}
+                    alt={img.alt ? img.alt : productName}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="slide">
               <div
                 style={{
                   paddingBottom: "100%",
@@ -67,12 +92,11 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
                     display: "block",
                     position: "absolute",
                   }}
-                  src={`/storage/${img.path}`}
-                  alt={img.alt ? img.alt : productName}
+                  src={placeholderImagePath}
                 />
               </div>
             </div>
-          ))}
+          )}
         </Slider>
         <Slider
           ref={(slider) => setThumbNailSlickRef(slider)}

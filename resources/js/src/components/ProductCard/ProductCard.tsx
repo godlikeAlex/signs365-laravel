@@ -19,6 +19,7 @@ export default function ProductCard({
   images,
   categories,
   min_price,
+  short_description,
   variant = "home",
 }: Props) {
   const [image] = images;
@@ -70,13 +71,7 @@ export default function ProductCard({
         ) : null}
 
         {variant === "catalog" && (
-          <p className={classes.productCardDescription}>
-            {title.length > 20 ? (
-              <div>Modern, Sleek, and Subtle Brandingl</div>
-            ) : (
-              <div>Built to Last. Designed to Guide.</div>
-            )}
-          </p>
+          <p className={classes.productCardDescription}>{short_description}</p>
         )}
 
         <div className={classes.cardRating}>

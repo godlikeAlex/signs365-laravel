@@ -18,3 +18,23 @@
   margin-top: 22px;
   margin-bottom: 26px;
 }
+
+.product-info-section {
+  border-top: 1px solid colors.$gray;
+  padding-top: 25px;
+  padding-bottom: 112px;
+
+  &__title {
+    font-size: 21px;
+  }
+
+  &__content {
+    font-size: 17px;
+    color: colors.$black;
+    margin-top: 20px;
+
+    & p {
+      color: colors.$black;
+    }
+  }
+}

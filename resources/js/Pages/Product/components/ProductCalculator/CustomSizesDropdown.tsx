@@ -35,78 +35,66 @@ const CustomSizesDropdown: React.FC<Props> = ({ sizes }: Props) => {
   };
 
   return (
-    <div className="row">
-      <form style={{ width: "100%", marginTop: 10 }}>
-        <div
-          className="ps-form--review ps-form-calculator"
-          style={{ marginBottom: 0 }}
-        >
-          <div className="row">
-            <div className="col-md-12">
-              <div className={"ps-checkout__group"}>
-                <label className={"ps-checkout__label"}>Adjusted sizes</label>
-                <Select
-                  maxMenuHeight={220}
-                  isSearchable
-                  menuPlacement="auto"
-                  options={options}
-                  onChange={(e) => handleChange(e.width, e.height, e.value)}
-                  value={options.find(
-                    (option) => option.value === state.customSize.value
-                  )}
-                  styles={{
-                    control: (baseStyles, dropDownState) => ({
-                      ...baseStyles,
-                      borderColor:
-                        state.customSize.showError && state.customSize.error
-                          ? "red"
-                          : dropDownState.isFocused
-                          ? "#fd8d27"
-                          : "#f0f2f5",
-                      boxShadow: "unset",
-                      height: "46px",
-                      borderRadius: "40px",
-                      backgroundColor: "#f0f2f5",
-                      color: "#595855",
-                      paddingLeft: 12,
-                      paddingRight: 12,
+    <form style={{ width: "100%", marginTop: 20 }}>
+      <label style={{ fontSize: 15 }}>Adjusted sizes</label>
+      <Select
+        maxMenuHeight={220}
+        isSearchable
+        menuPlacement="auto"
+        options={options}
+        onChange={(e) => handleChange(e.width, e.height, e.value)}
+        value={options.find(
+          (option) => option.value === state.customSize.value
+        )}
+        styles={{
+          control: (baseStyles, dropDownState) => ({
+            ...baseStyles,
+            borderColor:
+              state.quantity.showError && state.quantity.error
+                ? "red"
+                : dropDownState.isFocused
+                ? "#FFCA1A"
+                : "#FFCA1A",
+            boxShadow: "unset",
+            height: "46px",
+            borderRadius: "40px",
+            backgroundColor: "#EAE9E5",
+            color: "#595855",
+            paddingLeft: 12,
+            paddingRight: 12,
 
-                      ":hover": {
-                        borderColor: "#fd8d27",
-                      },
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      background: "#f0f2f5",
-                      color: "5b6c8f",
-                    }),
-                    option: (baseStyles, state) => ({
-                      ...baseStyles,
-                      color:
-                        state.isSelected || state.isFocused
-                          ? "white"
-                          : "#595855",
-                      background:
-                        state.isSelected || state.isFocused
-                          ? "#fd8d27"
-                          : "#f0f2f5",
-                    }),
-                    singleValue: (baseStyles) => ({
-                      ...baseStyles,
-                      color: "#595855",
-                    }),
-                    placeholder: (baseStyle) => ({
-                      ...baseStyle,
-                      color: "#595855",
-                    }),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+            ":hover": {
+              borderColor: "#FFCA1A",
+            },
+          }),
+          menuList: (base) => ({
+            ...base,
+            background: "#f0f2f5",
+            color: "5b6c8f",
+            // zIndex: 99,
+            // position: 'relative'
+          }),
+          menu: (base) => ({
+            ...base,
+            zIndex: 9,
+          }),
+          option: (baseStyles, state) => ({
+            ...baseStyles,
+            color: state.isSelected || state.isFocused ? "white" : "#595855",
+            background:
+              state.isSelected || state.isFocused ? "#FFCA1A" : "#f0f2f5",
+          }),
+          singleValue: (baseStyles) => ({
+            ...baseStyles,
+            color: "#595855",
+          }),
+          placeholder: (baseStyle) => ({
+            ...baseStyle,
+            color: "#595855",
+          }),
+        }}
+      />
+    </form>
   );
 };
 
