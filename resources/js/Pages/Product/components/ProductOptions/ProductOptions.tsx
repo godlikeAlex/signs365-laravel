@@ -19,10 +19,11 @@ const ProductOptions = ({ product }: Props) => {
 
   if (product.options.length === 1) {
     return (
-      <h6>
-        Option:{" "}
-        <span className="primary-color">{product.options[0].title}</span>
-      </h6>
+      <ProductFormSection>
+        <ProductFormSection.Title>
+          Option: {product.options[0].title}
+        </ProductFormSection.Title>
+      </ProductFormSection>
     );
   }
 

@@ -1,6 +1,6 @@
 import { Addon } from "./types/ProductModel";
 
-export function groupAddons(addons: Addon[]) {
+export function groupAddons(addons: Addon[]): Record<string, Addon[]> {
   const addonsWithGroup = addons.map((addon) => {
     if (!addon.group_addon) {
       return {

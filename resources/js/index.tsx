@@ -14,8 +14,6 @@ createInertiaApp({
     let page: any =
       pages[`./Pages/${name}.tsx`] || pages[`./Pages/${name}/${name}.tsx`];
 
-    console.log(name, pages);
-
     if (name !== "Error") {
       page.default.layout =
         page.default.layout ||

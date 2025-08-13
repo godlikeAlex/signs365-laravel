@@ -3,3 +3,15 @@
     @content;
   }
 }
+
+@mixin for-small-mobile {
+  @media (min-width: 320px) {
+    @content;
+  }
+}
+
+@mixin below-tablet {
+  @media (max-width: 850px) {
+    @content;
+  }
+}

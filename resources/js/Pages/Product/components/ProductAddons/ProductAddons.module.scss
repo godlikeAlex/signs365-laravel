@@ -1,0 +1,173 @@
+@use "@styles/variables/colors";
+@use "@styles/mixins/media";
+
+.addons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &--two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+button.addon {
+  display: flex;
+  background: unset;
+  border: 1px solid colors.$light-gray;
+  cursor: pointer;
+
+  transition: 0.3s;
+
+  &:hover,
+  &--active {
+    background-color: colors.$primary300;
+  }
+}
+
+.addon {
+  font-size: 18px;
+  border: 1px solid colors.$light-gray;
+  border-radius: 25px;
+  overflow: hidden;
+
+  @include media.for-desktop {
+    display: flex;
+    height: 36px;
+
+    &--with-quantity#{&}--active {
+      height: 55px;
+    }
+  }
+
+  &--toggler &__title {
+    width: 100%;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 25px;
+    // padding-inline: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+
+    height: 100%;
+
+    position: relative;
+
+    @include media.below-tablet {
+      padding-block: 5px;
+    }
+
+    &::after {
+      content: "";
+
+      position: absolute;
+
+      border-radius: 25px;
+      border: 1px solid colors.$light-gray;
+      left: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 105%;
+    }
+
+    @include media.for-desktop {
+      width: 150px;
+    }
+  }
+
+  &--active &__title {
+    background-color: colors.$primary300;
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.extra-checkbox-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  flex: 1;
+
+  @include media.for-desktop {
+    margin-block: unset;
+  }
+
+  @include media.below-tablet {
+    margin-block: 20px;
+    margin-inline: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.extra-checkbox {
+  display: flex;
+  align-items: center;
+
+  background-color: unset;
+  border: none;
+
+  font-size: 13px;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid colors.$ultra-light-gray;
+
+    transition: 0.3s;
+  }
+
+  &:hover::before,
+  &--active::before {
+    background-color: colors.$primary300;
+    border-color: colors.$primary300;
+  }
+}
+
+.quantity-addon {
+  &__container {
+    display: flex;
+    margin-top: 5px;
+  }
+
+  &__button {
+    width: 18px;
+    height: 18px;
+    background-color: colors.$primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 8px;
+    border-radius: 12px;
+    color: colors.$black;
+    cursor: pointer;
+  }
+
+  &__input {
+    background-color: transparent;
+    outline: none !important;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 30px;
+    text-align: center;
+    font-size: 13px;
+  }
+}

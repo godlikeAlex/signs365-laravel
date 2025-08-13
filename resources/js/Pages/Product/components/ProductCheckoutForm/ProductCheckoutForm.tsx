@@ -7,7 +7,7 @@ import { IProductCheckout } from "@/src/types/ProductModel";
 import { useDebounceEffect } from "ahooks";
 import { ProductActionKind } from "@/src/reducers/ProductReducer";
 import { CartService } from "@/src/services";
-import ProductAddons from "@/src/components/ProductAddons/ProductAddons";
+import ProductAddons from "@/Pages/Product/components/ProductAddons/ProductAddons";
 import ProductQuantity from "@/src/components/ProductQuantity";
 import ProductCalculator from "@/src/components/ProductCalculator";
 import SelectProductFile from "@/src/components/SelectProductFile";
@@ -157,6 +157,8 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
   return (
     <section>
       <ProductOptions product={product} />
+
+      <ProductAddons product={product} />
     </section>
   );
 
