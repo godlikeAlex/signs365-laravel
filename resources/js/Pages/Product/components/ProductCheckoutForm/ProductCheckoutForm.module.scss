@@ -1,0 +1,13 @@
+@use "@styles/variables/colors";
+
+.product-checkout-form-price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 37px;
+  width: 150px;
+  font-size: 23px;
+  border: 1px solid colors.$primary;
+  border-radius: 25px;
+}

@@ -118,9 +118,10 @@ const AddonItem: React.FC<Props> = ({ addon, disabled }: Props) => {
         [classes.addonActive]: Boolean(selectedAddon),
         [classes.addonToggler]: addon.extra_data_type === "unset",
         [classes.addonWithQuantity]: withQuantity,
-        // "disabled-variant": disabled,
+        [classes.addonDisabled]: disabled,
       })}
       onClick={(e) => AddonTag === "button" && handleClick(e)}
+      disabled={disabled}
     >
       <h6 className={classes.addonTitle}>
         {title}

@@ -1,0 +1,37 @@
+@use "@styles/variables/colors";
+
+.button {
+  &--ghost-300 {
+    --bg-color: white;
+    --hover-color: #{colors.$primary300};
+  }
+
+  &--primary-600 {
+    --bg-color: #ffdf8f;
+    --hover-color: #{colors.$primary};
+
+    border: 1px solid var(--bg-color) !important;
+  }
+}
+
+.button {
+  background-color: white;
+  border: 1px solid colors.$light-gray;
+  border-radius: 25px;
+  font-size: 18px;
+  text-transform: capitalize;
+  cursor: pointer;
+
+  height: 37px;
+  padding-inline: 18px;
+
+  transition: 0.3s;
+
+  background-color: var(--bg-color);
+
+  &:hover,
+  &--active {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+  }
+}

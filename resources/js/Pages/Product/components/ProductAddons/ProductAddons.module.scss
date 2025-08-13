@@ -96,6 +96,11 @@ button.addon {
       display: none;
     }
   }
+
+  &--disabled {
+    pointer-events: none;
+    background-color: #f0f2f5;
+  }
 }
 
 .extra-checkbox-list {

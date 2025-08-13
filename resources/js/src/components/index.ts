@@ -1,5 +1,7 @@
 import BadgeCategory from "./BadgeCategory";
+import BaseInput from "./BaseInput";
 import Breadcrumbs from "./Breadcrumbs";
+import Button from "./Button";
 import CartItem from "./CartItem";
 import CartList from "./CartList";
 import CatalogSection from "./CatalogSection";
@@ -39,6 +41,8 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   Rating,
+  BaseInput,
+  Button,
   HomeSection,
   Breadcrumbs,
   CatalogSection,

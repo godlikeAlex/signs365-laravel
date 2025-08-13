@@ -1,0 +1,27 @@
+@use "@styles/variables/colors";
+
+.base-input {
+  width: 100%;
+  background-color: colors.$ultra-light-gray;
+  border: 1px solid colors.$ultra-light-gray;
+
+  color: colors.$gray;
+  border-radius: 25px;
+  height: 37px;
+  padding-inline: 17px;
+
+  font-size: 18px;
+
+  &:focus {
+    border-color: colors.$primary;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 15px;
+  }
+}
