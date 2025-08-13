@@ -1,24 +1,41 @@
 @use "@styles/variables/colors";
+@use "@styles/mixins/media";
 
 .features-badge {
   display: flex;
-  height: 40px;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   justify-content: space-between;
-
-  padding-inline: 20px;
-
+  padding-inline: 15px;
   list-style: none;
   margin: 0;
 
   background: colors.$ultra-light-gray;
   border-radius: 25px;
 
+  height: 40px;
+
+  @include media.below-mobile {
+    height: auto;
+    flex-direction: column;
+
+    padding-block: 10px;
+  }
+
   &__item {
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 15px;
+
+    // gap: 5px;
+    // font-size: 10px;
+
+    font-size: clamp(0.625rem, 0.3493rem + 0.4902vw, 0.9375rem);
+    gap: clamp(0.3125rem, -0.0735rem + 0.6863vw, 0.75rem);
+
+    @include media.below-mobile {
+      font-size: 15px;
+    }
   }
 }

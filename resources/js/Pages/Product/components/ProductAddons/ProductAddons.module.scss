@@ -60,6 +60,8 @@ button.addon {
     align-items: center;
     border: none;
 
+    flex-shrink: 0;
+
     height: 100%;
 
     position: relative;
@@ -100,7 +102,8 @@ button.addon {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  // gap: 25px;
+  gap: clamp(0.3125rem, -8.8542rem + 13.3333vw, 1.5625rem);
   flex: 1;
 
   @include media.for-desktop {
