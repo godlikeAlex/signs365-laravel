@@ -85,7 +85,9 @@ export default function Product({ product, category }: Props) {
                   {category.title}
                 </Breadcrumbs.Item>
 
-                <Breadcrumbs.Item>{product.title}</Breadcrumbs.Item>
+                <Breadcrumbs.Item color={category.colors.primary}>
+                  {product.title}
+                </Breadcrumbs.Item>
               </Breadcrumbs>
             </div>
 

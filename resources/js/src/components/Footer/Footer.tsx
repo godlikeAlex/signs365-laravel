@@ -24,14 +24,10 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
                       style={{ textAlign: "center" }}
                     >
                       <a href="/">
-                        <img
-                          src={SVGLogo}
-                          style={{ width: 200 }}
-                          alt="Signs7"
-                        />
+                        <img src={SVGLogo} style={{ width: 90 }} alt="Signs7" />
 
                         <h3 className="footer-message">
-                          Everything for your business
+                          YOUR OUTDOOR ADVERTISING EXPERTS
                         </h3>
                       </a>
                     </div>

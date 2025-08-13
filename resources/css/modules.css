@@ -2600,10 +2600,9 @@
 }
 
 .footer-message {
-  color: var(--primary-color);
   text-transform: uppercase;
-  font-weight: bold;
-  margin-top: 20px;
+  font-size: 15px;
+  margin-top: 15px;
   margin-bottom: 50px;
 }
 
