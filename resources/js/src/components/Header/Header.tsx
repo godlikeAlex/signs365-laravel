@@ -12,9 +12,9 @@ import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
 import UserIcon from "@/assets/icons/SMALL/user.svg?react";
 import SVGLogo from "@/assets/images/logo.svg";
 
-import classes from "./Header.module.scss";
-import BadgeCategory from "../BadgeCategory";
 import HeaderCategoryItem from "./HeaderCategoryItem";
+
+import classes from "./Header.module.scss";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
