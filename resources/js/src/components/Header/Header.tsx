@@ -15,6 +15,7 @@ import SVGLogo from "@/assets/images/logo.svg";
 import HeaderCategoryItem from "./HeaderCategoryItem";
 
 import classes from "./Header.module.scss";
+import SearchForm from "../SearchForm";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
@@ -73,6 +74,10 @@ export default function Header() {
               </span>
             </li>
           </ul>
+
+          <div className={classes.topHeaderSearchContainer}>
+            <SearchForm />
+          </div>
 
           <ul className={classes.topHeaderRight}>
             <li className="top-header__nav-link">

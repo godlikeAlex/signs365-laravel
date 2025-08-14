@@ -1,0 +1,41 @@
+@use "@styles/variables/colors";
+
+$inputHeight: 29px;
+
+.search-form {
+  position: relative;
+}
+
+.search-input {
+  position: relative;
+
+  font-size: 10px;
+  height: $inputHeight;
+  padding-inline: 15px;
+
+  background-color: white;
+
+  border-color: colors.$border-product;
+  color: colors.$border-product;
+
+  &__button {
+    position: absolute;
+    top: 50%;
+    right: 1px;
+
+    transform: translateY(-50%);
+
+    height: calc($inputHeight - 2px);
+
+    background-color: unset;
+    border: none;
+    font-size: 10px;
+    background-color: colors.$ultra-light-gray;
+    border-radius: 0px 22px 22px 0;
+    cursor: pointer;
+
+    &:hover {
+      background-color: colors.$primary;
+    }
+  }
+}

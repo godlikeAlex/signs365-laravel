@@ -37,9 +37,14 @@ $topHeaderColor: #595855;
 
   padding-block: 23px;
 
+  &__search-container {
+    width: 348px;
+  }
+
   &__container {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
   }
 
   & ul {
@@ -51,11 +56,13 @@ $topHeaderColor: #595855;
   &__left {
     display: flex;
     gap: 13px;
+    flex-shrink: 0;
   }
 
   &__right {
     display: flex;
     gap: 36px;
+    flex-shrink: 0;
   }
 
   &__link {
