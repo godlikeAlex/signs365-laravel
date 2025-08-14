@@ -66,6 +66,7 @@ class ProductResource extends Resource
                 ->required()
                 ->unique(table: Product::class, ignoreRecord: true)
                 ->maxLength(75),
+              Forms\Components\TextInput::make("short_description"),
               Forms\Components\RichEditor::make("description")
                 ->columnSpan("full")
                 ->reactive(),

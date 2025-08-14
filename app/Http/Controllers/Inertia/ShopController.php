@@ -51,8 +51,15 @@ class ShopController extends Controller
       $product->load("options");
     }
 
+    $productResource = new ProductResource($product);
+    $categoryResource = new CategoryResource($product_category);
+
+    $productResource->wrap(null);
+    $categoryResource->wrap(null);
+
     return Inertia::render("Product", [
-      "product" => new ProductResource($product),
+      "product" => $productResource,
+      "category" => $categoryResource,
     ]);
   }
 }
