@@ -1,5 +1,7 @@
 import React from "react";
 
+import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
+
 interface Props {
   iconClass: string;
   size: "default" | "small";
@@ -17,12 +19,12 @@ const EmptyPage: React.FC<Props> = ({
       style={{ height: size === "small" ? "50vh" : "70vh", width: "100%" }}
     >
       <div className="ps-cart__icon">
-        <i
-          className={iconClass}
-          style={{ color: "#595855", fontSize: 120 }}
-        ></i>
+        <CartIcon />
       </div>
-      <h1 className="cart-title" style={{ color: "#ffca1a", marginTop: 20 }}>
+      <h1
+        className="cart-title"
+        style={{ color: "#595855", marginTop: 20, fontWeight: 400 }}
+      >
         {title}
       </h1>
     </div>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Inertia\HomeController;
 use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
 use App\Http\Controllers\Inertia\ShopController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StripeWebHookController;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -65,6 +66,8 @@ Route::get("/shop/{product_category:slug}/{product:slug}", [
   ShopController::class,
   "product",
 ]);
+
+Route::get("/search", [SearchController::class, "search"]);
 
 Route::get("/cart", [CartController::class, "renderCart"]);
 Route::post("/cart/toggle-with-installation", [

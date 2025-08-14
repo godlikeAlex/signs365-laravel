@@ -18,6 +18,10 @@ $inputHeight: 29px;
   border-color: colors.$border-product;
   color: colors.$border-product;
 
+  &--error {
+    border-color: rgba(255, 0, 0, 0.625) !important;
+  }
+
   &__button {
     position: absolute;
     top: 50%;
