@@ -1,4 +1,4 @@
-import { Footer, Menu, MobileHeader } from "@/src/components";
+import { Footer, Header, Menu, MobileHeader } from "@/src/components";
 import { Head, Link } from "@inertiajs/react";
 import React from "react";
 
@@ -19,7 +19,7 @@ const Error: React.FC<ErrorProps> = ({ status }: ErrorProps) => {
       <Head>
         <title>Page not found.</title>
       </Head>
-      <Menu />
+      <Header />
       <MobileHeader />
 
       <div className="ps-page--notfound pt-100 pb-100">
