@@ -76,6 +76,6 @@ class AuthSocialiteController extends Controller
 
     $request->session()->regenerate();
 
-    return redirect("/profile");
+    return redirect()->back();
   }
 }
