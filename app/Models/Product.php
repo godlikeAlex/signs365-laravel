@@ -104,6 +104,11 @@ class Product extends Model implements Sortable
   //   return $this->belongsToMany(Faq::class);
   // }
 
+  public function reviews()
+  {
+    return $this->hasMany(Review::class);
+  }
+
   public function faq(): BelongsTo
   {
     return $this->belongsTo(Faq::class);

@@ -60,6 +60,11 @@ class User extends Authenticatable implements FilamentUser
     return $this->hasMany(Order::class);
   }
 
+  public function reviews()
+  {
+    return $this->hasMany(Review::class);
+  }
+
   public function canAccessFilament(): bool
   {
     return $this->is_admin;
