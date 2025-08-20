@@ -6,6 +6,7 @@ import {
   IOrder,
   ICategory,
   IProductCard,
+  IReview,
 } from "./models";
 
 export interface LoginResponse {
@@ -34,7 +35,7 @@ export interface IGetProduct {
   product: IProduct;
 }
 
-interface IPagenation {
+interface IPagination {
   per_page: number;
   to: number;
   total: number;
@@ -45,10 +46,15 @@ interface IPagenation {
 
 export interface IOrdersPagenation {
   data: IOrder[];
-  meta: IPagenation;
+  meta: IPagination;
 }
 
 export interface IProductsPagination {
   data: IProductCard[];
-  meta: IPagenation;
+  meta: IPagination;
+}
+
+export interface IReviewsPaginationResponse {
+  data: IReview[];
+  meta: IPagination;
 }

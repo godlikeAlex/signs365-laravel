@@ -22,7 +22,6 @@
 .product-info-section {
   border-top: 1px solid colors.$gray;
   padding-top: 25px;
-  padding-bottom: 112px;
 
   &__title {
     font-size: 21px;
@@ -37,4 +36,27 @@
       color: colors.$black;
     }
   }
+}
+
+.product-section {
+  margin-top: 80px;
+}
+
+.review-section-description {
+  font-size: 12px;
+}
+
+.review-section-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 5px;
+
+  & h3 {
+    margin-bottom: 0px;
+  }
+}
+
+.product-reviews-section {
+  margin-bottom: 120px;
 }

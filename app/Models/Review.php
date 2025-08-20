@@ -15,6 +15,11 @@ class Review extends Model
     "published" => "boolean",
   ];
 
+  public function scopePublished($query)
+  {
+    return $query->where("published", true);
+  }
+
   public function product()
   {
     return $this->belongsTo(Product::class);

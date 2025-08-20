@@ -32,6 +32,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Rating from "./Rating";
 import Routing from "./Routing";
 import SearchForm from "./SearchForm";
+import Select from "./Select";
 import SEOHead from "./SEOHead";
 import SliderProducts from "./SliderProducts";
 import SocialFixedButtons from "./SocialFixedButtons";
@@ -42,6 +43,7 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   Rating,
+  Select,
   SearchForm,
   BaseInput,
   Button,

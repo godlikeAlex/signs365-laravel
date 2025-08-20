@@ -30,15 +30,13 @@ class ProductResource extends JsonResource
       // "min_price" => $this->min_price / 100,
       "min_price" => 35.0,
       "images" => ProductImageResource::collection($this->images),
-
       "seo_title" => $this->seo_title,
       "seo_desc" => $this->seo_desc,
       "seo_keywords" => $this->seo_keywords,
-
       "faq" => $this->faq ? $this->faq->content : null,
-
       "options" => OptionResource::collection($this->whenLoaded("options")),
-
+      "rating" => $this->getAverageRatting(),
+      "total_reviews" => $this->reviews()->count(),
       "categories" => ProductSimpleCategoryResource::collection($categories),
     ];
   }

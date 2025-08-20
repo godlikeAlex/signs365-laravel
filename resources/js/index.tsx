@@ -7,6 +7,9 @@ import { createInertiaApp } from "@inertiajs/react";
 import { DefaultLayout } from "./Layouts";
 import "react-loading-skeleton/dist/skeleton.css";
 import "@/src/styles/fonts.scss";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createInertiaApp({
   resolve: (name) => {
@@ -25,7 +28,9 @@ createInertiaApp({
   setup({ el, App, props }) {
     createRoot(el).render(
       <Provider store={store}>
-        <App {...props} />
+        <QueryClientProvider client={queryClient}>
+          <App {...props} />
+        </QueryClientProvider>
       </Provider>
     );
   },

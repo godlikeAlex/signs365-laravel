@@ -109,6 +109,19 @@ class Product extends Model implements Sortable
     return $this->hasMany(Review::class);
   }
 
+  public function getAverageRatting()
+  {
+    $average = $this->reviews()->avg("rating");
+
+    if (!$average) {
+      return 5;
+    }
+
+    return is_float($average)
+      ? number_format($average, 1)
+      : number_format($average);
+  }
+
   public function faq(): BelongsTo
   {
     return $this->belongsTo(Faq::class);

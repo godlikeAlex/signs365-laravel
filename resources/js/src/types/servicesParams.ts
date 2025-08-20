@@ -10,3 +10,8 @@ export interface ResetPasswordParams {
   newPassword: string;
   passwordConfirmation: string;
 }
+
+export interface GetReviewsParams {
+  page: number;
+  sort: string;
+}

@@ -113,3 +113,11 @@ export interface IProductVaraint {
   label: string;
   price: number;
 }
+
+export interface IReview {
+  id: number;
+  rating: number;
+  review: string;
+  user: { name: string; avatar?: string };
+  date: string;
+}

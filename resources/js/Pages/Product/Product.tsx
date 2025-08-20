@@ -21,6 +21,8 @@ import ProductContactForm from "./components/ProductContactForm";
 
 import classes from "./Product.module.scss";
 import { Link } from "@inertiajs/react";
+import classNames from "classnames";
+import ProductReviews from "./components/ProductReviews";
 
 interface Props {
   product: IProduct;
@@ -116,7 +118,7 @@ export default function Product({ product, category }: Props) {
               </p>
 
               <div className={classes.productRatingContainer}>
-                <Rating rating={5} size="lg" />
+                <Rating rating={4} size="lg" />
               </div>
 
               <FeaturesBadge />
@@ -130,24 +132,38 @@ export default function Product({ product, category }: Props) {
           </div>
         </div>
       </section>
-      <div className="container">
-        <section className={classes.productInfoSection}>
+
+      <section className={classes.productSection}>
+        <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h3 className={classes.productInfoSectionTitle}>Overview</h3>
-            </div>
+              <div className={classes.productInfoSection}>
+                <div className="row">
+                  <div className="col-md-12">
+                    <h3 className={classes.productInfoSectionTitle}>
+                      Overview
+                    </h3>
+                  </div>
 
-            <div className="col-md-8">
-              <p
-                className={classes.productInfoSectionContent}
-                dangerouslySetInnerHTML={{
-                  __html: product.description,
-                }}
-              ></p>
+                  <div className="col-md-8">
+                    <p
+                      className={classes.productInfoSectionContent}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description,
+                      }}
+                    ></p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <ProductReviews
+        totalReviews={product.total_reviews}
+        averageRating={product.rating}
+      />
 
       {/* {product.with_checkout ? (
         <ProductCheckoutType product={product} />

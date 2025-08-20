@@ -108,6 +108,8 @@ type IProductBase = {
   short_description: string;
   description: string;
   published: boolean;
+  rating: number;
+  total_reviews: number;
 
   seo_title?: string;
   seo_desc?: string;

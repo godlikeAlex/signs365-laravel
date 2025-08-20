@@ -5,6 +5,14 @@
   align-items: center;
   gap: 1.5px;
 
+  &__star * {
+    fill: colors.$ultra-light-gray;
+  }
+
+  &__star--active * {
+    fill: #ffcc26;
+  }
+
   &__value {
     font-size: 10px;
     margin-left: 5px;
