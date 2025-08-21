@@ -111,7 +111,9 @@ class Product extends Model implements Sortable
 
   public function getAverageRatting()
   {
-    $average = $this->reviews()->avg("rating");
+    $average = $this->reviews()
+      ->published()
+      ->avg("rating");
 
     if (!$average) {
       return 5;
@@ -131,6 +133,7 @@ class Product extends Model implements Sortable
   public function ratingsSummary()
   {
     $counts = $this->reviews()
+      ->published()
       ->selectRaw("rating, COUNT(*) as total")
       ->groupBy("rating")
       ->pluck("total", "rating")
