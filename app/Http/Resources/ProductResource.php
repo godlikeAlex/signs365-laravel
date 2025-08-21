@@ -37,6 +37,7 @@ class ProductResource extends JsonResource
       "options" => OptionResource::collection($this->whenLoaded("options")),
       "rating" => $this->getAverageRatting(),
       "total_reviews" => $this->reviews()->count(),
+      "summary_ratings" => $this->ratingsSummary(),
       "categories" => ProductSimpleCategoryResource::collection($categories),
     ];
   }

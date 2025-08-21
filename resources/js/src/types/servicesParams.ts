@@ -15,3 +15,10 @@ export interface GetReviewsParams {
   page: number;
   sort: string;
 }
+
+export interface CreateReviewParams {
+  rating: number;
+  media: File[];
+  review: string;
+  productID: number;
+}

@@ -163,6 +163,7 @@ export default function Product({ product, category }: Props) {
       <ProductReviews
         totalReviews={product.total_reviews}
         averageRating={product.rating}
+        summaryRatings={product.summary_ratings}
       />
 
       {/* {product.with_checkout ? (

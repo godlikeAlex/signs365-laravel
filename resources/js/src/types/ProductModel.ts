@@ -101,6 +101,8 @@ export type ProductImage = {
   thumbnail: string;
 };
 
+export type SummaryRatting = Record<number, number>;
+
 type IProductBase = {
   id: number;
   title: string;
@@ -110,6 +112,7 @@ type IProductBase = {
   published: boolean;
   rating: number;
   total_reviews: number;
+  summary_ratings: SummaryRatting;
 
   seo_title?: string;
   seo_desc?: string;

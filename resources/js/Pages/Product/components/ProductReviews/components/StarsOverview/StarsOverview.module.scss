@@ -1,0 +1,15 @@
+.stars-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__count {
+    font-size: 13px;
+  }
+}

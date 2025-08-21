@@ -1,7 +1,10 @@
 import api from "@/src/api";
 
 import { IReviewsPaginationResponse } from "@/src/types/axiosResponses";
-import { GetReviewsParams } from "@/src/types/servicesParams";
+import {
+  CreateReviewParams,
+  GetReviewsParams,
+} from "@/src/types/servicesParams";
 
 export default class ReviewService {
   static async getReviews({
@@ -18,5 +21,27 @@ export default class ReviewService {
     );
 
     return data;
+  }
+
+  static async createReview({
+    productID,
+    rating,
+    review,
+    media,
+  }: CreateReviewParams) {
+    const formData = new FormData();
+
+    formData.append("rating", `${rating}`);
+    formData.append("review", review);
+
+    media.forEach((file) => {
+      formData.append("media[]", file);
+    });
+
+    return api.post(`/product/review/${productID}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 }

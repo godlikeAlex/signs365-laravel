@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductReviewResource;
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,30 @@ class ReviewController extends Controller
     }
 
     return ProductReviewResource::collection($reviews->paginate(2));
+  }
+
+  public function createReview(Request $request, Product $product)
+  {
+    $review = Review::create([
+      "review" => $request->input("review"),
+      "rating" => $request->input("rating"),
+      "product_id" => $product->id,
+    ]);
+
+    if ($request->hasFile("media")) {
+      foreach ($request->file("media") as $media) {
+        $path = $media->store("reviews", "public");
+
+        $review->media()->create([
+          "file_path" => $path,
+          "file_type" => str_starts_with($media->getMimeType(), "video")
+            ? "video"
+            : "image",
+        ]);
+      }
+    }
+
+    return response()->noContent();
   }
 
   private function resolveSort($sort)

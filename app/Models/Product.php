@@ -117,9 +117,28 @@ class Product extends Model implements Sortable
       return 5;
     }
 
-    return is_float($average)
-      ? number_format($average, 1)
-      : number_format($average);
+    if ($average === null) {
+      $formatted = null;
+    } elseif (fmod($average, 1) == 0.0) {
+      $formatted = (int) $average;
+    } else {
+      $formatted = number_format($average, 1, ".", "");
+    }
+
+    return $formatted;
+  }
+
+  public function ratingsSummary()
+  {
+    $counts = $this->reviews()
+      ->selectRaw("rating, COUNT(*) as total")
+      ->groupBy("rating")
+      ->pluck("total", "rating")
+      ->toArray();
+
+    return collect(range(1, 5))->mapWithKeys(
+      fn($i) => [$i => $counts[$i] ?? 0]
+    );
   }
 
   public function faq(): BelongsTo

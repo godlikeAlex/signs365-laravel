@@ -4,16 +4,18 @@ import classNames from "classnames";
 import useReviews from "./useReviews";
 import Review from "./components/Review";
 
-import { Button, Rating, Select } from "@/src/components";
-import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
-import SelectProductFile from "@/src/components/SelectProductFile";
+import { Button, Modal, Rating, ReviewForm, Select } from "@/src/components";
 
 import productClasses from "@/Pages/Product/Product.module.scss";
 import classes from "./ProductReviews.module.scss";
+import StarsOverview from "./components/StarsOverview";
+import { SummaryRatting } from "@/src/types/ProductModel";
+import { useProductContext } from "@/src/contexts/MainProductContext";
 
 interface Props {
   totalReviews: number;
   averageRating: number;
+  summaryRatings: SummaryRatting;
 }
 
 type SortOption = { label: string; value: string };
@@ -24,8 +26,15 @@ const sortOptions: SortOption[] = [
   { label: "Lowest Rating", value: "rating,asc" },
 ];
 
-export default function ProductReviews({ totalReviews, averageRating }: Props) {
+export default function ProductReviews({
+  totalReviews,
+  averageRating,
+  summaryRatings,
+}: Props) {
+  const { state } = useProductContext();
+
   const [sort, setSort] = useState<SortOption>(() => sortOptions[0]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const reviews = useReviews({ sort: sort.value });
 
@@ -40,31 +49,22 @@ export default function ProductReviews({ totalReviews, averageRating }: Props) {
         >
           <div className="row">
             <div className="col-md-12">
-              <div className={productClasses.reviewSectionTitle}>
-                <h3 className={productClasses.productInfoSectionTitle}>
-                  Reviews {averageRating}
-                </h3>
-                <Rating rating={averageRating} withLabel={false} size="lg" />
+              <h3 className={productClasses.productInfoSectionTitle}>
+                What our clients say
+              </h3>
+            </div>
+            <div className="col-md-9">
+              <div className={classes.productReviewSort}>
+                <Select
+                  placeholder={"Sort By"}
+                  isSearchable={false}
+                  options={sortOptions}
+                  value={sort}
+                  size="sm"
+                  onChange={(newSort: SortOption) => setSort(newSort)}
+                />
               </div>
 
-              <p className={productClasses.reviewSectionDescription}>
-                Average rating based on {totalReviews} reviews
-              </p>
-            </div>
-
-            <div className="col-md-12">
-              <Select
-                className={classes.productReviewSort}
-                placeholder={"Sort By"}
-                isSearchable={false}
-                options={sortOptions}
-                value={sort}
-                size="sm"
-                onChange={(newSort: SortOption) => setSort(newSort)}
-              />
-            </div>
-
-            <div className="col-md-12">
               {reviews.data?.map((review) => (
                 <Review key={review.id} {...review} />
               ))}
@@ -82,9 +82,41 @@ export default function ProductReviews({ totalReviews, averageRating }: Props) {
                 </div>
               )}
             </div>
+
+            <div className="col-md-3">
+              <div className={productClasses.reviewSectionTitle}>
+                <Rating rating={averageRating} withLabel={false} size="lg" />
+
+                <h3 className={productClasses.productInfoSectionTitle}>
+                  {averageRating} / 5
+                </h3>
+              </div>
+
+              <p className={productClasses.reviewSectionDescription}>
+                Average rating based on {totalReviews} reviews
+              </p>
+
+              <StarsOverview summaryRatings={summaryRatings} />
+
+              <Button
+                onClick={() => setIsOpenModal(true)}
+                className="mt-20"
+                variant="ghost"
+                color="primary-300"
+              >
+                Write a review
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
+      <Modal isOpen={isOpenModal} close={() => setIsOpenModal(false)}>
+        <ReviewForm
+          product={{ id: state.product?.id, name: state.product?.title }}
+          onSuccess={() => setIsOpenModal(false)}
+        />
+      </Modal>
     </section>
   );
 }

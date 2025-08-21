@@ -1,0 +1,21 @@
+@use "@styles/variables/colors";
+
+.textArea {
+  padding: 17px;
+  font-size: 18px;
+  border-radius: 25px;
+  width: 100%;
+  height: 154px;
+
+  background-color: colors.$ultra-light-gray;
+  border: 1px solid colors.$ultra-light-gray;
+
+  color: colors.$gray;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,69 @@
+@use "@styles/variables/colors";
+
+.file-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+
+  cursor: pointer;
+
+  padding: 17px;
+  font-size: 14px;
+  border-radius: 25px;
+  width: 100%;
+  height: 154px;
+
+  background-color: colors.$ultra-light-gray;
+  border: 1px solid colors.$ultra-light-gray;
+
+  color: colors.$gray;
+
+  &__icon {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: auto;
+    margin-bottom: 10px;
+
+    stroke: colors.$primary;
+  }
+
+  &__preview-container {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__preview {
+    position: relative;
+    margin-top: 15px;
+
+    & img {
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+      object-fit: cover;
+    }
+
+    &__close {
+      position: absolute;
+      top: -9px;
+      right: -9px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background-color: colors.$gray;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      border: none;
+      font-size: 11px;
+
+      cursor: pointer;
+    }
+  }
+}

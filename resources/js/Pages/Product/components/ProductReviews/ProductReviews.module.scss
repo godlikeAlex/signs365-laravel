@@ -1,4 +1,9 @@
 .product-review-sort {
   max-width: 250px;
   margin-left: auto;
+
+  &__label {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
 }
