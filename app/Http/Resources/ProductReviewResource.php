@@ -20,6 +20,7 @@ class ProductReviewResource extends JsonResource
         "name" => $this->user ? $this->user->name : "Deleted User",
         "avatar" => $this->user ? $this->user->avatar : null,
       ],
+      "media" => $this->media,
       "review" => $this->review,
       "rating" => $this->rating,
       "date" => $this->created_at,

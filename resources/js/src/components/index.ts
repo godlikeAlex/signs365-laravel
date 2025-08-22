@@ -33,6 +33,8 @@ import ProductSlider from "./ProductSlider";
 import ProtectedRoute from "./ProtectedRoute";
 import Rating from "./Rating";
 import ReviewForm from "./ReviewForm";
+import ReviewModal from "./ReviewModal";
+import ReviewUserAvatar from "./ReviewUserAvatar";
 import Routing from "./Routing";
 import SearchForm from "./SearchForm";
 import Select from "./Select";
@@ -47,6 +49,8 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
   ReviewForm,
+  ReviewUserAvatar,
+  ReviewModal,
   FileUpload,
   Modal,
   Rating,

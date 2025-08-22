@@ -26,7 +26,7 @@ export default function Rating({
         <StarSVG
           key={idx}
           className={classNames(classes.ratingStar, {
-            [classes.ratingStarActive]: rating >= idx + 1,
+            [classes.ratingStarActive]: Math.round(rating) >= idx + 1,
           })}
           width={sizes[size].size}
           height={sizes[size].size}

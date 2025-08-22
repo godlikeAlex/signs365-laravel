@@ -31,7 +31,7 @@ Route::post("/product-request/{product}", [
 
 Route::post("/request/contacts", [ContactController::class, "requestContacts"]);
 
-Route::get("/product/reviews", [ReviewController::class, "index"]);
+Route::get("/product/reviews/{product:id}", [ReviewController::class, "index"]);
 
 Route::middleware("handleCityFromRequest")->group(function () {
   Route::get("/categories", [

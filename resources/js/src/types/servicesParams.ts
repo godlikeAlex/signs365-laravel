@@ -14,6 +14,7 @@ export interface ResetPasswordParams {
 export interface GetReviewsParams {
   page: number;
   sort: string;
+  productID: number;
 }
 
 export interface CreateReviewParams {

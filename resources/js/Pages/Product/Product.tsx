@@ -118,7 +118,7 @@ export default function Product({ product, category }: Props) {
               </p>
 
               <div className={classes.productRatingContainer}>
-                <Rating rating={4} size="lg" />
+                <Rating rating={product.rating} size="lg" />
               </div>
 
               <FeaturesBadge />
@@ -164,6 +164,7 @@ export default function Product({ product, category }: Props) {
         totalReviews={product.total_reviews}
         averageRating={product.rating}
         summaryRatings={product.summary_ratings}
+        productID={product.id}
       />
 
       {/* {product.with_checkout ? (

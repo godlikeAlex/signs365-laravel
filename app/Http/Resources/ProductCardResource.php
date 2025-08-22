@@ -20,6 +20,7 @@ class ProductCardResource extends JsonResource
       "id" => $this->id,
       "title" => $this->title,
       "slug" => $this->slug,
+      "rating" => $this->getAverageRatting(),
       "short_description" => $this->short_description,
       "min_price" => $this->getMinPrice(),
       "categories" => ProductSimpleCategoryResource::collection($categories),

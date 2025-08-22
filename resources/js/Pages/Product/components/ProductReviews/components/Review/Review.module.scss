@@ -14,15 +14,38 @@
     gap: 10px;
   }
 
-  &__user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-
   &__content {
     padding-left: 50px;
     margin-top: 5px;
     font-size: 14px;
+  }
+
+  &__media-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    gap: 15px;
+    margin-top: 20px;
+
+    &--three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--four {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    &--five {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  &__media-image {
+    height: 100%;
+    width: 100%;
+    max-height: 250px;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
   }
 }

@@ -10,6 +10,7 @@ export default class ReviewService {
   static async getReviews({
     page,
     sort,
+    productID,
   }: GetReviewsParams): Promise<IReviewsPaginationResponse> {
     const searchParams = new URLSearchParams();
 
@@ -17,7 +18,7 @@ export default class ReviewService {
     searchParams.set("sort", sort);
 
     const { data } = await api.get<IReviewsPaginationResponse>(
-      `/product/reviews?${searchParams.toString()}`
+      `/product/reviews/${productID}/?${searchParams.toString()}`
     );
 
     return data;

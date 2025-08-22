@@ -5,11 +5,11 @@ import { GetReviewsParams } from "@/src/types/servicesParams";
 
 type Params = Omit<GetReviewsParams, "page">;
 
-export default function useReviews({ sort }: Params) {
+export default function useReviews({ sort, productID }: Params) {
   return useInfiniteQuery({
     queryKey: ["reviews", sort],
     queryFn: ({ pageParam }) => {
-      return ReviewService.getReviews({ page: pageParam, sort });
+      return ReviewService.getReviews({ page: pageParam, sort, productID });
     },
     initialPageParam: 1,
     getNextPageParam: (result) => {

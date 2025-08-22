@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-  public function index(Request $request)
+  public function index(Request $request, Product $product)
   {
-    $reviews = Review::published()->latest();
+    $reviews = $product->reviews()->published();
 
     $sort = $this->resolveSort($request->query("sort", "created_at,desc"));
 
@@ -20,17 +20,22 @@ class ReviewController extends Controller
       list($sortColumn, $sortDirection) = $sort;
 
       $reviews->orderBy($sortColumn, $sortDirection);
+
+      $reviews->orderBy("created_at", "desc");
     }
 
-    return ProductReviewResource::collection($reviews->paginate(2));
+    return ProductReviewResource::collection($reviews->paginate(5));
   }
 
   public function createReview(Request $request, Product $product)
   {
+    $user = auth()->user();
+
     $review = Review::create([
       "review" => $request->input("review"),
       "rating" => $request->input("rating"),
       "product_id" => $product->id,
+      "user_id" => $user->id,
     ]);
 
     if ($request->hasFile("media")) {

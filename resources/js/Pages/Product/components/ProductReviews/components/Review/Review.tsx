@@ -3,36 +3,58 @@ import { IReview } from "@/src/types/models";
 import defaultProfileAvatar from "@/assets/images/default-profile.png";
 
 import classes from "./Review.module.scss";
-import { Rating } from "@/src/components";
+import { Rating, ReviewUserAvatar } from "@/src/components";
+import classNames from "classnames";
+import dayjs from "dayjs";
 
-interface Props extends IReview {}
+interface Props extends IReview {
+  onClickMedia: () => void;
+}
 
-export default function Review({ user, review, rating }: Props) {
+export default function Review({
+  user,
+  review,
+  rating,
+  media,
+  date,
+  onClickMedia,
+}: Props) {
   return (
     <article className={classes.review}>
       <div className={classes.reviewInfo}>
         <div className={classes.reviewUserInfo}>
           <div>
-            <img
-              className={classes.reviewUserAvatar}
-              src={defaultProfileAvatar}
-              alt={user.name}
-            />
+            <ReviewUserAvatar src={user.avatar} alt={user.name} />
           </div>
           <span>{user.name}</span>
         </div>
 
         <div className={classes.reviewUserInfo}>
           <Rating rating={rating} size="md" withLabel={false} />
-          <span>17 aug 2025</span>
+          {date && <span>{dayjs(date).format("D MMM YYYY")}</span>}
         </div>
       </div>
 
-      <div className={classes.reviewContent}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta, odit
-        molestias cupiditate nostrum autem ducimus ipsa voluptatum magni
-        repellat hic ea, voluptate totam pariatur quae, mollitia ex quos odio
-      </div>
+      <div className={classes.reviewContent}>{review}</div>
+
+      {media.length > 0 && (
+        <div
+          className={classNames(classes.reviewMediaContainer, {
+            [classes.reviewMediaContainerThree]: media.length === 3,
+            [classes.reviewMediaContainerFour]: media.length === 4,
+            [classes.reviewMediaContainerFive]: media.length >= 5,
+          })}
+        >
+          {media.map(({ id, file_path }) => (
+            <img
+              className={classes.reviewMediaImage}
+              key={id}
+              src={`/storage/${file_path}`}
+              onClick={() => onClickMedia()}
+            />
+          ))}
+        </div>
+      )}
     </article>
   );
 }

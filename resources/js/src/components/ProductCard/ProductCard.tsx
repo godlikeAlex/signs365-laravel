@@ -20,6 +20,7 @@ export default function ProductCard({
   categories,
   min_price,
   short_description,
+  rating,
   variant = "home",
 }: Props) {
   const [image] = images;
@@ -75,7 +76,7 @@ export default function ProductCard({
         )}
 
         <div className={classes.cardRating}>
-          <Rating rating={5} size={variant === "home" ? "sm" : "md"} />
+          <Rating rating={rating} size={variant === "home" ? "sm" : "md"} />
         </div>
 
         {min_price && (

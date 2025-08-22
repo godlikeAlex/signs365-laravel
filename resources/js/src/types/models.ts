@@ -50,6 +50,7 @@ export interface IProductCard {
   id: number;
   title: string;
   slug: string;
+  rating: number;
   short_description: string;
   min_price: number;
   categories?: Pick<ICategory, "title" | "slug" | "id" | "colors">[];
@@ -114,10 +115,17 @@ export interface IProductVaraint {
   price: number;
 }
 
+export interface IMediaReview {
+  id: number;
+  file_path: string;
+  file_type: "video" | "image";
+}
+
 export interface IReview {
   id: number;
   rating: number;
   review: string;
   user: { name: string; avatar?: string };
+  media: IMediaReview[];
   date: string;
 }
