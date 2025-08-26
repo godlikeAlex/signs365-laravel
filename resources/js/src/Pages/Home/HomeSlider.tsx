@@ -39,7 +39,9 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
 
               <div style={{ marginTop: 25 }} className="banner-description">
                 <h5>HIGH-QUALITY PRINTING,</h5>
-                <h5 className="banner-highlight">FAST TURNAROUND,</h5>
+                <h5 className="banner-highlight banner-highlight--purple">
+                  FAST TURNAROUND,
+                </h5>
                 <h5>AND AFFORDABLE PRICES.</h5>
               </div>
             </div>
