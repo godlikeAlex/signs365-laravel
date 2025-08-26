@@ -132,6 +132,8 @@ button.addon {
 
   font-size: 13px;
 
+  color: colors.$black;
+
   &::before {
     content: "";
     display: inline-block;

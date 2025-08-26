@@ -1,4 +1,5 @@
 @use "@styles/variables/colors";
+@use "@styles/mixins/media";
 
 .product-name {
   font-size: 38px;
@@ -39,7 +40,7 @@
 }
 
 .product-section {
-  margin-top: 80px;
+  padding-bottom: 25px;
 }
 
 .review-section-description {
@@ -59,4 +60,14 @@
 
 .product-reviews-section {
   margin-bottom: 120px;
+}
+
+.container-breadcrumbs {
+  margin-bottom: 90px;
+  margin-top: 70px;
+
+  @include media.below-mobile {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }

@@ -1,0 +1,47 @@
+@use "@styles/variables/colors";
+
+.expandable {
+  position: relative;
+
+  &--open::after {
+    display: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+
+    background: #000000;
+    background: linear-gradient(
+      360deg,
+      rgb(255, 255, 255) 0%,
+      rgba(255, 255, 255, 0) 60%
+    );
+    z-index: 0;
+  }
+}
+
+.show-more-button {
+  z-index: 2;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  color: colors.$primary700;
+  background-color: transparent;
+
+  &--relative {
+    position: relative;
+  }
+
+  &:hover {
+    background-color: transparent;
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+}

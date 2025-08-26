@@ -7,6 +7,7 @@ import CartList from "./CartList";
 import CatalogSection from "./CatalogSection";
 import Dropzone from "./Dropzone";
 import EmptyPage from "./EmptyPage";
+import ExpandableContent from "./ExpandableContent/ExpandableContent";
 import FacebookComments from "./FacebookComments";
 import FAQProduct from "./FAQProduct";
 import FileUpload from "./FileUpload";
@@ -48,6 +49,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export {
+  ExpandableContent,
   ReviewForm,
   ReviewUserAvatar,
   ReviewModal,

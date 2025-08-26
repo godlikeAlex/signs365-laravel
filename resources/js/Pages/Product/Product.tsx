@@ -7,6 +7,7 @@ import { IProduct, IProductDefault } from "@/src/types/ProductModel";
 import {
   BadgeCategory,
   Breadcrumbs,
+  ExpandableContent,
   ProductSlider,
   Rating,
   SEOHead,
@@ -79,7 +80,12 @@ export default function Product({ product, category }: Props) {
       <section style={{ marginBottom: 108 }}>
         <div className="container">
           <div className="row">
-            <div className="col-md-12 mb-90 mt-70">
+            <div
+              className={classNames(
+                "col-md-12 mb-90 mt-70",
+                classes.containerBreadcrumbs
+              )}
+            >
               <Breadcrumbs>
                 <Breadcrumbs.Item href="/">Home</Breadcrumbs.Item>
 
@@ -146,12 +152,14 @@ export default function Product({ product, category }: Props) {
                   </div>
 
                   <div className="col-md-8">
-                    <p
-                      className={classes.productInfoSectionContent}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description,
-                      }}
-                    ></p>
+                    <ExpandableContent>
+                      <p
+                        className={classes.productInfoSectionContent}
+                        dangerouslySetInnerHTML={{
+                          __html: product.description,
+                        }}
+                      />
+                    </ExpandableContent>
                   </div>
                 </div>
               </div>
