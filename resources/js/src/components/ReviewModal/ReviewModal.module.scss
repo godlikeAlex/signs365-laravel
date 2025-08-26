@@ -147,6 +147,8 @@
 
       &--open {
         bottom: 0;
+        max-height: 98vh;
+        overflow-y: auto;
       }
     }
   }

@@ -24,6 +24,8 @@ import { IReview } from "@/src/types/models";
 import { usePage } from "@inertiajs/react";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { toast } from "react-toastify";
+import LoadingProductCheckoutForm from "../ProductCheckoutForm/LoadingProductCheckoutForm";
+import ProductReviewsLoading from "./ProductReviewsLoading";
 
 interface Props {
   totalReviews: number;
@@ -105,7 +107,10 @@ export default function ProductReviews({
               </h3>
             </div>
           </div>
-          {reviews.data?.length > 0 ? (
+
+          {reviews.isPending ? (
+            <ProductReviewsLoading />
+          ) : reviews.data?.length > 0 ? (
             <div className="row flex-column-reverse flex-md-row">
               <div className="col-md-9">
                 <div className={classes.productReviewSort}>

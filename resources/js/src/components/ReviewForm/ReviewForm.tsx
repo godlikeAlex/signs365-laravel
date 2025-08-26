@@ -25,14 +25,14 @@ type Inputs = {
   media: File[];
 };
 
-const MAX_FILE_SIZE = 1000 * 1000 * 5;
+const MAX_FILE_SIZE = 1000 * 1000 * 10;
 
 const reviewSchema = yup.object({
   rating: yup.number().required("Please rate the product").max(5).min(1),
   review: yup
     .string()
     .required("Please write your review")
-    .min(5, "Please write your review")
+    .min(5, "Please write a little more detail")
     .max(
       1200,
       ({ max }) => `The maximum number of characters allowed is ${max}`
@@ -43,7 +43,7 @@ const reviewSchema = yup.object({
       .required()
       .test(
         "is-valid-size",
-        "Max allowed size is 5MB",
+        "Max allowed size is 10MB",
         (value) => value && value.size <= MAX_FILE_SIZE
       )
   ),

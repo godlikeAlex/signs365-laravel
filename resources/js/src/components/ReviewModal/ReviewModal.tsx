@@ -27,7 +27,7 @@ export default function ReviewModal({ review, ...props }: Props) {
       {...props}
       customClasses={{
         modal: classNames({
-          [classes.modalRootDisableScroll]: showMobileReview === false,
+          [classes.modalRootDisableScroll]: true,
         }),
         content: classes.reviewModalContent,
         backDrop: classes.reviewModalBackdrop,
@@ -60,7 +60,7 @@ export default function ReviewModal({ review, ...props }: Props) {
       </div>
 
       <div
-        style={{ overflow: "hidden" }}
+        // style={{ overflow: "hidden" }}
         className={classNames(classes.reviewModalContainerInfo, {
           [classes.reviewModalContainerInfoOpen]: showMobileReview,
         })}
@@ -109,7 +109,11 @@ export default function ReviewModal({ review, ...props }: Props) {
           </button>
         </div>
 
-        <p className={classes.reviewModalPreviewText}>{review.review}</p>
+        <p className={classes.reviewModalPreviewText}>
+          {review.review.length > 30
+            ? review.review.slice(0, 30) + "…"
+            : review.review}
+        </p>
       </div>
     </Modal>
   );

@@ -2,7 +2,6 @@ import { useAppSelector } from "@/src/hooks";
 import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 
-import "./style.css";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { Link, usePage } from "@inertiajs/react";
 
@@ -10,6 +9,13 @@ import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
 
 import SVGLogo from "@/assets/images/logo.svg";
 import { useSticky } from "@/src/hooks/useSticky";
+
+import MobileLogo from "./mobile-logo.svg";
+
+import classes from "./MobileHeader.module.scss";
+
+import "./style.css";
+import SearchForm from "../SearchForm";
 
 interface MobileHeaderProps {}
 
@@ -36,11 +42,31 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
         })}
       >
         <div className="container">
-          <div className="ps-logo">
-            <Link href="/">
-              <img src={SVGLogo} alt="" style={{ width: 60 }} />
-            </Link>
+          <div className={classes.mobileHeaderLogoContainer}>
+            <button
+              className="hamburger-button"
+              onClick={(e) => {
+                setShowMenu((isShown) => !isShown);
+              }}
+            >
+              <div
+                className={classNames("hamburger-icon", {
+                  "hamburger-icon--active": showMenu,
+                })}
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+            <div className={classes.mobileHeaderLogo}>
+              <Link href="/">
+                <img src={MobileLogo} alt="Signs" />
+                {/* <img src={SVGLogo} alt="Signs" /> */}
+              </Link>
+            </div>
           </div>
+
           <ul className="mobile-header__actions">
             <li>
               <Link className="cart-mobile-icon" href="/cart">
@@ -51,32 +77,20 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
                 ) : null}
               </Link>
             </li>
-
-            <li>
-              <button
-                className="hamburger-button"
-                onClick={(e) => {
-                  setShowMenu((isShown) => !isShown);
-                }}
-              >
-                <div
-                  className={classNames("hamburger-icon", {
-                    "hamburger-icon--active": showMenu,
-                  })}
-                >
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </button>
-            </li>
           </ul>
+        </div>
+
+        <div className={classes.mobileHeaderSearch}>
+          <div>
+            <SearchForm />
+          </div>
         </div>
       </header>
 
       <div
         className={classNames("ps-menu--slidebar", {
           active: showMenu,
+          stickySidebar: isSticky,
         })}
       >
         <div className="ps-menu__content">
