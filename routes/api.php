@@ -32,6 +32,10 @@ Route::post("/product-request/{product}", [
 Route::post("/request/contacts", [ContactController::class, "requestContacts"]);
 
 Route::get("/product/reviews/{product:id}", [ReviewController::class, "index"]);
+Route::post("/product/review/{product:id}", [
+  ReviewController::class,
+  "createReview",
+]);
 
 Route::middleware("handleCityFromRequest")->group(function () {
   Route::get("/categories", [
@@ -108,11 +112,6 @@ Route::middleware("handleCityFromRequest")
   });
 
 Route::middleware("auth:sanctum")->group(function () {
-  Route::post("/product/review/{product:id}", [
-    ReviewController::class,
-    "createReview",
-  ]);
-
   Route::post("/profile/edit", [
     \App\Http\Controllers\Api\UserController::class,
     "edit",

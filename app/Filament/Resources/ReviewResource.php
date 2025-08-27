@@ -8,6 +8,7 @@ use App\Forms\Components\Rating;
 use App\Models\Review;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -27,13 +28,29 @@ class ReviewResource extends Resource
   {
     return $form->schema([
       Rating::make("rating"),
-      Forms\Components\Placeholder::make("User")->content(
-        fn($record) => $record->user ? $record->user->name : "No user"
-      ),
+      Forms\Components\Placeholder::make("User")->content(function ($record) {
+        if ($record->user) {
+          return $record->user;
+        } elseif ($record->reviewer_name) {
+          return $record->reviewer_name;
+        } else {
+          return "No User";
+        }
+      }),
       Forms\Components\Placeholder::make("Product")->content(
         fn($record) => $record->product ? $record->product->title : "No Product"
       ),
-      Forms\Components\TextArea::make("review")->columnSpanFull(),
+      Forms\Components\Textarea::make("review")->columnSpanFull(),
+
+      Repeater::make("media")
+        ->columnSpanFull()
+        ->relationship()
+        ->grid(2)
+        ->schema([
+          Forms\Components\FileUpload::make("file_path")
+            ->enableOpen()
+            ->enableDownload(),
+        ]),
     ]);
   }
 
@@ -57,6 +74,7 @@ class ReviewResource extends Resource
         Tables\Columns\TextColumn::make("user.name")
           ->searchable()
           ->label("User")
+          ->default("Not registered user")
           ->url(
             fn(Review $record) => $record->user
               ? UserResource::getUrl("edit", [
@@ -90,8 +108,6 @@ class ReviewResource extends Resource
   {
     return [
       "index" => Pages\ListReviews::route("/"),
-      "create" => Pages\CreateReview::route("/create"),
-      "edit" => Pages\EditReview::route("/{record}/edit"),
       "view" => Pages\ViewReview::route("/{record}"),
     ];
   }

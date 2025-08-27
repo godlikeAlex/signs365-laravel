@@ -64,11 +64,7 @@ export default function ProductReviews({
 
   const sendReviewButton = (
     <Button
-      onClick={() =>
-        auth.user
-          ? setIsOpenModal(true)
-          : toast("Please log in to your account", { type: "error" })
-      }
+      onClick={() => setIsOpenModal(true)}
       className="mt-20"
       variant="ghost"
       color="primary-300"
@@ -174,6 +170,7 @@ export default function ProductReviews({
         <ReviewForm
           product={{ id: state.product?.id, name: state.product?.title }}
           onSuccess={() => setIsOpenModal(false)}
+          user={auth.user}
         />
       </Modal>
 

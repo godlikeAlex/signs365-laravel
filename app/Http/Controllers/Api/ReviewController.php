@@ -31,12 +31,24 @@ class ReviewController extends Controller
   {
     $user = auth()->user();
 
+    info($user);
+
     $review = Review::create([
       "review" => $request->input("review"),
       "rating" => $request->input("rating"),
       "product_id" => $product->id,
-      "user_id" => $user->id,
     ]);
+
+    if ($user) {
+      $review->update([
+        "user_id" => $user->id,
+      ]);
+    } else {
+      $review->update([
+        "reviewer_name" => $request->input("name"),
+        "reviewer_email" => $request->input("email"),
+      ]);
+    }
 
     if ($request->hasFile("media")) {
       foreach ($request->file("media") as $media) {

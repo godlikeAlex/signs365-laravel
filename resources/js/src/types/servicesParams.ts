@@ -22,4 +22,6 @@ export interface CreateReviewParams {
   media: File[];
   review: string;
   productID: number;
+  name: string;
+  email: string;
 }

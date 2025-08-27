@@ -14,10 +14,18 @@ class ProductReviewResource extends JsonResource
    */
   public function toArray($request)
   {
+    if ($this->user) {
+      $userName = $this->user->name;
+    } elseif ($this->reviewer_name) {
+      $userName = $this->reviewer_name;
+    } else {
+      $userName = "Deleted User";
+    }
+
     return [
       "id" => $this->id,
       "user" => [
-        "name" => $this->user ? $this->user->name : "Deleted User",
+        "name" => $userName,
         "avatar" => $this->user ? $this->user->avatar : null,
       ],
       "media" => $this->media,

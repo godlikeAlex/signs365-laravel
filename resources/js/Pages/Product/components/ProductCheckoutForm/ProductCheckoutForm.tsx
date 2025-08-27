@@ -145,6 +145,8 @@ function ProductCheckoutForm({}: ProductCheckoutFormProps) {
         onSuccess: () => {
           toast("Successfully added to cart", {
             type: "success",
+            position: "bottom-center",
+            theme: "colored",
             onClick: () => router.visit("/cart"),
           });
 

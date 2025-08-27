@@ -13,13 +13,18 @@ import classes from "./ReviewForm.module.scss";
 import TextArea from "../TextArea";
 import FileUpload from "../FileUpload";
 import ReviewService from "@/src/services/ReviewService";
+import { User } from "@/src/types/models";
+import BaseInput from "../BaseInput";
 
 interface Props {
   product: { id: number; name: string };
   onSuccess: () => void;
+  user?: User | null;
 }
 
 type Inputs = {
+  name: string;
+  email: string;
   review: string;
   rating: number;
   media: File[];
@@ -28,6 +33,8 @@ type Inputs = {
 const MAX_FILE_SIZE = 1000 * 1000 * 10;
 
 const reviewSchema = yup.object({
+  name: yup.string().required("Please enter your name"),
+  email: yup.string().email().required("Please enter your email"),
   rating: yup.number().required("Please rate the product").max(5).min(1),
   review: yup
     .string()
@@ -49,13 +56,19 @@ const reviewSchema = yup.object({
   ),
 });
 
-export default function ReviewForm({ product, onSuccess }: Props) {
+export default function ReviewForm({ product, user, onSuccess }: Props) {
   const {
     control,
     handleSubmit,
+    register,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
-    defaultValues: { media: [], review: "" },
+    defaultValues: {
+      media: [],
+      review: "",
+      name: user?.name,
+      email: user?.email,
+    },
     resolver: yupResolver(reviewSchema),
   });
 
@@ -64,7 +77,11 @@ export default function ReviewForm({ product, onSuccess }: Props) {
       await ReviewService.createReview({ ...values, productID: product.id });
 
       onSuccess();
-      toast("Your review will be published soon.", { type: "success" });
+      toast("Your review will be published soon.", {
+        type: "success",
+        position: "bottom-center",
+        theme: "colored",
+      });
     } catch {
       toast("Failed to send review.", { type: "error" });
     }
@@ -73,6 +90,30 @@ export default function ReviewForm({ product, onSuccess }: Props) {
   return (
     <form className={classes.reviewForm} onSubmit={handleSubmit(onSubmit)}>
       <h2 className={classes.reviewFormTitle}>{product.name}</h2>
+
+      {!user && (
+        <div className="row">
+          <div className={classNames("col-md-6", classes.reviewFormGroup)}>
+            <BaseInput
+              label="Name"
+              placeholder="Your Name"
+              {...register("name")}
+            />
+
+            <p className={classes.reviewFormError}>{errors.name?.message}</p>
+          </div>
+
+          <div className={classNames("col-md-6", classes.reviewFormGroup)}>
+            <BaseInput
+              label="Email"
+              placeholder="Your Email"
+              {...register("email")}
+            />
+
+            <p className={classes.reviewFormError}>{errors.email?.message}</p>
+          </div>
+        </div>
+      )}
 
       <div
         className={classNames(
@@ -133,9 +174,7 @@ export default function ReviewForm({ product, onSuccess }: Props) {
           name="review"
         />
 
-        {errors.review && (
-          <p className={classes.reviewFormError}>{errors.review.message}</p>
-        )}
+        <p className={classes.reviewFormError}>{errors.review?.message}</p>
       </div>
 
       <div className={classNames("text-center", classes.reviewFormGroup)}>

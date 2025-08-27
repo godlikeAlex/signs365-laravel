@@ -29,11 +29,15 @@ export default class ReviewService {
     rating,
     review,
     media,
+    name,
+    email,
   }: CreateReviewParams) {
     const formData = new FormData();
 
     formData.append("rating", `${rating}`);
     formData.append("review", review);
+    formData.append("name", name);
+    formData.append("email", email);
 
     media.forEach((file) => {
       formData.append("media[]", file);
