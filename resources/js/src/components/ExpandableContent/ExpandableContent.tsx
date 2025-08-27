@@ -45,8 +45,8 @@ export default function ExpandableContent({ children }: Props) {
           className={classNames(classes.showMoreButton, {
             [classes.showMoreButtonRelative]: isExpanded,
           })}
-          variant="ghost"
-          color="primary-300"
+          variant="primary"
+          color="primary-600"
           onClick={() => setIsExpanded((isExpanded) => !isExpanded)}
         >
           {isExpanded ? "Show Less" : "Show More"}
