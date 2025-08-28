@@ -3,6 +3,7 @@ import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import footerBg from "@/assets/images/footer-bg.webp";
 import slide3Bg from "@/assets/images/slides/slide3-bg.webp";
+import slide2Bg from "@/assets/images/slides/slide2-bg.webp";
 import slide1 from "@/assets/images/slides/slide1.webp";
 import slide2 from "@/assets/images/slides/slide2.webp";
 import slide3 from "@/assets/images/slides/slide3.webp";
@@ -51,7 +52,7 @@ const HomeSlider: React.FC<HomeSliderProps> = ({}: HomeSliderProps) => {
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="ps-banner" style={{ background: `url(${footerBg})` }}>
+        <div className="ps-banner" style={{ background: `url(${slide2Bg})` }}>
           <div className="container">
             <div className="banner-row">
               <h3 className="banner-highlight banner-highlight--big banner-highlight--purple">
