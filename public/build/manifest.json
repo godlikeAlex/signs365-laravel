@@ -1,21 +1,41 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-6c0153f5.css",
+    "file": "assets/app-dbffb20e.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-b7f5e610.css",
+    "file": "assets/style-6a95c8e9.css",
     "isEntry": true,
     "src": "resources/css/style.css"
+  },
+  "resources/js/assets/fonts/MyriadPro-Bold.woff": {
+    "file": "assets/MyriadPro-Bold-cb0315a4.woff",
+    "src": "resources/js/assets/fonts/MyriadPro-Bold.woff"
+  },
+  "resources/js/assets/fonts/MyriadPro-Regular.woff": {
+    "file": "assets/MyriadPro-Regular-f99d0251.woff",
+    "src": "resources/js/assets/fonts/MyriadPro-Regular.woff"
+  },
+  "resources/js/assets/icons/search.svg": {
+    "file": "assets/search-c0f7c747.svg",
+    "src": "resources/js/assets/icons/search.svg"
   },
   "resources/js/assets/icons/slider/reward.svg": {
     "file": "assets/reward-b481f4ec.svg",
     "src": "resources/js/assets/icons/slider/reward.svg"
   },
+  "resources/js/assets/icons/slider/truck-black.svg": {
+    "file": "assets/truck-black-ff6bde55.svg",
+    "src": "resources/js/assets/icons/slider/truck-black.svg"
+  },
   "resources/js/assets/icons/slider/truck.svg": {
     "file": "assets/truck-bfea8d73.svg",
     "src": "resources/js/assets/icons/slider/truck.svg"
+  },
+  "resources/js/assets/images/default-profile.png": {
+    "file": "assets/default-profile-26ed073c.png",
+    "src": "resources/js/assets/images/default-profile.png"
   },
   "resources/js/assets/images/footer-bg.webp": {
     "file": "assets/footer-bg-cb47aba9.webp",
@@ -29,16 +49,20 @@
     "file": "assets/payments-6fb8da66.svg",
     "src": "resources/js/assets/images/payments.svg"
   },
+  "resources/js/assets/images/placeholder.webp": {
+    "file": "assets/placeholder-36f7fa4d.webp",
+    "src": "resources/js/assets/images/placeholder.webp"
+  },
   "resources/js/assets/images/slides/price.webp": {
-    "file": "assets/price-eabc5650.webp",
+    "file": "assets/price-06555448.webp",
     "src": "resources/js/assets/images/slides/price.webp"
   },
   "resources/js/assets/images/slides/slide1.webp": {
-    "file": "assets/slide1-b7ba8a88.webp",
+    "file": "assets/slide1-159b61ee.webp",
     "src": "resources/js/assets/images/slides/slide1.webp"
   },
   "resources/js/assets/images/slides/slide2.webp": {
-    "file": "assets/slide2-40ffe724.webp",
+    "file": "assets/slide2-f73f5fb0.webp",
     "src": "resources/js/assets/images/slides/slide2.webp"
   },
   "resources/js/assets/images/slides/slide3-bg.webp": {
@@ -57,6 +81,14 @@
     "file": "assets/slide4-1728951b.webp",
     "src": "resources/js/assets/images/slides/slide4.webp"
   },
+  "resources/js/assets/images/slides/slide5-bg.webp": {
+    "file": "assets/slide5-bg-1cf0e463.webp",
+    "src": "resources/js/assets/images/slides/slide5-bg.webp"
+  },
+  "resources/js/assets/images/slides/slide5-mobile.png": {
+    "file": "assets/slide5-mobile-2ea3f6f1.png",
+    "src": "resources/js/assets/images/slides/slide5-mobile.png"
+  },
   "resources/js/assets/images/slides/slide5.webp": {
     "file": "assets/slide5-fb5d11f9.webp",
     "src": "resources/js/assets/images/slides/slide5.webp"
@@ -67,30 +99,43 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-cc328cf3.css",
+    "file": "assets/index-57ccc134.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
     "assets": [
       "assets/logo-b7f2b602.svg",
       "assets/payments-6fb8da66.svg",
+      "assets/placeholder-36f7fa4d.webp",
+      "assets/mobile-logo-22431dbf.svg",
+      "assets/default-profile-26ed073c.png",
       "assets/footer-bg-cb47aba9.webp",
       "assets/slide3-bg-94884eec.webp",
-      "assets/slide1-b7ba8a88.webp",
-      "assets/slide2-40ffe724.webp",
+      "assets/slide5-bg-1cf0e463.webp",
+      "assets/slide1-159b61ee.webp",
+      "assets/slide2-f73f5fb0.webp",
       "assets/slide3-698ba2f9.webp",
-      "assets/price-eabc5650.webp",
+      "assets/slide5-mobile-2ea3f6f1.png",
+      "assets/price-06555448.webp",
+      "assets/truck-black-ff6bde55.svg",
       "assets/slide4-bg-dfd7666c.webp",
       "assets/slide4-1728951b.webp",
       "assets/slide5-fb5d11f9.webp",
       "assets/truck-bfea8d73.svg",
-      "assets/reward-b481f4ec.svg"
+      "assets/reward-b481f4ec.svg",
+      "assets/search-c0f7c747.svg",
+      "assets/MyriadPro-Regular-f99d0251.woff",
+      "assets/MyriadPro-Bold-cb0315a4.woff"
     ],
     "css": [
-      "assets/index-cc328cf3.css"
+      "assets/index-57ccc134.css"
     ],
-    "file": "assets/index-a643364a.js",
+    "file": "assets/index-9f1119fb.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
+  },
+  "resources/js/src/components/MobileHeader/mobile-logo.svg": {
+    "file": "assets/mobile-logo-22431dbf.svg",
+    "src": "resources/js/src/components/MobileHeader/mobile-logo.svg"
   }
 }

@@ -12,7 +12,7 @@ export default class ProductService {
 
   static sendRequestProduct(
     slug: string,
-    data: { name: string; email: string }
+    data: { name: string; email: string; phone: string }
   ) {
     return api.post<{ ok: boolean }>(`/product-request/${slug}`, data);
   }

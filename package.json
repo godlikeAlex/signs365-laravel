@@ -43,6 +43,7 @@
     "@alpinejs/focus": "^3.13.10",
     "@hookform/resolvers": "^2.9.10",
     "@inertiajs/react": "^1.0.11",
+    "@react-input/mask": "^2.0.4",
     "@reduxjs/toolkit": "^1.9.1",
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",

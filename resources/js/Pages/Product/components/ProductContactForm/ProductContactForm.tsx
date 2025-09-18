@@ -1,4 +1,4 @@
-import { BaseInput, Button, Input } from "@/src/components";
+import { BaseInput, Button, Input, TextArea } from "@/src/components";
 import ProductService from "@/src/services/ProductService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
@@ -6,22 +6,36 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import ProductFormSection from "../ProductFormSection";
+import { generatePattern, InputMask } from "@react-input/mask";
+
+interface Props {
+  productSlug: string;
+}
+
+const INPUT_PHONE_MASK_OPTIONS = {
+  mask: "+1 (___) ___-__-__",
+  replacement: { _: /\d/ },
+};
 
 const FormSchema = yup
   .object({
     name: yup.string().min(2).required(),
     email: yup.string().email().required(),
+    phone: yup
+      .string()
+      .test("Is Correct Phone", "Please enter a valid phone number", (value) =>
+        RegExp(generatePattern("full-inexact", INPUT_PHONE_MASK_OPTIONS)).test(
+          value
+        )
+      ),
   })
   .required();
 
 type Inputs = {
   name: string;
   email: string;
+  phone: string;
 };
-
-interface Props {
-  productSlug: string;
-}
 
 const ProductContactForm: React.FC<Props> = ({ productSlug }: Props) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -30,6 +44,7 @@ const ProductContactForm: React.FC<Props> = ({ productSlug }: Props) => {
     handleSubmit,
     watch,
     formState: { errors, isValid },
+    reset,
   } = useForm<Inputs>({
     resolver: yupResolver(FormSchema),
   });
@@ -44,10 +59,18 @@ const ProductContactForm: React.FC<Props> = ({ productSlug }: Props) => {
       );
 
       if (data.ok) {
-        toast("Your request has been sent!", { type: "success" });
+        toast("Request sent! We’ll get back to you soon.", {
+          type: "success",
+          position: "bottom-center",
+          theme: "colored",
+          autoClose: 8500,
+        });
+        reset();
       } else {
         toast("Error sending request, please try again later", {
           type: "error",
+          position: "bottom-center",
+          theme: "colored",
         });
       }
 
@@ -66,19 +89,48 @@ const ProductContactForm: React.FC<Props> = ({ productSlug }: Props) => {
         <div className="container">
           <div className="row">
             <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-              <div className="ps-form--review" style={{ marginBottom: 0 }}>
+              <div style={{ textAlign: "center" }}>
+                <h3>
+                  <span style={{ color: "#ffca1a" }}>Contact us</span> — we’ll
+                  answer all your questions
+                </h3>
+              </div>
+
+              <div
+                className="ps-form--review"
+                style={{ marginBottom: 0, marginTop: 25 }}
+              >
                 <BaseInput
                   type="text"
                   {...register("name")}
                   disabled={isSubmitting}
                   label="Name"
+                  error={Boolean(errors.name?.message)}
                 />
-                <BaseInput
-                  type="email"
-                  {...register("email")}
-                  disabled={isSubmitting}
-                  label="Email"
-                />
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <BaseInput
+                      type="email"
+                      {...register("email")}
+                      disabled={isSubmitting}
+                      label="Email"
+                      error={Boolean(errors.email?.message)}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <InputMask
+                      {...INPUT_PHONE_MASK_OPTIONS}
+                      showMask
+                      separate
+                      component={BaseInput}
+                      label="Phone"
+                      {...register("phone")}
+                      error={Boolean(errors.phone?.message)}
+                    />
+                  </div>
+                </div>
 
                 <div className="ps-form__submit">
                   <Button

@@ -4,6 +4,7 @@
 <x-mail::panel>
 <p>Name: {{$name}}</p>
 <p>Email: {{$email}}</p>
+<p>Phone: {{$phone}}</p>
 <p>Product: {{$product_name}}</p>
 </x-mail::panel>
 

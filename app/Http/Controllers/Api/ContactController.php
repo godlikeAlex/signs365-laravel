@@ -23,6 +23,7 @@ class ContactController extends Controller
     $validated = $request->validate([
       "name" => "required",
       "email" => "required",
+      "phone" => "required",
     ]);
 
     foreach (
@@ -38,6 +39,7 @@ class ContactController extends Controller
         new ProductRequest(
           $request->input("name"),
           $request->input("email"),
+          $request->input("phone"),
           $product->title
         )
       );

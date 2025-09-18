@@ -24,4 +24,9 @@
     gap: 7px;
     font-size: 15px;
   }
+
+  &--error {
+    border-color: rgb(220, 48, 48) !important;
+    color: rgb(220, 48, 48) !important;
+  }
 }

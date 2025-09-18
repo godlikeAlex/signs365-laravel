@@ -15,16 +15,19 @@ class ProductRequest extends Mailable implements ShouldQueue
   public $name;
   public $email;
   public $product_name;
+  public $phone;
+
   /**
    * Create a new message instance.
    *
    * @return void
    */
-  public function __construct($name, $email, $product_name)
+  public function __construct($name, $email, $phone, $product_name)
   {
     $this->name = $name;
     $this->email = $email;
     $this->product_name = $product_name;
+    $this->phone = $phone;
   }
 
   /**
@@ -50,6 +53,7 @@ class ProductRequest extends Mailable implements ShouldQueue
         "product_name" => $this->product_name,
         "name" => $this->name,
         "email" => $this->email,
+        "phone" => $this->phone,
       ]
     );
   }

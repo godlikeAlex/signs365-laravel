@@ -12,6 +12,17 @@
 
     border: 1px solid var(--bg-color) !important;
   }
+
+  &--primary {
+    --bg-color: #{colors.$primary};
+    --hover-color: #{colors.$primary};
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    border: 1px solid var(--bg-color) !important;
+  }
 }
 
 .button {
@@ -30,9 +41,15 @@
 
   background-color: var(--bg-color);
 
-  &:hover,
   &--active {
     background-color: var(--hover-color);
     border-color: var(--hover-color);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--hover-color);
+      border-color: var(--hover-color);
+    }
   }
 }

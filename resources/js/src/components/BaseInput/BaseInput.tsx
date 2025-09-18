@@ -9,10 +9,11 @@ import classes from "./BaseInput.module.scss";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  error?: boolean;
 }
 
 const BaseInput = forwardRef<HTMLInputElement, Props>(function (
-  { className, label, ...props },
+  { className, label, error = false, ...props },
   ref
 ) {
   return (
@@ -20,7 +21,11 @@ const BaseInput = forwardRef<HTMLInputElement, Props>(function (
       {label}
       <input
         ref={ref}
-        className={classNames(classes.baseInput, className)}
+        className={classNames(
+          classes.baseInput,
+          { [classes.baseInputError]: error },
+          className
+        )}
         {...props}
       />
     </label>

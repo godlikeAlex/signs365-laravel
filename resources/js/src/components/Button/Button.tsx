@@ -27,6 +27,7 @@ export default function Button({
             variant === "primary" && color === "primary-600",
           [classes.buttonGhost300]:
             variant === "ghost" && color === "primary-300",
+          [classes.buttonPrimary]: variant === "primary" && color === "primary",
         },
         className
       )}
