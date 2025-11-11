@@ -1,4 +1,5 @@
 import {
+  Button,
   Footer,
   GoogleOneTap,
   Header,
@@ -6,6 +7,7 @@ import {
   MobileHeader,
   SocialFixedButtons,
 } from "@/src/components";
+import MobileCtaButton from "@/src/components/MobileCtaButton";
 import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,6 +26,8 @@ const DefaultLayout: React.FC<Props> = ({ children }: Props) => {
         {/* <Menu /> */}
         <MobileHeader />
         {/* <SocialFixedButtons /> */}
+
+        <MobileCtaButton />
 
         <div className="main">{children}</div>
 

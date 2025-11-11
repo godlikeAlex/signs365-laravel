@@ -148,6 +148,7 @@
 
 .category-menu-item__link:hover {
   color: var(--dark-color);
+  /* display: none; */
 }
 
 .category-menu-item__link:hover .category-menu-item__name {

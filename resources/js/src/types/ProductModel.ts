@@ -117,6 +117,7 @@ type IProductBase = {
   seo_title?: string;
   seo_desc?: string;
   seo_keywords?: string;
+  seo_schema?: string;
 
   faq?: { question: string; answer: string }[];
 

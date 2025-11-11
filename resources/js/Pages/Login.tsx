@@ -92,7 +92,7 @@ const Login: React.FC<Props> = ({}: Props) => {
                       </Link>
                     </div>
                   </div>
-                  <Link className="ps-account__link" href="/forgot-password">
+                  <Link className="ps-account__link" href="/forgot">
                     Lost your password?
                   </Link>
                 </div>

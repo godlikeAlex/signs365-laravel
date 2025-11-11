@@ -42,6 +42,9 @@ export default function Modal({
           <Dialog.Panel
             className={classNames(classes.modalContent, customClasses?.content)}
           >
+            <button className={classes.closeButton} onClick={close}>
+              <i className="fa-solid fa-xmark"></i>
+            </button>
             {children}
           </Dialog.Panel>
         </div>

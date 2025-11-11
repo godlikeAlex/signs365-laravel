@@ -1,13 +1,21 @@
 .faq-product .rc-collapse-header {
-  background-color: var(--primary-color);
+  background-color: #ffdf8f;
   border: unset !important;
   color: var(--dark-color) !important;
+
+  border-radius: 25px;
+  transition: 0.3s;
+}
+
+.rc-collapse-item-active .rc-collapse-header {
+  border-radius: 25px 25px 0 0;
 }
 
 .faq-product .rc-collapse-content {
   /* background-color: red; */
   border: 1px solid #f0f2f5;
   border-top: unset;
+  border-radius: 0 0 25px 25px !important;
 }
 
 .faq-product {

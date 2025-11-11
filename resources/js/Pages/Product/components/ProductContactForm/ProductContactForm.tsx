@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 import ProductFormSection from "../ProductFormSection";
 import { generatePattern, InputMask } from "@react-input/mask";
+import { yupTelephoneRule } from "@/src/components/InputTelephoneMask/yupTelephoneRule";
+import InputTelephoneMask from "@/src/components/InputTelephoneMask/InputTelephoneMask";
 
 interface Props {
   productSlug: string;
@@ -21,13 +23,10 @@ const FormSchema = yup
   .object({
     name: yup.string().min(2).required(),
     email: yup.string().email().required(),
-    phone: yup
-      .string()
-      .test("Is Correct Phone", "Please enter a valid phone number", (value) =>
-        RegExp(generatePattern("full-inexact", INPUT_PHONE_MASK_OPTIONS)).test(
-          value
-        )
-      ),
+    phone: yupTelephoneRule({
+      message: "Please enter a valid phone number",
+      nullable: false,
+    }),
   })
   .required();
 
@@ -120,14 +119,13 @@ const ProductContactForm: React.FC<Props> = ({ productSlug }: Props) => {
                   </div>
 
                   <div className="col-md-6">
-                    <InputMask
-                      {...INPUT_PHONE_MASK_OPTIONS}
+                    <InputTelephoneMask
                       showMask
                       separate
                       component={BaseInput}
                       label="Phone"
-                      {...register("phone")}
                       error={Boolean(errors.phone?.message)}
+                      {...register("phone")}
                     />
                   </div>
                 </div>

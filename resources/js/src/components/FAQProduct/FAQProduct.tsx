@@ -12,7 +12,7 @@ interface Props {
   }[];
 }
 
-const FAQProduct: React.FC<Props> = ({ questions }: Props) => {
+const FAQProduct: React.FC<Props> = ({ questions = [] }: Props) => {
   return (
     <Collapse accordion={true} openMotion={motion}>
       {questions.map(({ question, answer }, index) => (

@@ -7,6 +7,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\ServiceProvider;
 use Stevebauman\Location\Facades\Location;
+use Awcodes\Curator\Facades\Curator;
 
 use Request;
 
@@ -19,7 +20,14 @@ class FilamentServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    //
+    Curator::acceptedFileTypes([
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "application/pdf",
+      "video/mp4",
+      "video/webm",
+    ]);
   }
 
   /**

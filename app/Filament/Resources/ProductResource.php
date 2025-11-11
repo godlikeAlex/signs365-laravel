@@ -107,10 +107,11 @@ class ProductResource extends Resource
                 ->default(false),
             ]),
 
-          Forms\Components\Tabs\Tab::make("Product Images")
-            ->icon("heroicon-s-camera")
+          Forms\Components\Tabs\Tab::make("Product Assets")
+            ->icon("heroicon-s-photograph")
             ->schema([
               CuratorPicker::make("product_picture_ids")
+                ->label("Product assets")
                 ->multiple()
                 ->relationship("images", "id")
                 ->orderColumn("order"),
@@ -125,9 +126,7 @@ class ProductResource extends Resource
           Forms\Components\Tabs\Tab::make("SEO")
             ->icon("heroicon-s-search")
             ->schema([
-              Forms\Components\TextInput::make("seo_title")
-                ->label("Title")
-                ->maxLength(55),
+              Forms\Components\TextInput::make("seo_title")->label("Title"),
 
               Forms\Components\Textarea::make("seo_description")->label(
                 "Description"
@@ -137,6 +136,9 @@ class ProductResource extends Resource
               Forms\Components\TextArea::make("seo_keywords")->label(
                 "Keywords"
               ),
+              Forms\Components\TextArea::make("seo_schema")
+                ->columnSpan("full")
+                ->reactive(),
             ]),
         ]),
     ];

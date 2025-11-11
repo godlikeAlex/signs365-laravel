@@ -82,4 +82,24 @@ class AuthController extends Controller
 
     return Inertia::render("Register");
   }
+
+  public function indexForgot(Request $request)
+  {
+    if ($request->user()) {
+      return redirect("profile");
+    }
+
+    return Inertia::render("ForgotPassword");
+  }
+
+  public function indexResetPassword(Request $request, $token)
+  {
+    if ($request->user()) {
+      return redirect("profile");
+    }
+
+    return Inertia::render("ResetPassword", [
+      "token" => $token,
+    ]);
+  }
 }

@@ -32,6 +32,10 @@ $DOMAIN = env("APP_DOMAIN");
 */
 // Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
+Route::get("/ker", function () {
+  return phpinfo();
+});
+
 Route::prefix("api/auth")->group(function () {
   Route::post("login", [
     \App\Http\Controllers\Api\AuthController::class,
@@ -108,6 +112,16 @@ Route::get("register", [
 Route::post("register", [
   \App\Http\Controllers\Inertia\AuthController::class,
   "register",
+]);
+
+Route::get("forgot", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "indexForgot",
+])->name("forgot-index");
+
+Route::get("/auth/reset-password/{token}", [
+  \App\Http\Controllers\Inertia\AuthController::class,
+  "indexResetPassword",
 ]);
 
 Route::get("/auth/{provider}/redirect", [

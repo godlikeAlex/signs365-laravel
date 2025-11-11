@@ -36,6 +36,7 @@ class ProductResource extends JsonResource
       "faq" => $this->faq ? $this->faq->content : null,
       "options" => OptionResource::collection($this->whenLoaded("options")),
       "rating" => $this->getAverageRatting(),
+      "seo_schema" => $this->seo_schema,
       "total_reviews" => $this->reviews()
         ->published()
         ->count(),

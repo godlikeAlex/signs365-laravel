@@ -8,6 +8,7 @@ import { DefaultLayout } from "./Layouts";
 import "react-loading-skeleton/dist/skeleton.css";
 import "@/src/styles/fonts.scss";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ContactModalProvider } from "./src/components/ContactFormModal";
 
 const queryClient = new QueryClient();
 
@@ -29,10 +30,12 @@ createInertiaApp({
     createRoot(el).render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <App {...props} />
+          <ContactModalProvider>
+            <App {...props} />
+          </ContactModalProvider>
         </QueryClientProvider>
       </Provider>
     );
   },
-  title: (title) => `Signs7 - ${title}`,
+  title: (title) => (!title ? "Signs7 " : `${title}`),
 });

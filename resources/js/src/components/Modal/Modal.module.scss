@@ -28,6 +28,7 @@
     border-radius: 5px;
     padding-block: 35px;
     padding-inline: 25px;
+    position: relative;
   }
 
   &__backdrop {
@@ -40,4 +41,14 @@
 
     background-color: rgba(0, 0, 0, 0.379);
   }
+}
+
+.close-button {
+  background: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: unset;
+  font-size: 22px;
+  cursor: pointer;
 }

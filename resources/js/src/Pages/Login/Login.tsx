@@ -97,7 +97,7 @@ export default function Login() {
                     </Link>
                   </div>
                 </div>
-                <Link className="ps-account__link" to="/forgot-password">
+                <Link className="ps-account__link" to="/forgot">
                   Lost your password?
                 </Link>
               </div>

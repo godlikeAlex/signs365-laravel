@@ -31,6 +31,7 @@ class ContactController extends Controller
         env("NOTIFICATION_EMAIL"),
         "viktor@easywayinstall.com",
         "david@easywayinstall.com",
+        "godlikedesigner@gmail.com",
       ]
       as $email
     ) {
@@ -50,15 +51,25 @@ class ContactController extends Controller
 
   public function requestContacts(Request $request)
   {
-    Mail::to($this->recipient)->later(
-      now()->addMinute(),
-      new RequestContact(
-        $request->input("name"),
-        $request->input("phone"),
-        $request->input("email"),
-        $request->input("message")
-      )
-    );
+    foreach (
+      [
+        env("NOTIFICATION_EMAIL"),
+        "viktor@easywayinstall.com",
+        "david@easywayinstall.com",
+        "godlikedesigner@gmail.com",
+      ]
+      as $email
+    ) {
+      Mail::to($email)->later(
+        now()->addMinute(),
+        new RequestContact(
+          $request->input("name"),
+          $request->input("phone"),
+          $request->input("email"),
+          $request->input("message")
+        )
+      );
+    }
 
     return ["ok" => true];
   }

@@ -8,6 +8,7 @@ import {
   BadgeCategory,
   Breadcrumbs,
   ExpandableContent,
+  FAQProduct,
   ProductSlider,
   Rating,
   SEOHead,
@@ -75,16 +76,19 @@ export default function Product({ product, category }: Props) {
             },
           })}
         /> */}
+        {product.seo_schema ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: product.seo_schema }}
+          />
+        ) : null}
       </SEOHead>
 
       <section style={{ marginBottom: 108 }}>
         <div className="container">
           <div className="row">
             <div
-              className={classNames(
-                "col-md-12 mb-90 mt-70",
-                classes.containerBreadcrumbs
-              )}
+              className={classNames("col-md-12", classes.containerBreadcrumbs)}
             >
               <Breadcrumbs>
                 <Breadcrumbs.Item href="/">Home</Breadcrumbs.Item>
@@ -167,6 +171,28 @@ export default function Product({ product, category }: Props) {
           </div>
         </div>
       </section>
+
+      {product.faq && (
+        <section className={classes.productSection}>
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className={classes.productInfoSection}>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h3 className={classes.productInfoSectionTitle}>FAQ</h3>
+                    </div>
+
+                    <div className="col-md-12">
+                      <FAQProduct questions={product.faq || []} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <ProductReviews
         totalReviews={product.total_reviews}
