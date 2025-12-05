@@ -13,9 +13,10 @@ import UserIcon from "@/assets/icons/SMALL/user.svg?react";
 import SVGLogo from "@/assets/images/logo.svg";
 
 import HeaderCategoryItem from "./HeaderCategoryItem";
+import SearchForm from "../SearchForm";
 
 import classes from "./Header.module.scss";
-import SearchForm from "../SearchForm";
+import "./body.scss";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();

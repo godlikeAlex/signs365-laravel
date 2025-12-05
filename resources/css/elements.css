@@ -4183,6 +4183,11 @@ textarea.form-control {
   margin-right: 24px;
 }
 
+.ps-product--gallery .ps-gallery--image .ps-gallery__item img {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
 .ps-product--gallery .ps-gallery--image .ps-gallery__item:hover {
   border-color: var(--dark-color);
 }

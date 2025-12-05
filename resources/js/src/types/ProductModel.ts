@@ -118,6 +118,7 @@ type IProductBase = {
   seo_desc?: string;
   seo_keywords?: string;
   seo_schema?: string;
+  video: { path: string; cover: string } | null;
 
   faq?: { question: string; answer: string }[];
 

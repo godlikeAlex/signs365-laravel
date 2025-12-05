@@ -4,9 +4,12 @@ import "./style.css";
 import { ProductImage } from "@/src/types/ProductModel";
 import { NextArrow, PrevArrow } from "./Arrows";
 import placeholderImagePath from "@/assets/images/placeholder.webp";
+import VideoSlide from "./VideoSlide";
+import VideoThumbnail from "./VideoThumbnail";
 
 interface Props {
   images: ProductImage[];
+  video: { path: string; cover: string } | null;
   productName: string;
 }
 
@@ -28,7 +31,11 @@ const MainSlick = {
   lazyLoad: "ondemand",
 };
 
-const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
+const ProductSlider: React.FC<Props> = ({
+  images,
+  productName,
+  video,
+}: Props) => {
   const [mainSlickRef, setMainSlickRef] = useState(null);
   const [thumbNailSlickRef, setThumbNailSlickRef] = useState(null);
 
@@ -52,29 +59,31 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
           className="ps-product__thumbnail"
         >
           {images.length > 0 ? (
-            images.map((img) => (
-              <div className="slide" key={`main-${img.id}`}>
-                <div
-                  style={{
-                    paddingBottom: "100%",
-                    background: "#EEE",
-                    height: 0,
-                    position: "relative",
-                  }}
-                >
-                  <img
+            images.map((img) => {
+              return (
+                <div className="slide" key={`main-${img.id}`}>
+                  <div
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "block",
-                      position: "absolute",
+                      paddingBottom: "100%",
+                      background: "#EEE",
+                      height: 0,
+                      position: "relative",
                     }}
-                    src={`/storage/${img.path}`}
-                    alt={img.alt ? img.alt : productName}
-                  />
+                  >
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        position: "absolute",
+                      }}
+                      src={`/storage/${img.path}`}
+                      alt={img.alt ? img.alt : productName}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="slide">
               <div
@@ -97,6 +106,33 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
               </div>
             </div>
           )}
+
+          {video && (
+            <div className="slide">
+              <div
+                style={{
+                  paddingBottom: "100%",
+                  background: "#EEE",
+                  height: 0,
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    position: "absolute",
+                  }}
+                >
+                  <VideoSlide
+                    poster={`/storage/${video.cover}`}
+                    path={`/storage/${video.path}`}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </Slider>
         <Slider
           ref={(slider) => setThumbNailSlickRef(slider)}
@@ -116,6 +152,14 @@ const ProductSlider: React.FC<Props> = ({ images, productName }: Props) => {
               </div>
             </div>
           ))}
+
+          {video && (
+            <div className="slide">
+              <div className="ps-gallery__item">
+                <VideoThumbnail videoUrl={`/storage/${video.cover}`} />
+              </div>
+            </div>
+          )}
         </Slider>
       </div>
     </div>

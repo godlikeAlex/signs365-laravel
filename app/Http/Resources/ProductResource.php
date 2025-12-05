@@ -27,6 +27,9 @@ class ProductResource extends JsonResource
       "short_description" => $this->short_description,
       "with_checkout" => $this->with_checkout,
       "published" => $this->published,
+      "video" => $this->video
+        ? ["path" => $this->video, "cover" => $this->video_cover]
+        : null,
       // "min_price" => $this->min_price / 100,
       "min_price" => 35.0,
       "images" => ProductImageResource::collection($this->images),

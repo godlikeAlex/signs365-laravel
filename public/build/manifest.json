@@ -1,11 +1,11 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-6d767be4.css",
+    "file": "assets/app-06585cb7.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-6a95c8e9.css",
+    "file": "assets/style-fe692e3b.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -99,7 +99,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-95242aa5.css",
+    "file": "assets/index-6239f2cf.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -128,9 +128,9 @@
       "assets/MyriadPro-Bold-cb0315a4.woff"
     ],
     "css": [
-      "assets/index-95242aa5.css"
+      "assets/index-6239f2cf.css"
     ],
-    "file": "assets/index-96466678.js",
+    "file": "assets/index-381d9acf.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   },

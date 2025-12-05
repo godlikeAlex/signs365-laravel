@@ -26,7 +26,6 @@ class FilamentServiceProvider extends ServiceProvider
       "image/webp",
       "application/pdf",
       "video/mp4",
-      "video/webm",
     ]);
   }
 

@@ -32,6 +32,9 @@ interface Props {
 }
 
 export default function Product({ product, category }: Props) {
+  // const { images = [] } = product;
+  const video = product.video;
+
   const [state, dispatch] = React.useReducer(ProductReducer, {
     status: "idle",
     product: null,
@@ -106,6 +109,7 @@ export default function Product({ product, category }: Props) {
             <div className="col-md-6">
               <ProductSlider
                 images={product.images}
+                video={product.video}
                 productName={product.title}
               />
             </div>
@@ -200,6 +204,28 @@ export default function Product({ product, category }: Props) {
         summaryRatings={product.summary_ratings}
         productID={product.id}
       />
+
+      {video && (
+        <section style={{ lineHeight: 0 }}>
+          <video
+            style={{
+              width: "100%",
+              maxHeight: "75vh",
+              aspectRatio: "16/9",
+              objectFit: "cover",
+            }}
+            controls
+            preload="auto"
+            autoPlay
+            loop
+            playsInline
+            muted
+            poster={`/storage/${video.cover}`}
+          >
+            <source src={`/storage/${video.path}`} />
+          </video>
+        </section>
+      )}
 
       {/* {product.with_checkout ? (
         <ProductCheckoutType product={product} />

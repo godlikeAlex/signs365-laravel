@@ -115,6 +115,16 @@ class ProductResource extends Resource
                 ->multiple()
                 ->relationship("images", "id")
                 ->orderColumn("order"),
+
+              Section::make("Video")->schema([
+                Forms\Components\FileUpload::make("video")
+                  ->label("Video")
+                  ->acceptedFileTypes(["video/mp4"])
+                  ->nullable(),
+                Forms\Components\FileUpload::make("video_cover")
+                  ->label("Video Cover")
+                  ->nullable(),
+              ]),
               // Forms\Components\FileUpload::make("images")
               //   ->columnSpanFull()
               //   ->enableDownload()

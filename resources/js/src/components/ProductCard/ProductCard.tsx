@@ -16,14 +16,14 @@ type Props = IProductCard & {
 export default function ProductCard({
   title,
   slug,
-  images,
-  categories,
+  images = [],
+  categories = [],
   min_price,
   short_description,
   rating,
   variant = "home",
 }: Props) {
-  const [image] = images;
+  const [image] = images.filter((image) => !image.path.endsWith(".mp4"));
   const [category] = categories;
 
   const pathToProduct = `/shop/${category.slug}/${slug}`;

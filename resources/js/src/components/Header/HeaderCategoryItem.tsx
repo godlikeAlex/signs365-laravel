@@ -40,10 +40,12 @@ export default function HeaderCategoryItem({
 
   const [activeProduct, setActiveProduct] = useState<IProductCard>(null);
 
+  const images = activeProduct
+    ? activeProduct.images.filter((image) => !image.path.endsWith(".mp4"))
+    : [];
+
   const activeImage = activeProduct
-    ? `/storage/${
-        activeProduct?.images[0]?.thumbnail ?? activeProduct.images[0]?.path
-      }`
+    ? `/storage/${images[0]?.path}`
     : placeholderImagePath;
 
   const handleHoverProduct = (product: IProductCard) =>

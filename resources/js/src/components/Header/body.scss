@@ -1,0 +1,7 @@
+@import "@styles/mixins/media";
+
+.ps-page {
+  @include for-desktop {
+    padding-top: 235px;
+  }
+}
