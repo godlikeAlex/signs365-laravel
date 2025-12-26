@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
-import { HomeSection, SEOHead } from "@/src/components";
+import { HomeSection, PriceList, SEOHead } from "@/src/components";
 import { IProduct } from "@/src/types/ProductModel";
 import ProductShowModal from "@/Modals/ProductShowModal";
 
@@ -36,6 +36,14 @@ const Home: React.FC<Props> = ({ title }: Props) => {
       <div className="ps-home ps-home--4">
         <section className="ps-section--banner">
           <HomeSlider />
+        </section>
+
+        <section style={{ padding: 120 }}>
+          <div className="container-fluid">
+            <div className="col-md-12">
+              <PriceList productWithCategories={homeCategories} />
+            </div>
+          </div>
         </section>
 
         {homeCategories.map((category, idx) => {

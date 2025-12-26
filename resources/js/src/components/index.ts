@@ -48,6 +48,8 @@ import UpdatePasswordForm from "./UpdatePasswordForm";
 import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
+export { PriceList } from "./PriceList";
+
 export {
   ExpandableContent,
   ReviewForm,

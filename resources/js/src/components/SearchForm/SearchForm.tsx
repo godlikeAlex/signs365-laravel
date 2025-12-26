@@ -30,6 +30,7 @@ export default function SearchForm() {
     >
       <BaseInput
         name="query"
+        wrapperClass={classes.wrapper}
         className={classNames(classes.searchInput, {
           [classes.searchInputError]: error,
         })}

@@ -10,14 +10,15 @@ import classes from "./BaseInput.module.scss";
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: boolean;
+  wrapperClass?: string;
 }
 
 const BaseInput = forwardRef<HTMLInputElement, Props>(function (
-  { className, label, error = false, ...props },
+  { className, label, error = false, wrapperClass, ...props },
   ref
 ) {
   return (
-    <label className={classes.baseInputWrapper}>
+    <label className={classNames(classes.baseInputWrapper, wrapperClass)}>
       {label}
       <input
         ref={ref}

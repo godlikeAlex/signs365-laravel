@@ -71,23 +71,10 @@ export default function HeaderCategoryItem({
     >
       <Link
         href={`/shop/${slug}`}
-        // className={classes.categoryLink}
-        className={classNames("category-menu-item__link")}
+        className={classes.categoryLink}
+        // className={classNames("category-menu-item__link")}
       >
-        <img
-          src={`/storage/${icon}`}
-          alt={title}
-          style={{ width: "25px", height: "25px" }}
-        />
-        <div className={classes.navCategoryItemTitle}>
-          <BadgeCategory
-            active={isActivePage || hovered}
-            primaryColor={colors.primary}
-            alternativeColor={colors.alternative}
-          >
-            {title}
-          </BadgeCategory>
-        </div>
+        {title}
       </Link>
 
       <div className={classes.navDropdown} ref={submenuRef}>

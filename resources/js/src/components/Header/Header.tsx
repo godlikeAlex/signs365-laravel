@@ -34,7 +34,62 @@ export default function Header() {
     >
       <div className={classes.topHeader}>
         <div className={classNames("container", classes.topHeaderContainer)}>
-          <ul className={classes.topHeaderLeft}>
+          <div className={classNames(classes.logoContainer)}>
+            <Link href="/">
+              <img src={SVGLogo} className={classes.navLogo} alt="Signs" />
+            </Link>
+
+            <div className={classNames(classes.logoQuote)}>
+              Print. <br /> Install. <br /> Grow.
+            </div>
+          </div>
+
+          <ul className={classes.topHeaderLinks}>
+            <li className="top-header__nav-link">
+              <Link href="/" className={classes.topHeaderLink}>
+                Home
+              </Link>
+            </li>
+
+            <li className="top-header__nav-link">
+              <Link href="/about" className={classes.topHeaderLink}>
+                About
+              </Link>
+            </li>
+
+            <li className="top-header__nav-link">
+              <Link href="/contacts" className={classes.topHeaderLink}>
+                Contact
+              </Link>
+            </li>
+          </ul>
+
+          <div className={classes.topHeaderSearchContainer}>
+            <SearchForm />
+          </div>
+
+          <div className={classes.topHeaderRight}>
+            <a href="tel:+13072008927" className={classes.topHeaderPhone}>
+              <PhoneIcon className={classes.phoneIcon} />
+              <span style={{ marginLeft: 5 }}>+1 (307) 200-8927</span>
+            </a>
+
+            <div>
+              <span className={classes.location}>
+                <LocationIcon className={classes.topHeaderIcon} />
+
+                <span style={{ marginLeft: 5 }}>Nationwide</span>
+              </span>
+
+              <a href="mailto:info@signs7.com" className={classes.mail}>
+                <EmailIcon className={classes.topHeaderIcon} />
+
+                <span style={{ marginLeft: 5 }}>info@signs7.com</span>
+              </a>
+            </div>
+          </div>
+
+          {/* <ul className={classes.topHeaderLeft}>
             <li>
               <a
                 className={classNames(
@@ -74,70 +129,16 @@ export default function Header() {
                 <span style={{ marginLeft: 5 }}>{currentCity}</span>
               </span>
             </li>
-          </ul>
+          </ul> */}
 
-          <div className={classes.topHeaderSearchContainer}>
+          {/* <div className={classes.topHeaderSearchContainer}>
             <SearchForm />
-          </div>
-
-          <ul className={classes.topHeaderRight}>
-            <li className="top-header__nav-link">
-              <Link href="/" className={classes.topHeaderLink}>
-                Home
-              </Link>
-            </li>
-
-            <li className="top-header__nav-link">
-              <Link href="/about" className={classes.topHeaderLink}>
-                About
-              </Link>
-            </li>
-
-            <li className="top-header__nav-link">
-              <Link href="/contacts" className={classes.topHeaderLink}>
-                Contact
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={classes.topHeaderLink}
-                href={auth.user ? "/profile" : "/login"}
-              >
-                <UserIcon
-                  className={classNames(
-                    classes.topHeaderIcon,
-                    classes.topHeaderIconAction
-                  )}
-                />
-              </Link>
-            </li>
-            <li style={{ position: "relative" }}>
-              <Link
-                className={classes.topHeaderLink}
-                href="/cart"
-                id="cart-mini"
-              >
-                <CartIcon
-                  className={classNames(
-                    classes.topHeaderIcon,
-                    classes.topHeaderIconAction
-                  )}
-                />
-                {cart.items.length > 0 ? (
-                  <span className="badge-mini">{cart.items.length}</span>
-                ) : null}
-              </Link>
-            </li>
-          </ul>
+          </div> */}
         </div>
       </div>
 
       <nav className={classes.nav}>
         <div className={classNames("container", classes.navContainer)}>
-          <Link href="/">
-            <img src={SVGLogo} className={classes.navLogo} alt="Signs" />
-          </Link>
-
           <ul className={classes.navItems}>
             {homeCategories.map((category) => (
               <HeaderCategoryItem key={category.id} {...category} />

@@ -1,6 +1,11 @@
+@use "@styles/variables/colors";
 @import "@styles/mixins/media";
 
 $topHeaderColor: #595855;
+
+.nav__logo {
+  height: 60px;
+}
 
 .header {
   display: none;
@@ -41,7 +46,7 @@ $topHeaderColor: #595855;
 .top-header {
   // padding-top: 32px;
 
-  padding-block: 23px;
+  padding-block: 12px;
 
   &__search-container {
     width: 348px;
@@ -49,8 +54,9 @@ $topHeaderColor: #595855;
 
   &__container {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    // justify-content: space-between;
+    gap: 40px;
+    align-items: center;
   }
 
   & ul {
@@ -65,20 +71,47 @@ $topHeaderColor: #595855;
     flex-shrink: 0;
   }
 
-  &__right {
+  &__links {
     display: flex;
-    gap: 36px;
+    gap: 10px;
     flex-shrink: 0;
+    align-items: center;
+  }
+
+  &__right {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  &__phone {
+    font-size: 22px;
+    font-weight: bold;
   }
 
   &__link {
-    font-size: 13px;
-    color: $topHeaderColor;
+    font-size: 16px;
+    // color: colors.$primary;
+
+    &:hover {
+      opacity: 0.6;
+    }
 
     &--with-icon {
       font-size: 11.5px;
     }
   }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.logo-quote {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: bold;
 }
 
 .top-header-icon {
@@ -92,7 +125,7 @@ $topHeaderColor: #595855;
 }
 
 .nav {
-  padding-bottom: 57px;
+  background-color: #d1d3d4;
 
   &__container {
     display: flex;
@@ -100,18 +133,24 @@ $topHeaderColor: #595855;
     justify-content: space-between;
   }
 
-  &__logo {
-    width: 95px;
-    height: 95px;
-  }
-
   &__items {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 48px;
+    // gap: 48px;
   }
+}
+
+.categoryLink {
+  padding: 10px 15px;
+  display: block;
+}
+
+.categoryLink:hover {
+  background-color: var(--primaryCategoryColor);
+  color: unset;
+  font-size: 16px;
 }
 
 .nav-category-item {
@@ -212,6 +251,20 @@ $topHeaderColor: #595855;
       display: block;
     }
   }
+}
+
+.location {
+  font-size: 13px;
+}
+
+.mail {
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+.phoneIcon {
+  width: 24px;
+  height: 24px;
 }
 
 @keyframes smoothScroll {
