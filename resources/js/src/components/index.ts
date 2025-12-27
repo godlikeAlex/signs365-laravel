@@ -49,6 +49,7 @@ import UpdatePersonalInformationForm from "./UpdatePersonalInformationForm";
 import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 
 export { PriceList } from "./PriceList";
+export { HeroSection } from "./HeroSection";
 
 export {
   ExpandableContent,
