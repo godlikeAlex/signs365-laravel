@@ -34,17 +34,11 @@ const Home: React.FC<Props> = ({ title }: Props) => {
       ) : null}
 
       <div className="ps-home ps-home--4">
-        <section className="ps-section--banner">
-          <HomeSlider />
-        </section>
+        {/* <section className="ps-section--banner"> */}
+        {/* <HomeSlider /> */}
+        {/* </section> */}
 
-        <section style={{ padding: 120 }}>
-          <div className="container-fluid">
-            <div className="col-md-12">
-              <PriceList productWithCategories={homeCategories} />
-            </div>
-          </div>
-        </section>
+        <PriceList productWithCategories={homeCategories} />
 
         {homeCategories.map((category, idx) => {
           return (

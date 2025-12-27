@@ -18,8 +18,8 @@
 
 /*1. RESET AND TYPHOGRAPHY */
 * {
-  font-family: "Sofia Pro";
-  /* font-family: "Lexend", sans-serif; */
+  /* font-family: "Sofia Pro"; */
+  font-family: "Lexend", sans-serif;
 }
 
 html {
