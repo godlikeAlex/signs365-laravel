@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
-import { HeroSection, HomeSection, PriceList, SEOHead } from "@/src/components";
+import {
+  HeroSection,
+  HomeSection,
+  OurProcess,
+  PriceList,
+  SEOHead,
+} from "@/src/components";
 import { IProduct } from "@/src/types/ProductModel";
 import ProductShowModal from "@/Modals/ProductShowModal";
 
@@ -42,7 +48,9 @@ const Home: React.FC<Props> = ({ title }: Props) => {
 
         <PriceList productWithCategories={homeCategories} />
 
-        {homeCategories.map((category, idx) => {
+        <OurProcess />
+
+        {/* {homeCategories.map((category, idx) => {
           return (
             <HomeSection
               key={category.id}
@@ -53,7 +61,7 @@ const Home: React.FC<Props> = ({ title }: Props) => {
               altColor={category.colors.alternative}
             />
           );
-        })}
+        })} */}
       </div>
     </>
   );
