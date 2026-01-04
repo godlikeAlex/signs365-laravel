@@ -31,10 +31,10 @@ const processSteps = [
 export default function OurProcess() {
   return (
     <section style={{ paddingBlock: 120 }}>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row">
           {processSteps.map((step, index) => (
-            <div className="col-md-3">
+            <div className="col-md-3 p-0">
               <div
                 className={styles.step}
                 style={{
@@ -42,12 +42,11 @@ export default function OurProcess() {
                   ["--alt-color" as string]: step.colors[1],
                 }}
               >
-                <SVGStar className={styles.stepIcon} />
+                {/* <SVGStar className={styles.stepIcon} /> */}
+                <span className={styles.stepNum}>0{index + 1}</span>
 
-                <h4>{step.title}</h4>
+                <h4 className={styles.title}>{step.title}</h4>
                 <p>{step.desc}</p>
-
-                <span className={styles.stepNum}>{index + 1}</span>
               </div>
             </div>
           ))}

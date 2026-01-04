@@ -1,23 +1,33 @@
 .step {
-  text-align: center;
   position: relative;
-  border: 2px solid var(--alt-color);
-  padding-block: 25px;
-  border-radius: 10px;
-  padding-top: 60px;
-  padding-inline: 15px;
+  // border: 2px solid var(--alt-color);
+  // border-radius: 10px;
+  // padding-top: 60px;
+  padding-block: 50px;
+  padding-inline: 50px;
+
   height: 100%;
   overflow: hidden;
+  background-color: var(--alt-color);
+
+  .title {
+    // position: relative;
+    margin-top: 15px;
+    font-size: 32px;
+    font-weight: bold;
+  }
 
   &__num {
-    position: absolute;
-    font-size: 80px;
-    z-index: -1;
+    // position: absolute;
+    font-size: 140px;
+    line-height: 120px;
     color: var(--primary-color);
     font-weight: bold;
     opacity: 0.4;
-    left: 0px;
-    top: -25px;
+    // top: -35px;
+    z-index: 0;
+    // left: 0px;
+    // top: -25px;
   }
 
   &__icon {
@@ -27,17 +37,17 @@
     position: relative;
   }
 
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    opacity: 0.9;
-    background-color: var(--primary-color);
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    filter: blur(50px);
-  }
+  // &::before {
+  //   content: "";
+  //   position: absolute;
+  //   width: 100px;
+  //   height: 100px;
+  //   opacity: 0.9;
+  //   background-color: var(--primary-color);
+  //   z-index: -1;
+  //   top: 50%;
+  //   left: 50%;
+  //   transform: translate(-50%, -50%);
+  //   filter: blur(50px);
+  // }
 }
