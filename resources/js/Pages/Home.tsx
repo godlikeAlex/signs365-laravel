@@ -3,6 +3,7 @@ import HomeSlider from "@/src/Pages/Home/HomeSlider";
 import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
 import {
+  AboutSection,
   HeroSection,
   HomeSection,
   OurProcess,
@@ -45,6 +46,8 @@ const Home: React.FC<Props> = ({ title }: Props) => {
         {/* </section> */}
 
         <HeroSection productWithCategories={homeCategories} />
+
+        <AboutSection />
 
         <PriceList productWithCategories={homeCategories} />
 

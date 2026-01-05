@@ -19,6 +19,7 @@ import styles from "./PriceList.module.scss";
 import classNames from "classnames";
 import Button from "../Button";
 import ProductCard from "../ProductCard";
+import { HomePageSection } from "../HomePageSection";
 
 const TWEEN_FACTOR_BASE = 0.84;
 
@@ -118,89 +119,96 @@ export default function PriceList({ productWithCategories }: Props) {
   }, [emblaApi, tweenOpacity]);
 
   return (
-    <section
+    <div
       className={styles.priceSection}
       style={{
-        padding: 120,
         ["--primary-color" as string]:
           productWithCategories[selectedIndex].colors.primary,
         ["--alt-color" as string]:
           productWithCategories[selectedIndex].colors.alternative,
       }}
     >
-      <div className="container">
-        <div className="col-md-12">
-          <div className="embla">
-            <div className="embla__viewport" ref={emblaRef}>
-              <div className="embla__container">
-                {productWithCategories.map((category, index) => (
-                  <div
-                    className="embla__slide"
-                    key={index}
-                    onClick={() => emblaApi.scrollTo(index)}
-                  >
-                    <div className={styles.slideContent}>
-                      <h5
-                        className={styles.categoryName}
-                        style={{
-                          color:
-                            selectedIndex === index
-                              ? category.colors.primary
-                              : undefined,
-                        }}
-                      >
-                        {category.title}
-                      </h5>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button
-              className={classNames(styles.button, styles.buttonPrev)}
-              onClick={onPrevButtonClick}
-            >
-              <svg width="14" height="26" viewBox="0 0 14 26" fill="none">
-                <path
-                  d="M1.5 24.5L12.5 13L1.5 1.5"
-                  stroke="#171109"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </button>
-            <button onClick={onNextButtonClick} className={styles.button}>
-              <svg width="14" height="26" viewBox="0 0 14 26" fill="none">
-                <path
-                  d="M1.5 24.5L12.5 13L1.5 1.5"
-                  stroke="#171109"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </button>
+      <HomePageSection>
+        <div className="container">
+          <div className="col-md-12">
+            <HomePageSection.Title
+              title="Custom Printing Solutions for Your Brand"
+              description="We offer high-quality print-on-demand services for businesses and individuals. From small batches to large orders — fast production, consistent quality, and fair pricing."
+            />
           </div>
-
-          <div className="row" style={{ rowGap: 30 }}>
-            {productWithCategories[selectedIndex].products.map(
-              (product, index) => (
-                <div
-                  key={product.id}
-                  className={classNames(
-                    "col-md-3",
-                    styles.productCardContainer
-                  )}
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <ProductCard {...product} />
+          <div className="col-md-12">
+            <div className="embla">
+              <div className="embla__viewport" ref={emblaRef}>
+                <div className="embla__container">
+                  {productWithCategories.map((category, index) => (
+                    <div
+                      className="embla__slide"
+                      key={index}
+                      onClick={() => emblaApi.scrollTo(index)}
+                    >
+                      <div className={styles.slideContent}>
+                        <h5
+                          className={styles.categoryName}
+                          style={{
+                            color:
+                              selectedIndex === index
+                                ? category.colors.primary
+                                : undefined,
+                          }}
+                        >
+                          {category.title}
+                        </h5>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )
-            )}
+              </div>
+              <button
+                className={classNames(styles.button, styles.buttonPrev)}
+                onClick={onPrevButtonClick}
+              >
+                <svg width="14" height="26" viewBox="0 0 14 26" fill="none">
+                  <path
+                    d="M1.5 24.5L12.5 13L1.5 1.5"
+                    stroke="#171109"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <button onClick={onNextButtonClick} className={styles.button}>
+                <svg width="14" height="26" viewBox="0 0 14 26" fill="none">
+                  <path
+                    d="M1.5 24.5L12.5 13L1.5 1.5"
+                    stroke="#171109"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <div className="row" style={{ rowGap: 30 }}>
+              {productWithCategories[selectedIndex].products.map(
+                (product, index) => (
+                  <div
+                    key={product.id}
+                    className={classNames(
+                      "col-md-3",
+                      styles.productCardContainer
+                    )}
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <ProductCard {...product} />
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </HomePageSection>
+    </div>
   );
 }

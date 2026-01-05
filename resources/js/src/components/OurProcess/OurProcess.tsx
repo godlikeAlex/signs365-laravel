@@ -1,5 +1,6 @@
 import SVGStar from "@/assets/icons/LARGE/star-check-large.svg?react";
 import styles from "./OurProcess.module.scss";
+import { HomePageSection } from "../HomePageSection";
 
 const processSteps = [
   {
@@ -30,7 +31,11 @@ const processSteps = [
 
 export default function OurProcess() {
   return (
-    <section style={{ paddingBlock: 120 }}>
+    <HomePageSection altColor style={{ paddingBottom: 0 }}>
+      <HomePageSection.Title
+        title="From Idea to Finished Product"
+        description="We’ve made custom printing simple and transparent. Just a few steps — and your design becomes a high-quality printed product, ready to ship."
+      />
       <div className="container-fluid">
         <div className="row">
           {processSteps.map((step, index) => (
@@ -52,6 +57,6 @@ export default function OurProcess() {
           ))}
         </div>
       </div>
-    </section>
+    </HomePageSection>
   );
 }

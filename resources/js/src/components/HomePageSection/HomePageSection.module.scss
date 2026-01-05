@@ -1,0 +1,21 @@
+.section {
+  background-color: transparent;
+
+  &__alt {
+    background-color: rgb(249, 249, 249);
+  }
+}
+
+.heading-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 50px;
+}
+
+.heading {
+  &__description {
+    opacity: 0.9;
+  }
+}

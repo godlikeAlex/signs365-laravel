@@ -51,6 +51,8 @@ import VariantsProductPlaceholder from "./VariantsProductPlaceholder";
 export { PriceList } from "./PriceList";
 export { HeroSection } from "./HeroSection";
 export { OurProcess } from "./OurProcess";
+export { AboutSection } from "./AboutSection";
+export { HomePageSection } from "./HomePageSection";
 
 export {
   ExpandableContent,
