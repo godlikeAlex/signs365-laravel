@@ -7,10 +7,7 @@ export default function AboutSection() {
       <div className="container">
         <div className="row flex-wrap align-items-center">
           <div className="col-xs-12 col-md-6">
-            <img
-              src="https://easywayinstall.com/team/owner-viktor.webp"
-              className="cover-image"
-            />
+            <img src="/img/owner-viktor.webp" className="cover-image" />
           </div>
           <div className="col-xs-12 col-md-6">
             <span className="highlight" style={{ color: "#FFCA19" }}>

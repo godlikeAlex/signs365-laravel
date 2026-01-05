@@ -1,13 +1,21 @@
+@use "@styles/mixins/media";
+
 .hero-section {
   text-align: center;
   // padding: 200px;
   background: url(/resources/js/assets/images/footer-bg.webp);
   padding-block: 150px;
+
+  background-repeat: no-repeat;
 }
 
 .title {
   font-size: 65px;
   font-weight: 900;
+
+  @include media.below-mobile {
+    font-size: 32px;
+  }
 }
 
 .description {
@@ -15,6 +23,10 @@
   color: #171109;
   margin-top: 30px;
   margin-bottom: 40px;
+
+  @include media.below-mobile {
+    font-size: 16px;
+  }
 }
 
 .hero-category {
@@ -46,6 +58,7 @@
 
 .categories {
   margin-top: 40px;
+  padding-left: 0;
 }
 
 .button {

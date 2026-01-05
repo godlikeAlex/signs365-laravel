@@ -1,3 +1,5 @@
+@use "@styles/mixins/media";
+
 .section {
   background-color: transparent;
 
@@ -11,10 +13,19 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 50px;
+  margin-bottom: 35px;
 }
 
 .heading {
+  &__title {
+    font-weight: bold;
+    font-size: 42px;
+
+    @include media.below-mobile {
+      font-size: 28px;
+    }
+  }
+
   &__description {
     opacity: 0.9;
   }

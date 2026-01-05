@@ -20,6 +20,7 @@ import classNames from "classnames";
 import Button from "../Button";
 import ProductCard from "../ProductCard";
 import { HomePageSection } from "../HomePageSection";
+import { CallToAction } from "../CallToAction";
 
 const TWEEN_FACTOR_BASE = 0.84;
 
@@ -206,6 +207,10 @@ export default function PriceList({ productWithCategories }: Props) {
                 )
               )}
             </div>
+          </div>
+
+          <div className="col-md-12 mt-5">
+            <CallToAction />
           </div>
         </div>
       </HomePageSection>

@@ -1,0 +1,57 @@
+@use "@styles/mixins/media";
+
+.row-form {
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  border-radius: 25px;
+  gap: 5px;
+  padding: 5px;
+  overflow: hidden;
+  margin-top: -20px;
+
+  @include media.below-mobile {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
+
+.wrapper-input {
+  margin: 0;
+}
+
+.input {
+  border: none;
+  border-right: 1px solid #a9a9a9;
+  border-radius: 0px;
+  background-color: white;
+
+  @include media.below-mobile {
+    border-right: unset;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  &:focus {
+    border: none;
+    border-right: 1px solid #a9a9a9;
+
+    @include media.below-mobile {
+      border-right: unset;
+      border-bottom: 1px solid #e5e5e5;
+    }
+  }
+}
+
+.action-container {
+  text-align: center;
+  padding: 80px;
+  border-radius: 10px;
+  background: url(/resources/js/assets/images/footer-bg.webp);
+  background-position: center;
+
+  @include media.below-mobile {
+    padding: 20px;
+    padding-block: 40px;
+  }
+}

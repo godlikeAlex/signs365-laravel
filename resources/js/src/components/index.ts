@@ -53,6 +53,7 @@ export { HeroSection } from "./HeroSection";
 export { OurProcess } from "./OurProcess";
 export { AboutSection } from "./AboutSection";
 export { HomePageSection } from "./HomePageSection";
+export { CallToAction } from "./CallToAction";
 
 export {
   ExpandableContent,

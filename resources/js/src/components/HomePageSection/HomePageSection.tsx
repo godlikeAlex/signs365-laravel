@@ -16,7 +16,7 @@ export default function HomePageSection({
   return (
     <section
       className={classNames(styles.section, altColor && styles.sectionAlt)}
-      style={{ paddingBlock: 80, ...style }}
+      style={{ paddingBlock: 100, ...style }}
     >
       {children}
     </section>
@@ -31,7 +31,7 @@ HomePageSection.Title = ({
   description?: string;
 }) => (
   <div className={styles.headingContainer}>
-    <h2>{title}</h2>
+    <h2 className={styles.headingTitle}>{title}</h2>
     <p className={styles.headingDescription}>{description}</p>
   </div>
 );
