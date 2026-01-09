@@ -4,6 +4,7 @@ import { Link } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
 import SVGLogo from "@/assets/images/logo.svg";
 import SVGPayments from "@/assets/images/payments.svg";
+import { ElfsightWidget } from "react-elfsight-widget";
 
 interface FooterProps {}
 
@@ -12,6 +13,7 @@ const Footer: React.FC<FooterProps> = ({}: FooterProps) => {
 
   return (
     <footer className="ps-footer ps-footer--5 pt-50">
+      <ElfsightWidget widgetId="8d571e27-54ba-4022-8413-67615b7db494" />
       <div className="container">
         <div className="ps-footer__middle">
           <div className="row">

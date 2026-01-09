@@ -1,25 +1,25 @@
 import classes from "./FeaturesBadge.module.scss";
 
-import MoneyIcon from "@/Pages/Product/assets/money.svg?react";
-import DeliveryIcon from "@/Pages/Product/assets/delivery.svg?react";
-import ShippingIcon from "@/Pages/Product/assets/shipping.svg?react";
+import ConsultationIcon from "@/Pages/Product/assets/consultation.svg?react";
+import ProposalIcon from "@/Pages/Product/assets/proposal.svg?react";
+import ExecutionIcon from "@/Pages/Product/assets/execution.svg?react";
 
 export default function FeaturesBadge() {
   return (
     <ul className={classes.featuresBadge}>
       <li className={classes.featuresBadgeItem}>
-        <MoneyIcon />
-        100% Money Back
+        <ConsultationIcon width={32} />
+        Initial Consultation
       </li>
 
       <li className={classes.featuresBadgeItem}>
-        <ShippingIcon />
-        Non-contact shipping
+        <ProposalIcon width={22} />
+        Detailed Proposal
       </li>
 
       <li className={classes.featuresBadgeItem}>
-        <DeliveryIcon />
-        Free delivery
+        <ExecutionIcon width={25} />
+        Project Execution
       </li>
     </ul>
   );

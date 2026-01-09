@@ -16,6 +16,7 @@ import classes from "./MobileHeader.module.scss";
 
 import "./style.css";
 import SearchForm from "../SearchForm";
+import { Logo } from "../Logo";
 
 interface MobileHeaderProps {}
 
@@ -61,7 +62,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
             </button>
             <div className={classes.mobileHeaderLogo}>
               <Link href="/">
-                <img src={MobileLogo} alt="Signs" />
+                <Logo />
                 {/* <img src={SVGLogo} alt="Signs" /> */}
               </Link>
             </div>

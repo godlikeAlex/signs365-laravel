@@ -3,7 +3,7 @@ import { generatePattern, InputMask } from "@react-input/mask";
 import React, { forwardRef, PropsWithChildren } from "react";
 
 export const INPUT_TELEPHONE_MASK = {
-  mask: "+1 (___) ___-__-__",
+  mask: "+1 (___) ___-____",
   replacement: { _: /\d/ },
 };
 

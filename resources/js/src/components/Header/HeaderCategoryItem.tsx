@@ -31,10 +31,20 @@ export default function HeaderCategoryItem({
     const windowWidth = document.documentElement.clientWidth;
 
     const bounding = submenuElement.getBoundingClientRect();
-    const offScreen = windowWidth - bounding.right;
+    const parentBounding = submenuElement.parentElement.getBoundingClientRect();
 
-    if (offScreen <= 0) {
-      submenuElement.style.left = `${windowWidth - bounding.right}px`;
+    const offscreenRight = windowWidth - bounding.right;
+    const offscreenLeft = bounding.left;
+
+    const padding = 15;
+
+    if (offscreenRight < 0) {
+      submenuElement.style.left = `${offscreenRight}px`;
+    } else if (offscreenLeft < 0) {
+      const shiftNeeded = Math.abs(offscreenLeft) + padding;
+      const currentLeft = bounding.left - parentBounding.left;
+      submenuElement.style.left = `${currentLeft + shiftNeeded}px`;
+      submenuElement.style.transform = "none";
     }
   }, []);
 

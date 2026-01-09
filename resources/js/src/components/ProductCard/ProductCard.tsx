@@ -46,7 +46,7 @@ export default function ProductCard({
             ["--link-color" as string]: category?.colors?.primary,
           }}
         >
-          Customize
+          View
         </div>
         <img
           className={classes.productCardImage}
@@ -75,15 +75,15 @@ export default function ProductCard({
           <p className={classes.productCardDescription}>{short_description}</p>
         )}
 
-        <div className={classes.cardRating}>
+        {/* <div className={classes.cardRating}>
           <Rating rating={rating} size={variant === "home" ? "sm" : "md"} />
-        </div>
+        </div> */}
 
-        {min_price && (
+        {/* {min_price && (
           <div className={classes.productCardPrice}>
             From <span>{min_price.toLocaleString()}$</span>
           </div>
-        )}
+        )} */}
       </div>
     </article>
   );

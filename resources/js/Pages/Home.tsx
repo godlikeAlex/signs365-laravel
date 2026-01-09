@@ -4,6 +4,7 @@ import { SharedInertiaData } from "@/src/types/inertiaTypes";
 import { usePage } from "@inertiajs/react";
 import {
   AboutSection,
+  BeforeAfter,
   FAQProduct,
   HeroSection,
   HomePageSection,
@@ -106,7 +107,9 @@ const Home: React.FC<Props> = ({ title }: Props) => {
 
         <OurProcess />
 
-        <HomePageSection>
+        <BeforeAfter />
+
+        <HomePageSection altColor>
           <HomePageSection.Title
             title="Sign Installation Questions"
             description="Expert guidance from a professional sign installation company serving projects across the country."

@@ -6,15 +6,18 @@ import classNames from "classnames";
 interface Props {
   altColor?: boolean;
   style?: CSSProperties | undefined;
+  id?: string;
 }
 
 export default function HomePageSection({
   children,
   altColor = false,
   style,
+  id,
 }: PropsWithChildren<Props>) {
   return (
     <section
+      id={id}
       className={classNames(styles.section, altColor && styles.sectionAlt)}
       style={{ paddingBlock: 100, ...style }}
     >

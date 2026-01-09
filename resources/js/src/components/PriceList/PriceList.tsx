@@ -121,6 +121,7 @@ export default function PriceList({ productWithCategories }: Props) {
 
   return (
     <div
+      id="prices"
       className={styles.priceSection}
       style={{
         ["--primary-color" as string]:
@@ -133,8 +134,8 @@ export default function PriceList({ productWithCategories }: Props) {
         <div className="container">
           <div className="col-md-12">
             <HomePageSection.Title
-              title="Custom Printing Solutions for Your Brand"
-              description="We offer high-quality print-on-demand services for businesses and individuals. From small batches to large orders — fast production, consistent quality, and fair pricing."
+              title="Done-For-You Print Project Management for Agencies & Print Shops"
+              description="We support print shops and marketing agencies by managing their printing and installation projects end-to-end. From planning and site coordination to production assistance and final installation — we make your projects run smoothly, on time, and with professional results your clients will love."
             />
           </div>
           <div className="col-md-12">

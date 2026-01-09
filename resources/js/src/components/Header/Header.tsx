@@ -17,6 +17,7 @@ import SearchForm from "../SearchForm";
 
 import classes from "./Header.module.scss";
 import "./body.scss";
+import { Logo } from "../Logo";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
@@ -36,12 +37,8 @@ export default function Header() {
         <div className={classNames("container", classes.topHeaderContainer)}>
           <div className={classNames(classes.logoContainer)}>
             <Link href="/">
-              <img src={SVGLogo} className={classes.navLogo} alt="Signs" />
+              <Logo />
             </Link>
-
-            <div className={classNames(classes.logoQuote)}>
-              Print. <br /> Install. <br /> Grow.
-            </div>
           </div>
 
           <ul className={classes.topHeaderLinks}>
@@ -52,7 +49,7 @@ export default function Header() {
             </li>
 
             <li className="top-header__nav-link">
-              <Link href="/about" className={classes.topHeaderLink}>
+              <Link href="#about" className={classes.topHeaderLink}>
                 About
               </Link>
             </li>

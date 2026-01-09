@@ -53,6 +53,7 @@
   &:hover {
     transform: translateY(-10px);
     background-color: var(--primary-color);
+    color: unset;
   }
 }
 

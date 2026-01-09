@@ -45,7 +45,7 @@ export default function OurProcess() {
       <div className="container-fluid">
         <div className="row">
           {processSteps.map((step, index) => (
-            <div className="col-md-3 p-0">
+            <div className="col-md-3 p-0" key={index}>
               <div
                 className={styles.step}
                 style={{

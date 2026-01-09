@@ -54,6 +54,8 @@ export { OurProcess } from "./OurProcess";
 export { AboutSection } from "./AboutSection";
 export { HomePageSection } from "./HomePageSection";
 export { CallToAction } from "./CallToAction";
+export { Logo } from "./Logo";
+export { BeforeAfter } from "./BeforeAfter";
 
 export {
   ExpandableContent,

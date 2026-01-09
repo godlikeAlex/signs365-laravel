@@ -1,13 +1,14 @@
+import { Link } from "@inertiajs/react";
 import Button from "../Button";
 import { HomePageSection } from "../HomePageSection";
 
 export default function AboutSection() {
   return (
-    <HomePageSection>
+    <HomePageSection id="about">
       <div className="container">
         <div className="row flex-wrap align-items-center">
           <div className="col-xs-12 col-md-6">
-            <img src="/img/owner-viktor.webp" className="cover-image" />
+            <img src="/img/team.webp" className="cover-image" />
           </div>
           <div className="col-xs-12 col-md-6">
             <span className="highlight" style={{ color: "#FFCA19" }}>
@@ -31,7 +32,9 @@ export default function AboutSection() {
               care of the rest.
             </p>
 
-            <Button className="w-100">Checkout our services</Button>
+            <Button className="w-100" component={Link} href="/contacts">
+              Contact us
+            </Button>
 
             <div className="toppadding_10 visible-md visible-lg"></div>
           </div>

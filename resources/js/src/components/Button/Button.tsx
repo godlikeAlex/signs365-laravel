@@ -1,24 +1,37 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import {
+  ButtonHTMLAttributes,
+  ComponentPropsWithoutRef,
+  ElementType,
+  PropsWithChildren,
+} from "react";
 
 import classes from "./Button.module.scss";
 import classNames from "classnames";
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseProps {
   variant?: "ghost" | "primary";
   color?: "primary" | "primary-600" | "primary-300";
   active?: boolean;
 }
 
-export default function Button({
+type PolymorphicComponentProps<C extends ElementType> = BaseProps &
+  ComponentPropsWithoutRef<C> & {
+    component?: C;
+  };
+
+export default function Button<C extends ElementType = "button">({
   children,
   active = false,
   variant = "primary",
   color = "primary",
   className,
+  component,
   ...props
-}: PropsWithChildren<Props>) {
+}: PropsWithChildren<PolymorphicComponentProps<C>>) {
+  const Component = component || "button";
+
   return (
-    <button
+    <Component
       className={classNames(
         classes.button,
         {
@@ -34,6 +47,6 @@ export default function Button({
       {...props}
     >
       {children}
-    </button>
+    </Component>
   );
 }
