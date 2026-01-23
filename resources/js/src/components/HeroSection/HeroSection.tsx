@@ -2,12 +2,15 @@ import { CategoryWithProductCards } from "@/src/types/models";
 import classes from "./HeroSection.module.scss";
 import Button from "../Button";
 import { Link } from "@inertiajs/react";
+import { useContactModal } from "../ContactFormModal";
 
 interface Props {
   productWithCategories: CategoryWithProductCards[];
 }
 
 export default function HeroSection({ productWithCategories }: Props) {
+  const { open } = useContactModal();
+
   return (
     <section className={classes.heroSection}>
       <div className="container">
@@ -23,11 +26,7 @@ export default function HeroSection({ productWithCategories }: Props) {
                 organized and under control
               </p>
 
-              <Button
-                component={Link}
-                href="#prices"
-                className={classes.button}
-              >
+              <Button className={classes.button} onClick={() => open(null)}>
                 Let's Start Your Project
               </Button>
             </div>

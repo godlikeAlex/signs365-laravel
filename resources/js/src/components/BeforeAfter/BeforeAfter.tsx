@@ -64,7 +64,7 @@ export default function BeforeAfter() {
   const swiperRef = useRef<SwiperType>();
 
   return (
-    <HomePageSection>
+    <HomePageSection altColor>
       <div className="container">
         <div className="row">
           <div className="col-md-12">

@@ -1,8 +1,11 @@
 import { Link } from "@inertiajs/react";
 import Button from "../Button";
 import { HomePageSection } from "../HomePageSection";
+import { useContactModal } from "../ContactFormModal";
 
 export default function AboutSection() {
+  const { open } = useContactModal();
+
   return (
     <HomePageSection id="about">
       <div className="container">
@@ -15,7 +18,7 @@ export default function AboutSection() {
               About Us
             </span>
             <h2 className="section_header">
-              Expert Commercial Sign Installers
+              Your Back-Office for Sign Installations
             </h2>
             <p>
               With the right crew, managing large projects becomes simple. We
@@ -32,7 +35,7 @@ export default function AboutSection() {
               care of the rest.
             </p>
 
-            <Button className="w-100" component={Link} href="/contacts">
+            <Button className="w-100" onClick={() => open(null)}>
               Contact us
             </Button>
 

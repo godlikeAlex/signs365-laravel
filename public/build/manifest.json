@@ -17,6 +17,14 @@
     "file": "assets/MyriadPro-Regular-f99d0251.woff",
     "src": "resources/js/assets/fonts/MyriadPro-Regular.woff"
   },
+  "resources/js/assets/fonts/sofia-pro/Sofia Pro Bold Az.otf": {
+    "file": "assets/Sofia Pro Bold Az-ad296799.otf",
+    "src": "resources/js/assets/fonts/sofia-pro/Sofia Pro Bold Az.otf"
+  },
+  "resources/js/assets/fonts/sofia-pro/Sofia Pro Regular Az.otf": {
+    "file": "assets/Sofia Pro Regular Az-5353dd58.otf",
+    "src": "resources/js/assets/fonts/sofia-pro/Sofia Pro Regular Az.otf"
+  },
   "resources/js/assets/icons/search.svg": {
     "file": "assets/search-c0f7c747.svg",
     "src": "resources/js/assets/icons/search.svg"
@@ -99,7 +107,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-6239f2cf.css",
+    "file": "assets/index-352e2c29.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -107,17 +115,8 @@
       "assets/logo-b7f2b602.svg",
       "assets/payments-6fb8da66.svg",
       "assets/placeholder-36f7fa4d.webp",
-      "assets/mobile-logo-22431dbf.svg",
       "assets/default-profile-26ed073c.png",
       "assets/footer-bg-cb47aba9.webp",
-      "assets/slide3-bg-94884eec.webp",
-      "assets/slide5-bg-1cf0e463.webp",
-      "assets/slide1-159b61ee.webp",
-      "assets/slide2-f73f5fb0.webp",
-      "assets/slide3-698ba2f9.webp",
-      "assets/slide5-mobile-2ea3f6f1.png",
-      "assets/price-06555448.webp",
-      "assets/truck-black-ff6bde55.svg",
       "assets/slide4-bg-dfd7666c.webp",
       "assets/slide4-1728951b.webp",
       "assets/slide5-fb5d11f9.webp",
@@ -125,17 +124,15 @@
       "assets/reward-b481f4ec.svg",
       "assets/search-c0f7c747.svg",
       "assets/MyriadPro-Regular-f99d0251.woff",
-      "assets/MyriadPro-Bold-cb0315a4.woff"
+      "assets/MyriadPro-Bold-cb0315a4.woff",
+      "assets/Sofia Pro Regular Az-5353dd58.otf",
+      "assets/Sofia Pro Bold Az-ad296799.otf"
     ],
     "css": [
-      "assets/index-6239f2cf.css"
+      "assets/index-352e2c29.css"
     ],
-    "file": "assets/index-381d9acf.js",
+    "file": "assets/index-18d12ad8.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
-  },
-  "resources/js/src/components/MobileHeader/mobile-logo.svg": {
-    "file": "assets/mobile-logo-22431dbf.svg",
-    "src": "resources/js/src/components/MobileHeader/mobile-logo.svg"
   }
 }

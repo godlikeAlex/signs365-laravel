@@ -12,6 +12,7 @@ import {
   OurProcess,
   PriceList,
   SEOHead,
+  WhyWeSection,
 } from "@/src/components";
 import { IProduct } from "@/src/types/ProductModel";
 import ProductShowModal from "@/Modals/ProductShowModal";
@@ -107,9 +108,11 @@ const Home: React.FC<Props> = ({ title }: Props) => {
 
         <OurProcess />
 
+        <WhyWeSection />
+
         <BeforeAfter />
 
-        <HomePageSection altColor>
+        <HomePageSection>
           <HomePageSection.Title
             title="Sign Installation Questions"
             description="Expert guidance from a professional sign installation company serving projects across the country."

@@ -62,7 +62,7 @@ Route::prefix("api/auth")->group(function () {
 
 Route::get("", [HomeController::class, "index"])->name("home");
 
-Route::get("about", [HomeController::class, "about"])->name("about");
+// Route::get("about", [HomeController::class, "about"])->name("about");
 
 Route::get("/shop/{product_category:slug}", [ShopController::class, "index"]);
 

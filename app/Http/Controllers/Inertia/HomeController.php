@@ -15,7 +15,7 @@ class HomeController extends Controller
   public function index()
   {
     return Inertia::render("Home", [
-      "title" => "Signs7 - Custom Signs & Graphics",
+      "title" => "Nationwide Printing & Signage Installation Company | Signs7",
     ]);
   }
 

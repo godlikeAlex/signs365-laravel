@@ -512,7 +512,7 @@
     slickCarousel();
     slidePriceWidget();
     lightgalleryVideos();
-    smoothScrollingTo(location.hash);
+    // smoothScrollingTo(location.hash);
     backgroundImage();
   });
 
