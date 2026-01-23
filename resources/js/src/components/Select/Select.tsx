@@ -3,6 +3,7 @@ import RSelect from "react-select";
 
 type Props = {
   size?: "sm" | "md";
+  error?: boolean;
 } & React.ComponentProps<typeof RSelect>;
 
 const stylesBySize = {
@@ -10,8 +11,9 @@ const stylesBySize = {
   md: { height: "46px", fontSize: "16px" },
 };
 
-export default function Select({ size = "md", ...props }: Props) {
+export default function Select({ size = "md", error = false, ...props }: Props) {
   const styles = stylesBySize[size];
+  const errorColor = "rgb(220, 48, 48)";
 
   return (
     <RSelect
@@ -21,7 +23,11 @@ export default function Select({ size = "md", ...props }: Props) {
         }),
         control: (baseStyles, dropDownState) => ({
           ...baseStyles,
-          borderColor: dropDownState.isFocused ? "#FFCA1A" : "#EAE9E5",
+          borderColor: error
+            ? errorColor
+            : dropDownState.isFocused
+            ? "#FFCA1A"
+            : "#EAE9E5",
           boxShadow: "unset",
           height: styles.height,
           borderRadius: "40px",
@@ -32,7 +38,7 @@ export default function Select({ size = "md", ...props }: Props) {
           fontSize: styles.fontSize,
 
           ":hover": {
-            borderColor: "#FFCA1A",
+            borderColor: error ? errorColor : "#FFCA1A",
           },
         }),
         menuList: (base) => ({
@@ -51,13 +57,29 @@ export default function Select({ size = "md", ...props }: Props) {
           background:
             state.isSelected || state.isFocused ? "#FFCA1A" : "#f0f2f5",
         }),
+        multiValue: (baseStyles) => ({
+          ...baseStyles,
+          backgroundColor: "#FFCA19",
+        }),
+        multiValueLabel: (baseStyles) => ({
+          ...baseStyles,
+          color: "white",
+        }),
+        multiValueRemove: (baseStyles) => ({
+          ...baseStyles,
+          color: "white",
+          ":hover": {
+            backgroundColor: "#666666",
+            color: "white",
+          },
+        }),
         singleValue: (baseStyles) => ({
           ...baseStyles,
-          color: "#595855",
+          color: error ? errorColor : "#595855",
         }),
         placeholder: (baseStyle) => ({
           ...baseStyle,
-          color: "#595855",
+          color: error ? errorColor : "#595855",
         }),
       }}
       {...props}

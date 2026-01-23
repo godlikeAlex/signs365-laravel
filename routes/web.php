@@ -147,6 +147,7 @@ Route::get("profile", [
 Route::get("/privacy", [HomeController::class, "privacy"]);
 Route::get("/terms", [HomeController::class, "terms"]);
 Route::get("/contacts", [HomeController::class, "contacts"]);
+Route::get("/vendor-cooperation", [HomeController::class, "vendorCooperation"]);
 
 Route::middleware("auth:sanctum")->group(function () {
   Route::get("profile", [InertiaProfileController::class, "indexProfile"]);

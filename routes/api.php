@@ -30,6 +30,7 @@ Route::post("/product-request/{product}", [
 ]);
 
 Route::post("/request/contacts", [ContactController::class, "requestContacts"]);
+Route::post("/request/vendor", [ContactController::class, "requestVendor"]);
 
 Route::get("/product/reviews/{product:id}", [ReviewController::class, "index"]);
 Route::post("/product/review/{product:id}", [

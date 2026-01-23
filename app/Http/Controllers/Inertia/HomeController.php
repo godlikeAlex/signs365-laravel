@@ -46,4 +46,11 @@ class HomeController extends Controller
       "title" => "Contacts",
     ]);
   }
+
+  public function vendorCooperation()
+  {
+    return Inertia::render("VendorContact", [
+      "title" => "Vendor Cooperation Request",
+    ]);
+  }
 }

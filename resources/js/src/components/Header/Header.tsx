@@ -55,6 +55,15 @@ export default function Header() {
             </li>
 
             <li className="top-header__nav-link">
+              <Link
+                href="/vendor-cooperation"
+                className={classes.topHeaderLink}
+              >
+                For Vendors
+              </Link>
+            </li>
+
+            <li className="top-header__nav-link">
               <Link href="/contacts" className={classes.topHeaderLink}>
                 Contact
               </Link>
