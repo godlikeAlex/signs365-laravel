@@ -115,10 +115,16 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
             <div className="divider" />
 
             <li>
+              <Link onClick={closeMenu} href={"/vendor-cooperation"}>
+                For Vendors
+              </Link>
+            </li>
+
+            {/* <li>
               <Link onClick={closeMenu} href={"/cart"}>
                 Shopping Cart | {cart.items.length}
               </Link>
-            </li>
+            </li> */}
 
             {auth.user ? (
               <>

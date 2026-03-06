@@ -107,7 +107,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-352e2c29.css",
+    "file": "assets/index-88b9e7c9.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -117,6 +117,7 @@
       "assets/placeholder-36f7fa4d.webp",
       "assets/default-profile-26ed073c.png",
       "assets/footer-bg-cb47aba9.webp",
+      "assets/promo-image-f4fce618.webp",
       "assets/slide4-bg-dfd7666c.webp",
       "assets/slide4-1728951b.webp",
       "assets/slide5-fb5d11f9.webp",
@@ -129,10 +130,14 @@
       "assets/Sofia Pro Bold Az-ad296799.otf"
     ],
     "css": [
-      "assets/index-352e2c29.css"
+      "assets/index-88b9e7c9.css"
     ],
-    "file": "assets/index-18d12ad8.js",
+    "file": "assets/index-88722d35.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
+  },
+  "resources/js/src/components/PromoFileSection/promo-image.webp": {
+    "file": "assets/promo-image-f4fce618.webp",
+    "src": "resources/js/src/components/PromoFileSection/promo-image.webp"
   }
 }

@@ -11,6 +11,7 @@ import {
   HomeSection,
   OurProcess,
   PriceList,
+  PromoFileSection,
   SEOHead,
   WhyWeSection,
 } from "@/src/components";
@@ -111,6 +112,8 @@ const Home: React.FC<Props> = ({ title }: Props) => {
         <WhyWeSection />
 
         <BeforeAfter />
+
+        <PromoFileSection />
 
         <HomePageSection>
           <HomePageSection.Title

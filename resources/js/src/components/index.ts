@@ -57,6 +57,7 @@ export { CallToAction } from "./CallToAction";
 export { Logo } from "./Logo";
 export { BeforeAfter } from "./BeforeAfter";
 export { WhyWeSection } from "./WhyWeSection";
+export { PromoFileSection } from "./PromoFileSection";
 
 export {
   ExpandableContent,
