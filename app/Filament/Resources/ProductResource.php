@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Filament\Resources\ProductResource\RelationManagers\AddonsRelationManager;
+use App\Filament\Resources\ProductResource\RelationManagers\EstimateFormsRelationManager;
 use App\Filament\Resources\ProductResource\RelationManagers\OptionsRelationManager;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -99,6 +100,10 @@ class ProductResource extends Resource
                     : "Prices will appear at the bottom after saving the product"
                 )
                 ->default(true),
+              Toggle::make("is_estimate")
+                ->label("Estimate product")
+                ->helperText("Enable estimate forms and estimate cart flow")
+                ->default(false),
 
               Toggle::make("published")
                 ->columnSpanFull()
@@ -165,6 +170,7 @@ class ProductResource extends Resource
       ->columns([
         Tables\Columns\TextColumn::make("order")->searchable(),
         Tables\Columns\TextColumn::make("title")->searchable(),
+        Tables\Columns\IconColumn::make("is_estimate")->boolean(),
         // Tables\Columns\TextColumn::make("prices_min_price")
         //   ->label("Start Price")
         //   ->min("prices", "price")
@@ -257,7 +263,7 @@ class ProductResource extends Resource
 
   public static function getRelations(): array
   {
-    return [OptionsRelationManager::class];
+    return [OptionsRelationManager::class, EstimateFormsRelationManager::class];
   }
 
   public static function getPages(): array
