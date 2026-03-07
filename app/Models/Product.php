@@ -31,6 +31,7 @@ class Product extends Model implements Sortable
     "sizes" => "array",
     "published" => "boolean",
     "with_checkout" => "boolean",
+    "is_estimate" => "boolean",
   ];
 
   /**
@@ -75,6 +76,11 @@ class Product extends Model implements Sortable
       "product_id",
       "product_addon_id"
     );
+  }
+
+  public function estimateForms(): HasMany
+  {
+    return $this->hasMany(EstimateForm::class)->orderBy("sort");
   }
 
   public function categories(): BelongsToMany

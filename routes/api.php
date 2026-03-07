@@ -112,6 +112,35 @@ Route::middleware("handleCityFromRequest")
     Route::get("{product}", [ProductController::class, "product"]);
   });
 
+Route::prefix("estimate")->group(function () {
+  Route::prefix("cart")->group(function () {
+    Route::get("", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "index",
+    ]);
+    Route::post("calculate-single", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "calculateSingle",
+    ]);
+    Route::post("add", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "add",
+    ]);
+    Route::post("update-quantity", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "updateQuantity",
+    ]);
+    Route::post("remove-item", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "removeItem",
+    ]);
+    Route::post("clear", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "clear",
+    ]);
+  });
+});
+
 Route::middleware("auth:sanctum")->group(function () {
   Route::post("/profile/edit", [
     \App\Http\Controllers\Api\UserController::class,

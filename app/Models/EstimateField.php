@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\AddonExtraDataTypeEnum;
+use App\Enums\AddonTypeEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
+
+class EstimateField extends Model implements Sortable
+{
+  use HasFactory, SoftDeletes, SortableTrait;
+
+  protected $guarded = [];
+
+  public $sortable = [
+    "order_column_name" => "order_column",
+    "sort_when_creating" => true,
+  ];
+
+  protected $casts = [
+    "type" => AddonTypeEnum::class,
+    "extra_data_type" => AddonExtraDataTypeEnum::class,
+    "with_qty" => "boolean",
+    "extra_data_content" => "json",
+    "is_active" => "boolean",
+  ];
+
+  public function form(): BelongsTo
+  {
+    return $this->belongsTo(EstimateForm::class, "estimate_form_id");
+  }
+}
