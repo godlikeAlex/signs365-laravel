@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
   public function up(): void
   {
-    Schema::create("estimate_fields", function (Blueprint $table) {
+    Schema::create("estimate_field_options", function (Blueprint $table) {
       $table->id();
 
       $table
-        ->foreignId("estimate_form_id")
-        ->constrained("estimate_forms")
+        ->foreignId("estimate_field_id")
+        ->constrained("estimate_fields")
         ->cascadeOnDelete();
 
       $table->string("title");
@@ -26,10 +26,10 @@ return new class extends Migration {
 
       $table->string("extra_data_type")->default("unset");
       $table->json("extra_data_content")->nullable();
+      $table->string("disclaimer")->nullable();
 
       $table->integer("order_column")->default(0);
       $table->boolean("is_active")->default(true);
-      $table->string("disclaimer")->nullable();
 
       $table->softDeletes();
       $table->timestamps();
@@ -38,6 +38,6 @@ return new class extends Migration {
 
   public function down(): void
   {
-    Schema::dropIfExists("estimate_fields");
+    Schema::dropIfExists("estimate_field_options");
   }
 };

@@ -7,12 +7,11 @@ use App\Enums\AddonTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
-class EstimateField extends Model implements Sortable
+class EstimateFieldOption extends Model implements Sortable
 {
   use HasFactory, SoftDeletes, SortableTrait;
 
@@ -29,16 +28,10 @@ class EstimateField extends Model implements Sortable
     "with_qty" => "boolean",
     "extra_data_content" => "json",
     "is_active" => "boolean",
-    "selection_mode" => "string",
   ];
 
-  public function form(): BelongsTo
+  public function field(): BelongsTo
   {
-    return $this->belongsTo(EstimateForm::class, "estimate_form_id");
-  }
-
-  public function options(): HasMany
-  {
-    return $this->hasMany(EstimateFieldOption::class)->orderBy("order_column");
+    return $this->belongsTo(EstimateField::class, "estimate_field_id");
   }
 }

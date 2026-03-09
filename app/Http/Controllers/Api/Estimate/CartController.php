@@ -125,7 +125,10 @@ class CartController extends Controller
           "server_price_dollars" => $priceInDollars,
           "shipping_price_cents" => $shippingPrice,
           "calculated_field_ids" => collect($calculatedFields)
-            ->pluck("id")
+            ->map(
+              fn($item) => $item["option_id"] ?? ($item["field_id"] ?? null)
+            )
+            ->filter()
             ->values()
             ->all(),
         ])

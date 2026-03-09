@@ -36,7 +36,12 @@ class CalculatorService
     $sqft = $this->getSQFT($width, $height, $unit);
 
     $formPrice = $this->calculateFormPrice($form, $quantity, $sqft);
-    $shippingPrice = $this->calculateShippingPrice($form, $width, $height, $sqft);
+    $shippingPrice = $this->calculateShippingPrice(
+      $form,
+      $width,
+      $height,
+      $sqft
+    );
 
     [$fieldsPrice, $calculatedFields] = $this->calculateFields(
       $form,
@@ -64,23 +69,36 @@ class CalculatorService
     ];
   }
 
-  private function calculateFormPrice(EstimateForm $form, int $quantity, float $sqft): float
-  {
+  private function calculateFormPrice(
+    EstimateForm $form,
+    int $quantity,
+    float $sqft
+  ): float {
     $minPrice = (int) $form->min_price;
 
     $calculated = match ($form->type) {
       OptionTypeEnum::SQFT => (float) $form->price * $sqft,
       OptionTypeEnum::SINGLE => (float) $form->price,
-      OptionTypeEnum::BY_QTY => $this->getRangePrice($form->range_prices ?? [], $quantity),
-      OptionTypeEnum::PER_QTY => $this->getRangePrice($form->per_quantity_prices ?? [], $quantity),
+      OptionTypeEnum::BY_QTY => $this->getRangePrice(
+        $form->range_prices ?? [],
+        $quantity
+      ),
+      OptionTypeEnum::PER_QTY => $this->getRangePrice(
+        $form->per_quantity_prices ?? [],
+        $quantity
+      ),
       default => 0,
     };
 
     return max($calculated, $minPrice);
   }
 
-  private function calculateShippingPrice(EstimateForm $form, float $width, float $height, float $sqft): float
-  {
+  private function calculateShippingPrice(
+    EstimateForm $form,
+    float $width,
+    float $height,
+    float $sqft
+  ): float {
     if (!$form->shipping) {
       return 0;
     }
@@ -89,7 +107,10 @@ class CalculatorService
 
     return match ($shipping->type->value) {
       "single" => $shipping->condition["price"] ?? 0,
-      "sqft" => $this->getRangePrice($shipping->condition["range_sqft"] ?? [], $sqft),
+      "sqft" => $this->getRangePrice(
+        $shipping->condition["range_sqft"] ?? [],
+        $sqft
+      ),
       "widthxheight" => $this->getWidthHeightRangePrice(
         $shipping->condition["range_wh"] ?? [],
         $width,
@@ -110,20 +131,84 @@ class CalculatorService
   ): array {
     $total = 0;
     $calculated = collect([]);
+    $selectedSingleFields = [];
+
+    $fieldsCollection = $form
+      ->fields()
+      ->with("options")
+      ->get();
+    $fieldsByID = $fieldsCollection->keyBy("id");
+    $optionsByID = collect([]);
+
+    foreach ($fieldsCollection as $formField) {
+      foreach ($formField->options as $option) {
+        $optionsByID->put($option->id, [$formField, $option]);
+      }
+    }
 
     foreach ($fields as $fieldData) {
-      $fieldID = (int) ($fieldData["id"] ?? 0);
       $fieldQty = (int) ($fieldData["quantity"] ?? 0);
+      $optionID = (int) ($fieldData["option_id"] ?? ($fieldData["id"] ?? 0));
+      $fieldID = (int) ($fieldData["field_id"] ?? ($fieldData["id"] ?? 0));
 
       /** @var EstimateField|null $field */
-      $field = $form->fields()->find($fieldID);
+      $field = null;
+      $option = null;
+
+      if ($optionID > 0 && $optionsByID->has($optionID)) {
+        [$field, $option] = $optionsByID->get($optionID);
+      } elseif ($fieldID > 0 && $fieldsByID->has($fieldID)) {
+        $field = $fieldsByID->get($fieldID);
+      }
 
       if (!$field || !$field->is_active) {
         continue;
       }
 
-      $total += $this->calculateSingleField(
-        $field,
+      if ($option) {
+        if (!$option->is_active) {
+          continue;
+        }
+
+        if (($field->selection_mode ?? "single") === "single") {
+          if (isset($selectedSingleFields[$field->id])) {
+            continue;
+          }
+
+          $selectedSingleFields[$field->id] = true;
+        }
+
+        $total += $this->calculateSingleAddonPrice(
+          $option->type,
+          (string) $option->condition,
+          $formPrice,
+          $sqft,
+          $unit,
+          $width,
+          $height
+        );
+
+        if ($option->with_qty) {
+          $safeQty = max($option->min_qty ?? 0, $fieldQty);
+
+          if (($option->max_qty ?? 0) > 0) {
+            $safeQty = min($safeQty, (int) $option->max_qty);
+          }
+
+          $total += (int) $option->per_item_price * $safeQty;
+        }
+
+        $calculated->push([
+          "field_id" => $field->id,
+          "option_id" => $option->id,
+        ]);
+        continue;
+      }
+
+      // Backward compatibility for old flat fields.
+      $total += $this->calculateSingleAddonPrice(
+        $field->type,
+        (string) $field->condition,
         $formPrice,
         $sqft,
         $unit,
@@ -141,31 +226,46 @@ class CalculatorService
         $total += (int) $field->per_item_price * $safeQty;
       }
 
-      $calculated->push($field);
+      $calculated->push([
+        "field_id" => $field->id,
+        "option_id" => null,
+      ]);
     }
 
     return [$total, $calculated];
   }
 
-  private function calculateSingleField(
-    EstimateField $field,
+  private function calculateSingleAddonPrice(
+    AddonTypeEnum|string|null $type,
+    string $condition,
     float $currentPrice,
     float $sqft,
     string $unit,
     float $width,
     float $height
   ): float {
-    $condition = (string) $field->condition;
+    if (!$type) {
+      return 0;
+    }
 
-    if ($field->type === AddonTypeEnum::SQFT) {
+    if (is_string($type)) {
+      try {
+        $type = AddonTypeEnum::from($type);
+      } catch (\Throwable $exception) {
+        return 0;
+      }
+    }
+
+    if ($type === AddonTypeEnum::SQFT) {
       return intval($condition) * 100 * $sqft;
     }
 
-    if ($field->type === AddonTypeEnum::LINEAR_FOOT) {
+    if ($type === AddonTypeEnum::LINEAR_FOOT) {
       $conditionPrice = intval($condition) * 100;
-      $linearFoot = $unit === "feet"
-        ? ($width + $height) * 2
-        : (($width + $height) * 2) / 12;
+      $linearFoot =
+        $unit === "feet"
+          ? ($width + $height) * 2
+          : (($width + $height) * 2) / 12;
 
       return $linearFoot * $conditionPrice;
     }
@@ -195,23 +295,25 @@ class CalculatorService
 
   private function getRangePrice(array $ranges, float|int $desiredNumber): float
   {
-    $price = collect($ranges)
-      ->first(function ($range) use ($desiredNumber) {
-        $from = intval($range["from"] ?? 0);
-        $to = intval($range["to"] ?? 0);
+    $price = collect($ranges)->first(function ($range) use ($desiredNumber) {
+      $from = intval($range["from"] ?? 0);
+      $to = intval($range["to"] ?? 0);
 
-        if ($to === -1 && $desiredNumber >= $from) {
-          return true;
-        }
+      if ($to === -1 && $desiredNumber >= $from) {
+        return true;
+      }
 
-        return $desiredNumber >= $from && $desiredNumber <= $to;
-      });
+      return $desiredNumber >= $from && $desiredNumber <= $to;
+    });
 
     return $price ? (float) ($price["price"] ?? 0) : 0;
   }
 
-  private function getWidthHeightRangePrice(array $ranges, float $width, float $height): float
-  {
+  private function getWidthHeightRangePrice(
+    array $ranges,
+    float $width,
+    float $height
+  ): float {
     $price = collect($ranges)->first(function ($range) use ($width, $height) {
       $fromWidth = floatval($range["from_width"] ?? 0);
       $toWidth = floatval($range["to_width"] ?? 0);
@@ -226,7 +328,7 @@ class CalculatorService
       return (float) ($price["price"] ?? 0);
     }
 
-    return (float) (($ranges[0]["price"] ?? 0));
+    return (float) ($ranges[0]["price"] ?? 0);
   }
 
   private function isNumberInRange(float $from, float $to, float $target): bool

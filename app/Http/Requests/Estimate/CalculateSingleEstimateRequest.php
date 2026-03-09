@@ -21,7 +21,9 @@ class CalculateSingleEstimateRequest extends FormRequest
       "width" => ["required", "numeric", "gt:0"],
       "height" => ["required", "numeric", "gt:0"],
       "fields" => ["array"],
-      "fields.*.id" => ["required", "integer"],
+      "fields.*.id" => ["nullable", "integer"],
+      "fields.*.field_id" => ["nullable", "integer"],
+      "fields.*.option_id" => ["nullable", "integer"],
       "fields.*.quantity" => ["nullable", "integer", "min:0"],
       "payload" => ["nullable", "array"],
     ];

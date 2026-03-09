@@ -402,96 +402,112 @@ class EstimateFormResource extends Resource
                 Forms\Components\TextInput::make("title")
                   ->required()
                   ->maxLength(255),
-                Forms\Components\Select::make("type")
-                  ->reactive()
-                  ->options(function (Closure $get) {
-                    $formType = $get("../../type");
-
-                    if (!$formType) {
-                      return [];
-                    }
-
-                    $requiredTypes =
-                      OptionTypeEnum::from($formType) === OptionTypeEnum::SQFT
-                        ? [
-                          AddonTypeEnum::FEE,
-                          AddonTypeEnum::SQFT,
-                          AddonTypeEnum::LINEAR_FOOT,
-                        ]
-                        : [AddonTypeEnum::FEE];
-
-                    return collect($requiredTypes)
-                      ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
-                      ->all();
-                  })
+                Forms\Components\Select::make("selection_mode")
+                  ->options([
+                    "single" => "Single choice (radio)",
+                    "multi" => "Multi choice (checkbox)",
+                  ])
+                  ->default("single")
                   ->required(),
-
-                Forms\Components\TextInput::make("condition")
-                  ->required()
-                  ->reactive()
-                  ->numeric(
-                    fn(Closure $get) => in_array($get("type"), [
-                      AddonTypeEnum::SQFT->value,
-                      AddonTypeEnum::LINEAR_FOOT->value,
-                    ])
-                  )
-                  ->regex(function (Closure $get) {
-                    if (
-                      in_array($get("type"), [
-                        AddonTypeEnum::SQFT->value,
-                        AddonTypeEnum::LINEAR_FOOT->value,
-                      ])
-                    ) {
-                      return "/\d/m";
-                    }
-
-                    return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
-                  })
-                  ->maxLength(255),
-                Forms\Components\Select::make("extra_data_type")
-                  ->reactive()
-                  ->required()
-                  ->options(function () {
-                    return collect(AddonExtraDataTypeEnum::cases())
-                      ->mapWithKeys(fn($enum) => [$enum->value => $enum->value])
-                      ->all();
-                  }),
-                Forms\Components\TextInput::make("group_addon")->helperText(
-                  "Can select one field from the selected group"
-                ),
-                Forms\Components\Textarea::make("disclaimer")->rows(2),
-                Forms\Components\TextInput::make("per_item_price")
-                  ->numeric()
-                  ->label("Per item price")
-                  ->dehydrateStateUsing(fn($state) => $state * 100)
-                  ->afterStateHydrated(function (TextInput $component, $state) {
-                    $component->state($state / 100);
-                  })
-                  ->required(fn(Closure $get) => $get("with_qty"))
-                  ->hidden(fn(Closure $get) => $get("with_qty") == false),
-
-                Forms\Components\Toggle::make("with_qty")
-                  ->columnSpanFull()
-                  ->reactive()
-                  ->label("This field will be with Quantity?"),
-
-                Forms\Components\TextInput::make("min_qty")
-                  ->numeric()
-                  ->label("Minimum Quantity")
-                  ->required(fn(Closure $get) => $get("with_qty"))
-                  ->hidden(fn(Closure $get) => $get("with_qty") == false)
-                  ->default(0),
-
-                Forms\Components\TextInput::make("max_qty")
-                  ->numeric()
-                  ->label("Maximum Quantity")
-                  ->required(fn(Closure $get) => $get("with_qty"))
-                  ->hidden(fn(Closure $get) => $get("with_qty") == false)
-                  ->default(0),
+                Forms\Components\Textarea::make("disclaimer")
+                  ->rows(2)
+                  ->columnSpanFull(),
 
                 Forms\Components\Toggle::make("is_active")
                   ->default(true)
                   ->columnSpanFull(),
+
+                Forms\Components\Repeater::make("options")
+                  ->relationship()
+                  ->disableLabel()
+                  ->minItems(1)
+                  ->columns(2)
+                  ->orderable("order_column")
+                  ->columnSpanFull()
+                  ->schema([
+                    Forms\Components\TextInput::make("title")
+                      ->required()
+                      ->maxLength(255),
+                    Forms\Components\Select::make("type")
+                      ->reactive()
+                      ->options(function () {
+                        return collect([
+                          AddonTypeEnum::FEE,
+                          AddonTypeEnum::SQFT,
+                          AddonTypeEnum::LINEAR_FOOT,
+                        ])
+                          ->mapWithKeys(
+                            fn($enum) => [$enum->value => $enum->value]
+                          )
+                          ->all();
+                      })
+                      ->required(),
+                    Forms\Components\TextInput::make("condition")
+                      ->required()
+                      ->reactive()
+                      ->numeric(
+                        fn(Closure $get) => in_array($get("type"), [
+                          AddonTypeEnum::SQFT->value,
+                          AddonTypeEnum::LINEAR_FOOT->value,
+                        ])
+                      )
+                      ->regex(function (Closure $get) {
+                        if (
+                          in_array($get("type"), [
+                            AddonTypeEnum::SQFT->value,
+                            AddonTypeEnum::LINEAR_FOOT->value,
+                          ])
+                        ) {
+                          return "/\d/m";
+                        }
+
+                        return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
+                      })
+                      ->maxLength(255),
+                    Forms\Components\Select::make("extra_data_type")
+                      ->reactive()
+                      ->required()
+                      ->default(AddonExtraDataTypeEnum::UNSET->value)
+                      ->options(function () {
+                        return collect(AddonExtraDataTypeEnum::cases())
+                          ->mapWithKeys(
+                            fn($enum) => [$enum->value => $enum->value]
+                          )
+                          ->all();
+                      }),
+                    Forms\Components\Textarea::make("disclaimer")->rows(2),
+                    Forms\Components\TextInput::make("per_item_price")
+                      ->numeric()
+                      ->label("Per item price")
+                      ->dehydrateStateUsing(fn($state) => $state * 100)
+                      ->afterStateHydrated(function (
+                        TextInput $component,
+                        $state
+                      ) {
+                        $component->state($state / 100);
+                      })
+                      ->required(fn(Closure $get) => $get("with_qty"))
+                      ->hidden(fn(Closure $get) => $get("with_qty") == false),
+                    Forms\Components\Toggle::make("with_qty")
+                      ->columnSpanFull()
+                      ->reactive()
+                      ->label("This option will be with Quantity?"),
+                    Forms\Components\TextInput::make("min_qty")
+                      ->numeric()
+                      ->label("Minimum Quantity")
+                      ->required(fn(Closure $get) => $get("with_qty"))
+                      ->hidden(fn(Closure $get) => $get("with_qty") == false)
+                      ->default(0),
+                    Forms\Components\TextInput::make("max_qty")
+                      ->numeric()
+                      ->label("Maximum Quantity")
+                      ->required(fn(Closure $get) => $get("with_qty"))
+                      ->hidden(fn(Closure $get) => $get("with_qty") == false)
+                      ->default(0),
+                    Forms\Components\Toggle::make("is_active")
+                      ->default(true)
+                      ->columnSpanFull(),
+                  ]),
               ]),
           ]),
         ])
