@@ -26,6 +26,7 @@ class ProductResource extends JsonResource
       "description" => $this->description,
       "short_description" => $this->short_description,
       "with_checkout" => $this->with_checkout,
+      "is_estimate" => $this->is_estimate,
       "published" => $this->published,
       "video" => $this->video
         ? ["path" => $this->video, "cover" => $this->video_cover]
@@ -38,6 +39,9 @@ class ProductResource extends JsonResource
       "seo_keywords" => $this->seo_keywords,
       "faq" => $this->faq ? $this->faq->content : null,
       "options" => OptionResource::collection($this->whenLoaded("options")),
+      "estimate_forms" => EstimateFormResource::collection(
+        $this->whenLoaded("estimateForms")
+      ),
       "rating" => $this->getAverageRatting(),
       "seo_schema" => $this->seo_schema,
       "total_reviews" => $this->reviews()

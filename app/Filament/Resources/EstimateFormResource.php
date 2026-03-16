@@ -2,18 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\AddonExtraDataTypeEnum;
 use App\Enums\AddonTypeEnum;
 use App\Enums\OptionTypeEnum;
-use App\Enums\ShippingTypeEnum;
 use App\Filament\Resources\EstimateFormResource\Pages;
 use App\Models\EstimateForm;
-use App\Models\Shipping;
-use App\Models\SizeList;
 use Closure;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
@@ -46,51 +40,7 @@ class EstimateFormResource extends Resource
               Forms\Components\Select::make("type")
                 ->required()
                 ->reactive()
-                ->afterStateUpdated(function ($state, Closure $set) {
-                  $set("shipping_id", null);
-                  $set("size_for_collect", false);
-                  $set("show_custom_sizes", false);
-                  $set("quantity_list", []);
-                })
                 ->options(OptionTypeEnum::listOptionsWithLabel()),
-
-              Forms\Components\Select::make("shipping_id")
-                ->searchable()
-                ->relationship("shipping", "title")
-                ->reactive()
-                ->preload()
-                ->options(function (Closure $get) {
-                  $currentType = $get("type");
-                  $customSizeIsSet = $get("show_custom_sizes");
-
-                  if (!$currentType) {
-                    return;
-                  }
-
-                  switch (OptionTypeEnum::from($currentType)) {
-                    case OptionTypeEnum::SQFT:
-                      $requiredTypes = [
-                        ShippingTypeEnum::SQFT,
-                        ShippingTypeEnum::SINGLE,
-                        ShippingTypeEnum::WIDTHxHEIGHT,
-                      ];
-                      break;
-                    case OptionTypeEnum::SINGLE:
-                    case OptionTypeEnum::BY_QTY:
-                    case OptionTypeEnum::PER_QTY:
-                      $requiredTypes = $customSizeIsSet
-                        ? [ShippingTypeEnum::WIDTHxHEIGHT]
-                        : [ShippingTypeEnum::SINGLE];
-                      break;
-                    default:
-                      $requiredTypes = [];
-                      break;
-                  }
-
-                  return Shipping::query()
-                    ->whereIn("type", $requiredTypes)
-                    ->pluck("title", "id");
-                }),
 
               Forms\Components\TextInput::make("price")
                 ->prefix('$')
@@ -112,96 +62,7 @@ class EstimateFormResource extends Resource
                 })
                 ->required(),
 
-              Toggle::make("need_file")
-                ->label("Need file?")
-                ->default(false)
-                ->columnSpanFull()
-                ->reactive(),
-
               Toggle::make("is_active")->default(true),
-
-              Toggle::make("size_for_collect")
-                ->default(false)
-                ->reactive()
-                ->columnSpanFull()
-                ->hidden(
-                  fn(Closure $get) => $get("type") &&
-                    OptionTypeEnum::from($get("type")) === OptionTypeEnum::SQFT
-                ),
-              Toggle::make("show_custom_sizes")
-                ->default(false)
-                ->reactive()
-                ->hidden(fn(Closure $get) => !$get("size_for_collect")),
-
-              Section::make("Quantity")
-                ->visible(
-                  fn(Closure $get) => $get("type")
-                    ? OptionTypeEnum::from($get("type")) ===
-                      OptionTypeEnum::PER_QTY
-                    : false
-                )
-                ->schema([
-                  Forms\Components\Repeater::make("quantity_list")
-                    ->reactive()
-                    ->schema([
-                      Forms\Components\TextInput::make("label"),
-                      Forms\Components\TextInput::make("quantity"),
-                    ]),
-                ]),
-
-              Section::make("Sizes")
-                ->hidden(fn(Closure $get) => $get("show_custom_sizes") == false)
-                ->schema([
-                  Section::make("Size Validation")
-                    ->schema([
-                      Forms\Components\TextInput::make("max_width")
-                        ->reactive()
-                        ->required()
-                        ->default(-1)
-                        ->numeric(),
-                      Forms\Components\TextInput::make("max_height")
-                        ->reactive()
-                        ->default(-1)
-                        ->required()
-                        ->numeric(),
-                    ])
-                    ->hidden(function (Closure $get) {
-                      $type = $get("type");
-                      $customSizeIsSet = $get("show_custom_sizes");
-
-                      if (!$type) {
-                        return true;
-                      }
-
-                      if ($customSizeIsSet) {
-                        return false;
-                      }
-
-                      return OptionTypeEnum::from($type) !==
-                        OptionTypeEnum::SQFT;
-                    }),
-                  Select::make("size_list_id")
-                    ->label("Size List")
-                    ->columnSpanFull()
-                    ->reactive()
-                    ->options(fn() => SizeList::query()->pluck("title", "id")),
-                  Toggle::make("prevent_user_input_size")
-                    ->hidden(fn(Closure $get) => !$get("size_list_id"))
-                    ->default(false)
-                    ->label("Prevent the user from entering their size?"),
-                ]),
-
-              Section::make("Common Data")
-                ->reactive()
-                ->hidden(
-                  fn(Closure $get) => !$get("size_for_collect") ||
-                    $get("show_custom_sizes")
-                )
-                ->statePath("common_data")
-                ->schema([
-                  Forms\Components\TextInput::make("static_width")->default(1),
-                  Forms\Components\TextInput::make("static_height")->default(1),
-                ]),
 
               Forms\Components\Repeater::make("range_prices")
                 ->columns(3)
@@ -402,15 +263,27 @@ class EstimateFormResource extends Resource
                 Forms\Components\TextInput::make("title")
                   ->required()
                   ->maxLength(255),
-                Forms\Components\Select::make("selection_mode")
+                Forms\Components\Select::make("field_type")
                   ->options([
-                    "single" => "Single choice (radio)",
-                    "multi" => "Multi choice (checkbox)",
+                    "radio" => "Radio (single option)",
+                    "checkbox" => "Checkbox (multi options)",
+                    "select" => "Select (single option)",
+                    "text" => "Text Input",
+                    "textarea" => "Textarea",
+                    "number" => "Number",
+                    "file" => "File Upload",
                   ])
-                  ->default("single")
+                  ->default("radio")
                   ->required(),
                 Forms\Components\Textarea::make("disclaimer")
                   ->rows(2)
+                  ->columnSpanFull(),
+                Forms\Components\TextInput::make("cart_label")
+                  ->label("Label in estimate card")
+                  ->maxLength(255)
+                  ->columnSpanFull(),
+                Forms\Components\Toggle::make("is_required")
+                  ->default(false)
                   ->columnSpanFull(),
 
                 Forms\Components\Toggle::make("is_active")
@@ -424,6 +297,13 @@ class EstimateFormResource extends Resource
                   ->columns(2)
                   ->orderable("order_column")
                   ->columnSpanFull()
+                  ->hidden(
+                    fn(Closure $get) => !in_array($get("field_type"), [
+                      "radio",
+                      "checkbox",
+                      "select",
+                    ])
+                  )
                   ->schema([
                     Forms\Components\TextInput::make("title")
                       ->required()
@@ -464,46 +344,7 @@ class EstimateFormResource extends Resource
                         return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
                       })
                       ->maxLength(255),
-                    Forms\Components\Select::make("extra_data_type")
-                      ->reactive()
-                      ->required()
-                      ->default(AddonExtraDataTypeEnum::UNSET->value)
-                      ->options(function () {
-                        return collect(AddonExtraDataTypeEnum::cases())
-                          ->mapWithKeys(
-                            fn($enum) => [$enum->value => $enum->value]
-                          )
-                          ->all();
-                      }),
                     Forms\Components\Textarea::make("disclaimer")->rows(2),
-                    Forms\Components\TextInput::make("per_item_price")
-                      ->numeric()
-                      ->label("Per item price")
-                      ->dehydrateStateUsing(fn($state) => $state * 100)
-                      ->afterStateHydrated(function (
-                        TextInput $component,
-                        $state
-                      ) {
-                        $component->state($state / 100);
-                      })
-                      ->required(fn(Closure $get) => $get("with_qty"))
-                      ->hidden(fn(Closure $get) => $get("with_qty") == false),
-                    Forms\Components\Toggle::make("with_qty")
-                      ->columnSpanFull()
-                      ->reactive()
-                      ->label("This option will be with Quantity?"),
-                    Forms\Components\TextInput::make("min_qty")
-                      ->numeric()
-                      ->label("Minimum Quantity")
-                      ->required(fn(Closure $get) => $get("with_qty"))
-                      ->hidden(fn(Closure $get) => $get("with_qty") == false)
-                      ->default(0),
-                    Forms\Components\TextInput::make("max_qty")
-                      ->numeric()
-                      ->label("Maximum Quantity")
-                      ->required(fn(Closure $get) => $get("with_qty"))
-                      ->hidden(fn(Closure $get) => $get("with_qty") == false)
-                      ->default(0),
                     Forms\Components\Toggle::make("is_active")
                       ->default(true)
                       ->columnSpanFull(),

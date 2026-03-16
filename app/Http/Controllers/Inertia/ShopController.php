@@ -50,6 +50,8 @@ class ShopController extends Controller
   ) {
     if ($product->with_checkout) {
       $product->load("options");
+    } elseif ($product->is_estimate) {
+      $product->load("estimateForms");
     }
 
     $productResource = new ProductResource($product);

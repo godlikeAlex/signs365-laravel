@@ -32,9 +32,13 @@ class EstimateFormsRelationManager extends RelationManager
         Tables\Columns\IconColumn::make("is_active")->boolean(),
       ])
       ->filters([Tables\Filters\TrashedFilter::make()])
-      ->headerActions([Tables\Actions\CreateAction::make()])
+      ->headerActions([
+        Tables\Actions\CreateAction::make(),
+        Tables\Actions\AttachAction::make()->preloadRecordSelect(),
+      ])
       ->actions([
         Tables\Actions\EditAction::make(),
+        Tables\Actions\DetachAction::make(),
         Tables\Actions\DeleteAction::make(),
         Tables\Actions\RestoreAction::make(),
       ])

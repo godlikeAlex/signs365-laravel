@@ -36,12 +36,7 @@ class CalculatorService
     $sqft = $this->getSQFT($width, $height, $unit);
 
     $formPrice = $this->calculateFormPrice($form, $quantity, $sqft);
-    $shippingPrice = $this->calculateShippingPrice(
-      $form,
-      $width,
-      $height,
-      $sqft
-    );
+    $shippingPrice = 0;
 
     [$fieldsPrice, $calculatedFields] = $this->calculateFields(
       $form,
@@ -93,33 +88,6 @@ class CalculatorService
     return max($calculated, $minPrice);
   }
 
-  private function calculateShippingPrice(
-    EstimateForm $form,
-    float $width,
-    float $height,
-    float $sqft
-  ): float {
-    if (!$form->shipping) {
-      return 0;
-    }
-
-    $shipping = $form->shipping;
-
-    return match ($shipping->type->value) {
-      "single" => $shipping->condition["price"] ?? 0,
-      "sqft" => $this->getRangePrice(
-        $shipping->condition["range_sqft"] ?? [],
-        $sqft
-      ),
-      "widthxheight" => $this->getWidthHeightRangePrice(
-        $shipping->condition["range_wh"] ?? [],
-        $width,
-        $height
-      ),
-      default => 0,
-    };
-  }
-
   private function calculateFields(
     EstimateForm $form,
     array $fields,
@@ -131,7 +99,6 @@ class CalculatorService
   ): array {
     $total = 0;
     $calculated = collect([]);
-    $selectedSingleFields = [];
 
     $fieldsCollection = $form
       ->fields()
@@ -147,7 +114,6 @@ class CalculatorService
     }
 
     foreach ($fields as $fieldData) {
-      $fieldQty = (int) ($fieldData["quantity"] ?? 0);
       $optionID = (int) ($fieldData["option_id"] ?? ($fieldData["id"] ?? 0));
       $fieldID = (int) ($fieldData["field_id"] ?? ($fieldData["id"] ?? 0));
 
@@ -170,14 +136,6 @@ class CalculatorService
           continue;
         }
 
-        if (($field->selection_mode ?? "single") === "single") {
-          if (isset($selectedSingleFields[$field->id])) {
-            continue;
-          }
-
-          $selectedSingleFields[$field->id] = true;
-        }
-
         $total += $this->calculateSingleAddonPrice(
           $option->type,
           (string) $option->condition,
@@ -187,16 +145,6 @@ class CalculatorService
           $width,
           $height
         );
-
-        if ($option->with_qty) {
-          $safeQty = max($option->min_qty ?? 0, $fieldQty);
-
-          if (($option->max_qty ?? 0) > 0) {
-            $safeQty = min($safeQty, (int) $option->max_qty);
-          }
-
-          $total += (int) $option->per_item_price * $safeQty;
-        }
 
         $calculated->push([
           "field_id" => $field->id,
@@ -215,16 +163,6 @@ class CalculatorService
         $width,
         $height
       );
-
-      if ($field->with_qty) {
-        $safeQty = max($field->min_qty ?? 0, $fieldQty);
-
-        if (($field->max_qty ?? 0) > 0) {
-          $safeQty = min($safeQty, (int) $field->max_qty);
-        }
-
-        $total += (int) $field->per_item_price * $safeQty;
-      }
 
       $calculated->push([
         "field_id" => $field->id,

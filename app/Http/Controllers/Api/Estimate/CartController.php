@@ -6,7 +6,6 @@ use App\DTO\Estimate\AddToEstimateCartDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Estimate\AddToEstimateCartRequest;
 use App\Http\Requests\Estimate\CalculateSingleEstimateRequest;
-use App\Models\EstimateForm;
 use App\Models\Product;
 use App\Services\Estimate\CalculatorService;
 use App\Services\Estimate\CartService;
@@ -79,8 +78,9 @@ class CartController extends Controller
       );
     }
 
-    $form = EstimateForm::query()
-      ->where("product_id", $product->id)
+    $form = $product
+      ->estimateForms()
+      ->wherePivot("is_active", true)
       ->find($data["estimate_form_id"]);
 
     if (!$form) {

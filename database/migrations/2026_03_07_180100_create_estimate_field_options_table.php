@@ -18,14 +18,6 @@ return new class extends Migration {
       $table->string("title");
       $table->string("condition");
       $table->string("type")->default("fee");
-
-      $table->boolean("with_qty")->default(false);
-      $table->integer("per_item_price")->default(0);
-      $table->integer("min_qty")->default(0);
-      $table->integer("max_qty")->default(0);
-
-      $table->string("extra_data_type")->default("unset");
-      $table->json("extra_data_content")->nullable();
       $table->string("disclaimer")->nullable();
 
       $table->integer("order_column")->default(0);

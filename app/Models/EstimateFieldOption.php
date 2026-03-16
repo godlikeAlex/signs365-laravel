@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\AddonExtraDataTypeEnum;
 use App\Enums\AddonTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,9 +23,6 @@ class EstimateFieldOption extends Model implements Sortable
 
   protected $casts = [
     "type" => AddonTypeEnum::class,
-    "extra_data_type" => AddonExtraDataTypeEnum::class,
-    "with_qty" => "boolean",
-    "extra_data_content" => "json",
     "is_active" => "boolean",
   ];
 

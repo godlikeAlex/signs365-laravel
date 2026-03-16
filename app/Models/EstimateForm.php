@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\OptionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,30 +17,19 @@ class EstimateForm extends Model
 
   protected $casts = [
     "type" => OptionTypeEnum::class,
-    "common_data" => "json",
     "range_prices" => "array",
     "per_quantity_prices" => "json",
-    "quantity_list" => "json",
-    "size_for_collect" => "boolean",
-    "show_custom_sizes" => "boolean",
-    "need_file" => "boolean",
-    "prevent_user_input_size" => "boolean",
     "is_active" => "boolean",
   ];
 
-  public function product(): BelongsTo
+  public function products(): BelongsToMany
   {
-    return $this->belongsTo(Product::class);
-  }
-
-  public function shipping(): BelongsTo
-  {
-    return $this->belongsTo(Shipping::class);
-  }
-
-  public function sizeList(): BelongsTo
-  {
-    return $this->belongsTo(SizeList::class);
+    return $this->belongsToMany(
+      Product::class,
+      "estimate_form_product",
+      "estimate_form_id",
+      "product_id"
+    )->withPivot(["sort", "is_active"]);
   }
 
   public function fields(): HasMany

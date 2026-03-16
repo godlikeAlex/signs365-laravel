@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\AddonExtraDataTypeEnum;
-use App\Enums\AddonTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,12 +22,9 @@ class EstimateField extends Model implements Sortable
   ];
 
   protected $casts = [
-    "type" => AddonTypeEnum::class,
-    "extra_data_type" => AddonExtraDataTypeEnum::class,
-    "with_qty" => "boolean",
-    "extra_data_content" => "json",
+    "field_type" => "string",
+    "is_required" => "boolean",
     "is_active" => "boolean",
-    "selection_mode" => "string",
   ];
 
   public function form(): BelongsTo

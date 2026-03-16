@@ -17,6 +17,25 @@ class ProductController extends Controller
       $product->load("options", "addons");
     }
 
+    if ($product->is_estimate) {
+      $product->load([
+        "estimateForms" => function ($query) {
+          $query
+            ->where("is_active", true)
+            ->wherePivot("is_active", true)
+            ->with([
+              "fields" => function ($fieldQuery) {
+                $fieldQuery->where("is_active", true)->with([
+                  "options" => function ($optionQuery) {
+                    $optionQuery->where("is_active", true);
+                  },
+                ]);
+              },
+            ]);
+        },
+      ]);
+    }
+
     return ["product" => new ProductResource($product)];
   }
 }

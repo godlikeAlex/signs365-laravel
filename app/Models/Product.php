@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -78,9 +77,16 @@ class Product extends Model implements Sortable
     );
   }
 
-  public function estimateForms(): HasMany
+  public function estimateForms(): BelongsToMany
   {
-    return $this->hasMany(EstimateForm::class)->orderBy("sort");
+    return $this->belongsToMany(
+      EstimateForm::class,
+      "estimate_form_product",
+      "product_id",
+      "estimate_form_id"
+    )
+      ->withPivot(["sort", "is_active"])
+      ->orderBy("estimate_form_product.sort");
   }
 
   public function categories(): BelongsToMany
