@@ -345,6 +345,34 @@ class EstimateFormResource extends Resource
                       })
                       ->maxLength(255),
                     Forms\Components\Textarea::make("disclaimer")->rows(2),
+                    Forms\Components\Repeater::make("extra_inputs")
+                      ->label("Extra Inputs")
+                      ->columnSpanFull()
+                      ->schema([
+                        Forms\Components\TextInput::make("id")
+                          ->label("UUID")
+                          ->disabled()
+                          ->dehydrated()
+                          ->afterStateHydrated(function (
+                            TextInput $component,
+                            $state
+                          ) {
+                            $component->state($state ?: Str::uuid());
+                          }),
+                        Forms\Components\Select::make("type")
+                          ->options([
+                            "file" => "File",
+                            "text" => "Text",
+                          ])
+                          ->default("text")
+                          ->required(),
+                        Forms\Components\TextInput::make("label")
+                          ->required()
+                          ->maxLength(255),
+                        Forms\Components\Toggle::make("required")->default(
+                          false
+                        ),
+                      ]),
                     Forms\Components\Toggle::make("is_active")
                       ->default(true)
                       ->columnSpanFull(),

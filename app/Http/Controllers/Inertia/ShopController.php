@@ -50,7 +50,9 @@ class ShopController extends Controller
   ) {
     if ($product->with_checkout) {
       $product->load("options");
-    } elseif ($product->is_estimate) {
+    }
+
+    if ($product->is_estimate) {
       $product->load("estimateForms");
     }
 

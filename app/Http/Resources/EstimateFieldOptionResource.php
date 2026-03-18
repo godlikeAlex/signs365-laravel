@@ -14,6 +14,7 @@ class EstimateFieldOptionResource extends JsonResource
       "type" => $this->type,
       "condition" => $this->condition,
       "disclaimer" => $this->disclaimer,
+      "extra_inputs" => $this->extra_inputs ?? [],
       "is_active" => (bool) $this->is_active,
     ];
   }
