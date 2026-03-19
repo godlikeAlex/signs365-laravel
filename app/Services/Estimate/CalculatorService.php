@@ -3,7 +3,7 @@
 namespace App\Services\Estimate;
 
 use App\Enums\AddonTypeEnum;
-use App\Enums\OptionTypeEnum;
+use App\Enums\EstimateFormTypeEnum;
 use App\Models\EstimateField;
 use App\Models\EstimateForm;
 use App\Models\Product;
@@ -51,7 +51,7 @@ class CalculatorService
     $total = $formPrice + $shippingPrice + $fieldsPrice;
 
     if (!$priceWithoutQuantity) {
-      if ($form->type !== OptionTypeEnum::PER_QTY) {
+      if ($form->type !== EstimateFormTypeEnum::PER_QTY) {
         $total = $total * $quantity;
       }
     }
@@ -69,21 +69,26 @@ class CalculatorService
     int $quantity,
     float $sqft
   ): float {
-    $minPrice = (int) $form->min_price;
-
     $calculated = match ($form->type) {
-      OptionTypeEnum::SQFT => (float) $form->price * $sqft,
-      OptionTypeEnum::SINGLE => (float) $form->price,
-      OptionTypeEnum::BY_QTY => $this->getRangePrice(
+      EstimateFormTypeEnum::SQFT => (float) $form->price * $sqft,
+      EstimateFormTypeEnum::SINGLE => (float) $form->price,
+      EstimateFormTypeEnum::BY_QTY => $this->getRangePrice(
         $form->range_prices ?? [],
         $quantity
       ),
-      OptionTypeEnum::PER_QTY => $this->getRangePrice(
+      EstimateFormTypeEnum::PER_QTY => $this->getRangePrice(
         $form->per_quantity_prices ?? [],
         $quantity
       ),
+      EstimateFormTypeEnum::NO_BASE => 0,
       default => 0,
     };
+
+    if ($form->type === EstimateFormTypeEnum::NO_BASE) {
+      return 0;
+    }
+
+    $minPrice = (int) $form->min_price;
 
     return max($calculated, $minPrice);
   }

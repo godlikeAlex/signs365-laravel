@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\AddonTypeEnum;
-use App\Enums\OptionTypeEnum;
+use App\Enums\EstimateFormTypeEnum;
 use App\Filament\Resources\EstimateFormResource\Pages;
 use App\Models\EstimateForm;
 use Closure;
@@ -40,27 +40,30 @@ class EstimateFormResource extends Resource
               Forms\Components\Select::make("type")
                 ->required()
                 ->reactive()
-                ->options(OptionTypeEnum::listOptionsWithLabel()),
+                ->options(EstimateFormTypeEnum::listOptionsWithLabel()),
 
               Forms\Components\TextInput::make("price")
                 ->prefix('$')
                 ->numeric()
-                ->hidden(fn(Closure $get) => $get("type") == "qty")
+                ->hidden(
+                  fn(Closure $get) => in_array($get("type"), ["qty", "no_base"])
+                )
                 ->dehydrateStateUsing(fn($state) => $state * 100)
                 ->afterStateHydrated(function (TextInput $component, $state) {
                   $component->state($state / 100);
                 })
-                ->required(),
+                ->required(fn(Closure $get) => $get("type") !== "no_base"),
 
               Forms\Components\TextInput::make("min_price")
                 ->prefix('$')
                 ->numeric()
                 ->default(0)
+                ->hidden(fn(Closure $get) => $get("type") === "no_base")
                 ->dehydrateStateUsing(fn($state) => $state * 100)
                 ->afterStateHydrated(function (TextInput $component, $state) {
                   $component->state($state / 100);
                 })
-                ->required(),
+                ->required(fn(Closure $get) => $get("type") !== "no_base"),
 
               Toggle::make("is_active")->default(true),
 

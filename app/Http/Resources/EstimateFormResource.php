@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\OptionTypeEnum;
+use App\Enums\EstimateFormTypeEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EstimateFormResource extends JsonResource
@@ -15,7 +15,7 @@ class EstimateFormResource extends JsonResource
       "type" => $this->type,
       "price" => (int) $this->price,
       "min_price" => (int) $this->min_price,
-      "showCalculator" => $this->type === OptionTypeEnum::SQFT,
+      "showCalculator" => $this->type === EstimateFormTypeEnum::SQFT,
       "fields" => EstimateFieldResource::collection($this->fields),
     ];
   }

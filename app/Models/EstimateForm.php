@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\OptionTypeEnum;
+use App\Enums\EstimateFormTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,7 +16,7 @@ class EstimateForm extends Model
   protected $guarded = [];
 
   protected $casts = [
-    "type" => OptionTypeEnum::class,
+    "type" => EstimateFormTypeEnum::class,
     "range_prices" => "array",
     "per_quantity_prices" => "json",
     "is_active" => "boolean",
