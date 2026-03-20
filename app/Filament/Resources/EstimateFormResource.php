@@ -267,13 +267,12 @@ class EstimateFormResource extends Resource
                   ->required()
                   ->maxLength(255),
                 Forms\Components\Select::make("field_type")
+                  ->reactive()
                   ->options([
-                    "radio" => "Radio (single option)",
-                    "checkbox" => "Checkbox (multi options)",
-                    "select" => "Select (single option)",
+                    "radio" => "Single select",
+                    "multiselect" => "Multi Select",
                     "text" => "Text Input",
                     "textarea" => "Textarea",
-                    "number" => "Number",
                     "file" => "File Upload",
                   ])
                   ->default("radio")
@@ -296,15 +295,22 @@ class EstimateFormResource extends Resource
                 Forms\Components\Repeater::make("options")
                   ->relationship()
                   ->disableLabel()
-                  ->minItems(1)
+                  ->default([])
                   ->columns(2)
                   ->orderable("order_column")
                   ->columnSpanFull()
                   ->hidden(
                     fn(Closure $get) => !in_array($get("field_type"), [
                       "radio",
+                      "multiselect",
                       "checkbox",
-                      "select",
+                    ])
+                  )
+                  ->dehydrated(
+                    fn(Closure $get) => in_array($get("field_type"), [
+                      "radio",
+                      "multiselect",
+                      "checkbox",
                     ])
                   )
                   ->schema([
@@ -353,8 +359,7 @@ class EstimateFormResource extends Resource
                       ->columnSpanFull()
                       ->schema([
                         Forms\Components\TextInput::make("id")
-                          ->label("UUID")
-                          ->disabled()
+                          ->hidden()
                           ->dehydrated()
                           ->afterStateHydrated(function (
                             TextInput $component,
@@ -365,7 +370,6 @@ class EstimateFormResource extends Resource
                         Forms\Components\Select::make("type")
                           ->options([
                             "file" => "File",
-                            "text" => "Text",
                           ])
                           ->default("text")
                           ->required(),

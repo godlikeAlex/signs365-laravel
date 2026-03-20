@@ -14,7 +14,18 @@ class EstimateField extends Model implements Sortable
 {
   use HasFactory, SoftDeletes, SortableTrait;
 
-  protected $guarded = [];
+  protected $fillable = [
+    "estimate_form_id",
+    "title",
+    "field_type",
+    "condition",
+    "type",
+    "order_column",
+    "is_required",
+    "cart_label",
+    "is_active",
+    "disclaimer",
+  ];
 
   public $sortable = [
     "order_column_name" => "order_column",
