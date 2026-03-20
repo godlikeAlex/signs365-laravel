@@ -1,0 +1,28 @@
+.container {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.price {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.status {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+}

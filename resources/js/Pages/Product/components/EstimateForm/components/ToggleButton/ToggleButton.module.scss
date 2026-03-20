@@ -1,0 +1,32 @@
+@use "@styles/variables/colors";
+
+.toggle-button {
+  font-size: 18px;
+
+  padding: 0;
+  height: 31px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: 12px;
+
+  color: colors.$black;
+
+  background-color: white;
+  border: 1px solid colors.$border-product;
+  border-radius: 15px;
+
+  transition: 0.3s;
+
+  cursor: pointer;
+
+  &--active {
+    background-color: colors.$primary300;
+    border-color: colors.$primary300;
+  }
+
+  &:hover {
+    background-color: colors.$primary300;
+    opacity: 0.7;
+  }
+}

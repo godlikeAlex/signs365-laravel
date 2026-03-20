@@ -25,6 +25,7 @@ import classes from "./Product.module.scss";
 import { Link } from "@inertiajs/react";
 import classNames from "classnames";
 import ProductReviews from "./components/ProductReviews";
+import { EstimateForm } from "./components/EstimateForm";
 
 interface Props {
   product: IProduct;
@@ -137,7 +138,9 @@ export default function Product({ product, category }: Props) {
 
               <FeaturesBadge />
 
-              {product.with_checkout ? (
+              {product.is_estimate ? (
+                <EstimateForm forms={product.estimate_forms} />
+              ) : product.with_checkout ? (
                 <ProductCheckoutForm />
               ) : (
                 <ProductContactForm productSlug={product.slug} />

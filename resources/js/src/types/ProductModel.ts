@@ -1,3 +1,4 @@
+import { ProductEstimateForm } from "./EstimateProductModel";
 import { ICategory } from "./models";
 
 export type CustomSize = {
@@ -124,16 +125,25 @@ type IProductBase = {
 
   images?: null | ProductImage[];
   categories?: Pick<ICategory, "title" | "slug" | "id" | "colors">[];
+  is_estimate: boolean;
 };
 
 export interface IProductCheckout extends IProductBase {
+  is_estimate: false;
   with_checkout: true;
   options: ProductOption[];
   start_at: number;
 }
 
-export interface IProductDefault extends IProductBase {
+export interface IProductEstimate extends IProductBase {
   with_checkout: false;
+  estimate_forms: ProductEstimateForm[];
+  is_estimate: true;
 }
 
-export type IProduct = IProductDefault | IProductCheckout;
+export interface IProductDefault extends IProductBase {
+  with_checkout: false;
+  is_estimate: false;
+}
+
+export type IProduct = IProductDefault | IProductCheckout | IProductEstimate;

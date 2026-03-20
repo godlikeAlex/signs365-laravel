@@ -5,6 +5,17 @@ import UploadIcon from "@/assets/icons/upload.svg?react";
 
 import classes from "./FileUpload.module.scss";
 
+const createPreviewUUID = () => {
+  if (
+    typeof globalThis.crypto !== "undefined" &&
+    typeof globalThis.crypto.randomUUID === "function"
+  ) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
 type FileWithPreview = {
   file: File;
   uuid: string;
@@ -22,7 +33,7 @@ export default function FileUpload({ files, onUpload, onUpdate }: Props) {
     () =>
       files.map((file) => ({
         file,
-        uuid: self.crypto.randomUUID(),
+        uuid: createPreviewUUID(),
         preview: URL.createObjectURL(file),
       })),
     [files]

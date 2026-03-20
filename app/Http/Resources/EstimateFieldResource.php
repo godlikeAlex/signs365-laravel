@@ -16,6 +16,7 @@ class EstimateFieldResource extends JsonResource
       "cart_label" => $this->cart_label,
       "disclaimer" => $this->disclaimer,
       "is_active" => (bool) $this->is_active,
+      "form_id" => $this->estimate_form_id,
       "options" => EstimateFieldOptionResource::collection($this->options),
     ];
   }

@@ -10,6 +10,81 @@ use App\Models\Product;
 
 class CalculatorService
 {
+  public function calculateBundle(
+    int $productID,
+    array $selectedFormIDs,
+    float $width,
+    float $height,
+    int $quantity,
+    array $fieldsByForm = [],
+    string $unit = "inches",
+    bool $priceWithoutQuantity = false
+  ): array {
+    $product = Product::query()->find($productID);
+
+    if (!$product || !$product->is_estimate) {
+      throw new \Exception("Estimate product not found.");
+    }
+
+    $totalInCents = 0;
+    $shippingTotalInCents = 0;
+    $breakdown = collect([]);
+    $calculatedFields = collect([]);
+
+    $uniqueFormIDs = collect($selectedFormIDs)
+      ->map(fn($id) => (int) $id)
+      ->filter(fn($id) => $id > 0)
+      ->unique()
+      ->values();
+
+    if ($uniqueFormIDs->isEmpty()) {
+      throw new \Exception("At least one estimate form is required.");
+    }
+
+    foreach ($uniqueFormIDs as $formID) {
+      $formFields =
+        $fieldsByForm[(string) $formID] ?? ($fieldsByForm[$formID] ?? []);
+
+      [
+        $formTotalInCents,
+        $formTotalInDollars,
+        $shippingInCents,
+        $formCalculatedFields,
+      ] = $this->calculate(
+        productID: $productID,
+        estimateFormID: $formID,
+        width: $width,
+        height: $height,
+        quantity: $quantity,
+        fields: is_array($formFields) ? $formFields : [],
+        unit: $unit,
+        priceWithoutQuantity: $priceWithoutQuantity
+      );
+
+      $totalInCents += (int) $formTotalInCents;
+      $shippingTotalInCents += (int) $shippingInCents;
+
+      $breakdown->push([
+        "estimate_form_id" => (int) $formID,
+        "price_cents" => (int) $formTotalInCents,
+        "price_dollars" => $formTotalInDollars,
+      ]);
+
+      $calculatedFields->push([
+        "estimate_form_id" => (int) $formID,
+        "fields" => $formCalculatedFields,
+      ]);
+    }
+
+    return [
+      (int) round($totalInCents),
+      number_format(round($totalInCents / 100, 2), 2),
+      (int) round($shippingTotalInCents),
+      $calculatedFields->values(),
+      $breakdown->values(),
+    ];
+  }
+
   public function calculate(
     int $productID,
     int $estimateFormID,
@@ -148,7 +223,8 @@ class CalculatorService
           $sqft,
           $unit,
           $width,
-          $height
+          $height,
+          (int) ($option->min_price ?? 0)
         );
 
         $calculated->push([
@@ -166,7 +242,8 @@ class CalculatorService
         $sqft,
         $unit,
         $width,
-        $height
+        $height,
+        0
       );
 
       $calculated->push([
@@ -185,7 +262,8 @@ class CalculatorService
     float $sqft,
     string $unit,
     float $width,
-    float $height
+    float $height,
+    int $minPrice = 0
   ): float {
     if (!$type) {
       return 0;
@@ -200,7 +278,8 @@ class CalculatorService
     }
 
     if ($type === AddonTypeEnum::SQFT) {
-      return intval($condition) * 100 * $sqft;
+      $calculated = intval($condition) * 100 * $sqft;
+      return $minPrice > 0 ? max($calculated, $minPrice) : $calculated;
     }
 
     if ($type === AddonTypeEnum::LINEAR_FOOT) {
@@ -210,7 +289,8 @@ class CalculatorService
           ? ($width + $height) * 2
           : (($width + $height) * 2) / 12;
 
-      return $linearFoot * $conditionPrice;
+      $calculated = $linearFoot * $conditionPrice;
+      return $minPrice > 0 ? max($calculated, $minPrice) : $calculated;
     }
 
     if (preg_match('/^[+-][0-9]+(\.[0-9]{1,2})?$/', $condition)) {

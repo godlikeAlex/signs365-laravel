@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Estimate;
 
 use App\DTO\Estimate\AddToEstimateCartDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Estimate\AddBundleToEstimateCartRequest;
 use App\Http\Requests\Estimate\AddToEstimateCartRequest;
+use App\Http\Requests\Estimate\CalculateBundleEstimateRequest;
 use App\Http\Requests\Estimate\CalculateSingleEstimateRequest;
 use App\Models\Product;
 use App\Services\Estimate\CalculatorService;
@@ -112,6 +114,7 @@ class CartController extends Controller
       new AddToEstimateCartDTO(
         productID: $product->id,
         formID: $form->id,
+        formIDs: [$form->id],
         title: $product->title,
         quantity: $data["quantity"],
         price: $priceInCents,
@@ -132,6 +135,178 @@ class CartController extends Controller
             ->values()
             ->all(),
         ])
+      )
+    );
+
+    return response()->json($this->cart->format());
+  }
+
+  public function calculateBundle(
+    CalculateBundleEstimateRequest $request,
+    CalculatorService $calculatorService
+  ) {
+    $data = $request->validated();
+
+    $product = Product::query()->find($data["product_id"]);
+
+    if (!$product || !$product->is_estimate) {
+      return response()->json(
+        [
+          "error" => "Estimate product not found.",
+        ],
+        404
+      );
+    }
+
+    $selectedFormIDs = collect($data["selected_form_ids"] ?? [])
+      ->map(fn($id) => (int) $id)
+      ->filter(fn($id) => $id > 0)
+      ->unique()
+      ->values();
+
+    $availableForms = $product
+      ->estimateForms()
+
+      ->whereIn("estimate_forms.id", $selectedFormIDs)
+      ->get(["estimate_forms.id"]);
+
+    if ($availableForms->count() !== $selectedFormIDs->count()) {
+      return response()->json(
+        [
+          "error" => "One or more estimate forms are invalid.",
+        ],
+        422
+      );
+    }
+
+    try {
+      [, $priceInDollars, , , $breakdown] = $calculatorService->calculateBundle(
+        productID: (int) $data["product_id"],
+        selectedFormIDs: $selectedFormIDs->all(),
+        width: (float) $data["width"],
+        height: (float) $data["height"],
+        quantity: (int) $data["quantity"],
+        fieldsByForm: $data["fields_by_form"] ?? [],
+        unit: $data["unit"] ?? "inches"
+      );
+
+      return response()->json([
+        "price" => $priceInDollars,
+        "breakdown" => $breakdown,
+      ]);
+    } catch (\Exception $exception) {
+      return response()->json(["error" => $exception->getMessage()], 400);
+    }
+  }
+
+  public function addBundle(
+    AddBundleToEstimateCartRequest $request,
+    CalculatorService $calculatorService
+  ) {
+    $data = $request->validated();
+
+    $product = Product::query()->find($data["product_id"]);
+
+    if (!$product || !$product->is_estimate) {
+      return response()->json(
+        [
+          "error" => "Estimate product not found.",
+        ],
+        404
+      );
+    }
+
+    $selectedFormIDs = collect($data["selected_form_ids"] ?? [])
+      ->map(fn($id) => (int) $id)
+      ->filter(fn($id) => $id > 0)
+      ->unique()
+      ->values();
+
+    $forms = $product
+      ->estimateForms()
+      ->whereIn("estimate_forms.id", $selectedFormIDs)
+      ->get(["estimate_forms.id", "estimate_forms.type"]);
+
+    if ($forms->count() !== $selectedFormIDs->count()) {
+      return response()->json(
+        [
+          "error" => "One or more estimate forms are invalid.",
+        ],
+        422
+      );
+    }
+
+    [
+      $priceWithoutQtyInCents,
+      $priceWithoutQtyInDollars,
+      $shippingPrice,
+      $calculatedFields,
+      $breakdownWithoutQty,
+    ] = $calculatorService->calculateBundle(
+      productID: (int) $data["product_id"],
+      selectedFormIDs: $selectedFormIDs->all(),
+      width: (float) $data["width"],
+      height: (float) $data["height"],
+      quantity: (int) $data["quantity"],
+      fieldsByForm: $data["fields_by_form"] ?? [],
+      unit: $data["unit"] ?? "inches",
+      priceWithoutQuantity: true
+    );
+
+    [
+      $lineTotalInCents,
+      $lineTotalInDollars,
+    ] = $calculatorService->calculateBundle(
+      productID: (int) $data["product_id"],
+      selectedFormIDs: $selectedFormIDs->all(),
+      width: (float) $data["width"],
+      height: (float) $data["height"],
+      quantity: (int) $data["quantity"],
+      fieldsByForm: $data["fields_by_form"] ?? [],
+      unit: $data["unit"] ?? "inches",
+      priceWithoutQuantity: false
+    );
+
+    $this->cart->add(
+      new AddToEstimateCartDTO(
+        productID: $product->id,
+        formID: null,
+        formIDs: $selectedFormIDs->all(),
+        title: $product->title,
+        quantity: (int) $data["quantity"],
+        price: (int) $priceWithoutQtyInCents,
+        payload: [
+          "estimate_form_ids" => $selectedFormIDs->all(),
+          "form_types" => $forms
+            ->mapWithKeys(fn($form) => [$form->id => $form->type?->value])
+            ->all(),
+          "is_bundle" => true,
+          "unit" => $data["unit"] ?? "inches",
+          "width" => (float) $data["width"],
+          "height" => (float) $data["height"],
+          "selected_fields_by_form" => $data["fields_by_form"] ?? [],
+          "server_price_dollars" => $priceWithoutQtyInDollars,
+          "line_total_dollars" => $lineTotalInDollars,
+          "line_total_cents" => (int) $lineTotalInCents,
+          "shipping_price_cents" => $shippingPrice,
+          "breakdown" => $breakdownWithoutQty,
+          "calculated_field_ids_by_form" => collect($calculatedFields)
+            ->map(function ($formFields) {
+              return [
+                "estimate_form_id" => $formFields["estimate_form_id"] ?? null,
+                "ids" => collect($formFields["fields"] ?? [])
+                  ->map(
+                    fn($item) => $item["option_id"] ??
+                      ($item["field_id"] ?? null)
+                  )
+                  ->filter()
+                  ->values()
+                  ->all(),
+              ];
+            })
+            ->values()
+            ->all(),
+        ]
       )
     );
 

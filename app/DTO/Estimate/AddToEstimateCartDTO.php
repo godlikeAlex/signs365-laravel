@@ -6,7 +6,8 @@ class AddToEstimateCartDTO
 {
   public function __construct(
     public int $productID,
-    public int $formID,
+    public ?int $formID,
+    public array $formIDs,
     public string $title,
     public int $quantity,
     public int $price,

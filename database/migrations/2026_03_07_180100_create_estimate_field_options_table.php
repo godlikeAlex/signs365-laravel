@@ -19,6 +19,7 @@ return new class extends Migration {
       $table->string("condition");
       $table->string("type")->default("fee");
       $table->string("disclaimer")->nullable();
+      $table->json("extra_inputs")->nullable();
 
       $table->integer("order_column")->default(0);
       $table->boolean("is_active")->default(true);

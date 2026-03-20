@@ -23,6 +23,7 @@ class EstimateFieldOption extends Model implements Sortable
 
   protected $casts = [
     "type" => AddonTypeEnum::class,
+    "min_price" => "integer",
     "extra_inputs" => "array",
     "is_active" => "boolean",
   ];

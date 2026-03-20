@@ -26,10 +26,11 @@ class CartService
         "title" => $dto->title,
       ],
       "estimate_form_id" => $dto->formID,
+      "estimate_form_ids" => $dto->formIDs,
       "payload" => $dto->payload,
     ];
 
-    $id = md5($dto->productID . $dto->formID . serialize($options));
+    $id = md5($dto->productID . serialize($dto->formIDs) . serialize($options));
 
     $this->cart->add([
       "id" => $id,
@@ -80,11 +81,19 @@ class CartService
       ->sort()
       ->values()
       ->map(function ($item) {
-        $formType = $item->attributes["payload"]["form_type"] ?? null;
-        $lineTotalInCents =
-          $formType === "per_qty"
-            ? $item->price
-            : $item->price * $item->quantity;
+        $lockedLineTotal =
+          (bool) ($item->attributes["payload"]["lock_line_total"] ?? false);
+        $lineTotalInCents = $lockedLineTotal
+          ? $item->attributes["payload"]["line_total_cents"] ?? null
+          : null;
+
+        if ($lineTotalInCents === null) {
+          $formType = $item->attributes["payload"]["form_type"] ?? null;
+          $lineTotalInCents =
+            $formType === "per_qty"
+              ? $item->price
+              : $item->price * $item->quantity;
+        }
 
         return [
           "id" => $item->id,
@@ -99,6 +108,15 @@ class CartService
     $subtotalInCents = $this->cart
       ->getContent()
       ->reduce(function ($carry, $item) {
+        $lockedLineTotal =
+          (bool) ($item->attributes["payload"]["lock_line_total"] ?? false);
+        $lineTotalInCents = $lockedLineTotal
+          ? $item->attributes["payload"]["line_total_cents"] ?? null
+          : null;
+        if ($lineTotalInCents !== null) {
+          return $carry + (int) $lineTotalInCents;
+        }
+
         $formType = $item->attributes["payload"]["form_type"] ?? null;
 
         if ($formType === "per_qty") {

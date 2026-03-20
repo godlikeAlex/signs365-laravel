@@ -353,6 +353,27 @@ class EstimateFormResource extends Resource
                         return '/^[+-][0-9]+(\.[0-9]{1,2})?[%]?$/';
                       })
                       ->maxLength(255),
+                    Forms\Components\TextInput::make("min_price")
+                      ->label("Min price")
+                      ->numeric()
+                      ->default(0)
+                      ->minValue(0)
+                      ->prefix("$")
+                      ->dehydrateStateUsing(
+                        fn($state) => intval(round($state * 100))
+                      )
+                      ->afterStateHydrated(function (
+                        TextInput $component,
+                        $state
+                      ) {
+                        $component->state($state / 100);
+                      })
+                      ->hidden(
+                        fn(Closure $get) => !in_array($get("type"), [
+                          AddonTypeEnum::SQFT->value,
+                          AddonTypeEnum::LINEAR_FOOT->value,
+                        ])
+                      ),
                     Forms\Components\Textarea::make("disclaimer")->rows(2),
                     Forms\Components\Repeater::make("extra_inputs")
                       ->label("Extra Inputs")
