@@ -52,7 +52,8 @@ export default function EstimateForm({ forms }: Props) {
   async function onSubmit(data: EstimateFormSchema) {
     const body = EstimateFormService.buildBundleParams(
       page.props.product.id,
-      data
+      data,
+      forms
     );
 
     try {
@@ -63,7 +64,7 @@ export default function EstimateForm({ forms }: Props) {
         type: "success",
         position: "bottom-center",
         theme: "colored",
-        onClick: () => router.visit("/cart"),
+        onClick: () => router.visit("/estimate/cart"),
       });
     } catch (error) {
       toast("Failed to add estimate", {
@@ -112,6 +113,7 @@ export default function EstimateForm({ forms }: Props) {
         <EstimateSubmitBar
           productID={page.props.product.id}
           isSubmitting={isSubmitting}
+          forms={forms}
         />
       </form>
     </FormProvider>

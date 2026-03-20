@@ -12,6 +12,7 @@ use Inertia\Middleware;
 use Str;
 use Tightenco\Ziggy\Ziggy;
 use App\Services\Cart\Service as CartService;
+use App\Services\Estimate\CartService as EstimateCartService;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -41,7 +42,6 @@ class HandleInertiaRequests extends Middleware
    */
   public function share(Request $request)
   {
-    $cart = null;
     $city = City::where("id", $request->get("city"))->first() ?? City::first();
 
     if (Cookie::has("cart")) {
@@ -53,6 +53,20 @@ class HandleInertiaRequests extends Middleware
       Cookie::queue($cookie);
 
       $cart = new CartService($uuid, $city);
+    }
+
+    if (Cookie::has("cart_estimate")) {
+      $estimateCart = new EstimateCartService(Cookie::get("cart_estimate"));
+    } else {
+      $estimateUuid = Str::uuid();
+      $estimateCookie = Cookie::forever(
+        name: "cart_estimate",
+        value: $estimateUuid,
+        httpOnly: true
+      );
+
+      Cookie::queue($estimateCookie);
+      $estimateCart = new EstimateCartService($estimateUuid);
     }
 
     $geoInfo = geoip($request->ip());
@@ -77,6 +91,7 @@ class HandleInertiaRequests extends Middleware
         )->toJson()
       ),
       "cart" => $cart->format($city),
+      "estimate_cart" => $estimateCart->format(),
       "auth" => [
         "user" => $request->user(),
       ],

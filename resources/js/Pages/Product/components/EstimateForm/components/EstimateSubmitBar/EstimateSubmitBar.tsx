@@ -5,13 +5,19 @@ import EstimateCartService from "../../EstimateCart.service";
 import { EstimateFormSchema } from "../../schema/estimate-form-schema";
 import classes from "./EstimateSubmitBar.module.scss";
 import { Button } from "@/src/components";
+import { ProductEstimateForm } from "@/src/types/EstimateProductModel";
 
 interface Props {
   productID: number;
   isSubmitting: boolean;
+  forms: ProductEstimateForm[];
 }
 
-export default function EstimateSubmitBar({ productID, isSubmitting }: Props) {
+export default function EstimateSubmitBar({
+  productID,
+  isSubmitting,
+  forms,
+}: Props) {
   const [estimatePrice, setEstimatePrice] = React.useState<string | null>(null);
   const [isCalculating, setIsCalculating] = React.useState(false);
   const requestIDRef = React.useRef(0);
@@ -72,14 +78,18 @@ export default function EstimateSubmitBar({ productID, isSubmitting }: Props) {
       const controller = new AbortController();
       calculateAbortRef.current = controller;
 
-      const body = EstimateFormService.buildBundleParams(productID, {
-        selectedFormIds,
-        quantity: quantity ?? 1,
-        width,
-        height,
-        unit,
-        dynamicEstimateFields,
-      });
+      const body = EstimateFormService.buildBundleParams(
+        productID,
+        {
+          selectedFormIds,
+          quantity: quantity ?? 1,
+          width,
+          height,
+          unit,
+          dynamicEstimateFields,
+        },
+        forms
+      );
 
       try {
         setIsCalculating(true);

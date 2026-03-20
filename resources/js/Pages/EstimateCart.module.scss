@@ -1,0 +1,157 @@
+.content {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.receipt {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+}
+
+.receiptHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #d8d8d8;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.receiptTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.qty {
+  font-size: 13px;
+  color: #666;
+}
+
+.removeButton {
+  border: 0;
+  background: transparent;
+  color: #cf1322;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.removeButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.rowLabel {
+  color: #666;
+  flex: 1;
+}
+
+.rowValue {
+  flex: 1;
+  text-align: right;
+  font-weight: 500;
+}
+
+.rowLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.rowValueText {
+  color: #333;
+}
+
+.rowValueText::after {
+  content: "•";
+  margin-left: 6px;
+  color: #b9b9b9;
+}
+
+.rowLink {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.lineTotal {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #d8d8d8;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sidebar {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 16px;
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+  background: #fff;
+}
+
+.sidebarTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.sideRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.disclaimer {
+  margin-top: 12px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: #666;
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 0;
+}
+
+@media (max-width: 991px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}

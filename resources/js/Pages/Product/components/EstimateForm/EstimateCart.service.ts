@@ -2,7 +2,9 @@ import api from "@/src/api";
 
 export type EstimateFieldValue =
   | string
+  | string[]
   | number
+  | number[]
   | boolean
   | File
   | File[]

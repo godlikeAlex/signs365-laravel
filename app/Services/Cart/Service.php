@@ -310,7 +310,17 @@ class Service
     $this->cart->condition($createdTaxCondition);
 
     $totalItems = $this->cart->getContent()->reduce(function ($carry, $item) {
-      if ($item->attributes["productOptionType"] === OptionTypeEnum::PER_QTY) {
+      $productOptionType = data_get($item, "attributes.productOptionType");
+
+      if (is_string($productOptionType)) {
+        try {
+          $productOptionType = OptionTypeEnum::from($productOptionType);
+        } catch (\Throwable $exception) {
+          $productOptionType = null;
+        }
+      }
+
+      if ($productOptionType === OptionTypeEnum::PER_QTY) {
         return $carry + $item->price;
       }
 

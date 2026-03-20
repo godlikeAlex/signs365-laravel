@@ -122,9 +122,17 @@ Route::prefix("estimate")->group(function () {
       \App\Http\Controllers\Api\Estimate\CartController::class,
       "calculateSingle",
     ]);
+    Route::post("calculate-bundle", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "calculateBundle",
+    ]);
     Route::post("add", [
       \App\Http\Controllers\Api\Estimate\CartController::class,
       "add",
+    ]);
+    Route::post("add-bundle", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "addBundle",
     ]);
     Route::post("update-quantity", [
       \App\Http\Controllers\Api\Estimate\CartController::class,

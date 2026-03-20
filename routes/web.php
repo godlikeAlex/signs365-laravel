@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\AuthSocialiteController;
 use App\Http\Controllers\Inertia\CartController;
+use App\Http\Controllers\Inertia\EstimateCartController;
 use App\Http\Controllers\Inertia\HomeController;
 use App\Http\Controllers\Inertia\ProfileController as InertiaProfileController;
 use App\Http\Controllers\Inertia\ShopController;
@@ -74,6 +75,7 @@ Route::get("/shop/{product_category:slug}/{product:slug}", [
 Route::get("/search", [SearchController::class, "search"]);
 
 Route::get("/cart", [CartController::class, "renderCart"]);
+Route::get("/estimate/cart", [EstimateCartController::class, "index"]);
 Route::post("/cart/toggle-with-installation", [
   CartController::class,
   "toggleExtraInstallation",
