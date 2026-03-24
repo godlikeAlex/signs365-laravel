@@ -12,6 +12,8 @@ import CartIcon from "@/assets/icons/SMALL/cart.svg?react";
 import UserIcon from "@/assets/icons/SMALL/user.svg?react";
 import SVGLogo from "@/assets/images/logo.svg";
 
+import TrustIcon from "./trust.svg?react";
+
 import HeaderCategoryItem from "./HeaderCategoryItem";
 import SearchForm from "../SearchForm";
 
@@ -70,8 +72,14 @@ export default function Header() {
             </li>
           </ul>
 
-          <div className={classes.topHeaderSearchContainer}>
+          {/*<div className={classes.topHeaderSearchContainer}>
             <SearchForm />
+          </div>*/}
+
+          <div className={classes.topHeaderMyProject}>
+            <Link href="/estimate/cart">
+              <TrustIcon width={16} /> My Projects
+            </Link>
           </div>
 
           <div className={classes.topHeaderRight}>

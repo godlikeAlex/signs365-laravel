@@ -8,11 +8,15 @@ use App\Http\Requests\Estimate\AddBundleToEstimateCartRequest;
 use App\Http\Requests\Estimate\AddToEstimateCartRequest;
 use App\Http\Requests\Estimate\CalculateBundleEstimateRequest;
 use App\Http\Requests\Estimate\CalculateSingleEstimateRequest;
+use App\Http\Requests\Estimate\SubmitEstimateRequest;
+use App\Mail\EstimateRequestAdmin;
+use App\Mail\EstimateRequestReceived;
 use App\Models\Product;
 use App\Services\Estimate\CalculatorService;
 use App\Services\Estimate\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CartController extends Controller
@@ -343,6 +347,48 @@ class CartController extends Controller
   public function clear()
   {
     $this->cart->clear();
+
+    return response()->json(["ok" => true]);
+  }
+
+  public function submit(SubmitEstimateRequest $request)
+  {
+    $cart = $this->cart->format();
+
+    if (count($cart["items"] ?? []) === 0) {
+      return response()->json(["error" => "Estimate cart is empty."], 422);
+    }
+
+    $submittedAt = now()
+      ->setTimezone("America/New_York")
+      ->format("Y-m-d H:i T");
+
+    $adminRecipients = collect([
+      env("NOTIFICATION_EMAIL"),
+      config("mail.from.address"),
+    ])
+      ->filter()
+      ->unique()
+      ->values();
+
+    foreach ($adminRecipients as $email) {
+      Mail::to($email)->later(
+        now()->addMinute(),
+        new EstimateRequestAdmin(
+          customerName: $request->string("name")->toString(),
+          customerEmail: $request->string("email")->toString(),
+          customerPhone: $request->string("phone")->toString(),
+          customerAddress: $request->string("address")->toString(),
+          cart: $cart,
+          submittedAt: $submittedAt
+        )
+      );
+    }
+
+    Mail::to($request->string("email")->toString())->later(
+      now()->addMinute(),
+      new EstimateRequestReceived(name: $request->string("name")->toString())
+    );
 
     return response()->json(["ok" => true]);
   }

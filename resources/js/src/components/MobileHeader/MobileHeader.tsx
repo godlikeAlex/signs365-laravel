@@ -22,7 +22,11 @@ interface MobileHeaderProps {}
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const { homeCategories, cart, auth } = usePage<SharedInertiaData>().props;
+  const {
+    homeCategories,
+    estimate_cart: cart,
+    auth,
+  } = usePage<SharedInertiaData>().props;
 
   useEffect(() => {
     document.body.style.overflow = showMenu ? "hidden" : "auto";
@@ -70,7 +74,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
 
           <ul className="mobile-header__actions">
             <li>
-              <Link className="cart-mobile-icon" href="/cart">
+              <Link className="cart-mobile-icon" href="/estimate/cart">
                 <CartIcon className="mobile-header-icon" />
 
                 {cart.items.length > 0 ? (

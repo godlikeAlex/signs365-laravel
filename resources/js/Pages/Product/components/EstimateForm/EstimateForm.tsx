@@ -60,11 +60,16 @@ export default function EstimateForm({ forms }: Props) {
       setIsSubmitting(true);
       await EstimateCartService.addBundle(body);
 
-      toast("Successfully added to estimate", {
-        type: "success",
-        position: "bottom-center",
-        theme: "colored",
-        onClick: () => router.visit("/estimate/cart"),
+      router.reload({
+        only: ["estimate_cart"],
+        onSuccess: () => {
+          toast("Successfully added to estimate", {
+            type: "success",
+            position: "bottom-center",
+            theme: "colored",
+            onClick: () => router.visit("/estimate/cart"),
+          });
+        },
       });
     } catch (error) {
       toast("Failed to add estimate", {

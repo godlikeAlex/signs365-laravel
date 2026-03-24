@@ -105,6 +105,8 @@ export default function Product({ product, category }: Props) {
                   {product.title}
                 </Breadcrumbs.Item>
               </Breadcrumbs>
+
+              <h1 className={classes.productName}>{product.title}</h1>
             </div>
 
             <div className="col-md-6">
@@ -116,7 +118,7 @@ export default function Product({ product, category }: Props) {
             </div>
 
             <div className="col-md-6">
-              <BadgeCategory
+              {/*<BadgeCategory
                 primaryColor={category.colors.primary}
                 alternativeColor={category.colors.alternative}
                 format="lg"
@@ -124,19 +126,17 @@ export default function Product({ product, category }: Props) {
                 href={`/shop/${category.slug}`}
               >
                 {category.title}
-              </BadgeCategory>
-
-              <h1 className={classes.productName}>{product.title}</h1>
+              </BadgeCategory>*/}
 
               <p className={classes.productDescriptionPreview}>
                 {product.short_description}
               </p>
 
-              <div className={classes.productRatingContainer}>
+              {/*<div className={classes.productRatingContainer}>
                 <Rating rating={product.rating} size="lg" />
               </div>
 
-              <FeaturesBadge />
+              <FeaturesBadge />*/}
 
               {product.is_estimate ? (
                 <EstimateForm forms={product.estimate_forms} />

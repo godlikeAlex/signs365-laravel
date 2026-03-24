@@ -146,6 +146,10 @@ Route::prefix("estimate")->group(function () {
       \App\Http\Controllers\Api\Estimate\CartController::class,
       "clear",
     ]);
+    Route::post("submit", [
+      \App\Http\Controllers\Api\Estimate\CartController::class,
+      "submit",
+    ]);
   });
 });
 

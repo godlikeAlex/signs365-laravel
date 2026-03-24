@@ -68,6 +68,13 @@ export interface EstimateRemoveItemParams {
   item_id: string;
 }
 
+export interface SubmitEstimateRequestParams {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
 function appendNestedFormData(
   formData: FormData,
   key: string,
@@ -178,5 +185,9 @@ export default class EstimateCartService {
 
   static clear() {
     return api.post<{ ok: true }>("/estimate/cart/clear");
+  }
+
+  static submit(body: SubmitEstimateRequestParams) {
+    return api.post<{ ok: true }>("/estimate/cart/submit", body);
   }
 }

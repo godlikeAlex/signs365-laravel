@@ -44,6 +44,17 @@ $topHeaderColor: #595855;
     width: 348px;
   }
 
+  &__my-project {
+    margin-left: auto;
+
+    & a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+  }
+
   &__container {
     display: flex;
     // justify-content: space-between;
@@ -71,7 +82,7 @@ $topHeaderColor: #595855;
   }
 
   &__right {
-    margin-left: auto;
+    /* margin-left: auto; */
     text-align: right;
   }
 

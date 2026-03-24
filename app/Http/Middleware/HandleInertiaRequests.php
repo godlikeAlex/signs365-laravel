@@ -69,19 +69,21 @@ class HandleInertiaRequests extends Middleware
       $estimateCart = new EstimateCartService($estimateUuid);
     }
 
-    $geoInfo = geoip($request->ip());
+    // $geoInfo = geoip($request->ip());
 
-    if ($request->session()->missing("currentCity")) {
-      if ($geoInfo->country === "United States") {
-        $request->session()->put("currentCity", $geoInfo->state_name);
-      } else {
-        $request->session()->put("currentCity", "New York");
-      }
-    } else {
-      $request
-        ->session()
-        ->put("currentCity", $request->session()->get("currentCity"));
-    }
+    // if ($request->session()->missing("currentCity")) {
+    //   if ($geoInfo->country === "United States") {
+    //     $request->session()->put("currentCity", $geoInfo->state_name);
+    //   } else {
+    //     $request->session()->put("currentCity", "New York");
+    //   }
+    // } else {
+    //   $request
+    //     ->session()
+    //     ->put("currentCity", $request->session()->get("currentCity"));
+    // }
+
+    $request->session()->put("currentCity", "New York");
 
     return array_merge(parent::share($request), [
       "currentCity" => $request->session()->get("currentCity"),

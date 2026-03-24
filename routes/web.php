@@ -74,7 +74,8 @@ Route::get("/shop/{product_category:slug}/{product:slug}", [
 
 Route::get("/search", [SearchController::class, "search"]);
 
-Route::get("/cart", [CartController::class, "renderCart"]);
+Route::get("/cart", [EstimateCartController::class, "index"]);
+// Route::get("/cart", [CartController::class, "renderCart"]);
 Route::get("/estimate/cart", [EstimateCartController::class, "index"]);
 Route::post("/cart/toggle-with-installation", [
   CartController::class,

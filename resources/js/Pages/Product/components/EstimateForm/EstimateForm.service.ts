@@ -14,6 +14,16 @@ type EstimateFormFieldWithFormID = EstimateFormField & {
 };
 
 export default class EstimateFormService {
+  private static normalizeMinOne(value: unknown): number {
+    const parsed = Number(value);
+
+    if (!Number.isFinite(parsed) || parsed < 1) {
+      return 1;
+    }
+
+    return parsed;
+  }
+
   private static buildExtraInputSources(params: {
     forms: ProductEstimateForm[];
     selectedFormIds: number[];
@@ -173,13 +183,17 @@ export default class EstimateFormService {
     data: EstimateFormSchema,
     forms?: ProductEstimateForm[]
   ): EstimateBundleParams {
+    const normalizedQuantity = this.normalizeMinOne(data.quantity);
+    const normalizedWidth = this.normalizeMinOne(data.width);
+    const normalizedHeight = this.normalizeMinOne(data.height);
+
     return {
       product_id: productID,
       selected_form_ids: data.selectedFormIds,
-      quantity: data.quantity,
+      quantity: normalizedQuantity,
       unit: data.unit,
-      width: data.width,
-      height: data.height,
+      width: normalizedWidth,
+      height: normalizedHeight,
       fields_by_form: this.buildFieldsByForm(data.dynamicEstimateFields, {
         forms,
         selectedFormIds: data.selectedFormIds,

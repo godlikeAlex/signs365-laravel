@@ -76,17 +76,27 @@ export const customStyles = {
   }),
   control: (provided) => ({
     ...provided,
-    padding: "10px 20px",
-    border: "none",
-    background: "#f0f2f5",
+    padding: "0px 20px",
+    border: "1px solid #eae9e5",
+    background: "#eae9e5",
     fontSize: 16,
     borderRadius: "40px",
     minWidth: "100%",
+    boxShadow: "none !important",
+    ":active": {
+      border: "1px solid #ffca1a",
+    },
+    ":focus": {
+      border: "1px solid #ffca1a",
+    },
+    ":hover": {
+      border: "1px solid #ffca1a",
+    },
   }),
   valueContainer: (provided) => ({
     ...provided,
     // display: "none",
-    color: "red",
+    color: "#595855",
     margin: 0,
     padding: 0,
   }),
@@ -99,7 +109,7 @@ export const customStyles = {
   input: (base) => ({
     ...base,
     color: "#595855",
-    fontSize: "16px",
+    fontSize: "18px",
     margin: 0,
     padding: 0,
     width: "100%",
@@ -109,7 +119,12 @@ export const customStyles = {
     ...base,
     margin: 0,
     padding: 0,
+    fontSize: "18px",
     width: "100%",
+    ":placeholder": {
+      fontSize: "18px",
+      color: "red",
+    },
   }),
 };
 

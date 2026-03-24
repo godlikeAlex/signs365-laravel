@@ -268,13 +268,25 @@ class EstimateFormResource extends Resource
                   ->maxLength(255),
                 Forms\Components\Select::make("field_type")
                   ->reactive()
-                  ->options([
-                    "radio" => "Single select",
-                    "multiselect" => "Multi Select",
-                    "text" => "Text Input",
-                    "textarea" => "Textarea",
-                    "file" => "File Upload",
-                  ])
+                  ->options(function (Closure $get) {
+                    $options = [
+                      "radio" => "Single select",
+                      "text" => "Text Input",
+                      "textarea" => "Textarea",
+                      "file" => "File Upload",
+                    ];
+
+                    // Keep legacy values editable, but don't expose them for new picks.
+                    if ($get("field_type") === "multiselect") {
+                      $options["multiselect"] = "Multi Select (Legacy)";
+                    }
+
+                    if ($get("field_type") === "checkbox") {
+                      $options["checkbox"] = "Checkbox (Legacy)";
+                    }
+
+                    return $options;
+                  })
                   ->default("radio")
                   ->required(),
                 Forms\Components\Textarea::make("disclaimer")

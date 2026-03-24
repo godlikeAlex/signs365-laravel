@@ -99,10 +99,21 @@ class ProductResource extends Resource
                     ? ""
                     : "Prices will appear at the bottom after saving the product"
                 )
+                ->afterStateUpdated(function (Closure $set, $state) {
+                  if ($state) {
+                    $set("is_estimate", false);
+                  }
+                })
                 ->default(true),
               Toggle::make("is_estimate")
                 ->label("Estimate product")
                 ->helperText("Enable estimate forms and estimate cart flow")
+                ->reactive()
+                ->afterStateUpdated(function (Closure $set, $state) {
+                  if ($state) {
+                    $set("with_checkout", false);
+                  }
+                })
                 ->default(false),
 
               Toggle::make("published")
