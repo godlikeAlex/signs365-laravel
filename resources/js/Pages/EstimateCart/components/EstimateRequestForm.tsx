@@ -27,7 +27,7 @@ const estimateRequestSchema = z.object({
 type EstimateRequestFormValues = z.infer<typeof estimateRequestSchema>;
 
 interface Props {
-  onSubmitSuccess: () => void;
+  onSubmitSuccess: (requestID: string) => void;
 }
 
 export default function EstimateRequestForm({ onSubmitSuccess }: Props) {
@@ -53,14 +53,14 @@ export default function EstimateRequestForm({ onSubmitSuccess }: Props) {
     try {
       setIsSubmitting(true);
 
-      await EstimateCartService.submit({
+      const { data } = await EstimateCartService.submit({
         name: values.name,
         email: values.email,
         phone: values.number,
         address: values.address?.label ?? "",
       });
 
-      onSubmitSuccess();
+      onSubmitSuccess(data.request_id);
     } catch (error) {
       toast("Failed to submit estimate. Please try again.", {
         type: "error",

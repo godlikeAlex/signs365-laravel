@@ -2,6 +2,7 @@
 # New Estimate Request
 
 <x-mail::panel>
+<p><strong>Request ID:</strong> {{ $requestID }}</p>
 <p><strong>Name:</strong> {{ $customerName }}</p>
 <p><strong>Email:</strong> {{ $customerEmail }}</p>
 <p><strong>Phone:</strong> {{ $customerPhone }}</p>

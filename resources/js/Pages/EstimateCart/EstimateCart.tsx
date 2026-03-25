@@ -54,6 +54,9 @@ export default function EstimateCart() {
     null
   );
   const [isConfirmationOpen, setIsConfirmationOpen] = React.useState(false);
+  const [submittedRequestID, setSubmittedRequestID] = React.useState<
+    string | null
+  >(null);
 
   const hasItems = estimate_cart.items.length > 0;
 
@@ -72,7 +75,8 @@ export default function EstimateCart() {
     }
   };
 
-  const handleSubmitSuccess = () => {
+  const handleSubmitSuccess = (requestID: string) => {
+    setSubmittedRequestID(requestID);
     setIsConfirmationOpen(true);
   };
 
@@ -106,7 +110,9 @@ export default function EstimateCart() {
           {serviceTitles.length > 0 ? (
             <div className={classes.row}>
               <span className={classes.rowLabel}>Service Type</span>
-              <span className={classes.rowValue}>{serviceTitles.join(", ")}</span>
+              <span className={classes.rowValue}>
+                {serviceTitles.join(", ")}
+              </span>
             </div>
           ) : null}
 
@@ -138,9 +144,13 @@ export default function EstimateCart() {
                         rel="noreferrer"
                         title={link.name || link.label}
                       >
-                        {row.links && row.links.length > 1
+                        <img
+                          src={link.url}
+                          style={{ width: 70, height: 70, objectFit: "cover" }}
+                        />
+                        {/*{row.links && row.links.length > 1
                           ? `${link.label} ${linkIndex + 1}`
-                          : link.label}
+                          : link.label}*/}
                       </a>
                     ))}
                   </span>
@@ -204,7 +214,9 @@ export default function EstimateCart() {
 
                     <div className={classes.sideRow}>
                       <span>Subtotal</span>
-                      <strong>${estimate_cart.subtotal.toLocaleString()}</strong>
+                      <strong>
+                        ${estimate_cart.subtotal.toLocaleString()}
+                      </strong>
                     </div>
                     <div className={classes.sideRow}>
                       <span>Total</span>
@@ -216,7 +228,9 @@ export default function EstimateCart() {
                       pricing and project details.
                     </p>
 
-                    <EstimateRequestForm onSubmitSuccess={handleSubmitSuccess} />
+                    <EstimateRequestForm
+                      onSubmitSuccess={handleSubmitSuccess}
+                    />
                   </aside>
                 </div>
               </div>
@@ -227,7 +241,11 @@ export default function EstimateCart() {
 
       <EstimateSubmitConfirmationModal
         isOpen={isConfirmationOpen}
-        onClose={() => setIsConfirmationOpen(false)}
+        requestID={submittedRequestID}
+        onClose={() => {
+          setIsConfirmationOpen(false);
+          setSubmittedRequestID(null);
+        }}
       />
     </>
   );

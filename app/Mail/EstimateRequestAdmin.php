@@ -14,6 +14,7 @@ class EstimateRequestAdmin extends Mailable implements ShouldQueue
   use Queueable, SerializesModels;
 
   public function __construct(
+    public string $requestID,
     public string $customerName,
     public string $customerEmail,
     public string $customerPhone,
@@ -25,7 +26,7 @@ class EstimateRequestAdmin extends Mailable implements ShouldQueue
 
   public function envelope(): Envelope
   {
-    return new Envelope(subject: "New Estimate Request");
+    return new Envelope(subject: "New Estimate Request #{$this->requestID}");
   }
 
   public function content(): Content
@@ -37,6 +38,7 @@ class EstimateRequestAdmin extends Mailable implements ShouldQueue
         "customerEmail" => $this->customerEmail,
         "customerPhone" => $this->customerPhone,
         "customerAddress" => $this->customerAddress,
+        "requestID" => $this->requestID,
         "cart" => $this->cart,
         "submittedAt" => $this->submittedAt,
       ]

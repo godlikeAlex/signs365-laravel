@@ -75,6 +75,11 @@ export interface SubmitEstimateRequestParams {
   address: string;
 }
 
+export interface SubmitEstimateResponse {
+  ok: true;
+  request_id: string;
+}
+
 function appendNestedFormData(
   formData: FormData,
   key: string,
@@ -188,6 +193,6 @@ export default class EstimateCartService {
   }
 
   static submit(body: SubmitEstimateRequestParams) {
-    return api.post<{ ok: true }>("/estimate/cart/submit", body);
+    return api.post<SubmitEstimateResponse>("/estimate/cart/submit", body);
   }
 }

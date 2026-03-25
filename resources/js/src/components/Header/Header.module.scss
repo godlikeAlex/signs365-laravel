@@ -46,6 +46,7 @@ $topHeaderColor: #595855;
 
   &__my-project {
     margin-left: auto;
+    position: relative;
 
     & a {
       display: flex;
@@ -53,6 +54,22 @@ $topHeaderColor: #595855;
       align-items: center;
       gap: 5px;
     }
+  }
+
+  &__my-project-indicator {
+    position: absolute;
+    background-color: var(--primary-color);
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    right: -6px;
+    top: -6px;
+
+    color: black !important;
   }
 
   &__container {

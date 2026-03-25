@@ -23,7 +23,12 @@ import { Logo } from "../Logo";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
-  const { cart, auth, currentCity, homeCategories } = pageData.props;
+  const {
+    estimate_cart: cart,
+    auth,
+    currentCity,
+    homeCategories,
+  } = pageData.props;
 
   const headerRef = useRef<HTMLElement>();
   const { isSticky } = useSticky(headerRef);
@@ -78,7 +83,16 @@ export default function Header() {
 
           <div className={classes.topHeaderMyProject}>
             <Link href="/estimate/cart">
-              <TrustIcon width={16} /> My Projects
+              <span style={{ position: "relative" }}>
+                {cart.items.length > 0 && (
+                  <span className={classes.topHeaderMyProjectIndicator}>
+                    {cart.items.length}
+                  </span>
+                )}
+
+                <TrustIcon width={26} />
+              </span>
+              My Projects
             </Link>
           </div>
 

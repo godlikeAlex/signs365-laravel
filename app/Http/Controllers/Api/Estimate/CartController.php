@@ -354,6 +354,7 @@ class CartController extends Controller
   public function submit(SubmitEstimateRequest $request)
   {
     $cart = $this->cart->format();
+    $requestID = str_pad((string) random_int(0, 999999), 6, "0", STR_PAD_LEFT);
 
     if (count($cart["items"] ?? []) === 0) {
       return response()->json(["error" => "Estimate cart is empty."], 422);
@@ -375,6 +376,7 @@ class CartController extends Controller
       Mail::to($email)->later(
         now()->addMinute(),
         new EstimateRequestAdmin(
+          requestID: $requestID,
           customerName: $request->string("name")->toString(),
           customerEmail: $request->string("email")->toString(),
           customerPhone: $request->string("phone")->toString(),
@@ -387,9 +389,16 @@ class CartController extends Controller
 
     Mail::to($request->string("email")->toString())->later(
       now()->addMinute(),
-      new EstimateRequestReceived(name: $request->string("name")->toString())
+      new EstimateRequestReceived(
+        name: $request->string("name")->toString(),
+        requestID: $requestID,
+        cart: $cart
+      )
     );
 
-    return response()->json(["ok" => true]);
+    return response()->json([
+      "ok" => true,
+      "request_id" => $requestID,
+    ]);
   }
 }
