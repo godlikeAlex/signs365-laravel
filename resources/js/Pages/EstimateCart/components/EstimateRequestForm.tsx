@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { z } from "zod";
 
 import classes from "../EstimateCart.module.scss";
+import { router } from "@inertiajs/react";
 
 const estimateRequestSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -59,7 +60,10 @@ export default function EstimateRequestForm({ onSubmitSuccess }: Props) {
         phone: values.number,
         address: values.address?.label ?? "",
       });
-
+      router.reload({
+        only: ["estimate_cart"],
+        preserveScroll: true,
+      });
       onSubmitSuccess(data.request_id);
     } catch (error) {
       toast("Failed to submit estimate. Please try again.", {
@@ -124,9 +128,9 @@ export default function EstimateRequestForm({ onSubmitSuccess }: Props) {
       <Button
         type="submit"
         variant="primary"
-        color="primary-600"
         className={classes.submitButton}
         disabled={!isValid || isSubmitting}
+        color="black"
       >
         Submit Estimate
       </Button>

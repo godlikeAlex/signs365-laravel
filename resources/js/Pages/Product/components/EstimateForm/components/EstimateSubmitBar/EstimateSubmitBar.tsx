@@ -134,10 +134,15 @@ export default function EstimateSubmitBar({
         </div>
       </div>
 
-      <Button type="submit" className="mt-2 w-100">
+      <Button
+        type="submit"
+        variant="primary"
+        color="black"
+        className="mt-2 w-100"
+      >
         {isCalculating || isSubmitting
           ? "Calculating, please wait..."
-          : " Add to Estimate"}
+          : " Add to Projects"}
       </Button>
     </>
   );

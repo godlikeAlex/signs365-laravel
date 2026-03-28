@@ -316,8 +316,8 @@
   align-items: center;
   line-height: 0;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: -10px;
 }
 
 .hamburger-icon {

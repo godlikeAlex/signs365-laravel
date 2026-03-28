@@ -11,6 +11,8 @@ import SVGLogo from "@/assets/images/logo.svg";
 import { useSticky } from "@/src/hooks/useSticky";
 
 import MobileLogo from "./mobile-logo.svg";
+import TrustIcon from "./trust.svg?react";
+import PhoneIcon from "@/assets/icons/SMALL/phone.svg?react";
 
 import classes from "./MobileHeader.module.scss";
 
@@ -75,20 +77,20 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
           <ul className="mobile-header__actions">
             <li>
               <Link className="cart-mobile-icon" href="/estimate/cart">
-                <CartIcon className="mobile-header-icon" />
+                <TrustIcon className="mobile-header-icon" />
 
                 {cart.items.length > 0 ? (
                   <span className="cart-badge">{cart.items.length}</span>
                 ) : null}
               </Link>
             </li>
-          </ul>
-        </div>
 
-        <div className={classes.mobileHeaderSearch}>
-          <div>
-            <SearchForm />
-          </div>
+            <li>
+              <a href="tel:+13073019928">
+                <PhoneIcon width={26} height={26} />
+              </a>
+            </li>
+          </ul>
         </div>
       </header>
 
@@ -130,35 +132,23 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
               </Link>
             </li> */}
 
-            {auth.user ? (
-              <>
-                <li>
-                  <Link onClick={closeMenu} href={"/profile"}>
-                    Profile
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <Link onClick={closeMenu} href={"/login"}>
-                    Login
-                  </Link>
-                </li>
-
-                <li>
-                  <Link onClick={closeMenu} href={"/register"}>
-                    Create account
-                  </Link>
-                </li>
-              </>
-            )}
+            <li>
+              <Link
+                onClick={closeMenu}
+                href={
+                  "https://clienthub.getjobber.com/client_hubs/c53c4bae-c5bf-49b6-9d2c-199d6f8dac18/login/new?source=share_login"
+                }
+                target="_blank"
+              >
+                Login
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="ps-menu__footer">
           <div className="ps-menu__item">
             <div className="ps-menu__contact">
-              <a href="tel:+13072008927" style={{ color: "#ffca1a" }}>
+              <a href="tel:+13073019928" style={{ color: "#ffca1a" }}>
                 <strong>+1 (307) 301-9928</strong>
               </a>
               <br />

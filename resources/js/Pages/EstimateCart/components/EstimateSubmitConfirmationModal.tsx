@@ -28,6 +28,11 @@ export default function EstimateSubmitConfirmationModal({
           project details.
         </p>
 
+        <p className={classes.confirmationText}>
+          Please note that this estimate is preliminary and does not represent
+          the final price.
+        </p>
+
         <Button
           type="button"
           variant="primary"
