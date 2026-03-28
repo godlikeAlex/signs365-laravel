@@ -38,4 +38,5 @@ export interface ProductEstimateForm {
   min_price: number;
   price: number;
   icon?: string;
+  color?: string;
 }

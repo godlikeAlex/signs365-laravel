@@ -1,7 +1,7 @@
 import { IProductEstimate } from "@/src/types/ProductModel";
-import { Controller, useController, useFormContext } from "react-hook-form";
+import { CSSProperties } from "react";
+import { useController, useFormContext } from "react-hook-form";
 import { EstimateFormSchema } from "../../schema/estimate-form-schema";
-import { ToggleButton } from "../ToggleButton";
 import styles from "./SelectForm.module.scss";
 
 interface Props {
@@ -10,11 +10,7 @@ interface Props {
 
 export default function SelectForm({ forms }: Props) {
   const { control } = useFormContext<EstimateFormSchema>();
-  const {
-    field,
-    fieldState: { invalid, isTouched, isDirty },
-    formState: { touchedFields, dirtyFields },
-  } = useController({
+  const { field } = useController({
     name: "selectedFormIds",
     control,
     defaultValue: [],
@@ -33,17 +29,19 @@ export default function SelectForm({ forms }: Props) {
   return (
     <div className={styles.selectFormGroup}>
       {forms.map((form) => (
-        <ToggleButton
+        <button
           key={form.id}
-          isActive={field.value.includes(form.id)}
+          type="button"
+          className={styles.selectFormButton}
+          data-active={field.value.includes(form.id)}
+          style={
+            { "--select-form-color": form.color ?? "#FFCA19" } as CSSProperties
+          }
           onClick={() => handleToggleForm(form.id)}
-          appearance={"colored"}
         >
-          <div className={styles.buttonContent}>
-            {form.icon && <img src={`/storage/${form.icon}`} />}
-            {form.title}
-          </div>
-        </ToggleButton>
+          {form.icon && <img src={`/storage/${form.icon}`} />}
+          {form.title}
+        </button>
       ))}
     </div>
   );
