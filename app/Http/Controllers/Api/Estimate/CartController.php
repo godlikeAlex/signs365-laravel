@@ -396,6 +396,8 @@ class CartController extends Controller
       )
     );
 
+    $this->cart->clear();
+
     return response()->json([
       "ok" => true,
       "request_id" => $requestID,
