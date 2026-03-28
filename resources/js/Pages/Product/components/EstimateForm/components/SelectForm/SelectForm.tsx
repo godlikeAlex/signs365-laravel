@@ -37,8 +37,12 @@ export default function SelectForm({ forms }: Props) {
           key={form.id}
           isActive={field.value.includes(form.id)}
           onClick={() => handleToggleForm(form.id)}
+          appearance={"colored"}
         >
-          {form.title}
+          <div className={styles.buttonContent}>
+            {form.icon && <img src={`/storage/${form.icon}`} />}
+            {form.title}
+          </div>
         </ToggleButton>
       ))}
     </div>

@@ -86,15 +86,15 @@ export default function EstimateForm({ forms }: Props) {
     <FormProvider {...formMethods}>
       <form onSubmit={formMethods.handleSubmit(onSubmit)}>
         <EstimateFormSection>
-          <EstimateFormSection.Title>Sizes</EstimateFormSection.Title>
-          <SelectSize />
-        </EstimateFormSection>
-
-        <EstimateFormSection>
           <EstimateFormSection.Title>
             Select Your Service
           </EstimateFormSection.Title>
           <SelectForm forms={forms} />
+        </EstimateFormSection>
+
+        <EstimateFormSection>
+          <EstimateFormSection.Title>Sizes</EstimateFormSection.Title>
+          <SelectSize />
         </EstimateFormSection>
 
         {formFields.map((field) => (

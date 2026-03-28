@@ -67,7 +67,7 @@
 
 <x-mail::panel>
 <p>If you have any questions, you can contact us:</p>
-<p><strong>Phone:</strong> +1 (307) 200-8927</p>
+<p><strong>Phone:</strong> +1 (307) 301-9928</p>
 <p><strong>Email:</strong> info@signs7.com</p>
 </x-mail::panel>
 

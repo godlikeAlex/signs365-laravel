@@ -51,7 +51,7 @@ const Menu: React.FC<Props> = ({}: Props) => {
                   href="tel:+13072008927"
                 >
                   <PhoneIcon className="top-header-icon" />
-                  <span style={{ marginLeft: 5 }}>+1 (307) 200-8927</span>
+                  <span style={{ marginLeft: 5 }}>+1 (307) 301-9928</span>
                 </a>
               </li>
 

@@ -204,7 +204,7 @@ const Privacy: React.FC<Props> = ({ title }: Props) => {
                 be removed by contacting us through the New York Printing
                 Solutions online support center at: https://signs7.com/ or by
                 email to: info@signs7.com and by putting “UNSUBSCRIBE” in the
-                subject line and follow up with a phone call +1 (307) 200-8927
+                subject line and follow up with a phone call +1 (307) 301-9928
                 or visit us in person at 760 5th ave, Brooklyn, 11232
               </p>
 

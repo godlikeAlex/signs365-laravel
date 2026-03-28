@@ -1,4 +1,17 @@
 .select-form-group {
   display: flex;
   gap: 9px;
+  flex-wrap: wrap;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  & img {
+    width: 22px;
+    height: 22px;
+  }
 }

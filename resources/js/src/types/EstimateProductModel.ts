@@ -37,4 +37,5 @@ export interface ProductEstimateForm {
   fields: EstimateFormField[];
   min_price: number;
   price: number;
+  icon?: string;
 }

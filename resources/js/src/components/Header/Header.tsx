@@ -20,6 +20,7 @@ import SearchForm from "../SearchForm";
 import classes from "./Header.module.scss";
 import "./body.scss";
 import { Logo } from "../Logo";
+import Button from "../Button";
 
 export default function Header() {
   const pageData = usePage<SharedInertiaData>();
@@ -94,12 +95,20 @@ export default function Header() {
               </span>
               My Projects
             </Link>
+
+            <Button
+              component="a"
+              href="https://clienthub.getjobber.com/client_hubs/c53c4bae-c5bf-49b6-9d2c-199d6f8dac18/login/new?source=share_login"
+              target="_blank"
+            >
+              Login
+            </Button>
           </div>
 
           <div className={classes.topHeaderRight}>
-            <a href="tel:+13072008927" className={classes.topHeaderPhone}>
+            <a href="tel:+13073019928" className={classes.topHeaderPhone}>
               <PhoneIcon className={classes.phoneIcon} />
-              <span style={{ marginLeft: 5 }}>+1 (307) 200-8927</span>
+              <span style={{ marginLeft: 5 }}>+1 (307) 301-9928</span>
             </a>
 
             <div>
@@ -124,10 +133,10 @@ export default function Header() {
                   classes.topHeaderLink,
                   classes.topHeaderLinkWithIcon
                 )}
-                href="tel:+13072008927"
+                href="tel:+13073019928"
               >
                 <PhoneIcon className={classes.topHeaderIcon} />
-                <span style={{ marginLeft: 5 }}>tel: +1 (307) 200-8927</span>
+                <span style={{ marginLeft: 5 }}>tel: +1 (307) 301-9928</span>
               </a>
             </li>
 

@@ -48,6 +48,9 @@ $topHeaderColor: #595855;
     margin-left: auto;
     position: relative;
 
+    display: flex;
+    gap: 22px;
+
     & a {
       display: flex;
       justify-content: center;
