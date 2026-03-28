@@ -13,6 +13,7 @@ class EstimateFormResource extends JsonResource
       "id" => $this->id,
       "title" => $this->title,
       "type" => $this->type,
+      "icon" => $this->icon,
       "price" => (int) $this->price,
       "min_price" => (int) $this->min_price,
       "showCalculator" => $this->type === EstimateFormTypeEnum::SQFT,

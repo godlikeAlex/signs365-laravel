@@ -37,6 +37,14 @@ class EstimateFormResource extends Resource
               Forms\Components\TextInput::make("title")
                 ->required()
                 ->maxLength(255),
+              Forms\Components\FileUpload::make("icon")
+                ->label("Icon")
+                ->image()
+                ->directory("estimate-forms")
+                ->nullable(),
+              Forms\Components\ColorPicker::make("color")
+                ->label("Color")
+                ->nullable(),
               Forms\Components\Select::make("type")
                 ->required()
                 ->reactive()
