@@ -97,6 +97,11 @@ export default function EstimateForm({ forms }: Props) {
           <SelectSize />
         </EstimateFormSection>
 
+        <EstimateFormSection>
+          <EstimateFormSection.Title>Quantity</EstimateFormSection.Title>
+          <EstimateQuantity />
+        </EstimateFormSection>
+
         {formFields.map((field) => (
           <EstimateFormSection key={`${field.form_id}-${field.id}`}>
             <EstimateFormSection.Title>{field.title}</EstimateFormSection.Title>
@@ -109,11 +114,6 @@ export default function EstimateForm({ forms }: Props) {
             />
           </EstimateFormSection>
         ))}
-
-        <EstimateFormSection>
-          <EstimateFormSection.Title>Quantity</EstimateFormSection.Title>
-          <EstimateQuantity />
-        </EstimateFormSection>
 
         <EstimateSubmitBar
           productID={page.props.product.id}

@@ -13,8 +13,15 @@ interface Props {
   config: EstimateRadioSelectField;
 }
 
+const DEFAULT_CONDITIONS = ["+0", "0", "0%", "+0%"];
+
 export default function RadioSelect({ config }: Props) {
   const { form_id, options, disclaimer, dynamicKeyField } = config;
+  const defaultOption = options.find((option) => {
+    const normalizedCondition = option.condition.replace(/\s+/g, "");
+
+    return DEFAULT_CONDITIONS.includes(normalizedCondition);
+  });
 
   const { control } = useFormContext<EstimateFormSchema>();
   const {
@@ -24,6 +31,7 @@ export default function RadioSelect({ config }: Props) {
     shouldUnregister: true,
     control,
     name: `dynamicEstimateFields.${dynamicKeyField}`,
+    defaultValue: defaultOption?.id ?? options[0]?.id,
   });
   const value = typeof field.value === "number" ? field.value : undefined;
   const currentSelectedOption = options.find((option) => option.id === value);
