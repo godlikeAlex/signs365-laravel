@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\EstimateFormTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,11 +30,16 @@ class EstimateForm extends Model
       "estimate_form_product",
       "estimate_form_id",
       "product_id"
-    )->withPivot(["sort", "is_active"]);
+    )->withPivot(["sort", "order_column", "is_active"]);
   }
 
   public function fields(): HasMany
   {
     return $this->hasMany(EstimateField::class)->orderBy("order_column");
+  }
+
+  public function ownerProduct(): BelongsTo
+  {
+    return $this->belongsTo(Product::class, "owner_product_id");
   }
 }

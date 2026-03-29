@@ -1,11 +1,11 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-61ab2af6.css",
+    "file": "assets/app-6d9f906d.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
   "resources/css/style.css": {
-    "file": "assets/style-fe692e3b.css",
+    "file": "assets/style-6ba0a042.css",
     "isEntry": true,
     "src": "resources/css/style.css"
   },
@@ -107,7 +107,7 @@
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-266505ef.css",
+    "file": "assets/index-3a30a41e.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -130,9 +130,9 @@
       "assets/Sofia Pro Bold Az-ad296799.otf"
     ],
     "css": [
-      "assets/index-266505ef.css"
+      "assets/index-3a30a41e.css"
     ],
-    "file": "assets/index-d072100f.js",
+    "file": "assets/index-b108797b.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   },
