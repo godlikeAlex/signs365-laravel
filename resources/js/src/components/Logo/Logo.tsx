@@ -8,7 +8,7 @@ export default function Logo() {
       <img src={SVGLogo} className={classes.logo} alt="Signs" />
 
       <div className={classes.logoQuote}>
-        Project. <br /> Solutions. <br /> Partner.
+        Print. <br /> Install. <br /> Design.
       </div>
     </div>
   );

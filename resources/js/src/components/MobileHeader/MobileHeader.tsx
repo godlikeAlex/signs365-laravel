@@ -19,6 +19,7 @@ import classes from "./MobileHeader.module.scss";
 import "./style.css";
 import SearchForm from "../SearchForm";
 import { Logo } from "../Logo";
+import Button from "../Button";
 
 interface MobileHeaderProps {}
 
@@ -84,12 +85,6 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
                 ) : null}
               </Link>
             </li>
-
-            <li>
-              <a href="tel:+13073019928">
-                <PhoneIcon width={26} height={26} />
-              </a>
-            </li>
           </ul>
         </div>
       </header>
@@ -133,15 +128,15 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
             </li> */}
 
             <li>
-              <Link
+              <Button
+                style={{ display: "inline-flex" }}
                 onClick={closeMenu}
-                href={
-                  "https://clienthub.getjobber.com/client_hubs/c53c4bae-c5bf-49b6-9d2c-199d6f8dac18/login/new?source=share_login"
-                }
+                component="a"
+                href="https://clienthub.getjobber.com/client_hubs/c53c4bae-c5bf-49b6-9d2c-199d6f8dac18/login/new?source=share_login"
                 target="_blank"
               >
                 Login
-              </Link>
+              </Button>
             </li>
           </ul>
         </div>

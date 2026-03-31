@@ -45,6 +45,12 @@ class EstimateFormResource extends Resource
               Forms\Components\ColorPicker::make("color")
                 ->label("Color")
                 ->nullable(),
+              Forms\Components\ColorPicker::make("alt_color")
+                ->label("Alt Color")
+                ->nullable(),
+              Forms\Components\ColorPicker::make("alt_color")
+                ->label("Alt Color")
+                ->nullable(),
               Forms\Components\Select::make("type")
                 ->required()
                 ->reactive()

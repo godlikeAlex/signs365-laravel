@@ -18,7 +18,7 @@ export default function HeroSection({ productWithCategories }: Props) {
           <div className="col-md-12">
             <div className="top-content">
               <h1 className={classes.title}>
-                Manage your project <br /> in one place
+                Print, Install, Design <br /> all in one place.
               </h1>
 
               <p className={classes.description}>
@@ -26,9 +26,17 @@ export default function HeroSection({ productWithCategories }: Props) {
                 organized and under control
               </p>
 
-              <Button className={classes.button} onClick={() => open(null)}>
-                Let's Start Your Project
-              </Button>
+              <div className={classes.actionGroup}>
+                <Button>Get Your Estimate Online</Button>
+
+                <Button
+                  color="primary"
+                  variant="ghost"
+                  onClick={() => open(null)}
+                >
+                  Talk to the Team
+                </Button>
+              </div>
             </div>
 
             <ul className={classes.categories}>

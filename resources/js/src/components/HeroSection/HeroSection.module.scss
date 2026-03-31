@@ -7,6 +7,7 @@
   padding-block: 150px;
 
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .title {
@@ -14,7 +15,7 @@
   font-weight: 900;
 
   @include media.below-mobile {
-    font-size: 32px;
+    font-size: 28px;
   }
 }
 
@@ -68,4 +69,12 @@
   padding: 10px 35px;
   font-size: 22px;
   height: unset;
+}
+
+.action-group {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }

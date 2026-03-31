@@ -35,7 +35,10 @@ export default function SelectForm({ forms }: Props) {
           className={styles.selectFormButton}
           data-active={field.value.includes(form.id)}
           style={
-            { "--select-form-color": form.color ?? "#FFCA19" } as CSSProperties
+            {
+              "--select-form-color": form.color ?? "#FFCA19",
+              "--select-form-color-alt": form.alt_color ?? "#FFEDB5",
+            } as CSSProperties
           }
           onClick={() => handleToggleForm(form.id)}
         >

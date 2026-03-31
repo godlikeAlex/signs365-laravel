@@ -39,4 +39,5 @@ export interface ProductEstimateForm {
   price: number;
   icon?: string;
   color?: string;
+  alt_color?: string;
 }

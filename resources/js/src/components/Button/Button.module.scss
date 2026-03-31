@@ -6,6 +6,17 @@
     --hover-color: #{colors.$primary300};
   }
 
+  &--ghost-700 {
+    --bg-color: rgba(255, 237, 181, 0.2);
+    --hover-color: #{colors.$primary700};
+    color: colors.$primary700 !important;
+    border-color: colors.$primary700 !important;
+
+    &:hover {
+      color: colors.$black !important;
+    }
+  }
+
   &--primary-600 {
     --bg-color: #ffdf8f;
     --hover-color: #{colors.$primary};
