@@ -1,7 +1,8 @@
 .select-form-group {
   display: grid;
-  gap: 9px;
+  gap: 16px;
   grid-template-columns: repeat(3, 95px);
+  margin-top: 15px;
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 110px);
@@ -30,11 +31,11 @@
   transition: box-shadow 0.2s ease, transform 0.2s ease, filter 0.2s ease;
 
   &[data-active="true"] {
-    box-shadow: 0 0 0 2px
+    box-shadow: 0 0 0 5px
         color-mix(in srgb, var(--select-form-color) 35%, transparent),
       0 4px 10px color-mix(in srgb, var(--select-form-color) 40%, transparent);
     background-color: var(--select-form-color);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   & img {

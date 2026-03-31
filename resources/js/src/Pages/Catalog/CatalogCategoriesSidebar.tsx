@@ -44,11 +44,9 @@ const CatalogCategoriesSidebar: React.FC<Props> = ({
                 active: isActive,
               })}
               style={
-                isActive
-                  ? ({
-                      "--category-primary": category.colors.primary,
-                    } as React.CSSProperties)
-                  : undefined
+                {
+                  "--category-primary": category.colors.primary,
+                } as React.CSSProperties
               }
             >
               <Link

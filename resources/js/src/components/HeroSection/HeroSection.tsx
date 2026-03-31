@@ -27,7 +27,9 @@ export default function HeroSection({ productWithCategories }: Props) {
               </p>
 
               <div className={classes.actionGroup}>
-                <Button>Get Your Estimate Online</Button>
+                <Button component={Link} href="/shop/adhesive-prints">
+                  Get Your Estimate Online
+                </Button>
 
                 <Button
                   color="primary"

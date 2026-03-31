@@ -81,3 +81,7 @@
   background: #fafafa;
   font-weight: 700;
 }
+
+.catalog-categories-sidebar__item:hover .catalog-categories-sidebar__link {
+  color: var(--category-primary);
+}
