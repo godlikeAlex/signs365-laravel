@@ -35,6 +35,9 @@ class ShopController extends Controller
 
     return Inertia::render("Catalog", [
       "currentCategory" => $currentCategory,
+      "categories" => CategoryWithOutProducts::collection(
+        $categoriesWithOutProducts
+      ),
       "countedProducts" => $product_category
         ->products()
         ->published()

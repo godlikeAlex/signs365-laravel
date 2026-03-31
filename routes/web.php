@@ -33,10 +33,6 @@ $DOMAIN = env("APP_DOMAIN");
 */
 // Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
-Route::get("/ker", function () {
-  return phpinfo();
-});
-
 Route::prefix("api/auth")->group(function () {
   Route::post("login", [
     \App\Http\Controllers\Api\AuthController::class,
@@ -63,7 +59,7 @@ Route::prefix("api/auth")->group(function () {
 
 Route::get("", [HomeController::class, "index"])->name("home");
 
-// Route::get("about", [HomeController::class, "about"])->name("about");
+Route::get("about", [HomeController::class, "about"])->name("about");
 
 Route::get("/shop/{product_category:slug}", [ShopController::class, "index"]);
 

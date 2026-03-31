@@ -57,7 +57,7 @@ export default function Header() {
             </li>
 
             <li className="top-header__nav-link">
-              <Link href="#about" className={classes.topHeaderLink}>
+              <Link href="/about" className={classes.topHeaderLink}>
                 About
               </Link>
             </li>

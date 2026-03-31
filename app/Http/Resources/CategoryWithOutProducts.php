@@ -19,6 +19,12 @@ class CategoryWithOutProducts extends JsonResource
       "title" => $this->title,
       "slug" => $this->slug,
       "icon" => $this->icon,
+      "active_icon" => $this->icon_active,
+      "colors" => [
+        "primary" => $this->primary_color,
+        "alternative" => $this->alternative_color,
+      ],
+      "show_on_home" => $this->show_on_home,
     ];
   }
 }

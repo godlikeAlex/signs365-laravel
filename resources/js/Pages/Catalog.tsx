@@ -9,11 +9,13 @@ import { Breadcrumbs, CatalogSection, SEOHead } from "@/src/components";
 interface Props {
   productsWithPagination: IProductsPagination;
   currentCategory: ICategory;
+  categories: ICategory[];
 }
 
 const Catalog: React.FC<Props> = ({
   productsWithPagination,
   currentCategory,
+  categories,
 }: Props) => {
   const { data: products, meta } = productsWithPagination;
 
@@ -42,6 +44,7 @@ const Catalog: React.FC<Props> = ({
             <div className="col-md-12 mt-50">
               <CatalogProducts
                 currentCategory={currentCategory}
+                categories={categories}
                 products={products}
                 pageCount={meta.last_page}
                 currentPage={meta.current_page}

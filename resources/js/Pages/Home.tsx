@@ -103,8 +103,6 @@ const Home: React.FC<Props> = ({ title }: Props) => {
 
         <HeroSection productWithCategories={homeCategories} />
 
-        <AboutSection />
-
         <PriceList productWithCategories={homeCategories} />
 
         <OurProcess />

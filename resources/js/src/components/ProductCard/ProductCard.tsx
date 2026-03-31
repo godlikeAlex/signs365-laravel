@@ -56,8 +56,8 @@ export default function ProductCard({
       </Link>
 
       <div className={classes.productCardContent}>
-        <Link href={pathToProduct}>
-          <h3 className={classes.productCardTitle}>{title}</h3>
+        <Link className={classes.productCardTitle} href={pathToProduct}>
+          {title}
         </Link>
 
         {category && variant === "home" ? (

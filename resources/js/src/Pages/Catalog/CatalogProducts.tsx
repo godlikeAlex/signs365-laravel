@@ -4,18 +4,22 @@ import classNames from "classnames";
 import ReactPaginate from "react-paginate";
 import { EmptyPage, ProductCard } from "@/src/components";
 import { ICategory, IProductCard } from "@/src/types/models";
+import CatalogCategoriesSidebar from "./CatalogCategoriesSidebar";
 
 import "./style.css";
 
 interface Props {
   products: IProductCard[];
   currentCategory: ICategory;
+  categories: ICategory[];
   pageCount: number;
   currentPage: number;
 }
 
 const CatalogProducts: React.FC<Props> = ({
   products,
+  currentCategory,
+  categories,
   pageCount,
   currentPage,
 }: Props) => {
@@ -42,14 +46,27 @@ const CatalogProducts: React.FC<Props> = ({
       <div>
         <div className="row">
           {products.length > 0 ? (
-            products.map((product, idx) => (
-              <div
-                className="col-12 col-lg-4 col-xl-3 mb-25"
-                key={`${product.id}-${idx}`}
-              >
-                <ProductCard {...product} variant="catalog" />
+            <>
+              <div className="col-md-3 mb-2">
+                <CatalogCategoriesSidebar
+                  categories={categories}
+                  currentCategory={currentCategory}
+                />
               </div>
-            ))
+
+              <div className="col-md-9">
+                <div className="row">
+                  {products.map((product, idx) => (
+                    <div
+                      className="col-md-4 mb-25"
+                      key={`${product.id}-${idx}`}
+                    >
+                      <ProductCard {...product} variant="catalog" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           ) : (
             <EmptyPage
               iconClass="fa-solid fa-basket-shopping"

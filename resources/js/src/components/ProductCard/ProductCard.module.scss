@@ -95,7 +95,7 @@
     color: colors.$light-gray;
     margin-top: 12px;
     margin-bottom: 25px;
-    height: 38px;
+    min-height: 38px;
   }
 
   &__price {
