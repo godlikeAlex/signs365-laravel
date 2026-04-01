@@ -38,7 +38,7 @@ a img {
 /* Typography */
 
 h1 {
-  color: #3d4852;
+  color: #171109;
   font-size: 18px;
   font-weight: bold;
   margin-top: 0;
@@ -80,7 +80,7 @@ img {
   -premailer-cellpadding: 0;
   -premailer-cellspacing: 0;
   -premailer-width: 100%;
-  background-color: #edf2f7;
+  background-color: #f9f7f0;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -103,7 +103,7 @@ img {
 }
 
 .header a {
-  color: #3d4852;
+  color: #171109;
   font-size: 19px;
   font-weight: bold;
   text-decoration: none;
@@ -112,7 +112,7 @@ img {
 /* Logo */
 
 .logo {
-  max-height: 75px;
+  max-height: 110px;
   width: auto;
   max-width: 220px;
 }
@@ -123,9 +123,9 @@ img {
   -premailer-cellpadding: 0;
   -premailer-cellspacing: 0;
   -premailer-width: 100%;
-  background-color: #edf2f7;
-  border-bottom: 1px solid #edf2f7;
-  border-top: 1px solid #edf2f7;
+  background-color: #f9f7f0;
+  border-bottom: 1px solid #f9f7f0;
+  border-top: 1px solid #f9f7f0;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -260,12 +260,12 @@ img {
 /* Panels */
 
 .panel {
-  border-left: #2d3748 solid 4px;
+  border-left: #ffca19 solid 4px;
   margin: 21px 0;
 }
 
 .panel-content {
-  background-color: #edf2f7;
+  background-color: #fffbed;
   color: #718096;
   padding: 16px;
 }

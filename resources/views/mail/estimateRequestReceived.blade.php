@@ -3,6 +3,7 @@
 
 <p><strong>Request ID:</strong> {{ $requestID }}</p>
 <p>Thank you for your request. Our team will contact you soon.</p>
+<p><strong>Disclaimer</strong> The provided price is an estimate only and may vary depending on project requirements, scope, and additional services.</p>
 
 <x-mail::panel>
 <p><strong>Total Cost:</strong> ${{ number_format((float) ($cart['total'] ?? 0), 2) }}</p>
