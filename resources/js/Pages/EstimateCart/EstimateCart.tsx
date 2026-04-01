@@ -58,6 +58,8 @@ export default function EstimateCart() {
     string | null
   >(null);
 
+  console.log(estimate_cart);
+
   const hasItems = estimate_cart.items.length > 0;
 
   const handleRemoveItem = async (itemID: string) => {

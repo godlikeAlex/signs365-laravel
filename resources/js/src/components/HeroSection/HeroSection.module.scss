@@ -44,6 +44,7 @@
   gap: 10px;
   aspect-ratio: 1/1;
   justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &__icon {
     width: 48px;
@@ -51,10 +52,17 @@
     filter: brightness(0);
   }
 
+  &[data-pulse="true"] {
+    animation: hero-category-pulse 1.4s ease-in-out;
+  }
+
   &:hover {
     transform: translateY(-10px);
     background-color: var(--primary-color);
     color: unset;
+    box-shadow: 0 0 0 8px
+        color-mix(in srgb, var(--primary-color) 42%, transparent),
+      0 12px 28px color-mix(in srgb, var(--primary-color) 46%, transparent);
   }
 }
 
@@ -77,4 +85,26 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+}
+
+@keyframes hero-category-pulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary-color) 0%, transparent),
+      0 0 0 color-mix(in srgb, var(--primary-color) 0%, transparent);
+  }
+
+  45% {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 8px
+        color-mix(in srgb, var(--primary-color) 42%, transparent),
+      0 12px 28px color-mix(in srgb, var(--primary-color) 46%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-category[data-pulse="true"] {
+    animation: none;
+  }
 }

@@ -1,3 +1,4 @@
+import React from "react";
 import { CategoryWithProductCards } from "@/src/types/models";
 import classes from "./HeroSection.module.scss";
 import Button from "../Button";
@@ -10,6 +11,24 @@ interface Props {
 
 export default function HeroSection({ productWithCategories }: Props) {
   const { open } = useContactModal();
+  const [activePulseIndex, setActivePulseIndex] = React.useState(0);
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    if (!productWithCategories.length) {
+      return;
+    }
+
+    setActivePulseIndex(0);
+
+    const intervalId = window.setInterval(() => {
+      setActivePulseIndex(
+        (prevIndex) => (prevIndex + 1) % productWithCategories.length
+      );
+    }, 1800);
+
+    return () => window.clearInterval(intervalId);
+  }, [productWithCategories.length]);
 
   return (
     <section className={classes.heroSection}>
@@ -32,8 +51,8 @@ export default function HeroSection({ productWithCategories }: Props) {
                 </Button>
 
                 <Button
-                  color="primary"
-                  variant="ghost"
+                  variant="primary"
+                  color="black"
                   onClick={() => open(null)}
                 >
                   Talk to the Team
@@ -43,15 +62,20 @@ export default function HeroSection({ productWithCategories }: Props) {
 
             <ul className={classes.categories}>
               <div className="row" style={{ rowGap: 15 }}>
-                {productWithCategories.map((category) => (
+                {productWithCategories.map((category, index) => (
                   <div className="col-md-2 col-6" key={category.id}>
                     <Link
                       className={classes.heroCategory}
                       href={`/shop/${category.slug}`}
+                      onMouseEnter={() => setHoveredIndex(index)}
+                      onMouseLeave={() => setHoveredIndex(null)}
                       style={{
                         ["--primary-color" as string]: category.colors.primary,
                         ["--alt-color" as string]: category.colors.alternative,
                       }}
+                      data-pulse={
+                        activePulseIndex === index && hoveredIndex !== index
+                      }
                     >
                       <img
                         src={`/storage/${category.icon}`}

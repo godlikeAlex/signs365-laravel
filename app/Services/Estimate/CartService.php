@@ -460,11 +460,11 @@ class CartService
 
           if (is_array($item) && !empty($item["url"])) {
             $links[] = [
-              "label" => "Open file",
+              "label" => "",
               "url" => (string) $item["url"],
               "name" => $item["name"] ?? null,
             ];
-            return "Open file";
+            return "";
           }
 
           return null;
