@@ -103,6 +103,12 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({}: MobileHeaderProps) => {
               </Link>
             </li>
 
+            <li>
+              <Link onClick={closeMenu} href={"/about"}>
+                About Us
+              </Link>
+            </li>
+
             <div className="divider" />
 
             {homeCategories.map((category) => (

@@ -29,7 +29,14 @@ class EstimateFormsRelationManager extends RelationManager
   {
     return $table
       ->columns([
-        Tables\Columns\TextColumn::make("title")->searchable(),
+        Tables\Columns\TextColumn::make("title")
+          ->formatStateUsing(function (?string $state, Model $record): string {
+            /** @var EstimateForm $record */
+            $ownerTitle = $record->ownerProduct?->title ?? "No owner";
+
+            return "{$state} ({$ownerTitle})";
+          })
+          ->searchable(),
         Tables\Columns\TextColumn::make("type"),
         Tables\Columns\IconColumn::make("is_active")->boolean(),
       ])
@@ -43,7 +50,19 @@ class EstimateFormsRelationManager extends RelationManager
 
           return $data;
         }),
-        Tables\Actions\AttachAction::make()->preloadRecordSelect(),
+        Tables\Actions\AttachAction::make()
+          ->recordSelectOptionsQuery(
+            fn(Builder $query): Builder => $query->with([
+              "ownerProduct:id,title",
+            ])
+          )
+          ->recordTitle(function (Model $record): string {
+            /** @var EstimateForm $record */
+            $ownerTitle = $record->ownerProduct?->title ?? "No owner";
+
+            return "{$record->title} ({$ownerTitle})";
+          })
+          ->preloadRecordSelect(),
       ])
       ->actions([
         Tables\Actions\EditAction::make()->using(function (
@@ -85,9 +104,9 @@ class EstimateFormsRelationManager extends RelationManager
 
   protected function getTableQuery(): Builder
   {
-    return parent::getTableQuery()->withoutGlobalScopes([
-      SoftDeletingScope::class,
-    ]);
+    return parent::getTableQuery()
+      ->withoutGlobalScopes([SoftDeletingScope::class])
+      ->with(["ownerProduct:id,title"]);
   }
 
   private static function cloneEstimateForm(
