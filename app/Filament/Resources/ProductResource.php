@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Awcodes\Curator\GliderFallback;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\Layout;
@@ -253,6 +254,20 @@ class ProductResource extends Resource
 
             $record->moveOrderDown();
           }),
+        Tables\Actions\Action::make("duplicate")
+          ->label("Copy")
+          ->icon("heroicon-o-duplicate")
+          ->color("secondary")
+          ->requiresConfirmation()
+          ->action(function (Product $record): void {
+            $duplicatedProduct = static::duplicateProduct($record);
+
+            Notification::make()
+              ->title("Product copied")
+              ->body("Created: {$duplicatedProduct->title}")
+              ->success()
+              ->send();
+          }),
         Tables\Actions\EditAction::make(),
         Tables\Actions\DeleteAction::make(),
         // Tables\Actions\ForceDeleteAction::make(),
@@ -284,5 +299,113 @@ class ProductResource extends Resource
       "create" => Pages\CreateProduct::route("/create"),
       "edit" => Pages\EditProduct::route("/{record}/edit"),
     ];
+  }
+
+  private static function duplicateProduct(Product $product): Product
+  {
+    return DB::transaction(function () use ($product): Product {
+      $product->loadMissing([
+        "categories:id",
+        "options:id",
+        "addons:id",
+        "images:id",
+        "estimateForms:id",
+      ]);
+
+      $copiedProduct = $product->replicate();
+      $copiedProduct->title = static::generateCopyTitle($product->title);
+      $copiedProduct->slug = static::generateCopySlug($product->slug);
+      $copiedProduct->published = false;
+      $copiedProduct->deleted_at = null;
+      $copiedProduct->save();
+
+      $copiedProduct
+        ->categories()
+        ->sync($product->categories->pluck("id")->all());
+      $copiedProduct->options()->sync($product->options->pluck("id")->all());
+      $copiedProduct->addons()->sync($product->addons->pluck("id")->all());
+
+      $imagesToSync = $product->images->mapWithKeys(
+        fn($image): array => [
+          $image->id => ["order" => (int) ($image->pivot->order ?? 0)],
+        ]
+      );
+      $copiedProduct->images()->sync($imagesToSync->all());
+
+      $estimateFormsToSync = $product->estimateForms->mapWithKeys(
+        fn($estimateForm): array => [
+          $estimateForm->id => [
+            "sort" => (int) ($estimateForm->pivot->sort ?? 0),
+            "order_column" =>
+              (int) ($estimateForm->pivot->order_column ??
+                ($estimateForm->pivot->sort ?? 0)),
+            "is_active" => (bool) ($estimateForm->pivot->is_active ?? true),
+          ],
+        ]
+      );
+      $copiedProduct->estimateForms()->sync($estimateFormsToSync->all());
+
+      return $copiedProduct;
+    });
+  }
+
+  private static function generateCopyTitle(string $title): string
+  {
+    $suffix = " (copy)";
+    $maxLength = 50;
+
+    if (Str::length($title) + Str::length($suffix) <= $maxLength) {
+      return "{$title}{$suffix}";
+    }
+
+    return Str::substr($title, 0, $maxLength - Str::length($suffix)) . $suffix;
+  }
+
+  private static function generateCopySlug(string $slug): string
+  {
+    $baseSlug = Str::slug($slug);
+
+    if (blank($baseSlug)) {
+      $baseSlug = "product";
+    }
+
+    $copySuffix = "-copy";
+    $maxLength = 75;
+
+    $candidate = Str::substr(
+      $baseSlug,
+      0,
+      $maxLength - Str::length($copySuffix)
+    );
+    $candidate .= $copySuffix;
+
+    if (
+      !Product::withTrashed()
+        ->where("slug", $candidate)
+        ->exists()
+    ) {
+      return $candidate;
+    }
+
+    $counter = 2;
+
+    while (true) {
+      $numberSuffix = "-{$counter}";
+      $availableLength =
+        $maxLength - Str::length($copySuffix) - Str::length($numberSuffix);
+
+      $candidate = Str::substr($baseSlug, 0, max($availableLength, 1));
+      $candidate .= "{$copySuffix}{$numberSuffix}";
+
+      if (
+        !Product::withTrashed()
+          ->where("slug", $candidate)
+          ->exists()
+      ) {
+        return $candidate;
+      }
+
+      $counter++;
+    }
   }
 }

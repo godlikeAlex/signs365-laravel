@@ -51,11 +51,11 @@ export default function HeroSection({ productWithCategories }: Props) {
                 </Button>
 
                 <Button
-                  variant="primary"
+                  variant="ghost"
                   color="black"
                   onClick={() => open(null)}
                 >
-                  Talk to the Team
+                  Let’s Connect
                 </Button>
               </div>
             </div>

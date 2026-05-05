@@ -42,6 +42,7 @@ export default function Button<C extends ElementType = "button">({
             variant === "ghost" && color === "primary-300",
           [classes.buttonGhost700]: variant === "ghost" && color === "primary",
           [classes.buttonBlack]: variant === "primary" && color === "black",
+          [classes.buttonBlackGhost]: variant === "ghost" && color === "black",
           [classes.buttonPrimary]: variant === "primary" && color === "primary",
         },
         className

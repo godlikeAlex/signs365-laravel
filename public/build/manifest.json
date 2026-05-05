@@ -29,17 +29,9 @@
     "file": "assets/search-c0f7c747.svg",
     "src": "resources/js/assets/icons/search.svg"
   },
-  "resources/js/assets/icons/slider/reward.svg": {
-    "file": "assets/reward-b481f4ec.svg",
-    "src": "resources/js/assets/icons/slider/reward.svg"
-  },
   "resources/js/assets/icons/slider/truck-black.svg": {
     "file": "assets/truck-black-ff6bde55.svg",
     "src": "resources/js/assets/icons/slider/truck-black.svg"
-  },
-  "resources/js/assets/icons/slider/truck.svg": {
-    "file": "assets/truck-bfea8d73.svg",
-    "src": "resources/js/assets/icons/slider/truck.svg"
   },
   "resources/js/assets/images/default-profile.png": {
     "file": "assets/default-profile-26ed073c.png",
@@ -81,14 +73,6 @@
     "file": "assets/slide3-698ba2f9.webp",
     "src": "resources/js/assets/images/slides/slide3.webp"
   },
-  "resources/js/assets/images/slides/slide4-bg.webp": {
-    "file": "assets/slide4-bg-dfd7666c.webp",
-    "src": "resources/js/assets/images/slides/slide4-bg.webp"
-  },
-  "resources/js/assets/images/slides/slide4.webp": {
-    "file": "assets/slide4-1728951b.webp",
-    "src": "resources/js/assets/images/slides/slide4.webp"
-  },
   "resources/js/assets/images/slides/slide5-bg.webp": {
     "file": "assets/slide5-bg-1cf0e463.webp",
     "src": "resources/js/assets/images/slides/slide5-bg.webp"
@@ -97,17 +81,13 @@
     "file": "assets/slide5-mobile-2ea3f6f1.png",
     "src": "resources/js/assets/images/slides/slide5-mobile.png"
   },
-  "resources/js/assets/images/slides/slide5.webp": {
-    "file": "assets/slide5-fb5d11f9.webp",
-    "src": "resources/js/assets/images/slides/slide5.webp"
-  },
   "resources/js/fillament-app.js": {
     "file": "assets/fillament-app-c216566f.js",
     "isEntry": true,
     "src": "resources/js/fillament-app.js"
   },
   "resources/js/index.css": {
-    "file": "assets/index-bf3a5ae3.css",
+    "file": "assets/index-ef81c31d.css",
     "src": "resources/js/index.css"
   },
   "resources/js/index.tsx": {
@@ -116,23 +96,18 @@
       "assets/payments-6fb8da66.svg",
       "assets/placeholder-36f7fa4d.webp",
       "assets/default-profile-26ed073c.png",
-      "assets/footer-bg-cb47aba9.webp",
       "assets/promo-image-f4fce618.webp",
-      "assets/slide4-bg-dfd7666c.webp",
-      "assets/slide4-1728951b.webp",
-      "assets/slide5-fb5d11f9.webp",
-      "assets/truck-bfea8d73.svg",
-      "assets/reward-b481f4ec.svg",
       "assets/search-c0f7c747.svg",
+      "assets/footer-bg-cb47aba9.webp",
       "assets/MyriadPro-Regular-f99d0251.woff",
       "assets/MyriadPro-Bold-cb0315a4.woff",
       "assets/Sofia Pro Regular Az-5353dd58.otf",
       "assets/Sofia Pro Bold Az-ad296799.otf"
     ],
     "css": [
-      "assets/index-bf3a5ae3.css"
+      "assets/index-ef81c31d.css"
     ],
-    "file": "assets/index-4588366d.js",
+    "file": "assets/index-0a7cc983.js",
     "isEntry": true,
     "src": "resources/js/index.tsx"
   },
